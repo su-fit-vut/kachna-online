@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachnaOnline.App", "KachnaOnline.App\KachnaOnline.App.csproj", "{70AFCD5A-ACBA-45F5-88DC-622B99A08BA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachnaOnline.Data", "KachnaOnline.Data\KachnaOnline.Data.csproj", "{351AB0CF-F8A2-4627-A28D-4FE6B32BF35B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachnaOnline.Business", "KachnaOnline.Business\KachnaOnline.Business.csproj", "{26D05A1B-F591-418D-A1FD-927935D68CB9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70AFCD5A-ACBA-45F5-88DC-622B99A08BA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70AFCD5A-ACBA-45F5-88DC-622B99A08BA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70AFCD5A-ACBA-45F5-88DC-622B99A08BA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70AFCD5A-ACBA-45F5-88DC-622B99A08BA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{351AB0CF-F8A2-4627-A28D-4FE6B32BF35B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{351AB0CF-F8A2-4627-A28D-4FE6B32BF35B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{351AB0CF-F8A2-4627-A28D-4FE6B32BF35B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{351AB0CF-F8A2-4627-A28D-4FE6B32BF35B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26D05A1B-F591-418D-A1FD-927935D68CB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26D05A1B-F591-418D-A1FD-927935D68CB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26D05A1B-F591-418D-A1FD-927935D68CB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26D05A1B-F591-418D-A1FD-927935D68CB9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
