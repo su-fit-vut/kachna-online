@@ -1,6 +1,12 @@
+// Startup.cs
+// Author: Ondřej Ondryáš
+
+using System;
 using KachnaOnline.App.Extensions;
+using KachnaOnline.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,6 +36,9 @@ namespace KachnaOnline.App
             // Configures custom rules for Serilog's request logging.
             services.ConfigureSerilogRequestLogging();
 
+            // Add scoped database context.
+            services.AddAppDatabase(this.Configuration);
+
             // Add MVC controllers.
             services.AddControllers();
 
@@ -48,7 +57,7 @@ namespace KachnaOnline.App
         /// An <see cref="IWebHostEnvironment" /> instance that contains information about the current
         /// environment.
         /// </param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -89,6 +98,19 @@ namespace KachnaOnline.App
 
             // Map controller endpoints using the default mapping strategy.
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            // Run migrations (optionally).
+            if (Environment.CommandLine.Contains("--migrate-db"))
+            {
+                dbContext.Database.Migrate();
+            }
+
+            // Add initial data (optionally).
+            if (Environment.CommandLine.Contains("--bootstrap-db"))
+            {
+                var dbBootstrapper = new DataBootstrapper(dbContext);
+                dbBootstrapper.BootstrapDatabase();
+            }
         }
     }
 }

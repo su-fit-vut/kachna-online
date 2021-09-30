@@ -1,3 +1,6 @@
+// BoardGame.cs
+// Author: Ondřej Ondryáš
+
 using System;
 using System.ComponentModel.DataAnnotations;
 using KachnaOnline.Data.Entities.Users;
@@ -15,15 +18,15 @@ namespace KachnaOnline.Data.Entities.BoardGames
         public string Description { get; set; }
         [StringLength(512)] public string ImageUrl { get; set; }
 
-        [Required] public int PlayersMin { get; set; }
-        [Required] public int PlayersMax { get; set; }
+        public int? PlayersMin { get; set; }
+        public int? PlayersMax { get; set; }
         [Required] public int CategoryId { get; set; }
 
         [StringLength(1024)] public string NoteInternal { get; set; }
 
         public int? OwnerId { get; set; }
 
-        [Required] public int InStock { get; set; }
+        [Required] [ConcurrencyCheck] public int InStock { get; set; }
         [Required] public int Unavailable { get; set; }
         [Required] public bool Visible { get; set; }
 
