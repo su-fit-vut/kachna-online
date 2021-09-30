@@ -1,3 +1,9 @@
+// StartupExtensions.cs
+// Author: Ondřej Ondryáš
+
+using KachnaOnline.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog.AspNetCore;
 using Serilog.Events;

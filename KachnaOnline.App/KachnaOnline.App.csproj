@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    </PropertyGroup>
+      <UserSecretsId>db419fbb-3870-4b03-a831-11d5f1e5a96d</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <!-- Swagger (OpenAPI) generation and UI -->

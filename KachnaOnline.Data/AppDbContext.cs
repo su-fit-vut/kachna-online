@@ -1,3 +1,6 @@
+// AppDbContext.cs
+// Author: Ondřej Ondryáš
+
 using KachnaOnline.Data.Entities.BoardGames;
 using KachnaOnline.Data.Entities.ClubStates;
 using KachnaOnline.Data.Entities.Events;
@@ -44,6 +47,8 @@ namespace KachnaOnline.Data
                 .WithMany()
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<UserRole>()
+                .HasKey(e => new { e.UserId, e.RoleId });
 
             // Club states
             builder.Entity<RepeatingState>()
@@ -123,6 +128,9 @@ namespace KachnaOnline.Data
                 .WithMany()
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ReservationItemEvent>()
+                .HasKey(e => new { e.ReservationItemId, e.MadeOn });
 
             base.OnModelCreating(builder);
         }
