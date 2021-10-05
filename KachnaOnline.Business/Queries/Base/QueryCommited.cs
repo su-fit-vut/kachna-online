@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿// QueryCommited.cs
+// Author: Ondřej Ondryáš
+
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 

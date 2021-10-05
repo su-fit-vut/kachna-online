@@ -4,6 +4,7 @@
 using System;
 using KachnaOnline.App.Extensions;
 using KachnaOnline.Data;
+using KachnaOnline.Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

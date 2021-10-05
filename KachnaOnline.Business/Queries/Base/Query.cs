@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿// Query.cs
+// Author: Ondřej Ondryáš
+
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachnaOnline.Business.Queries.Base
