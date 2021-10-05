@@ -1,3 +1,6 @@
+// Program.cs
+// Author: Ondřej Ondryáš
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;

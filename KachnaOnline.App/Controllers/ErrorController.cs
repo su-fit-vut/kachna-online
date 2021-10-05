@@ -1,3 +1,6 @@
+// ErrorController.cs
+// Author: Ondřej Ondryáš
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace KachnaOnline.App.Controllers

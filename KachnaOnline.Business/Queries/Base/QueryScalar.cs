@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿// QueryScalar.cs
+// Author: Ondřej Ondryáš
+
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachnaOnline.Business.Queries.Base
