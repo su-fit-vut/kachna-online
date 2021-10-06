@@ -17,7 +17,14 @@ namespace KachnaOnline.Data.Entities.Events
         [Required(AllowEmptyStrings = false)]
         [StringLength(128)]
         public string Name { get; set; }
-
+        
+        [StringLength(256)]
+        public string Place { get; set; }
+        [StringLength(512)]
+        public string PlaceUrl { get; set; }
+        [StringLength(512)]
+        public string ImageUrl { get; set; }
+        
         [StringLength(512)] [Required] public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
         [StringLength(512)] public string Url { get; set; }

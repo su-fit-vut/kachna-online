@@ -18,6 +18,7 @@ namespace KachnaOnline.Data.Entities.BoardGames
 
         // Navigation properties
         public virtual Reservation Reservation { get; set; }
+        public virtual BoardGame BoardGame { get; set; }
         public virtual ICollection<ReservationItemEvent> Events { get; set; }
     }
 }

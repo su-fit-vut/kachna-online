@@ -21,6 +21,8 @@ namespace KachnaOnline.Business.Data.Repositories
             return Set.Where(e => e.Id == key)
                 .Include(e => e.Roles)
                 .ThenInclude(e => e.Role)
+                .Include(e => e.Roles)
+                .ThenInclude(e => e.AssignedByUser)
                 .FirstOrDefaultAsync();
         }
     }
