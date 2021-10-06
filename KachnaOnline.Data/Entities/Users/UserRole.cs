@@ -9,6 +9,8 @@ namespace KachnaOnline.Data.Entities.Users
     {
         [Required] public int UserId { get; set; }
         [Required] public int RoleId { get; set; }
+
+        public bool ForceDisable { get; set; } = false;
         public int? AssignedByUserId { get; set; }
         
         // Navigation properties

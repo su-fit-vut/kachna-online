@@ -4,7 +4,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace KachnaOnline.Business.Queries.Base
+namespace KachnaOnline.Business.Data.Queries.Base
 {
     public abstract class QueryScalar<TResult, TDbContext> where TDbContext : DbContext
     {
