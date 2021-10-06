@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace KachnaOnline.Business.Queries.Base
+namespace KachnaOnline.Business.Data.Queries.Base
 {
     public abstract class QueryCommited<TDbContext> where TDbContext : DbContext
     {

@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachnaOnline.Data", "Kachna
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachnaOnline.Business", "KachnaOnline.Business\KachnaOnline.Business.csproj", "{26D05A1B-F591-418D-A1FD-927935D68CB9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachnaOnline.Business.Data", "KachnaOnline.Business.Data\KachnaOnline.Business.Data.csproj", "{EACC70E1-D3F2-414E-8D92-3B550CF0581E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{26D05A1B-F591-418D-A1FD-927935D68CB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26D05A1B-F591-418D-A1FD-927935D68CB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26D05A1B-F591-418D-A1FD-927935D68CB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EACC70E1-D3F2-414E-8D92-3B550CF0581E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EACC70E1-D3F2-414E-8D92-3B550CF0581E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EACC70E1-D3F2-414E-8D92-3B550CF0581E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EACC70E1-D3F2-414E-8D92-3B550CF0581E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
