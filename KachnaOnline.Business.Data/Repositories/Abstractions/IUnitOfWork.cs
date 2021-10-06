@@ -10,5 +10,6 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
         IUserRepository Users { get; }
         IRoleRepository Roles { get; }
         Task SaveChanges();
+        Task ClearTrackedChanges();
     }
 }

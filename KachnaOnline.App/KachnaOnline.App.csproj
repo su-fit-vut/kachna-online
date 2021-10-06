@@ -3,12 +3,15 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-      <UserSecretsId>db419fbb-3870-4b03-a831-11d5f1e5a96d</UserSecretsId>
-  </PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn>
+        <UserSecretsId>db419fbb-3870-4b03-a831-11d5f1e5a96d</UserSecretsId>
+    </PropertyGroup>
 
     <ItemGroup>
         <!-- Swagger (OpenAPI) generation and UI -->
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
 
         <!-- Logging -->
         <PackageReference Include="Serilog" Version="2.10.0" />
@@ -27,11 +30,11 @@
 
         <!-- ASP.NET Core -->
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.10" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.10" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\KachnaOnline.Business\KachnaOnline.Business.csproj" />
-      <ProjectReference Include="..\KachnaOnline.Data\KachnaOnline.Data.csproj" />
+        <ProjectReference Include="..\KachnaOnline.Business\KachnaOnline.Business.csproj" />
+        <ProjectReference Include="..\KachnaOnline.Data\KachnaOnline.Data.csproj" />
     </ItemGroup>
-
 </Project>

@@ -22,6 +22,8 @@ namespace KachnaOnline.Data.Entities.Users
         [StringLength(128)]
         public string Name { get; set; }
 
+        [Required] public bool Disabled { get; set; } = false;
+
         // Navigation properties
         public virtual ICollection<UserRole> Roles { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }

@@ -41,7 +41,7 @@ namespace KachnaOnline.Business.Data.Repositories
         public virtual async Task Delete(TKey key)
         {
             var entity = await this.Get(key);
-            if (entity is not null)
+            if (entity != null)
             {
                 Set.Remove(entity);
             }

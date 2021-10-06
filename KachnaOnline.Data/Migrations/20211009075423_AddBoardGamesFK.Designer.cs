@@ -3,14 +3,16 @@ using System;
 using KachnaOnline.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KachnaOnline.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211009075423_AddBoardGamesFK")]
+    partial class AddBoardGamesFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -286,10 +288,6 @@ namespace KachnaOnline.Data.Migrations
                     b.Property<string>("FullDescription")
                         .HasColumnType("text");
 
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(512)
-                        .HasColumnType("varchar(512)");
-
                     b.Property<int>("MadeById")
                         .HasColumnType("int");
 
@@ -297,14 +295,6 @@ namespace KachnaOnline.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
-
-                    b.Property<string>("Place")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<string>("PlaceUrl")
-                        .HasMaxLength(512)
-                        .HasColumnType("varchar(512)");
 
                     b.Property<string>("ShortDescription")
                         .IsRequired()

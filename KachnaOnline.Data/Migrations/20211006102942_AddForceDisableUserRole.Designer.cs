@@ -3,14 +3,16 @@ using System;
 using KachnaOnline.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KachnaOnline.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211006102942_AddForceDisableUserRole")]
+    partial class AddForceDisableUserRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,8 +138,6 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BoardGameId");
 
                     b.HasIndex("ReservationId");
 
@@ -286,10 +286,6 @@ namespace KachnaOnline.Data.Migrations
                     b.Property<string>("FullDescription")
                         .HasColumnType("text");
 
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(512)
-                        .HasColumnType("varchar(512)");
-
                     b.Property<int>("MadeById")
                         .HasColumnType("int");
 
@@ -297,14 +293,6 @@ namespace KachnaOnline.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
-
-                    b.Property<string>("Place")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<string>("PlaceUrl")
-                        .HasMaxLength(512)
-                        .HasColumnType("varchar(512)");
 
                     b.Property<string>("ShortDescription")
                         .IsRequired()
@@ -345,9 +333,6 @@ namespace KachnaOnline.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Disabled")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -418,19 +403,11 @@ namespace KachnaOnline.Data.Migrations
 
             modelBuilder.Entity("KachnaOnline.Data.Entities.BoardGames.ReservationItem", b =>
                 {
-                    b.HasOne("KachnaOnline.Data.Entities.BoardGames.BoardGame", "BoardGame")
-                        .WithMany()
-                        .HasForeignKey("BoardGameId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("KachnaOnline.Data.Entities.BoardGames.Reservation", "Reservation")
                         .WithMany("Items")
                         .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("BoardGame");
 
                     b.Navigation("Reservation");
                 });

@@ -5,20 +5,23 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="AutoMapper" Version="10.1.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.10" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Dtos" />
-      <Folder Include="Facades" />
-      <Folder Include="Models" />
-      <Folder Include="Services" />
+        <Folder Include="Dtos" />
+        <Folder Include="Facades" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\KachnaOnline.Data\KachnaOnline.Data.csproj" />
+        <ProjectReference Include="..\KachnaOnline.Business.Data\KachnaOnline.Business.Data.csproj" />
+        <ProjectReference Include="..\KachnaOnline.Data\KachnaOnline.Data.csproj" />
     </ItemGroup>
 
 </Project>

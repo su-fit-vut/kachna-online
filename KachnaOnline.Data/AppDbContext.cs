@@ -123,6 +123,12 @@ namespace KachnaOnline.Data
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<ReservationItem>()
+                .HasOne(e => e.BoardGame)
+                .WithMany()
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<ReservationItemEvent>()
                 .HasOne(e => e.MadeBy)
                 .WithMany()

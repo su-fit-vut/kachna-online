@@ -27,6 +27,12 @@ namespace KachnaOnline.Business.Data.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public Task ClearTrackedChanges()
+        {
+            _dbContext.ChangeTracker.Clear();
+            return Task.CompletedTask;
+        }
+
         public void Dispose()
         {
             _dbContext.Dispose();

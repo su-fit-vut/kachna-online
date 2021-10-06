@@ -2,6 +2,7 @@
 // Author: Ondřej Ondryáš
 
 using KachnaOnline.Data.Entities.BoardGames;
+using KachnaOnline.Data.Entities.Users;
 
 namespace KachnaOnline.Data
 {
@@ -25,6 +26,7 @@ namespace KachnaOnline.Data
         {
             var cats = this.MakeCategories();
             this.MakeGames(cats);
+            this.MakeRoles();
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace KachnaOnline.Data
                 }
             };
 
-            _dbContext.AddRange(categories);
+            _dbContext.BoardGameCategories.AddRange(categories);
             _dbContext.SaveChanges();
             return categories;
         }
@@ -103,7 +105,7 @@ namespace KachnaOnline.Data
         /// and saves them to the database.
         /// </summary>
         /// <returns>An array of created <see cref="BoardGame"/> entities.</returns>
-        private BoardGame[] MakeGames(Category[] cats)
+        private void MakeGames(Category[] cats)
         {
             var games = new[]
             {
@@ -739,7 +741,25 @@ namespace KachnaOnline.Data
 
             _dbContext.BoardGames.AddRange(games);
             _dbContext.SaveChanges();
-            return games;
+        }
+
+        private void MakeRoles()
+        {
+            foreach (var role in _dbContext.Roles)
+            {
+                _dbContext.Roles.Remove(role);
+            }
+
+            var roles = new[]
+            {
+                new Role { Name = "StatesManager" },
+                new Role { Name = "EventsManager" },
+                new Role { Name = "BoardGamesManager" },
+                new Role { Name = "Admin" }
+            };
+
+            _dbContext.Roles.AddRange(roles);
+            _dbContext.SaveChanges();
         }
     }
 }
