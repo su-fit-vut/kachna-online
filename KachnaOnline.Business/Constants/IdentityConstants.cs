@@ -12,6 +12,5 @@ namespace KachnaOnline.Business.Constants
         public const string NameClaim = JwtRegisteredClaimNames.GivenName;
         public const string RolesClaim = "role";
         public const string KisRefreshTokenClaim = "krt";
-        public const string KisNicknameClaim = "knick";
     }
 }

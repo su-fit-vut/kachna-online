@@ -21,6 +21,16 @@ namespace KachnaOnline.Business.Models.Users
         public string Email { get; set; }
         
         /// <summary>
+        /// The user's nickname to show to the public instead of their name.
+        /// </summary>
+        public string Nickname { get; set; }
+        
+        /// <summary>
+        /// The user's Discord ID to generate mentions in Discord messages.
+        /// </summary>
+        public ulong? DiscordId { get; set; }
+        
+        /// <summary>
         /// Flag signalising whether the user's account has been disabled by an administrator.
         /// </summary>
         public bool Disabled { get; set; }

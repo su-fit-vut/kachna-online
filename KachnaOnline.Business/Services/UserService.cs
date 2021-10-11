@@ -149,6 +149,7 @@ namespace KachnaOnline.Business.Services
                     Id = id,
                     Name = kisData.Name,
                     Email = kisData.Email,
+                    Nickname = kisData.Nickname,
                     Roles = new List<UserRole>()
                 };
 
@@ -159,6 +160,9 @@ namespace KachnaOnline.Business.Services
                 // Synchronize existing user entity with KIS
                 userEntity.Name = kisData.Name;
                 userEntity.Email = kisData.Email;
+
+                // Only assign KIS nickname if the user hasn't set a custom nickname. 
+                userEntity.Nickname ??= kisData.Nickname;
             }
 
             await this.MapRoles(userEntity, kisData.Roles);
@@ -196,8 +200,7 @@ namespace KachnaOnline.Business.Services
                 new(IdentityConstants.IdClaim, identity.UserData.Id.ToString()),
                 new(IdentityConstants.EmailClaim, identity.UserData.Email),
                 new(IdentityConstants.NameClaim, identity.UserData.Name),
-                new(IdentityConstants.KisNicknameClaim, identity.UserData.Nickname),
-                new(IdentityConstants.KisRefreshTokenClaim, identity.RefreshToken),
+                new(IdentityConstants.KisRefreshTokenClaim, identity.RefreshToken)
             };
             claims.AddRange(roles.Select(r => new Claim(IdentityConstants.RolesClaim, r)));
 
