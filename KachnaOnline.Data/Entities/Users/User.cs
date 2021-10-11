@@ -22,6 +22,10 @@ namespace KachnaOnline.Data.Entities.Users
         [StringLength(128)]
         public string Name { get; set; }
 
+        [StringLength(128)] public string Nickname { get; set; }
+
+        public ulong? DiscordId { get; set; }
+
         [Required] public bool Disabled { get; set; } = false;
 
         // Navigation properties
