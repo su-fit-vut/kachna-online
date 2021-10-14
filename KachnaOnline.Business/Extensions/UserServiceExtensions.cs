@@ -13,11 +13,11 @@ namespace KachnaOnline.Business.Extensions
     public static class UserServiceExtensions
     {
         /// <summary>
-        /// Returns the user corresponding to the sub (user ID) claim in the <paramref name="principal"/>.
+        /// Returns the user corresponding to the 'sub' (user ID) claim in the <paramref name="principal"/>.
         /// </summary>
         /// <param name="userService">An <see cref="IUserService"/> instance.</param>
-        /// <param name="principal">The principal that contains the sub (user ID) claim.</param>
-        /// <returns>A <see cref="User"/> object containing the user whose ID matches the sub claim value
+        /// <param name="principal">The principal that contains the 'sub' (user ID) claim.</param>
+        /// <returns>A <see cref="User"/> object containing the user whose ID matches the 'sub' claim value
         /// if such user exists, or null if it doesn't.</returns>
         public static Task<User> GetUser(this IUserService userService, ClaimsPrincipal principal)
         {
@@ -28,12 +28,12 @@ namespace KachnaOnline.Business.Extensions
         }
 
         /// <summary>
-        /// Returns the names of roles assigned to the user corresponding to the sub (user ID) claim
+        /// Returns the names of roles assigned to the user corresponding to the 'sub' (user ID) claim
         /// in the <paramref name="principal"/>.
         /// </summary>
         /// <param name="userService">An <see cref="IUserService"/> instance.</param>
-        /// <param name="principal">The principal that contains the sub (user ID) claim.</param>
-        /// <returns>An enumerable of names of roles assigned to the user whose ID matches the sub claim value
+        /// <param name="principal">The principal that contains the 'sub' (user ID) claim.</param>
+        /// <returns>An enumerable of names of roles assigned to the user whose ID matches the 'sub' claim value
         /// if such user exists, or null if it doesn't.</returns>
         public static Task<IEnumerable<string>> GetUserRoles(this IUserService userService, ClaimsPrincipal principal)
         {
@@ -45,12 +45,12 @@ namespace KachnaOnline.Business.Extensions
 
         /// <summary>
         /// Returns <see cref="RoleAssignment"/> objects describing the role assignments for the user corresponding
-        /// to the sub (user ID) claim in the <paramref name="principal"/>.
+        /// to the 'sub' (user ID) claim in the <paramref name="principal"/>.
         /// </summary>
         /// <param name="userService">An <see cref="IUserService"/> instance.</param>
-        /// <param name="principal">The principal that contains the sub (user ID) claim.</param>
+        /// <param name="principal">The principal that contains the 'sub' (user ID) claim.</param>
         /// <returns>An enumerable of <see cref="RoleAssignment"/> objects describing the role assignments for the user
-        /// whose ID matches the sub claim value if such user exists, or null if it doesn't.</returns>
+        /// whose ID matches the 'sub' claim value if such user exists, or null if it doesn't.</returns>
         public static Task<IEnumerable<RoleAssignment>> GetUserRoleDetails(this IUserService userService,
             ClaimsPrincipal principal)
         {
@@ -66,7 +66,7 @@ namespace KachnaOnline.Business.Extensions
         /// and returns a JWT Bearer token representing the user's identity.
         /// </summary>
         /// <param name="userService">An <see cref="IUserService"/> instance.</param>
-        /// <param name="principal">The principal that contains the sub (user ID) claim and the kisrt claim.</param>
+        /// <param name="principal">The principal that contains a 'kisrt' claim.</param>
         /// <returns>A <see cref="LoginResult"/> structure with the JWT Bearer token or information about errors.</returns>
         public static Task<LoginResult> Refresh(this IUserService userService, ClaimsPrincipal principal)
         {

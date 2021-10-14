@@ -199,7 +199,7 @@ namespace KachnaOnline.Business.Services
             {
                 new(IdentityConstants.IdClaim, identity.UserData.Id.ToString()),
                 new(IdentityConstants.EmailClaim, identity.UserData.Email),
-                new(IdentityConstants.NameClaim, identity.UserData.Name),
+                new(IdentityConstants.NameClaim, identity.UserData.Nickname ?? identity.UserData.Name),
                 new(IdentityConstants.KisRefreshTokenClaim, identity.RefreshToken)
             };
             claims.AddRange(roles.Select(r => new Claim(IdentityConstants.RolesClaim, r)));

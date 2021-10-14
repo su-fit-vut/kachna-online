@@ -1,18 +1,16 @@
 ﻿// ClubStateController.cs
 // Author: Ondřej Ondryáš
 
-using System.Linq;
 using System.Threading.Tasks;
-using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Services.Abstractions;
-using Microsoft.AspNetCore.Authorization;
+using KachnaOnline.Dto.ClubStates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace KachnaOnline.App.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("states")]
     public class ClubStateController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -26,22 +24,9 @@ namespace KachnaOnline.App.Controllers
         }
 
         [HttpGet]
-        public string Get()
+        public async Task<StateDto> Get()
         {
-            return "Stub";
-        }
-
-        [HttpGet("Test")]
-        [Authorize]
-        public async Task<object> Test()
-        {
-            return new
-            {
-                LocalUser = await _userService.GetUser(this.User),
-                RolesString = await _userService.GetUserRoles(this.User),
-                Roles = await _userService.GetUserRoleDetails(this.User),
-                Claims = this.User.Claims.Select(c => new {c.Type, c.Value})
-            };
+            return null;
         }
     }
 }

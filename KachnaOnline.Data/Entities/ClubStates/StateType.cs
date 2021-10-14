@@ -7,7 +7,6 @@ namespace KachnaOnline.Data.Entities.ClubStates
     {
         OpenBar = 0,
         OpenChillzone = 1,
-        Private = 2,
-        Closed = 3
+        Private = 2
     }
 }
