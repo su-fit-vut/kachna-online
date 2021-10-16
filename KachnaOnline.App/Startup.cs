@@ -2,6 +2,7 @@
 // Author: Ondřej Ondryáš
 
 using System;
+using System.Text.Json.Serialization;
 using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Configuration;
@@ -49,7 +50,13 @@ namespace KachnaOnline.App
             services.AddBusinessLayer(this.Configuration);
 
             // Add MVC controllers.
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
             // Add JWT authorization.
             services.AddCustomJwtAuthorization(this.Configuration);

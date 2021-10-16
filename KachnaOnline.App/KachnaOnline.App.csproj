@@ -36,5 +36,6 @@
     <ItemGroup>
         <ProjectReference Include="..\KachnaOnline.Business\KachnaOnline.Business.csproj" />
         <ProjectReference Include="..\KachnaOnline.Data\KachnaOnline.Data.csproj" />
+        <ProjectReference Include="..\KachnaOnline.Dto\KachnaOnline.Dto.csproj" />
     </ItemGroup>
 </Project>
