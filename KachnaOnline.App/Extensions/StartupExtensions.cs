@@ -130,11 +130,15 @@ namespace KachnaOnline.App.Extensions
                 });
 
                 // Filter out references to the ProblemDetails scheme 
-                c.OperationFilter<ProblemDetailsFilter>();
+                c.SchemaFilter<NullableFilter>();
                 // Add authorization info to endpoints
                 c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+                // Set 'nullable' to false in properties of certain schemes.
+                c.OperationFilter<ProblemDetailsFilter>();
                 // Load endpoint documentation from the XML generated during build from embedded xmldocs
                 var filePath = Path.Combine(AppContext.BaseDirectory, "KachnaOnline.App.xml");
+                c.IncludeXmlComments(filePath);
+                filePath = Path.Combine(AppContext.BaseDirectory, "KachnaOnline.Dto.xml");
                 c.IncludeXmlComments(filePath);
             });
         }

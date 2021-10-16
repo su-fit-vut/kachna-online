@@ -15,13 +15,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Dtos" />
         <Folder Include="Facades" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\KachnaOnline.Business.Data\KachnaOnline.Business.Data.csproj" />
         <ProjectReference Include="..\KachnaOnline.Data\KachnaOnline.Data.csproj" />
+        <ProjectReference Include="..\KachnaOnline.Dto\KachnaOnline.Dto.csproj" />
     </ItemGroup>
 
 </Project>
