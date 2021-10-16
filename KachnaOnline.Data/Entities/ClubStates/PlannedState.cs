@@ -13,7 +13,7 @@ namespace KachnaOnline.Data.Entities.ClubStates
         [Key] public int Id { get; set; }
         [Required] public int MadeById { get; set; }
         [Required] public DateTime Start { get; set; }
-        public DateTime? PlannedEnd { get; set; }
+        public DateTime PlannedEnd { get; set; }
         [Required] public StateType State { get; set; }
         public DateTime? Ended { get; set; }
         public int? ClosedById { get; set; }
