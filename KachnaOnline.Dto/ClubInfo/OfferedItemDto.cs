@@ -32,5 +32,10 @@ namespace KachnaOnline.Dto.ClubInfo
         /// Signalizes whether the item is a permanent offer.
         /// </summary>
         public bool IsPermanentOffer { get; set; }
+        
+        /// <summary>
+        /// The names of labels associated with the item.
+        /// </summary>
+        public string[] Labels { get;set; }
     }
 }
