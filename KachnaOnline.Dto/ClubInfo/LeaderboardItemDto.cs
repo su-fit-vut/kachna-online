@@ -1,6 +1,8 @@
 // LeaderboardItemDto.cs
 // Author: Ondřej Ondryáš
 
+using KachnaOnline.Dto.Swagger;
+
 namespace KachnaOnline.Dto.ClubInfo
 {
     /// <summary>
@@ -11,6 +13,7 @@ namespace KachnaOnline.Dto.ClubInfo
         /// <summary>
         /// A person's nickname (or their initials).
         /// </summary>
+        [SwaggerNotNull]
         public string Name { get; set; }
 
         /// <summary>

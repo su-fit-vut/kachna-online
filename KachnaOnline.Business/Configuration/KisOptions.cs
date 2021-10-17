@@ -5,6 +5,13 @@ using System.Collections.Generic;
 
 namespace KachnaOnline.Business.Configuration
 {
+    public class KisCacheOptions
+    {
+        public int Offers { get; set; } = 600;
+        public int Taps { get; set; } = 600;
+        public int Leaderboard { get; set; } = 30;
+    }
+
     public class KisOptions
     {
         /// <summary>
@@ -15,7 +22,7 @@ namespace KachnaOnline.Business.Configuration
         /// or https://su-dev.fit.vutbr.cz/kis/api/.
         /// </example>
         public string ApiBaseUrl { get; set; }
-        
+
         /// <summary>
         /// A KIS display token.
         /// </summary>
@@ -25,7 +32,7 @@ namespace KachnaOnline.Business.Configuration
         /// current beers on tap or prestige leaderboard. 
         /// </remarks>
         public string DisplayToken { get; set; }
-        
+
         /// <summary>
         /// A dictionary that controls how KIS roles are mapped to local roles.
         /// </summary>
@@ -44,5 +51,25 @@ namespace KachnaOnline.Business.Configuration
         /// to all users with KIS role regular_member.
         /// </example>
         public Dictionary<string, List<string>> RoleMappings { get; set; }
+
+        /// <summary>
+        /// An array of IDs of taps of which info should be fetched from KIS and presented in this service.
+        /// </summary>
+        public int[] TapIds { get; set; } = new[] { 1, 2, 3, 4 };
+
+        /// <summary>
+        /// The ID of the label in KIS used to determine whether an article is a 'Permanent offer'.
+        /// </summary>
+        public int PermanentOfferLabelId { get; set; } = 8;
+
+        /// <summary>
+        /// The number of records to fetch from KIS when getting leaderboard data.
+        /// </summary>
+        public int NumberOfLeaderboardItems { get; set; } = 10;
+
+        /// <summary>
+        /// Configures how long are items fetched from KIS cached for.
+        /// </summary>
+        public KisCacheOptions CacheExpirationTimesSeconds { get; set; } = new();
     }
 }

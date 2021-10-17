@@ -1,6 +1,9 @@
 // OfferDto.cs
 // Author: Ondřej Ondryáš
 
+using System.Collections.Generic;
+using KachnaOnline.Dto.Swagger;
+
 namespace KachnaOnline.Dto.ClubInfo
 {
     /// <summary>
@@ -8,7 +11,7 @@ namespace KachnaOnline.Dto.ClubInfo
     /// </summary>
     public class OfferDto
     {
-        public OfferedItemDto[] Products { get; set; }
-        public OfferedItemDto[] BeersOnTap { get; set; }
+        [SwaggerNotNull] public List<OfferedItemDto> Products { get; set; }
+        [SwaggerNotNull] public List<OfferedItemDto> BeersOnTap { get; set; }
     }
 }
