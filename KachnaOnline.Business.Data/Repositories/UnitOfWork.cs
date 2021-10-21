@@ -12,29 +12,43 @@ namespace KachnaOnline.Business.Data.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable, IAsyncDisposable
     {
         private readonly AppDbContext _dbContext;
-        public IUserRepository Users { get; }
-        public IRoleRepository Roles { get; }
-        public IBoardGamesRepository BoardGames { get; }
-        public IBoardGameCategoriesRepository BoardGamesCategories { get; }
-        public IEventsRepository Events { get; }
-        public IReservationRepository Reservations { get; }
-        public IReservationItemRepository ReservationItems { get; }
-        public IReservationItemEventRepository ReservationItemEvents { get; }
+
+        private IUserRepository _users;
+        public IUserRepository Users => _users ??= new UserRepository(_dbContext);
+
+        private IRoleRepository _roles;
+        public IRoleRepository Roles => _roles ??= new RoleRepository(_dbContext);
+
+        private IPlannedStateRepository _plannedStates;
+        public IPlannedStateRepository PlannedStates => _plannedStates ??= new PlannedStateRepository(_dbContext);
+
+        private IBoardGamesRepository _boardGames;
+        public IBoardGamesRepository BoardGames => _boardGames ??= new BoardGamesRepository(_dbContext);
+
+        private IBoardGameCategoriesRepository _boardGameCategories;
+        public IBoardGameCategoriesRepository BoardGamesCategories => _boardGameCategories ??= new PlannedStateRepository(_dbContext);
+
+        private IEventsRepository _events;
+        public IEventsRepository Events => _events ??= new EventsRepository(_dbContext);
+
+        public IReservationRepository _reservations;
+        public IReservationRepository Reservations => _reservations ??= new ReservationRepository(_dbContext);
+
+        public IReservationItemRepository _reservationItems;
+
+        public IReservationItemRepository ReservationItems =>
+            _reservationItems ??= new ReservationItemRepository(_dbContext);
+
+        public IReservationItemEventRepository _reservationItemEvents;
+
+        public IReservationItemEventRepository ReservationItemEvents =>
+            _reservationItemEvents ??= new ReservationItemEventRepository(_dbContext);
 
         private IDbContextTransaction _transaction;
 
         public UnitOfWork(AppDbContext dbContext)
         {
             _dbContext = dbContext;
-
-            this.Users = new UserRepository(dbContext);
-            this.Roles = new RoleRepository(dbContext);
-            this.BoardGames = new BoardGamesRepository(dbContext);
-            this.BoardGamesCategories = new BoardGameCategoriesRepository(dbContext);
-            this.Events = new EventsRepository(dbContext);
-            this.Reservations = new ReservationRepository(dbContext);
-            this.ReservationItems = new ReservationItemRepository(dbContext);
-            this.ReservationItemEvents = new ReservationItemEventRepository(dbContext);
         }
 
         public async Task SaveChanges()

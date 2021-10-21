@@ -9,6 +9,7 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
     {
         IUserRepository Users { get; }
         IRoleRepository Roles { get; }
+        IPlannedStateRepository PlannedStates { get; }
         IBoardGamesRepository BoardGames { get; }
         IBoardGameCategoriesRepository BoardGamesCategories { get; }
         IReservationRepository Reservations { get; }
