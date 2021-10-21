@@ -2,9 +2,8 @@
 // Author: Ondřej Ondryáš
 
 using System;
-using System.Text.Json.Serialization;
 
-namespace KachnaOnline.Dto.ClubState
+namespace KachnaOnline.Dto.ClubStates
 {
     /// <summary>
     /// Represents a state of the club that has already ended.

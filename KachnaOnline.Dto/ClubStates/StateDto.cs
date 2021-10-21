@@ -5,7 +5,7 @@ using System;
 using System.Text.Json.Serialization;
 using KachnaOnline.Dto.Swagger;
 
-namespace KachnaOnline.Dto.ClubState
+namespace KachnaOnline.Dto.ClubStates
 {
     /// <summary>
     /// Represents the current or a future (planned) state of the club.
@@ -51,7 +51,7 @@ namespace KachnaOnline.Dto.ClubState
         public StateDto FollowingState { get; set; }
 
         /// <summary>
-        /// An internal note. This is included in the response only when there's a internal note and the request
+        /// An internal note. This is included in the response only when there's an internal note and the request
         /// is authorized to a state manager.
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
