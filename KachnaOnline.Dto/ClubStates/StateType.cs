@@ -1,7 +1,7 @@
 // StateType.cs
 // Author: Ondřej Ondryáš
 
-namespace KachnaOnline.Dto.ClubState
+namespace KachnaOnline.Dto.ClubStates
 {
     /// <summary>
     /// Represents a state the club may be in.

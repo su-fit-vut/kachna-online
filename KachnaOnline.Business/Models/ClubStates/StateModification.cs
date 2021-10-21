@@ -3,7 +3,7 @@
 
 using System;
 
-namespace KachnaOnline.Business.Models.ClubState
+namespace KachnaOnline.Business.Models.ClubStates
 {
     /// <summary>
     /// A model for modifying a club state.

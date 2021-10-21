@@ -3,7 +3,7 @@
 
 using KachnaOnline.Dto.Swagger;
 
-namespace KachnaOnline.Dto.ClubState
+namespace KachnaOnline.Dto.ClubStates
 {
     /// <summary>
     /// Represents a set of identifiers of a state manager.
