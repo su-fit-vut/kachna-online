@@ -9,6 +9,9 @@ using KachnaOnline.Business.Facades;
 using KachnaOnline.Business.Mappings;
 using KachnaOnline.Business.Services;
 using KachnaOnline.Business.Services.Abstractions;
+using KachnaOnline.Business.Services.StatePlanning;
+using KachnaOnline.Business.Services.StatePlanning.Abstractions;
+using KachnaOnline.Business.Services.StatePlanning.TransitionHandlers;
 using KachnaOnline.Business.Services.BoardGamesNotifications;
 using KachnaOnline.Business.Services.BoardGamesNotifications.Abstractions;
 using KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHandlers;
@@ -55,9 +58,16 @@ namespace KachnaOnline.Business.Extensions
             services.AddScoped<IBoardGamesNotificationService, BoardGamesNotificationService>();
             services.AddHostedService<BoardGamesNotificationBackgroundService>();
 
+            // Add state planner.
+            services.AddTransient<IStateTransitionHandler, SaveEndedDateTimeTransitionHandler>();
+            services.AddScoped<IStateTransitionService, StateTransitionService>();
+            services.AddSingleton<IStatePlannerService, StatePlannerService>();
+            services.AddHostedService<StatePlannerBackgroundService>();
+
             // Add custom services.
             services.AddScoped<IKisService, KisService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IClubStateService, ClubStateService>();
             services.AddScoped<IBoardGamesService, BoardGamesService>();
             services.AddScoped<IEventsService, EventsService>();
 
