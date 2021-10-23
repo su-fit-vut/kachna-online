@@ -1,5 +1,5 @@
 // UnitOfWork.cs
-// Author: Ondřej Ondryáš
+// Author: Ondřej Ondryáš, David Chocholatý
 
 using System;
 using System.Threading.Tasks;
@@ -15,6 +15,7 @@ namespace KachnaOnline.Business.Data.Repositories
         public IRoleRepository Roles { get; }
         public IBoardGamesRepository BoardGames { get; }
         public IBoardGameCategoriesRepository BoardGamesCategories { get; }
+        public IEventsRepository Events { get; }
 
         public UnitOfWork(AppDbContext dbContext)
         {
@@ -24,6 +25,7 @@ namespace KachnaOnline.Business.Data.Repositories
             this.Roles = new RoleRepository(dbContext);
             this.BoardGames = new BoardGamesRepository(dbContext);
             this.BoardGamesCategories = new BoardGameCategoriesRepository(dbContext);
+            this.Events = new EventsRepository(dbContext);
         }
 
         public async Task SaveChanges()
