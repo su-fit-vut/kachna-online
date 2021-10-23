@@ -1,5 +1,5 @@
 // StartupExtensions.cs
-// Author: Ondřej Ondryáš
+// Author: Ondřej Ondryáš, David Chocholatý
 
 using System;
 using System.Net.Http.Headers;
@@ -19,7 +19,7 @@ namespace KachnaOnline.Business.Extensions
         public static void AddBusinessLayer(this IServiceCollection services, IConfiguration configuration)
         {
             // Add AutoMapper and load mapping profiles from this assembly.
-            services.AddAutoMapper(typeof(UserMappings), typeof(KisMappings), typeof(BoardGamesMappings));
+            services.AddAutoMapper(typeof(UserMappings), typeof(KisMappings), typeof(BoardGamesMappings), typeof(EventMappings));
 
             // Add KIS HTTP client factory.
             var kisOptions = configuration.GetSection("Kis").Get<KisOptions>();
@@ -41,6 +41,9 @@ namespace KachnaOnline.Business.Extensions
 
             // Add memory cache.
             services.AddMemoryCache();
+
+            // Add HTTP context accessor.
+            services.AddHttpContextAccessor();
 
             // Add custom services.
             services.AddScoped<IKisService, KisService>();
