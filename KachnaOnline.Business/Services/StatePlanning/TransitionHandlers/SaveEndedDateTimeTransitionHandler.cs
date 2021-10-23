@@ -29,8 +29,11 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
         public async Task PerformEndAction(int stateId)
         {
             var state = await _unitOfWork.PlannedStates.Get(stateId);
-            state.Ended = DateTime.Now;
-            await _unitOfWork.SaveChanges();
+            if (!state.Ended.HasValue)
+            {
+                state.Ended = DateTime.Now;
+                await _unitOfWork.SaveChanges();
+            }
         }
     }
 }

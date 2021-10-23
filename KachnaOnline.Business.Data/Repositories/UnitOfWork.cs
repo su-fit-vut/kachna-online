@@ -19,8 +19,12 @@ namespace KachnaOnline.Business.Data.Repositories
         private IRoleRepository _roles;
         public IRoleRepository Roles => _roles ??= new RoleRepository(_dbContext);
 
-        private IPlannedStateRepository _plannedStates;
-        public IPlannedStateRepository PlannedStates => _plannedStates ??= new PlannedStateRepository(_dbContext);
+        private IPlannedStatesRepository _plannedStates;
+        public IPlannedStatesRepository PlannedStates => _plannedStates ??= new PlannedStatesRepository(_dbContext);
+
+        private IRepeatingStatesRepository _repeatingStates;
+        public IRepeatingStatesRepository RepeatingStates =>
+            _repeatingStates ??= new RepeatingStatesRepository(_dbContext);
 
         private IBoardGamesRepository _boardGames;
         public IBoardGamesRepository BoardGames => _boardGames ??= new BoardGamesRepository(_dbContext);

@@ -53,5 +53,14 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <returns>An enumerable of <see cref="RoleAssignment"/> objects describing the role assignments for the user
         /// matching the specified <paramref name="userId"/> if such user exists, or null if it doesn't.</returns>
         Task<IEnumerable<RoleAssignment>> GetUserRoleDetails(int userId);
+
+        /// <summary>
+        /// Checks whether the user corresponding to the specified <paramref name="userId"/> has the role specified
+        /// by <paramref name="role"/>. 
+        /// </summary>
+        /// <param name="userId">The user ID to check the role for.</param>
+        /// <param name="role">The name of the role to check.</param>
+        /// <returns>Null if such user doesn't exist. True if the user has the specified role. False otherwise.</returns>
+        Task<bool?> IsInRole(int userId, string role);
     }
 }

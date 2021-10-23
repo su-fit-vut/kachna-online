@@ -1,4 +1,4 @@
-// PlannedStateRepository.cs
+// PlannedStatesRepository.cs
 // Author: Ondřej Ondryáš
 
 using System;
@@ -12,18 +12,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KachnaOnline.Business.Data.Repositories
 {
-    public class PlannedStateRepository : GenericRepository<PlannedState, int>, IPlannedStateRepository
+    public class PlannedStatesRepository : GenericRepository<PlannedState, int>, IPlannedStatesRepository
     {
-        public PlannedStateRepository(AppDbContext dbContext) : base(dbContext)
+        public PlannedStatesRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
 
-        public async Task<PlannedState> GetCurrent(DateTime? atTime = null)
+        public async Task<PlannedState> GetCurrent(DateTime? atTime = null, bool includeEndMinute = false)
         {
             var actualAtTime = atTime ?? DateTime.Now;
+            IQueryable<PlannedState> query;
 
-            return await Set
-                .Where(s => s.Start <= actualAtTime && s.PlannedEnd > actualAtTime && s.Ended == null)
+            if (includeEndMinute)
+            {
+                query = Set
+                    .Where(s => s.Start <= actualAtTime && s.PlannedEnd >= actualAtTime && s.Ended == null);
+            }
+            else
+            {
+                query = Set
+                    .Where(s => s.Start <= actualAtTime && s.PlannedEnd > actualAtTime && s.Ended == null);
+            }
+
+            return await query
                 .OrderByDescending(s => s.Start)
                 .FirstOrDefaultAsync();
         }
@@ -49,10 +60,10 @@ namespace KachnaOnline.Business.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<PlannedState> GetLast()
+        public async Task<PlannedState> GetLastEnded()
         {
             return await Set
-                .Where(s => s.Ended.HasValue && s.Ended.Value < DateTime.Now)
+                .Where(s => s.Ended.HasValue && s.Ended.Value <= DateTime.Now)
                 .OrderByDescending(s => s.Ended)
                 .FirstOrDefaultAsync();
         }
@@ -76,14 +87,14 @@ namespace KachnaOnline.Business.Data.Repositories
             return query.AsAsyncEnumerable();
         }
 
-        public IAsyncEnumerable<PlannedState> GetForRepeatingState(int repeatingStateId, bool futureOnly,
+        public IAsyncEnumerable<PlannedState> GetForRepeatingState(int repeatingStateId,DateTime? onlyAfter,
             bool includeNextStates)
         {
             var query = Set
                 .Where(s => s.RepeatingStateId == repeatingStateId);
 
-            if (futureOnly)
-                query = query.Where(s => s.Start > DateTime.Now);
+            if (onlyAfter.HasValue)
+                query = query.Where(s => s.Start >= onlyAfter.Value);
 
             if (includeNextStates)
                 query = query.Include(s => s.NextPlannedState);

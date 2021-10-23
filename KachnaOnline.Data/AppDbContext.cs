@@ -65,7 +65,8 @@ namespace KachnaOnline.Data
 
             builder.Entity<PlannedState>()
                 .HasOne(e => e.NextPlannedState)
-                .WithOne();
+                .WithOne()
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.Entity<PlannedState>()
                 .HasOne(e => e.AssociatedEvent)

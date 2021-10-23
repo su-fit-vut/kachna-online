@@ -97,6 +97,16 @@ namespace KachnaOnline.Business.Services
                     { Role = r.Role.Name, AssignedBy = _mapper.Map<User>(r.AssignedByUser) });
         }
 
+        /// <inheritdoc />
+        public async Task<bool?> IsInRole(int userId, string role)
+        {
+            var entity = await _userRepository.GetWithRoles(userId);
+            if (entity is null)
+                return null;
+
+            return entity.Roles.Any(r => r.Role.Name == role);
+        }
+
         /// <summary>
         /// Checks the provided <paramref name="kisIdentity"/>, synchronizes user data
         /// and returns a JWT for the user.
