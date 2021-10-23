@@ -26,7 +26,7 @@ namespace KachnaOnline.Business.Data.Repositories
         public IBoardGamesRepository BoardGames => _boardGames ??= new BoardGamesRepository(_dbContext);
 
         private IBoardGameCategoriesRepository _boardGameCategories;
-        public IBoardGameCategoriesRepository BoardGamesCategories => _boardGameCategories ??= new PlannedStateRepository(_dbContext);
+        public IBoardGameCategoriesRepository BoardGamesCategories => _boardGameCategories ??= new BoardGameCategoriesRepository(_dbContext);
 
         private IEventsRepository _events;
         public IEventsRepository Events => _events ??= new EventsRepository(_dbContext);
@@ -35,12 +35,10 @@ namespace KachnaOnline.Business.Data.Repositories
         public IReservationRepository Reservations => _reservations ??= new ReservationRepository(_dbContext);
 
         public IReservationItemRepository _reservationItems;
-
         public IReservationItemRepository ReservationItems =>
             _reservationItems ??= new ReservationItemRepository(_dbContext);
 
         public IReservationItemEventRepository _reservationItemEvents;
-
         public IReservationItemEventRepository ReservationItemEvents =>
             _reservationItemEvents ??= new ReservationItemEventRepository(_dbContext);
 
@@ -49,27 +47,6 @@ namespace KachnaOnline.Business.Data.Repositories
         public UnitOfWork(AppDbContext dbContext)
         {
             _dbContext = dbContext;
-        }
-
-        public async Task SaveChanges()
-        {
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public Task ClearTrackedChanges()
-        {
-            _dbContext.ChangeTracker.Clear();
-            return Task.CompletedTask;
-        }
-
-        public void Dispose()
-        {
-            _dbContext.Dispose();
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await _dbContext.DisposeAsync();
         }
 
         public async Task BeginTransaction()
@@ -95,6 +72,27 @@ namespace KachnaOnline.Business.Data.Repositories
                 await _transaction.DisposeAsync();
                 _transaction = null;
             }
+        }
+
+        public async Task SaveChanges()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public Task ClearTrackedChanges()
+        {
+            _dbContext.ChangeTracker.Clear();
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            _dbContext.Dispose();
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await _dbContext.DisposeAsync();
         }
     }
 }
