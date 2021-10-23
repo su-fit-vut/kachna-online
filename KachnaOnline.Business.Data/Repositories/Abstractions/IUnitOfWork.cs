@@ -1,5 +1,5 @@
 // IUnitOfWork.cs
-// Author: Ondřej Ondryáš
+// Author: Ondřej Ondryáš, David Chocholatý
 
 using System.Threading.Tasks;
 
@@ -14,6 +14,8 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
         IReservationRepository Reservations { get; }
         IReservationItemRepository ReservationItems { get; }
         IReservationItemEventRepository ReservationItemEvents { get; }
+        IEventsRepository Events { get; }
+
         Task SaveChanges();
         Task ClearTrackedChanges();
         Task BeginTransaction();
