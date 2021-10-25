@@ -16,7 +16,8 @@ namespace KachnaOnline.Business.Data.Extensions
         {
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseMySQL(configuration.GetConnectionString("AppDb"),
+                options.UseMySql(configuration.GetConnectionString("AppDb"),
+                    ServerVersion.AutoDetect(configuration.GetConnectionString("AppDb")),
                     mysqlOptions => mysqlOptions.MigrationsAssembly("KachnaOnline.Data"));
             });
 

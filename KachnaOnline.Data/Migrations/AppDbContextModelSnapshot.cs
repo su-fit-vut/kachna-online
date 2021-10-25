@@ -27,10 +27,10 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<TimeSpan?>("DefaultReservationTime")
-                        .HasColumnType("time");
+                        .HasColumnType("time(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(512)
@@ -81,7 +81,7 @@ namespace KachnaOnline.Data.Migrations
 
                     b.Property<string>("ColourHex")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -103,7 +103,7 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("MadeOn")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("NoteInternal")
                         .HasMaxLength(1024)
@@ -130,7 +130,7 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ExpiresOn")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
@@ -150,13 +150,13 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("MadeOn")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("MadeById")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("NewExpiryDateTime")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("NewState")
                         .HasColumnType("int");
@@ -188,7 +188,7 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Ended")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("MadeById")
                         .HasColumnType("int");
@@ -205,13 +205,13 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("varchar(1024)");
 
                     b.Property<DateTime>("PlannedEnd")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("RepeatingStateId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Start")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("State")
                         .HasColumnType("int");
@@ -242,10 +242,10 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EffectiveFrom")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("EffectiveTo")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("MadeById")
                         .HasColumnType("int");
@@ -262,10 +262,10 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("TimeFrom")
-                        .HasColumnType("time");
+                        .HasColumnType("time(6)");
 
                     b.Property<TimeSpan>("TimeTo")
-                        .HasColumnType("time");
+                        .HasColumnType("time(6)");
 
                     b.HasKey("Id");
 
@@ -281,10 +281,10 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("From")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("FullDescription")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(512)
@@ -312,7 +312,7 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("varchar(512)");
 
                     b.Property<DateTime>("To")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Url")
                         .HasMaxLength(512)
