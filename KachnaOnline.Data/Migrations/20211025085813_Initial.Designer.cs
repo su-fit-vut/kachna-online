@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KachnaOnline.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211005203640_Initial")]
+    [Migration("20211025085813_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,10 +29,10 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<TimeSpan?>("DefaultReservationTime")
-                        .HasColumnType("time");
+                        .HasColumnType("time(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(512)
@@ -83,7 +83,7 @@ namespace KachnaOnline.Data.Migrations
 
                     b.Property<string>("ColourHex")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -105,7 +105,7 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("MadeOn")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("NoteInternal")
                         .HasMaxLength(1024)
@@ -132,12 +132,14 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ExpiresOn")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BoardGameId");
 
                     b.HasIndex("ReservationId");
 
@@ -150,13 +152,13 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("MadeOn")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("MadeById")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("NewExpiryDateTime")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("NewState")
                         .HasColumnType("int");
@@ -188,7 +190,7 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Ended")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("MadeById")
                         .HasColumnType("int");
@@ -204,14 +206,14 @@ namespace KachnaOnline.Data.Migrations
                         .HasMaxLength(1024)
                         .HasColumnType("varchar(1024)");
 
-                    b.Property<DateTime?>("PlannedEnd")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("PlannedEnd")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("RepeatingStateId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Start")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("State")
                         .HasColumnType("int");
@@ -242,10 +244,10 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EffectiveFrom")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("EffectiveTo")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("MadeById")
                         .HasColumnType("int");
@@ -262,10 +264,10 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("TimeFrom")
-                        .HasColumnType("time");
+                        .HasColumnType("time(6)");
 
                     b.Property<TimeSpan>("TimeTo")
-                        .HasColumnType("time");
+                        .HasColumnType("time(6)");
 
                     b.HasKey("Id");
 
@@ -281,10 +283,14 @@ namespace KachnaOnline.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("From")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("FullDescription")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)");
 
                     b.Property<int>("MadeById")
                         .HasColumnType("int");
@@ -294,13 +300,21 @@ namespace KachnaOnline.Data.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
 
+                    b.Property<string>("Place")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("PlaceUrl")
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)");
+
                     b.Property<string>("ShortDescription")
                         .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("varchar(512)");
 
                     b.Property<DateTime>("To")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Url")
                         .HasMaxLength(512)
@@ -334,6 +348,12 @@ namespace KachnaOnline.Data.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Disabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<ulong?>("DiscordId")
+                        .HasColumnType("bigint unsigned");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(320)
@@ -341,6 +361,10 @@ namespace KachnaOnline.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
+
+                    b.Property<string>("Nickname")
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
 
@@ -359,6 +383,9 @@ namespace KachnaOnline.Data.Migrations
 
                     b.Property<int?>("AssignedByUserId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("ForceDisable")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -400,11 +427,19 @@ namespace KachnaOnline.Data.Migrations
 
             modelBuilder.Entity("KachnaOnline.Data.Entities.BoardGames.ReservationItem", b =>
                 {
+                    b.HasOne("KachnaOnline.Data.Entities.BoardGames.BoardGame", "BoardGame")
+                        .WithMany()
+                        .HasForeignKey("BoardGameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("KachnaOnline.Data.Entities.BoardGames.Reservation", "Reservation")
                         .WithMany("Items")
                         .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("BoardGame");
 
                     b.Navigation("Reservation");
                 });
