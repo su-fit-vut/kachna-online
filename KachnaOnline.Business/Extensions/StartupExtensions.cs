@@ -19,7 +19,7 @@ namespace KachnaOnline.Business.Extensions
         public static void AddBusinessLayer(this IServiceCollection services, IConfiguration configuration)
         {
             // Add AutoMapper and load mapping profiles from this assembly.
-            services.AddAutoMapper(typeof(UserMappings), typeof(KisMappings));
+            services.AddAutoMapper(typeof(UserMappings), typeof(KisMappings), typeof(BoardGameMappings));
 
             // Add KIS HTTP client factory.
             var kisOptions = configuration.GetSection("Kis").Get<KisOptions>();
@@ -45,9 +45,11 @@ namespace KachnaOnline.Business.Extensions
             // Add custom services.
             services.AddScoped<IKisService, KisService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBoardGameService, BoardGameService>();
 
             // Add facades.
             services.AddScoped<ClubInfoFacade>();
+            services.AddScoped<BoardGameFacade>();
         }
     }
 }
