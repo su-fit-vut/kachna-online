@@ -2,6 +2,7 @@
 // Author: František Nečas
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -21,6 +22,8 @@ namespace KachnaOnline.Dto.BoardGames
         /// <summary>
         /// Full name of the game.
         /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(256)]
         public string Name { get; set; }
 
         /// <summary>
@@ -32,6 +35,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// Url to an image of the game.
         /// May be null if it is not provided.
         /// </summary>
+        [StringLength(512)] 
         public string ImageUrl { get; set; }
 
         /// <summary>
@@ -46,6 +50,12 @@ namespace KachnaOnline.Dto.BoardGames
         public int? PlayersMax { get; set; }
         
         /// <summary>
+        /// ID of the category. Not included in responses, it is present in the
+        /// Category attribute.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? CategoryId { get; set; }
+        /// <summary>
         /// Nested <see cref="CategoryDto"/> object representing the category of the game.
         /// </summary>
         public CategoryDto Category { get; set; }
@@ -54,6 +64,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// An internal note. Included in the response only if it is done by an authorized board game manager.
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [StringLength(1024)]
         public string NoteInternal { get; set; }
 
         /// <summary>
@@ -65,26 +76,43 @@ namespace KachnaOnline.Dto.BoardGames
 
         /// <summary>
         /// The total number of pieces of the game available in the system.
+        /// Included in the response only if it is done by an authorized board game manager.
         /// </summary>
-        public int InStock { get; set; }
+        [Required]
+        [ConcurrencyCheck]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? InStock { get; set; }
         /// <summary>
         /// The number of pieces of the game which are marked as unavailable by a board game manager.
         /// This may be done for example to prepare for an upcoming tournament in the game.
+        /// Included in the response only if it is done by an authorized board game manager.
         /// </summary>
-        public int Unavailable { get; set; }
+        [Required]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? Unavailable { get; set; }
+        /// <summary>
+        /// The number of pieces of the game which are available for borrowing. This is the only
+        /// number of games returned to a user who is not a board game manager.
+        /// </summary>
+        [BindNever]
+        public int? Available { get; set; }
         
         /// <summary>
         /// Whether the game should be visible to regular users.
         /// Included in the response only if it is done by an authorized board game manager.
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [Required]
         public bool? Visible { get; set; }
 
         /// <summary>
-        /// The default duration of reservation which is used unless a different value is explicitly
-        /// specified. Only included in the response if the request was done by an authorized board game manager.
+        /// The default duration of reservation in days which is used when a reservation of this game is created.
+        /// If it is not specified, the system-wide default is used. This allows making reservations of games,
+        /// which are highly sought after, last shorter.
+        /// Only included in the response if the request was done by an authorized game manager.
+        /// Not included in the response if it is not specified for the game.
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public TimeSpan? DefaultReservationTime { get; set; }
+        public int? DefaultReservationDays { get; set; }
     }
 }
