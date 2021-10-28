@@ -27,11 +27,7 @@ namespace KachnaOnline.App.Controllers
         /// Returns the current list of board games.
         /// </summary>
         /// <remarks>
-        ///     GET /boardGames
-        ///     GET /boardGames?categoryId=1
-        ///     GET /boardGames?available=true
-        ///     GET /boardGames?categoryId=1&amp;available=true&amp;players=3
-        /// 
+        /// The queries can be combined in any way.
         /// </remarks>
         /// <param name="categoryId">If present, only games from this category will be returned.</param>
         /// <param name="players">If present, only games which can be played by this number of players will be
@@ -81,27 +77,6 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Creates a new board game.
         /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /boardGames
-        ///     {
-        ///         "name": "A great game",
-        ///         "description": "What a great game!",
-        ///         "imageUrl": "https://example.com",
-        ///         "playersMin": 2,
-        ///         "playersMax": 5,
-        ///         "categoryId": 1,
-        ///         "noteInternal": "Internal note",
-        ///         "ownerId": 704,
-        ///         "inStock": 2,
-        ///         "unavailable": 0,
-        ///         "visible": true,
-        ///         "defaultReservationDays": 14
-        ///      }
-        /// 
-        /// 
-        /// </remarks>
         /// <param name="game"><see cref="BoardGameDto"/> to create.</param>
         /// <returns>The created <see cref="BoardGameDto"/> if the creation succeeded.</returns>
         /// <response code="201">Success, returns the created game.</response>
@@ -122,7 +97,7 @@ namespace KachnaOnline.App.Controllers
                 var createdGame = await _facade.CreateBoardGame(this.User, game);
                 return CreatedAtAction(nameof(GetBoardGame), new { id = createdGame.Id }, createdGame);
             }
-            catch (NotABoardGameManagerException)
+            catch (NotABoardGamesManagerException)
             {
                 return Forbid();
             }
@@ -143,26 +118,6 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Updates a board game with the given ID.
         /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     PUT /boardGames/10
-        ///     {
-        ///         "name": "A great game",
-        ///         "description": "Turned out to be not so great :(",
-        ///         "imageUrl": "https://example.com",
-        ///         "playersMin": 2,
-        ///         "playersMax": 5,
-        ///         "categoryId": 1,
-        ///         "noteInternal": "Nobody wants it...",
-        ///         "ownerId": 704,
-        ///         "inStock": 2,
-        ///         "unavailable": 0,
-        ///         "visible": true,
-        ///         "defaultReservationDays": 30
-        ///      }
-        /// 
-        /// </remarks>
         /// <param name="id">ID of the board game to update.</param>
         /// <param name="game"><see cref="BoardGameDto"/> representing the new state.</param>
         /// <response code="204">Success, board game was updated.</response>
@@ -185,7 +140,7 @@ namespace KachnaOnline.App.Controllers
                 await _facade.UpdateBoardGame(this.User, id, game);
                 return NoContent();
             }
-            catch (NotABoardGameManagerException)
+            catch (NotABoardGamesManagerException)
             {
                 return Forbid();
             }
@@ -210,17 +165,6 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Updates stock of a board game with the given ID.
         /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     PUT /boardGames/10/stock
-        ///     {
-        ///         "inStock": 2,
-        ///         "unavailable": 0,
-        ///         "visible": true
-        ///      }
-        /// 
-        /// </remarks>
         /// <param name="id">ID of the board game to update.</param>
         /// <param name="stock"><see cref="BoardGameStockDto"/> representing the new stock state.</param>
         /// <response code="204">Success, board game stock was updated.</response>
@@ -241,7 +185,7 @@ namespace KachnaOnline.App.Controllers
                 await _facade.UpdateBoardGameStock(this.User, id, stock);
                 return NoContent();
             }
-            catch (NotABoardGameManagerException)
+            catch (NotABoardGamesManagerException)
             {
                 return Forbid();
             }
@@ -300,16 +244,6 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Creates a new board game category.
         /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /boardGames/categories
-        ///     {
-        ///         "name": "Hardcore games",
-        ///         "colourHex": "000000"
-        ///     }
-        /// 
-        /// </remarks>
         /// <param name="category"><see cref="CategoryDto"/> to create.</param>
         /// <returns>The created <see cref="CategoryDto"/> if the creation succeeded.</returns>
         /// <response code="201">Success, returns the created category.</response>
@@ -328,7 +262,7 @@ namespace KachnaOnline.App.Controllers
                 var createdCategory = await _facade.CreateCategory(this.User, category);
                 return CreatedAtAction(nameof(GetCategory), new { id = createdCategory.Id }, createdCategory);
             }
-            catch (NotABoardGameManagerException)
+            catch (NotABoardGamesManagerException)
             {
                 return Forbid();
             }
@@ -341,16 +275,6 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Updates a category with the given ID.
         /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     PUT /boardGames/categories/10
-        ///     {
-        ///         "name": "Hardcore games",
-        ///         "colourHex": "000001"
-        ///     }
-        /// 
-        /// </remarks>
         /// <param name="id">ID of the category to update.</param>
         /// <param name="category"><see cref="CategoryDto"/> representing the new state.</param>
         /// <response code="204">Success, category was updated.</response>
@@ -371,7 +295,7 @@ namespace KachnaOnline.App.Controllers
                 await _facade.UpdateCategory(this.User, id, category);
                 return NoContent();
             }
-            catch (NotABoardGameManagerException)
+            catch (NotABoardGamesManagerException)
             {
                 return Forbid();
             }
@@ -408,7 +332,7 @@ namespace KachnaOnline.App.Controllers
                 await _facade.DeleteCategory(this.User, id);
                 return NoContent();
             }
-            catch (NotABoardGameManagerException)
+            catch (NotABoardGamesManagerException)
             {
                 return Forbid();
             }

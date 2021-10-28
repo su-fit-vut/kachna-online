@@ -55,13 +55,13 @@ namespace KachnaOnline.Business.Facades
         /// <returns>The created <see cref="CategoryDto"/> with a filled ID.</returns>
         /// <exception cref="CategoryManipulationFailedException">Thrown when the category cannot be created.
         /// This can be caused by a database error.</exception>
-        /// <exception cref="NotABoardGameManagerException">When the <paramref name="user"/> is not allowed
+        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed
         /// to create a new category (i.e. is not a board game manager).</exception>
         public async Task<CategoryDto> CreateCategory(ClaimsPrincipal user, CategoryDto category)
         {
             if (!user.IsInRole(RoleConstants.BoardGamesManager))
             {
-                throw new NotABoardGameManagerException();
+                throw new NotABoardGamesManagerException();
             }
 
             var createdCategory = await _boardGameService.CreateCategory(_mapper.Map<Category>(category));
@@ -74,7 +74,7 @@ namespace KachnaOnline.Business.Facades
         /// <param name="user">User requesting the category update.</param>
         /// <param name="id">ID of the category to update.</param>
         /// <param name="category"><see cref="CategoryDto"/> representing the new state.</param>
-        /// <exception cref="NotABoardGameManagerException">When the <paramref name="user"/> is not allowed to update
+        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed to update
         /// the category (i.e. is not a board game manager).</exception>
         /// <exception cref="CategoryNotFoundException">When a category with the given <paramref name="id"/> does not
         /// exist.</exception>
@@ -83,7 +83,7 @@ namespace KachnaOnline.Business.Facades
         {
             if (!user.IsInRole(RoleConstants.BoardGamesManager))
             {
-                throw new NotABoardGameManagerException();
+                throw new NotABoardGamesManagerException();
             }
 
             await _boardGameService.UpdateCategory(id, _mapper.Map<Category>(category));
@@ -94,7 +94,7 @@ namespace KachnaOnline.Business.Facades
         /// </summary>
         /// <param name="user">User requesting the category deletion.</param>
         /// <param name="id">ID of the category to delete.</param>
-        /// <exception cref="NotABoardGameManagerException">When the <paramref name="user"/> is not allowed to update
+        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed to update
         /// the category (i.e. is not a board game manager).</exception>
         /// <exception cref="CategoryNotFoundException">When a category with the given <paramref name="id"/> does not
         /// exist.</exception>
@@ -105,7 +105,7 @@ namespace KachnaOnline.Business.Facades
         {
             if (!user.IsInRole(RoleConstants.BoardGamesManager))
             {
-                throw new NotABoardGameManagerException();
+                throw new NotABoardGamesManagerException();
             }
 
             try
@@ -196,7 +196,7 @@ namespace KachnaOnline.Business.Facades
         /// <returns>The created <see cref="BoardGameDto"/> with a filled ID.</returns>
         /// <exception cref="BoardGameManipulationFailedException">Thrown when the board game cannot be created.
         /// This can be caused by a database error.</exception>
-        /// <exception cref="NotABoardGameManagerException">When the <paramref name="user"/> is not allowed
+        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed
         /// to create a new board game (i.e. is not a board game manager).</exception>
         /// <exception cref="CategoryNotFoundException">When a category with the ID assigned to the game
         /// does not exist.</exception>
@@ -206,7 +206,7 @@ namespace KachnaOnline.Business.Facades
         {
             if (!user.IsInRole(RoleConstants.BoardGamesManager))
             {
-                throw new NotABoardGameManagerException();
+                throw new NotABoardGamesManagerException();
             }
 
             var createdGame = await _boardGameService.CreateBoardGame(_mapper.Map<BoardGame>(game));
@@ -219,7 +219,7 @@ namespace KachnaOnline.Business.Facades
         /// <param name="user">User requesting the board game update.</param>
         /// <param name="id">ID of the board game to update.</param>
         /// <param name="game"><see cref="BoardGameDto"/> representing the new state.</param>
-        /// <exception cref="NotABoardGameManagerException">When the <paramref name="user"/> is not allowed to update
+        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed to update
         /// the board game (i.e. is not a board game manager).</exception>
         /// <exception cref="BoardGameNotFoundException">When a board game with the given <paramref name="id"/> does not
         /// exist.</exception>
@@ -232,7 +232,7 @@ namespace KachnaOnline.Business.Facades
         {
             if (!user.IsInRole(RoleConstants.BoardGamesManager))
             {
-                throw new NotABoardGameManagerException();
+                throw new NotABoardGamesManagerException();
             }
 
             await _boardGameService.UpdateBoardGame(id, _mapper.Map<BoardGame>(game));
@@ -244,7 +244,7 @@ namespace KachnaOnline.Business.Facades
         /// <param name="user">User requesting the board game stock update.</param>
         /// <param name="id">ID of the board game to update.</param>
         /// <param name="stock"><see cref="BoardGameStockDto"/> representing the new stock state.</param>
-        /// <exception cref="NotABoardGameManagerException">When the <paramref name="user"/> is not allowed to update
+        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed to update
         /// the board game stock (i.e. is not a board game manager).</exception>
         /// <exception cref="BoardGameNotFoundException">When a board game with the given <paramref name="id"/> does not
         /// exist.</exception>
@@ -260,7 +260,7 @@ namespace KachnaOnline.Business.Facades
 
             if (!user.IsInRole(RoleConstants.BoardGamesManager))
             {
-                throw new NotABoardGameManagerException();
+                throw new NotABoardGamesManagerException();
             }
 
             await _boardGameService.UpdateBoardGame(id, stock.InStock.Value, stock.Unavailable.Value,

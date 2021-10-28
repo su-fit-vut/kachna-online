@@ -15,12 +15,14 @@ namespace KachnaOnline.Dto.BoardGames
         /// <summary>
         /// ID of the category.
         /// </summary>
+        /// <example>5</example>
         [BindNever]
         public int Id { get; set; }
 
         /// <summary>
         /// Name of the category describing the games inside (e.g. card games).
         /// </summary>
+        /// <example>Hardcore games</example>
         [Required(AllowEmptyStrings = false)]
         [StringLength(64)]
         public string Name { get; set; }
@@ -29,6 +31,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// Colour to display the category as, consistent with the colours on the shelves
         /// in the student club.
         /// </summary>
+        /// <example>000000</example>
         [Required(AllowEmptyStrings = false)]
         [DefaultValue("000000")]
         [RegularExpression("[0-9a-f]{6}")]
