@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
@@ -83,6 +84,10 @@ namespace KachnaOnline.Business.Services
         /// <inheritdoc />
         public async Task<BoardGame> CreateBoardGame(BoardGame game)
         {
+            if (game is null)
+            {
+                throw new ArgumentNullException();
+            }
             if (await _boardGameCategoryRepository.Get(game.CategoryId) is null)
             {
                 throw new CategoryNotFoundException();
@@ -113,6 +118,10 @@ namespace KachnaOnline.Business.Services
         /// <inheritdoc />
         public async Task UpdateBoardGame(int id, BoardGame game)
         {
+            if (game is null)
+            {
+                throw new ArgumentNullException();
+            }
             var currentGame = await _boardGameRepository.Get(id);
             if (currentGame is null)
             {
@@ -128,19 +137,8 @@ namespace KachnaOnline.Business.Services
             {
                 throw new UserNotFoundException(game.OwnerId.Value);
             }
-
-            currentGame.Name = game.Name;
-            currentGame.Description = game.Description;
-            currentGame.ImageUrl = game.ImageUrl;
-            currentGame.PlayersMin = game.PlayersMin;
-            currentGame.PlayersMax = game.PlayersMax;
-            currentGame.CategoryId = game.CategoryId;
-            currentGame.NoteInternal = game.NoteInternal;
-            currentGame.OwnerId = game.OwnerId;
-            currentGame.InStock = game.InStock;
-            currentGame.Unavailable = game.Unavailable;
-            currentGame.Visible = game.Visible;
-            currentGame.DefaultReservationTime = game.DefaultReservationTime;
+            
+            _mapper.Map<BoardGame, KachnaOnline.Data.Entities.BoardGames.BoardGame>(game, currentGame);
             try
             {
                 await _unitOfWork.SaveChanges();
@@ -198,6 +196,10 @@ namespace KachnaOnline.Business.Services
         /// <inheritdoc />
         public async Task<Category> CreateCategory(Category category)
         {
+            if (category is null)
+            {
+                throw new ArgumentNullException();
+            }
             var categoryEntity = _mapper.Map<KachnaOnline.Data.Entities.BoardGames.Category>(category);
             await _boardGameCategoryRepository.Add(categoryEntity);
             try
@@ -216,6 +218,10 @@ namespace KachnaOnline.Business.Services
         /// <inheritdoc />
         public async Task UpdateCategory(int id, Category category)
         {
+            if (category is null)
+            {
+                throw new ArgumentNullException();
+            }
             var currentCategory = await _boardGameCategoryRepository.Get(id);
             if (currentCategory is null)
             {
@@ -247,7 +253,7 @@ namespace KachnaOnline.Business.Services
 
             if (entity.Games.Count != 0)
             {
-                throw new CategoryHasBoardGamesException(_mapper.Map<List<BoardGame>>(entity.Games));
+                throw new CategoryHasBoardGamesException(entity.Games.Select(d => d.Id).ToArray());
             }
 
             await _boardGameCategoryRepository.Delete(entity);

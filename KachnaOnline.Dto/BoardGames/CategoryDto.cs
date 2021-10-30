@@ -3,7 +3,6 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace KachnaOnline.Dto.BoardGames
 {
@@ -16,7 +15,6 @@ namespace KachnaOnline.Dto.BoardGames
         /// ID of the category.
         /// </summary>
         /// <example>5</example>
-        [BindNever]
         public int Id { get; set; }
 
         /// <summary>

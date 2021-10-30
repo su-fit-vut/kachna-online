@@ -4,7 +4,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace KachnaOnline.Dto.BoardGames
 {
@@ -17,8 +16,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// ID of the game.
         /// </summary>
         /// <example>1</example>
-        [BindNever]
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Full name of the game.
@@ -89,7 +87,6 @@ namespace KachnaOnline.Dto.BoardGames
         /// </summary>
         /// <example>2</example>
         [Required]
-        [ConcurrencyCheck]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? InStock { get; set; }
         /// <summary>
@@ -106,8 +103,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// number of games returned to a user who is not a board game manager.
         /// </summary>
         /// <example>1</example>
-        [BindNever]
-        public int? Available { get; set; }
+        public int Available { get; set; }
         
         /// <summary>
         /// Whether the game should be visible to regular users.

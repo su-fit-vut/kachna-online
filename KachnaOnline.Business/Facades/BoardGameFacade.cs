@@ -40,7 +40,7 @@ namespace KachnaOnline.Business.Facades
         /// Returns a category with the given ID.
         /// </summary>
         /// <param name="categoryId">ID of the <see cref="CategoryDto"/> to return.</param>
-        /// <returns><see cref="CategoryDto"/> with the given ID.</returns>
+        /// <returns>A <see cref="CategoryDto"/> with the given ID.</returns>
         /// <exception cref="CategoryNotFoundException">Thrown when a category with the given
         /// <paramref name="categoryId"/> does not exist.</exception>
         public async Task<CategoryDto> GetCategory(int categoryId)
@@ -51,20 +51,12 @@ namespace KachnaOnline.Business.Facades
         /// <summary>
         /// Creates a new category.
         /// </summary>
-        /// <param name="user">User requesting the category creation.</param>
         /// <param name="category"><see cref="CategoryDto"/> to create.</param>
         /// <returns>The created <see cref="CategoryDto"/> with a filled ID.</returns>
         /// <exception cref="CategoryManipulationFailedException">Thrown when the category cannot be created.
         /// This can be caused by a database error.</exception>
-        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed
-        /// to create a new category (i.e. is not a board game manager).</exception>
-        public async Task<CategoryDto> CreateCategory(ClaimsPrincipal user, CategoryDto category)
+        public async Task<CategoryDto> CreateCategory( CategoryDto category)
         {
-            if (!user.IsInRole(RoleConstants.BoardGamesManager))
-            {
-                throw new NotABoardGamesManagerException();
-            }
-
             var createdCategory = await _boardGameService.CreateCategory(_mapper.Map<Category>(category));
             return _mapper.Map<CategoryDto>(createdCategory);
         }
@@ -72,52 +64,27 @@ namespace KachnaOnline.Business.Facades
         /// <summary>
         /// Updates a category with the given ID.
         /// </summary>
-        /// <param name="user">User requesting the category update.</param>
         /// <param name="id">ID of the category to update.</param>
         /// <param name="category"><see cref="CategoryDto"/> representing the new state.</param>
-        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed to update
-        /// the category (i.e. is not a board game manager).</exception>
         /// <exception cref="CategoryNotFoundException">When a category with the given <paramref name="id"/> does not
         /// exist.</exception>
         /// <exception cref="CategoryManipulationFailedException">When the category cannot be updated.</exception>
-        public async Task UpdateCategory(ClaimsPrincipal user, int id, CategoryDto category)
+        public async Task UpdateCategory( int id, CategoryDto category)
         {
-            if (!user.IsInRole(RoleConstants.BoardGamesManager))
-            {
-                throw new NotABoardGamesManagerException();
-            }
-
             await _boardGameService.UpdateCategory(id, _mapper.Map<Category>(category));
         }
 
         /// <summary>
         /// Deletes a category with the given ID.
         /// </summary>
-        /// <param name="user">User requesting the category deletion.</param>
         /// <param name="id">ID of the category to delete.</param>
-        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed to update
-        /// the category (i.e. is not a board game manager).</exception>
         /// <exception cref="CategoryNotFoundException">When a category with the given <paramref name="id"/> does not
         /// exist.</exception>
         /// <exception cref="CategoryManipulationFailedException">When the category cannot be deleted.</exception>
-        /// <exception cref="CategoryHasBoardGamesException">When the category has linked board games. The property
-        /// describing conflicting <see cref="BoardGameDto"/> is filled by the facade.</exception>
-        public async Task DeleteCategory(ClaimsPrincipal user, int id)
+        /// <exception cref="CategoryHasBoardGamesException">When the category has linked board games.</exception>
+        public async Task DeleteCategory(int id)
         {
-            if (!user.IsInRole(RoleConstants.BoardGamesManager))
-            {
-                throw new NotABoardGamesManagerException();
-            }
-
-            try
-            {
-                await _boardGameService.DeleteCategory(id);
-            }
-            catch (CategoryHasBoardGamesException e)
-            {
-                e.ConflictingGamesDto = _mapper.Map<List<BoardGameDto>>(e.ConflictingGames);
-                throw;
-            }
+            await _boardGameService.DeleteCategory(id);
         }
 
         /// <summary>
@@ -179,7 +146,7 @@ namespace KachnaOnline.Business.Facades
         /// </summary>
         /// <param name="user">User requesting the data.</param>
         /// <param name="boardGameId">ID of the <see cref="BoardGameDto"/> to return.</param>
-        /// <returns><see cref="BoardGameDto"/> with the given ID.</returns>
+        /// <returns>A <see cref="BoardGameDto"/> with the given ID.</returns>
         /// <exception cref="BoardGameNotFoundException">Thrown when a board game with the given
         /// <paramref name="boardGameId"/> does not exist.</exception>
         public async Task<BoardGameDto> GetBoardGame(ClaimsPrincipal user, int boardGameId)
@@ -192,24 +159,16 @@ namespace KachnaOnline.Business.Facades
         /// <summary>
         /// Creates a new board game.
         /// </summary>
-        /// <param name="user">User requesting the board game creation.</param>
         /// <param name="game"><see cref="BoardGameDto"/> to create.</param>
         /// <returns>The created <see cref="BoardGameDto"/> with a filled ID.</returns>
         /// <exception cref="BoardGameManipulationFailedException">Thrown when the board game cannot be created.
         /// This can be caused by a database error.</exception>
-        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed
-        /// to create a new board game (i.e. is not a board game manager).</exception>
         /// <exception cref="CategoryNotFoundException">When a category with the ID assigned to the game
         /// does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with the ID assigned to the game does
         /// not exist.</exception>
-        public async Task<BoardGameDto> CreateBoardGame(ClaimsPrincipal user, BoardGameDto game)
+        public async Task<BoardGameDto> CreateBoardGame(BoardGameDto game)
         {
-            if (!user.IsInRole(RoleConstants.BoardGamesManager))
-            {
-                throw new NotABoardGamesManagerException();
-            }
-
             var createdGame = await _boardGameService.CreateBoardGame(_mapper.Map<BoardGame>(game));
             return _mapper.Map<BoardGameDto>(createdGame);
         }
@@ -217,11 +176,8 @@ namespace KachnaOnline.Business.Facades
         /// <summary>
         /// Updates a board game with the given ID.
         /// </summary>
-        /// <param name="user">User requesting the board game update.</param>
         /// <param name="id">ID of the board game to update.</param>
         /// <param name="game"><see cref="BoardGameDto"/> representing the new state.</param>
-        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed to update
-        /// the board game (i.e. is not a board game manager).</exception>
         /// <exception cref="BoardGameNotFoundException">When a board game with the given <paramref name="id"/> does not
         /// exist.</exception>
         /// <exception cref="BoardGameManipulationFailedException">When the board game cannot be updated.</exception>
@@ -229,43 +185,22 @@ namespace KachnaOnline.Business.Facades
         /// does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with the ID assigned to the game does
         /// not exist.</exception>
-        public async Task UpdateBoardGame(ClaimsPrincipal user, int id, BoardGameDto game)
+        public async Task UpdateBoardGame(int id, BoardGameDto game)
         {
-            if (!user.IsInRole(RoleConstants.BoardGamesManager))
-            {
-                throw new NotABoardGamesManagerException();
-            }
-
             await _boardGameService.UpdateBoardGame(id, _mapper.Map<BoardGame>(game));
         }
 
         /// <summary>
         /// Updates stock of a board game with the given ID.
         /// </summary>
-        /// <param name="user">User requesting the board game stock update.</param>
         /// <param name="id">ID of the board game to update.</param>
         /// <param name="stock"><see cref="BoardGameStockDto"/> representing the new stock state.</param>
-        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="user"/> is not allowed to update
-        /// the board game stock (i.e. is not a board game manager).</exception>
         /// <exception cref="BoardGameNotFoundException">When a board game with the given <paramref name="id"/> does not
         /// exist.</exception>
         /// <exception cref="BoardGameManipulationFailedException">When the board game cannot be updated.</exception>
-        /// <exception cref="ArgumentException">When any of the <see cref="BoardGameStockDto"/> values are not
-        /// specified.</exception>
-        public async Task UpdateBoardGameStock(ClaimsPrincipal user, int id, BoardGameStockDto stock)
+        public async Task UpdateBoardGameStock(int id, BoardGameStockDto stock)
         {
-            if (stock.InStock is null || stock.Unavailable is null || stock.Visible is null)
-            {
-                throw new ArgumentException("New board game stock must be fully defined.");
-            }
-
-            if (!user.IsInRole(RoleConstants.BoardGamesManager))
-            {
-                throw new NotABoardGamesManagerException();
-            }
-
-            await _boardGameService.UpdateBoardGame(id, stock.InStock.Value, stock.Unavailable.Value,
-                stock.Visible.Value);
+            await _boardGameService.UpdateBoardGame(id, stock.InStock, stock.Unavailable, stock.Visible);
         }
     }
 }
