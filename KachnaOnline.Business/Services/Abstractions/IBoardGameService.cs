@@ -1,6 +1,7 @@
 // IBoardGameService.cs
 // Author: František Nečas
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Exceptions;
@@ -26,7 +27,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// Returns a board game with the given ID.
         /// </summary>
         /// <param name="boardGameId">ID of the <see cref="BoardGame"/> to return.</param>
-        /// <returns><see cref="BoardGame"/> corresponding to the given ID.</returns>
+        /// <returns>A <see cref="BoardGame"/> corresponding to the given ID.</returns>
         /// <exception cref="BoardGameNotFoundException">Thrown when a board game with the given
         /// <paramref name="boardGameId"/> does not exist.</exception>
         Task<BoardGame> GetBoardGame(int boardGameId);
@@ -42,6 +43,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with the ID assigned to the game does
         /// not exist.</exception>
+        /// <exception cref="ArgumentNullException">When <paramref name="game"/> is null.</exception>
         Task<BoardGame> CreateBoardGame(BoardGame game);
         
         /// <summary>
@@ -56,6 +58,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with the ID assigned to the game does
         /// not exist.</exception>
+        /// <exception cref="ArgumentNullException">When <paramref name="game"/> is null.</exception>
         Task UpdateBoardGame(int id, BoardGame game);
         
         /// <summary>
@@ -80,7 +83,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// Returns a category with the given ID.
         /// </summary>
         /// <param name="categoryId">ID of the <see cref="Category"/> to return.</param>
-        /// <returns><see cref="Category"/> corresponding to the given ID.</returns>
+        /// <returns>A <see cref="Category"/> corresponding to the given ID.</returns>
         /// <exception cref="CategoryNotFoundException">Thrown when a category with the given
         /// <paramref name="categoryId"/> does not exist.</exception>
         Task<Category> GetCategory(int categoryId);
@@ -92,6 +95,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <returns>The created <see cref="Category"/> with a filled ID.</returns>
         /// <exception cref="CategoryManipulationFailedException">Thrown when the category cannot be created.
         /// This can be caused by a database error.</exception>
+        /// <exception cref="ArgumentNullException">When <paramref name="category"/> is null.</exception>
         Task<Category> CreateCategory(Category category);
 
         /// <summary>
@@ -102,6 +106,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <exception cref="CategoryNotFoundException">When a category with the given <paramref name="id"/> does not
         /// exist.</exception>
         /// <exception cref="CategoryManipulationFailedException">When the category cannot be updated.</exception>
+        /// <exception cref="ArgumentNullException">When <paramref name="category"/> is null.</exception>
         Task UpdateCategory(int id, Category category);
 
         /// <summary>

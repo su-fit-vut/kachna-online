@@ -1,9 +1,10 @@
-// BoardGameController.cs
+// BoardGamesController.cs
 // Author: František Nečas
 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
 using KachnaOnline.Business.Facades;
@@ -15,11 +16,12 @@ namespace KachnaOnline.App.Controllers
 {
     [ApiController]
     [Route("boardGames")]
-    public class BoardGameController : ControllerBase
+    [Authorize(Roles = RoleConstants.BoardGamesManager)]
+    public class BoardGamesController : ControllerBase
     {
         private readonly BoardGameFacade _facade;
 
-        public BoardGameController(BoardGameFacade facade)
+        public BoardGamesController(BoardGameFacade facade)
         {
             _facade = facade;
         }
@@ -36,17 +38,16 @@ namespace KachnaOnline.App.Controllers
         /// <param name="available">If present, only games with this availability will be returned.</param>
         /// <param name="visible">If present, only games with this visibility will be returned.
         /// Regular and unauthenticated users will always receive only visible games.</param>
-        /// <returns>List of <see cref="BoardGameDto"/> corresponding to the given queries.</returns>
-        /// <response code="200">Returns the list of board games.</response>
+        /// <returns>A list of <see cref="BoardGameDto"/> corresponding to the given queries.</returns>
+        /// <response code="200">The list of board games.</response>
         [AllowAnonymous]
         [ProducesResponseType(200)]
-        [Produces("application/json")]
         [HttpGet]
         public async Task<ActionResult<List<BoardGameDto>>> GetBoardGames(
-            [FromQuery] int? categoryId,
-            [FromQuery] int? players,
-            [FromQuery] bool? available,
-            [FromQuery] bool? visible)
+            int? categoryId,
+            int? players,
+            bool? available,
+            bool? visible)
         {
             return await _facade.GetBoardGames(this.User, categoryId, players, available, visible);
         }
@@ -55,13 +56,12 @@ namespace KachnaOnline.App.Controllers
         /// Returns a board game with the given ID.
         /// </summary>
         /// <param name="id">ID of the board game to return.</param>
-        /// <returns><see cref="BoardGameDto"/> of a game corresponding to ID <paramref name="id"/>.</returns>
-        /// <response code="200">Returns the board game.</response>
+        /// <returns>A <see cref="BoardGameDto"/> of a game corresponding to ID <paramref name="id"/>.</returns>
+        /// <response code="200">The board game.</response>
         /// <response code="404">No such board game exists.</response>
         [AllowAnonymous]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        [Produces("application/json")]
         [HttpGet("{id}")]
         public async Task<ActionResult<BoardGameDto>> GetBoardGame(int id)
         {
@@ -80,39 +80,35 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <param name="game"><see cref="BoardGameDto"/> to create.</param>
         /// <returns>The created <see cref="BoardGameDto"/> if the creation succeeded.</returns>
-        /// <response code="201">Success, returns the created game.</response>
-        /// <response code="400">The given JSON object is not in a valid format.</response>
+        /// <response code="201">The created game.</response>
         /// <response code="403">User not logged in or not a board game manager.</response>
         /// <response code="422">A category or user with the given ID does not exist.</response>
-        [Authorize]
-        [Consumes("application/json")]
         [ProducesResponseType(201)]
         [ProducesResponseType(403)]
         [ProducesResponseType(422)]
-        [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult<BoardGameDto>> CreateBoardGame([FromBody] BoardGameDto game)
         {
             try
             {
-                var createdGame = await _facade.CreateBoardGame(this.User, game);
+                var createdGame = await _facade.CreateBoardGame(game);
                 return CreatedAtAction(nameof(GetBoardGame), new { id = createdGame.Id }, createdGame);
             }
             catch (NotABoardGamesManagerException)
             {
                 return Forbid();
             }
-            catch (CategoryNotFoundException e)
+            catch (CategoryNotFoundException)
             {
-                return UnprocessableEntity(e.Message);
+                return UnprocessableEntity();
             }
             catch (UserNotFoundException)
             {
                 return UnprocessableEntity();
             }
-            catch (BoardGameManipulationFailedException e)
+            catch (BoardGameManipulationFailedException)
             {
-                return Problem(statusCode: 500, detail: e.Message);
+                return Problem(statusCode: 500);
             }
         }
         
@@ -121,15 +117,11 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <param name="id">ID of the board game to update.</param>
         /// <param name="game"><see cref="BoardGameDto"/> representing the new state.</param>
-        /// <response code="204">Success, board game was updated.</response>
-        /// <response code="400">The given JSON object is not in a valid format.</response>
+        /// <response code="204">Board game was updated.</response>
         /// <response code="403">User not logged in or not a board game manager.</response>
         /// <response code="404">Board game with the given ID does not exist.</response>
         /// <response code="422">A category or user with the given ID does not exist.</response>
-        [Authorize]
-        [Consumes("application/json")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
@@ -138,7 +130,7 @@ namespace KachnaOnline.App.Controllers
         {
             try
             {
-                await _facade.UpdateBoardGame(this.User, id, game);
+                await _facade.UpdateBoardGame(id, game);
                 return NoContent();
             }
             catch (NotABoardGamesManagerException)
@@ -149,17 +141,17 @@ namespace KachnaOnline.App.Controllers
             {
                 return NotFound();
             }
-            catch (CategoryNotFoundException e)
+            catch (CategoryNotFoundException)
             {
-                return UnprocessableEntity(e.Message);
+                return UnprocessableEntity();
             }
             catch (UserNotFoundException)
             {
                 return UnprocessableEntity();
             }
-            catch (BoardGameManipulationFailedException e)
+            catch (BoardGameManipulationFailedException)
             {
-                return Problem(statusCode: 500, detail: e.Message);
+                return Problem(statusCode: 500);
             }
         }
         
@@ -168,14 +160,10 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <param name="id">ID of the board game to update.</param>
         /// <param name="stock"><see cref="BoardGameStockDto"/> representing the new stock state.</param>
-        /// <response code="204">Success, board game stock was updated.</response>
-        /// <response code="400">The given JSON object is not in a valid format.</response>
+        /// <response code="204">Board game stock was updated.</response>
         /// <response code="403">User not logged in or not a board game manager.</response>
         /// <response code="404">Board game with the given ID does not exist.</response>
-        [Authorize]
-        [Consumes("application/json")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [HttpPut("{id}/stock")]
@@ -183,7 +171,7 @@ namespace KachnaOnline.App.Controllers
         {
             try
             {
-                await _facade.UpdateBoardGameStock(this.User, id, stock);
+                await _facade.UpdateBoardGameStock(id, stock);
                 return NoContent();
             }
             catch (NotABoardGamesManagerException)
@@ -194,24 +182,19 @@ namespace KachnaOnline.App.Controllers
             {
                 return NotFound();
             }
-            catch (BoardGameManipulationFailedException e)
+            catch (BoardGameManipulationFailedException)
             {
-                return Problem(statusCode: 500, detail: e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return BadRequest(e);
+                return Problem(statusCode: 500);
             }
         }
         
         /// <summary>
         /// Returns the list of all board game categories.
         /// </summary>
-        /// <returns>List of <see cref="CategoryDto"/>.</returns>
-        /// <response code="200">Returns the list of board game categories.</response>
+        /// <returns>A list of <see cref="CategoryDto"/>.</returns>
+        /// <response code="200">The list of board game categories.</response>
         [AllowAnonymous]
         [ProducesResponseType(200)]
-        [Produces("application/json")]
         [HttpGet("categories")]
         public async Task<ActionResult<List<CategoryDto>>> GetCategories()
         {
@@ -222,13 +205,12 @@ namespace KachnaOnline.App.Controllers
         /// Returns a board game category with the given ID.
         /// </summary>
         /// <param name="id">ID of the category to return.</param>
-        /// <returns><see cref="CategoryDto"/> of a category corresponding to ID <paramref name="id"/>.</returns>
-        /// <response code="200">Returns the category.</response>
+        /// <returns>A <see cref="CategoryDto"/> of a category corresponding to ID <paramref name="id"/>.</returns>
+        /// <response code="200">The category.</response>
         /// <response code="404">No such category exists.</response>
         [AllowAnonymous]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        [Produces("application/json")]
         [HttpGet("categories/{id}")]
         public async Task<ActionResult<CategoryDto>> GetCategory(int id)
         {
@@ -236,9 +218,9 @@ namespace KachnaOnline.App.Controllers
             {
                 return await _facade.GetCategory(id);
             }
-            catch (CategoryNotFoundException e)
+            catch (CategoryNotFoundException)
             {
-                return NotFound(e.Message);
+                return NotFound();
             }
         }
 
@@ -247,29 +229,25 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <param name="category"><see cref="CategoryDto"/> to create.</param>
         /// <returns>The created <see cref="CategoryDto"/> if the creation succeeded.</returns>
-        /// <response code="201">Success, returns the created category.</response>
-        /// <response code="400">The given JSON object is not in a valid format.</response>
+        /// <response code="201">The created category.</response>
         /// <response code="403">User not logged in or not a board game manager.</response>
-        [Authorize]
-        [Consumes("application/json")]
         [ProducesResponseType(201)]
         [ProducesResponseType(403)]
-        [Produces("application/json")]
         [HttpPost("categories")]
         public async Task<ActionResult<CategoryDto>> CreateCategory([FromBody] CategoryDto category)
         {
             try
             {
-                var createdCategory = await _facade.CreateCategory(this.User, category);
+                var createdCategory = await _facade.CreateCategory(category);
                 return CreatedAtAction(nameof(GetCategory), new { id = createdCategory.Id }, createdCategory);
             }
             catch (NotABoardGamesManagerException)
             {
                 return Forbid();
             }
-            catch (CategoryManipulationFailedException e)
+            catch (CategoryManipulationFailedException)
             {
-                return Problem(statusCode: 500, detail: e.Message);
+                return Problem(statusCode: 500);
             }
         }
 
@@ -278,14 +256,10 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <param name="id">ID of the category to update.</param>
         /// <param name="category"><see cref="CategoryDto"/> representing the new state.</param>
-        /// <response code="204">Success, category was updated.</response>
-        /// <response code="400">The given JSON object is not in a valid format.</response>
+        /// <response code="204">Category was updated.</response>
         /// <response code="403">User not logged in or not a board game manager.</response>
         /// <response code="404">Category with the given ID does not exist.</response>
-        [Authorize]
-        [Consumes("application/json")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [HttpPut("categories/{id}")]
@@ -293,20 +267,20 @@ namespace KachnaOnline.App.Controllers
         {
             try
             {
-                await _facade.UpdateCategory(this.User, id, category);
+                await _facade.UpdateCategory(id, category);
                 return NoContent();
             }
             catch (NotABoardGamesManagerException)
             {
                 return Forbid();
             }
-            catch (CategoryNotFoundException e)
+            catch (CategoryNotFoundException)
             {
-                return NotFound(e.Message);
+                return NotFound();
             }
-            catch (CategoryManipulationFailedException e)
+            catch (CategoryManipulationFailedException)
             {
-                return Problem(statusCode: 500, detail: e.Message);
+                return Problem(statusCode: 500);
             }
         }
 
@@ -314,40 +288,38 @@ namespace KachnaOnline.App.Controllers
         /// Deletes a category with the given ID.
         /// </summary>
         /// <param name="id">ID of the category to delete.</param>
-        /// <response code="204">Success, category was deleted.</response>
+        /// <response code="204">Category was deleted.</response>
         /// <response code="403">User not logged in or not a board game manager.</response>
         /// <response code="404">Category with the given ID does not exist.</response>
         /// <response code="409">Board games from this category must first be transferred. Returns the list
         /// of conflicting board games.</response>
-        [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
-        [Produces("application/json")]
         [HttpDelete("categories/{id}")]
         public async Task<ActionResult<List<BoardGameDto>>> DeleteCategory(int id)
         {
             try
             {
-                await _facade.DeleteCategory(this.User, id);
+                await _facade.DeleteCategory(id);
                 return NoContent();
             }
             catch (NotABoardGamesManagerException)
             {
                 return Forbid();
             }
-            catch (CategoryNotFoundException e)
+            catch (CategoryNotFoundException)
             {
-                return NotFound(e.Message);
+                return NotFound();
             }
-            catch (CategoryManipulationFailedException e)
+            catch (CategoryManipulationFailedException)
             {
-                return Problem(statusCode: 500, detail: e.Message);
+                return Problem(statusCode: 500);
             }
             catch (CategoryHasBoardGamesException e)
             {
-                return Conflict(e.ConflictingGamesDto);
+                return Conflict(e.ConflictingGameIds);
             }
         }
     }
