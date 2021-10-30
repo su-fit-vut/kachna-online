@@ -10,6 +10,7 @@ using KachnaOnline.Business.Models.BoardGames;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Dto.BoardGames;
 using KachnaOnline.Business.Constants;
+using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
 
 namespace KachnaOnline.Business.Facades
@@ -255,7 +256,7 @@ namespace KachnaOnline.Business.Facades
         {
             if (stock.InStock is null || stock.Unavailable is null || stock.Visible is null)
             {
-                throw new ArgumentException("New board game stock must be fully defined");
+                throw new ArgumentException("New board game stock must be fully defined.");
             }
 
             if (!user.IsInRole(RoleConstants.BoardGamesManager))

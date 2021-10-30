@@ -10,7 +10,7 @@ namespace KachnaOnline.Business.Exceptions.BoardGames
     /// </summary>
     public class CategoryManipulationFailedException : Exception
     {
-        public CategoryManipulationFailedException() : base("Operation with the given category failed")
+        public CategoryManipulationFailedException() : base("Operation with the given category failed.")
         {
         }
     }
