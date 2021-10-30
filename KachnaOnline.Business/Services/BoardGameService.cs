@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
+using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
 using KachnaOnline.Business.Models.BoardGames;
 using KachnaOnline.Business.Services.Abstractions;
@@ -89,7 +90,7 @@ namespace KachnaOnline.Business.Services
 
             if (game.OwnerId is not null && await _userRepository.Get(game.OwnerId.Value) is null)
             {
-                throw new UserNotFoundException();
+                throw new UserNotFoundException(game.OwnerId.Value);
             }
 
             var gameEntity = _mapper.Map<KachnaOnline.Data.Entities.BoardGames.BoardGame>(game);
@@ -125,7 +126,7 @@ namespace KachnaOnline.Business.Services
 
             if (game.OwnerId is not null && await _userRepository.Get(game.OwnerId.Value) is null)
             {
-                throw new UserNotFoundException();
+                throw new UserNotFoundException(game.OwnerId.Value);
             }
 
             currentGame.Name = game.Name;

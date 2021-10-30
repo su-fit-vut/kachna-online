@@ -14,10 +14,9 @@ namespace KachnaOnline.Business.Exceptions.BoardGames
         public List<BoardGameDto> ConflictingGamesDto { get; set; }
 
         public CategoryHasBoardGamesException(List<BoardGame> conflicting) : base(
-            "Category cannot be deleted because it has linked games")
+            "Category cannot be deleted because it has linked games.")
         {
             ConflictingGames = conflicting;
         }
-
     }
 }

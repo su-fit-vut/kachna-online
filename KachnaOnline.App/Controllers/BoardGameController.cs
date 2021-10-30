@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
 using KachnaOnline.Business.Facades;
 using KachnaOnline.Dto.BoardGames;
@@ -101,9 +102,9 @@ namespace KachnaOnline.App.Controllers
             {
                 return Forbid();
             }
-            catch (CategoryNotFoundException)
+            catch (CategoryNotFoundException e)
             {
-                return UnprocessableEntity();
+                return UnprocessableEntity(e.Message);
             }
             catch (UserNotFoundException)
             {
@@ -133,7 +134,7 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutBoardGame(int id, [FromBody] BoardGameDto game)
+        public async Task<ActionResult> UpdateBoardGame(int id, [FromBody] BoardGameDto game)
         {
             try
             {
@@ -148,9 +149,9 @@ namespace KachnaOnline.App.Controllers
             {
                 return NotFound();
             }
-            catch (CategoryNotFoundException)
+            catch (CategoryNotFoundException e)
             {
-                return UnprocessableEntity();
+                return UnprocessableEntity(e.Message);
             }
             catch (UserNotFoundException)
             {
@@ -178,7 +179,7 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [HttpPut("{id}/stock")]
-        public async Task<ActionResult> PutBoardGameStock(int id, [FromBody] BoardGameStockDto stock)
+        public async Task<ActionResult> UpdateBoardGameStock(int id, [FromBody] BoardGameStockDto stock)
         {
             try
             {
@@ -288,7 +289,7 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [HttpPut("categories/{id}")]
-        public async Task<ActionResult> PutCategory(int id, [FromBody] CategoryDto category)
+        public async Task<ActionResult> UpdateCategory(int id, [FromBody] CategoryDto category)
         {
             try
             {
@@ -299,9 +300,9 @@ namespace KachnaOnline.App.Controllers
             {
                 return Forbid();
             }
-            catch (CategoryNotFoundException)
+            catch (CategoryNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
             catch (CategoryManipulationFailedException e)
             {
@@ -336,9 +337,9 @@ namespace KachnaOnline.App.Controllers
             {
                 return Forbid();
             }
-            catch (CategoryNotFoundException)
+            catch (CategoryNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
             catch (CategoryManipulationFailedException e)
             {

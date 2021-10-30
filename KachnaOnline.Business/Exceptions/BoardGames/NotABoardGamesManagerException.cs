@@ -10,7 +10,7 @@ namespace KachnaOnline.Business.Exceptions.BoardGames
     /// </summary>
     public class NotABoardGamesManagerException : Exception
     {
-        public NotABoardGamesManagerException() : base("You must be a board game manager to do that")
+        public NotABoardGamesManagerException() : base("You must be a board game manager to do that.")
         {
         }
     }
