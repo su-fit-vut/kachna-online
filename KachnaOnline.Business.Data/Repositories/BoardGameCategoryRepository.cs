@@ -13,7 +13,6 @@ namespace KachnaOnline.Business.Data.Repositories
     {
         public BoardGameCategoryRepository(AppDbContext dbContext) : base(dbContext)
         {
-            
         }
 
         public Task<Category> GetWithBoardGames(int categoryId)
