@@ -1,4 +1,4 @@
-// IBoardGameService.cs
+// IBoardGamesService.cs
 // Author: František Nečas
 
 using System;
@@ -10,7 +10,7 @@ using KachnaOnline.Business.Models.BoardGames;
 
 namespace KachnaOnline.Business.Services.Abstractions
 {
-    public interface IBoardGameService
+    public interface IBoardGamesService
     {
         /// <summary>
         /// Returns a list of all board games.

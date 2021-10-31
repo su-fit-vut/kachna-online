@@ -1,4 +1,4 @@
-// BoardGameService.cs
+// BoardGamesService.cs
 // Author: František Nečas
 
 using System;
@@ -16,21 +16,21 @@ using Microsoft.Extensions.Logging;
 
 namespace KachnaOnline.Business.Services
 {
-    public class BoardGameService : IBoardGameService
+    public class BoardGamesService : IBoardGamesService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<BoardGameService> _logger;
+        private readonly ILogger<BoardGamesService> _logger;
         private readonly IBoardGamesRepository _boardGamesRepository;
-        private readonly IBoardGamesCategoryRepository _boardGamesCategoryRepository;
+        private readonly IBoardGameCategoriesRepository _boardGamesCategoryRepository;
         private readonly IUserRepository _userRepository;
 
-        public BoardGameService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<BoardGameService> logger)
+        public BoardGamesService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<BoardGamesService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
-            _boardGamesRepository = _unitOfWork.BoardGameses;
+            _boardGamesRepository = _unitOfWork.BoardGames;
             _boardGamesCategoryRepository = _unitOfWork.BoardGamesCategories;
             _userRepository = _unitOfWork.Users;
         }

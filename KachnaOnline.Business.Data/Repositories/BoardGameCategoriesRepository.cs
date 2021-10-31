@@ -1,4 +1,4 @@
-// BoardGamesCategoryRepository.cs
+// BoardGameCategoriesRepository.cs
 // Author: František Nečas
 
 using System.Threading.Tasks;
@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KachnaOnline.Business.Data.Repositories
 {
-    public class BoardGamesCategoryRepository : GenericRepository<Category, int>, IBoardGamesCategoryRepository
+    public class BoardGameCategoriesRepository : GenericRepository<Category, int>, IBoardGameCategoriesRepository
     {
-        public BoardGamesCategoryRepository(AppDbContext dbContext) : base(dbContext)
+        public BoardGameCategoriesRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
 

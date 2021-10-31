@@ -17,11 +17,11 @@ namespace KachnaOnline.Business.Facades
     public class BoardGamesFacade
     {
         private readonly IMapper _mapper;
-        private readonly IBoardGameService _boardGameService;
+        private readonly IBoardGamesService _boardGamesService;
 
-        public BoardGamesFacade(IBoardGameService boardGameService, IMapper mapper)
+        public BoardGamesFacade(IBoardGamesService boardGamesService, IMapper mapper)
         {
-            _boardGameService = boardGameService;
+            _boardGamesService = boardGamesService;
             _mapper = mapper;
         }
 
@@ -31,7 +31,7 @@ namespace KachnaOnline.Business.Facades
         /// <returns>A list of <see cref="CategoryDto"/>.</returns>
         public async Task<IEnumerable<CategoryDto>> GetCategories()
         {
-            var categories = await _boardGameService.GetBoardGameCategories();
+            var categories = await _boardGamesService.GetBoardGameCategories();
             return _mapper.Map<List<CategoryDto>>(categories);
         }
 
@@ -44,7 +44,7 @@ namespace KachnaOnline.Business.Facades
         /// <paramref name="categoryId"/> does not exist.</exception>
         public async Task<CategoryDto> GetCategory(int categoryId)
         {
-            return _mapper.Map<CategoryDto>(await _boardGameService.GetCategory(categoryId));
+            return _mapper.Map<CategoryDto>(await _boardGamesService.GetCategory(categoryId));
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace KachnaOnline.Business.Facades
         /// This can be caused by a database error.</exception>
         public async Task<CategoryDto> CreateCategory(CreateCategoryDto category)
         {
-            var createdCategory = await _boardGameService.CreateCategory(_mapper.Map<Category>(category));
+            var createdCategory = await _boardGamesService.CreateCategory(_mapper.Map<Category>(category));
             return _mapper.Map<CategoryDto>(createdCategory);
         }
 
@@ -70,7 +70,7 @@ namespace KachnaOnline.Business.Facades
         /// <exception cref="CategoryManipulationFailedException">When the category cannot be updated.</exception>
         public async Task UpdateCategory(int id, CreateCategoryDto category)
         {
-            await _boardGameService.UpdateCategory(id, _mapper.Map<Category>(category));
+            await _boardGamesService.UpdateCategory(id, _mapper.Map<Category>(category));
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace KachnaOnline.Business.Facades
         /// <exception cref="CategoryHasBoardGamesException">When the category has linked board games.</exception>
         public async Task DeleteCategory(int id)
         {
-            await _boardGameService.DeleteCategory(id);
+            await _boardGamesService.DeleteCategory(id);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace KachnaOnline.Business.Facades
             if (!user.IsInRole(RoleConstants.BoardGamesManager))
                 visible = true;
 
-            var games = await _boardGameService.GetBoardGames(categoryId, players, available, visible);
+            var games = await _boardGamesService.GetBoardGames(categoryId, players, available, visible);
             if (user.IsInRole(RoleConstants.BoardGamesManager))
             {
                 return _mapper.Map<List<ManagerBoardGameDto>>(games);
@@ -134,7 +134,7 @@ namespace KachnaOnline.Business.Facades
         /// is not a board games manager.</exception>
         public async Task<BoardGameDto> GetBoardGame(ClaimsPrincipal user, int boardGameId)
         {
-            var game = await _boardGameService.GetBoardGame(boardGameId);
+            var game = await _boardGamesService.GetBoardGame(boardGameId);
             if (!game.Visible)
             {
                 if (!(user.Identity?.IsAuthenticated ?? false))
@@ -169,7 +169,7 @@ namespace KachnaOnline.Business.Facades
         /// not exist.</exception>
         public async Task<BoardGameDto> CreateBoardGame(CreateBoardGameDto game)
         {
-            var createdGame = await _boardGameService.CreateBoardGame(_mapper.Map<BoardGame>(game));
+            var createdGame = await _boardGamesService.CreateBoardGame(_mapper.Map<BoardGame>(game));
             return _mapper.Map<ManagerBoardGameDto>(createdGame);
         }
 
@@ -187,7 +187,7 @@ namespace KachnaOnline.Business.Facades
         /// not exist.</exception>
         public async Task UpdateBoardGame(int id, CreateBoardGameDto game)
         {
-            await _boardGameService.UpdateBoardGame(id, _mapper.Map<BoardGame>(game));
+            await _boardGamesService.UpdateBoardGame(id, _mapper.Map<BoardGame>(game));
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace KachnaOnline.Business.Facades
         /// <exception cref="BoardGameManipulationFailedException">When the board game cannot be updated.</exception>
         public async Task UpdateBoardGameStock(int id, BoardGameStockDto stock)
         {
-            await _boardGameService.UpdateBoardGame(id, stock.InStock, stock.Unavailable, stock.Visible);
+            await _boardGamesService.UpdateBoardGame(id, stock.InStock, stock.Unavailable, stock.Visible);
         }
     }
 }
