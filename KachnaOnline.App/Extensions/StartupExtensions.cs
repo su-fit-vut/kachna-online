@@ -104,6 +104,7 @@ namespace KachnaOnline.App.Extensions
         {
             services.AddSwaggerGen(c =>
             {
+                c.UseOneOfForPolymorphism();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "KachnaOnline", Version = "v1" });
                 c.AddSecurityDefinition("JWTBearer", new OpenApiSecurityScheme()
                 {
@@ -141,6 +142,8 @@ namespace KachnaOnline.App.Extensions
                 filePath = Path.Combine(AppContext.BaseDirectory, "KachnaOnline.Dto.xml");
                 c.IncludeXmlComments(filePath);
             });
+
+            services.AddSwaggerGenNewtonsoftSupport();
         }
     }
 }
