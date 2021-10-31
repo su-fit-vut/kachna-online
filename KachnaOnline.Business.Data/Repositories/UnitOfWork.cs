@@ -13,8 +13,8 @@ namespace KachnaOnline.Business.Data.Repositories
         private readonly AppDbContext _dbContext;
         public IUserRepository Users { get; }
         public IRoleRepository Roles { get; }
-        public IBoardGameRepository BoardGames { get; }
-        public IBoardGameCategoryRepository BoardGameCategories { get; }
+        public IBoardGamesRepository BoardGameses { get; }
+        public IBoardGamesCategoryRepository BoardGamesCategories { get; }
 
         public UnitOfWork(AppDbContext dbContext)
         {
@@ -22,8 +22,8 @@ namespace KachnaOnline.Business.Data.Repositories
 
             this.Users = new UserRepository(dbContext);
             this.Roles = new RoleRepository(dbContext);
-            this.BoardGames = new BoardGameRepository(dbContext);
-            this.BoardGameCategories = new BoardGameCategoryRepository(dbContext);
+            this.BoardGameses = new BoardGamesRepository(dbContext);
+            this.BoardGamesCategories = new BoardGamesCategoryRepository(dbContext);
         }
 
         public async Task SaveChanges()
