@@ -1,4 +1,4 @@
-// BoardGameMappings.cs
+// BoardGamesMappings.cs
 // Author: František Nečas
 
 using System;
@@ -7,9 +7,9 @@ using KachnaOnline.Business.Models.BoardGames;
 
 namespace KachnaOnline.Business.Mappings
 {
-    public class BoardGameMappings : Profile
+    public class BoardGamesMappings : Profile
     {
-        public BoardGameMappings()
+        public BoardGamesMappings()
         {
             // Categories
             this.CreateMap<KachnaOnline.Data.Entities.BoardGames.Category, Category>();

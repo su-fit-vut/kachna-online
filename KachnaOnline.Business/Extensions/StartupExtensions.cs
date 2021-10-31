@@ -19,7 +19,7 @@ namespace KachnaOnline.Business.Extensions
         public static void AddBusinessLayer(this IServiceCollection services, IConfiguration configuration)
         {
             // Add AutoMapper and load mapping profiles from this assembly.
-            services.AddAutoMapper(typeof(UserMappings), typeof(KisMappings), typeof(BoardGameMappings));
+            services.AddAutoMapper(typeof(UserMappings), typeof(KisMappings), typeof(BoardGamesMappings));
 
             // Add KIS HTTP client factory.
             var kisOptions = configuration.GetSection("Kis").Get<KisOptions>();
