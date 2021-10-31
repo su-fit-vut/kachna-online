@@ -37,7 +37,7 @@ namespace KachnaOnline.Business.Mappings
                     opt => opt.MapFrom<TimeSpan?>(src =>
                         src.DefaultReservationDays == null
                             ? null
-                            : new TimeSpan(src.DefaultReservationDays.Value, 0, 0, 0)));
+                            : TimeSpan.FromDays(src.DefaultReservationDays.Value)));
         }
     }
 }
