@@ -71,10 +71,10 @@ namespace KachnaOnline.App.Controllers
             }
             catch (BoardGameNotFoundException)
             {
-                return NotFound();
+                return this.NotFound();
             }
         }
-        
+
         /// <summary>
         /// Creates a new board game.
         /// </summary>
@@ -92,26 +92,26 @@ namespace KachnaOnline.App.Controllers
             try
             {
                 var createdGame = await _facade.CreateBoardGame(game);
-                return CreatedAtAction(nameof(GetBoardGame), new { id = createdGame.Id }, createdGame);
+                return this.CreatedAtAction(nameof(this.GetBoardGame), new { id = createdGame.Id }, createdGame);
             }
             catch (NotABoardGamesManagerException)
             {
-                return Forbid();
+                return this.Forbid();
             }
             catch (CategoryNotFoundException)
             {
-                return UnprocessableEntity();
+                return this.UnprocessableEntity();
             }
             catch (UserNotFoundException)
             {
-                return UnprocessableEntity();
+                return this.UnprocessableEntity();
             }
             catch (BoardGameManipulationFailedException)
             {
-                return Problem(statusCode: 500);
+                return this.Problem(statusCode: 500);
             }
         }
-        
+
         /// <summary>
         /// Updates a board game with the given ID.
         /// </summary>
@@ -131,30 +131,30 @@ namespace KachnaOnline.App.Controllers
             try
             {
                 await _facade.UpdateBoardGame(id, game);
-                return NoContent();
+                return this.NoContent();
             }
             catch (NotABoardGamesManagerException)
             {
-                return Forbid();
+                return this.Forbid();
             }
             catch (BoardGameNotFoundException)
             {
-                return NotFound();
+                return this.NotFound();
             }
             catch (CategoryNotFoundException)
             {
-                return UnprocessableEntity();
+                return this.UnprocessableEntity();
             }
             catch (UserNotFoundException)
             {
-                return UnprocessableEntity();
+                return this.UnprocessableEntity();
             }
             catch (BoardGameManipulationFailedException)
             {
-                return Problem(statusCode: 500);
+                return this.Problem(statusCode: 500);
             }
         }
-        
+
         /// <summary>
         /// Updates stock of a board game with the given ID.
         /// </summary>
@@ -172,22 +172,22 @@ namespace KachnaOnline.App.Controllers
             try
             {
                 await _facade.UpdateBoardGameStock(id, stock);
-                return NoContent();
+                return this.NoContent();
             }
             catch (NotABoardGamesManagerException)
             {
-                return Forbid();
+                return this.Forbid();
             }
             catch (BoardGameNotFoundException)
             {
-                return NotFound();
+                return this.NotFound();
             }
             catch (BoardGameManipulationFailedException)
             {
-                return Problem(statusCode: 500);
+                return this.Problem(statusCode: 500);
             }
         }
-        
+
         /// <summary>
         /// Returns the list of all board game categories.
         /// </summary>
@@ -220,7 +220,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (CategoryNotFoundException)
             {
-                return NotFound();
+                return this.NotFound();
             }
         }
 
@@ -239,15 +239,15 @@ namespace KachnaOnline.App.Controllers
             try
             {
                 var createdCategory = await _facade.CreateCategory(category);
-                return CreatedAtAction(nameof(GetCategory), new { id = createdCategory.Id }, createdCategory);
+                return this.CreatedAtAction(nameof(this.GetCategory), new { id = createdCategory.Id }, createdCategory);
             }
             catch (NotABoardGamesManagerException)
             {
-                return Forbid();
+                return this.Forbid();
             }
             catch (CategoryManipulationFailedException)
             {
-                return Problem(statusCode: 500);
+                return this.Problem(statusCode: 500);
             }
         }
 
@@ -268,19 +268,19 @@ namespace KachnaOnline.App.Controllers
             try
             {
                 await _facade.UpdateCategory(id, category);
-                return NoContent();
+                return this.NoContent();
             }
             catch (NotABoardGamesManagerException)
             {
-                return Forbid();
+                return this.Forbid();
             }
             catch (CategoryNotFoundException)
             {
-                return NotFound();
+                return this.NotFound();
             }
             catch (CategoryManipulationFailedException)
             {
-                return Problem(statusCode: 500);
+                return this.Problem(statusCode: 500);
             }
         }
 
@@ -303,23 +303,23 @@ namespace KachnaOnline.App.Controllers
             try
             {
                 await _facade.DeleteCategory(id);
-                return NoContent();
+                return this.NoContent();
             }
             catch (NotABoardGamesManagerException)
             {
-                return Forbid();
+                return this.Forbid();
             }
             catch (CategoryNotFoundException)
             {
-                return NotFound();
+                return this.NotFound();
             }
             catch (CategoryManipulationFailedException)
             {
-                return Problem(statusCode: 500);
+                return this.Problem(statusCode: 500);
             }
             catch (CategoryHasBoardGamesException e)
             {
-                return Conflict(e.ConflictingGameIds);
+                return this.Conflict(e.ConflictingGameIds);
             }
         }
     }

@@ -8,12 +8,12 @@ namespace KachnaOnline.Business.Exceptions.BoardGames
 {
     public class CategoryHasBoardGamesException : Exception
     {
-        public Array ConflictingGameIds { get; }
+        public int[] ConflictingGameIds { get; }
 
-        public CategoryHasBoardGamesException(Array conflicting) : base(
+        public CategoryHasBoardGamesException(int[] conflicting) : base(
             "Category cannot be deleted because it has linked games.")
         {
-            ConflictingGameIds = conflicting;
+            this.ConflictingGameIds = conflicting;
         }
     }
 }

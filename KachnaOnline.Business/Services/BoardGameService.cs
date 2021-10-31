@@ -60,7 +60,7 @@ namespace KachnaOnline.Business.Services
             await foreach (var game in _boardGameRepository.GetFilteredGames(category, players, available, visible))
             {
                 var gameModel = _mapper.Map<BoardGame>(game);
-                await CalculateGameAvailability(gameModel);
+                await this.CalculateGameAvailability(gameModel);
                 result.Add(gameModel);
             }
 
@@ -72,12 +72,10 @@ namespace KachnaOnline.Business.Services
         {
             var game = await _boardGameRepository.GetWithCategory(boardGameId);
             if (game is null)
-            {
                 throw new BoardGameNotFoundException();
-            }
 
             var gameModel = _mapper.Map<BoardGame>(game);
-            await CalculateGameAvailability(gameModel);
+            await this.CalculateGameAvailability(gameModel);
             return gameModel;
         }
 
@@ -85,18 +83,13 @@ namespace KachnaOnline.Business.Services
         public async Task<BoardGame> CreateBoardGame(BoardGame game)
         {
             if (game is null)
-            {
-                throw new ArgumentNullException();
-            }
+                throw new ArgumentNullException(nameof(game));
+
             if (await _boardGameCategoryRepository.Get(game.CategoryId) is null)
-            {
                 throw new CategoryNotFoundException();
-            }
 
             if (game.OwnerId is not null && await _userRepository.Get(game.OwnerId.Value) is null)
-            {
                 throw new UserNotFoundException(game.OwnerId.Value);
-            }
 
             var gameEntity = _mapper.Map<KachnaOnline.Data.Entities.BoardGames.BoardGame>(game);
             await _boardGameRepository.Add(gameEntity);
@@ -104,7 +97,7 @@ namespace KachnaOnline.Business.Services
             {
                 await _unitOfWork.SaveChanges();
                 var newGame = _mapper.Map<BoardGame>(gameEntity);
-                await CalculateGameAvailability(newGame);
+                await this.CalculateGameAvailability(newGame);
                 return newGame;
             }
             catch (Exception e)
@@ -119,26 +112,19 @@ namespace KachnaOnline.Business.Services
         public async Task UpdateBoardGame(int id, BoardGame game)
         {
             if (game is null)
-            {
-                throw new ArgumentNullException();
-            }
+                throw new ArgumentNullException(nameof(game));
+
             var currentGame = await _boardGameRepository.Get(id);
             if (currentGame is null)
-            {
                 throw new BoardGameNotFoundException();
-            }
 
             if (await _boardGameCategoryRepository.Get(game.CategoryId) is null)
-            {
                 throw new CategoryNotFoundException();
-            }
 
             if (game.OwnerId is not null && await _userRepository.Get(game.OwnerId.Value) is null)
-            {
                 throw new UserNotFoundException(game.OwnerId.Value);
-            }
-            
-            _mapper.Map<BoardGame, KachnaOnline.Data.Entities.BoardGames.BoardGame>(game, currentGame);
+
+            _mapper.Map(game, currentGame);
             try
             {
                 await _unitOfWork.SaveChanges();
@@ -156,9 +142,8 @@ namespace KachnaOnline.Business.Services
         {
             var currentGame = await _boardGameRepository.Get(id);
             if (currentGame is null)
-            {
                 throw new BoardGameNotFoundException();
-            }
+
             currentGame.InStock = newStock;
             currentGame.Unavailable = newUnavailable;
             currentGame.Visible = newVisibility;
@@ -186,9 +171,7 @@ namespace KachnaOnline.Business.Services
         {
             var category = await _boardGameCategoryRepository.Get(categoryId);
             if (category is null)
-            {
                 throw new CategoryNotFoundException();
-            }
 
             return _mapper.Map<Category>(category);
         }
@@ -197,9 +180,8 @@ namespace KachnaOnline.Business.Services
         public async Task<Category> CreateCategory(Category category)
         {
             if (category is null)
-            {
-                throw new ArgumentNullException();
-            }
+                throw new ArgumentNullException(nameof(category));
+
             var categoryEntity = _mapper.Map<KachnaOnline.Data.Entities.BoardGames.Category>(category);
             await _boardGameCategoryRepository.Add(categoryEntity);
             try
@@ -219,14 +201,11 @@ namespace KachnaOnline.Business.Services
         public async Task UpdateCategory(int id, Category category)
         {
             if (category is null)
-            {
-                throw new ArgumentNullException();
-            }
+                throw new ArgumentNullException(nameof(category));
+
             var currentCategory = await _boardGameCategoryRepository.Get(id);
             if (currentCategory is null)
-            {
                 throw new CategoryNotFoundException();
-            }
 
             currentCategory.Name = category.Name;
             currentCategory.ColourHex = category.ColourHex;
@@ -247,14 +226,10 @@ namespace KachnaOnline.Business.Services
         {
             var entity = await _boardGameCategoryRepository.GetWithBoardGames(id);
             if (entity is null)
-            {
                 throw new CategoryNotFoundException();
-            }
 
             if (entity.Games.Count != 0)
-            {
                 throw new CategoryHasBoardGamesException(entity.Games.Select(d => d.Id).ToArray());
-            }
 
             await _boardGameCategoryRepository.Delete(entity);
             try

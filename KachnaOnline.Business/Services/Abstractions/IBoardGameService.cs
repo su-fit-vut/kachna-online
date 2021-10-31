@@ -31,7 +31,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <exception cref="BoardGameNotFoundException">Thrown when a board game with the given
         /// <paramref name="boardGameId"/> does not exist.</exception>
         Task<BoardGame> GetBoardGame(int boardGameId);
-        
+
         /// <summary>
         /// Creates a new board game.
         /// </summary>
@@ -45,7 +45,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// not exist.</exception>
         /// <exception cref="ArgumentNullException">When <paramref name="game"/> is null.</exception>
         Task<BoardGame> CreateBoardGame(BoardGame game);
-        
+
         /// <summary>
         /// Updates a board game with the given ID.
         /// </summary>
@@ -60,7 +60,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// not exist.</exception>
         /// <exception cref="ArgumentNullException">When <paramref name="game"/> is null.</exception>
         Task UpdateBoardGame(int id, BoardGame game);
-        
+
         /// <summary>
         /// Updates stock of a board game with the given ID.
         /// </summary>

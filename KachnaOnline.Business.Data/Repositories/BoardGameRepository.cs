@@ -27,27 +27,22 @@ namespace KachnaOnline.Business.Data.Repositories
         {
             var result = Set.AsQueryable();
             if (categoryId is not null)
-            {
                 result = result.Where(b => b.CategoryId == categoryId);
-            }
 
             if (players is not null)
             {
                 result = result.Where(b =>
-                    (b.PlayersMin != null && b.PlayersMin <= players) &&
-                    (b.PlayersMax != null && b.PlayersMax >= players));
+                    b.PlayersMin != null && b.PlayersMin <= players && b.PlayersMax != null && b.PlayersMax >= players);
             }
 
             if (available is not null)
             {
                 // TODO: reservations
-                result = result.Where(b => (b.InStock - b.Unavailable) > 0 == available);
+                result = result.Where(b => (b.InStock - b.Unavailable > 0) == available);
             }
 
             if (visible is not null)
-            {
                 result = result.Where(b => b.Visible == visible);
-            }
 
             return result.Include(b => b.Category).AsAsyncEnumerable();
         }

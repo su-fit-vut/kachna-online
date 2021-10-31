@@ -55,7 +55,7 @@ namespace KachnaOnline.Business.Facades
         /// <returns>The created <see cref="CategoryDto"/> with a filled ID.</returns>
         /// <exception cref="CategoryManipulationFailedException">Thrown when the category cannot be created.
         /// This can be caused by a database error.</exception>
-        public async Task<CategoryDto> CreateCategory( CategoryDto category)
+        public async Task<CategoryDto> CreateCategory(CategoryDto category)
         {
             var createdCategory = await _boardGameService.CreateCategory(_mapper.Map<Category>(category));
             return _mapper.Map<CategoryDto>(createdCategory);
@@ -69,7 +69,7 @@ namespace KachnaOnline.Business.Facades
         /// <exception cref="CategoryNotFoundException">When a category with the given <paramref name="id"/> does not
         /// exist.</exception>
         /// <exception cref="CategoryManipulationFailedException">When the category cannot be updated.</exception>
-        public async Task UpdateCategory( int id, CategoryDto category)
+        public async Task UpdateCategory(int id, CategoryDto category)
         {
             await _boardGameService.UpdateCategory(id, _mapper.Map<Category>(category));
         }
@@ -125,16 +125,14 @@ namespace KachnaOnline.Business.Facades
         {
             // Regular users can only see visible games
             if (!user.IsInRole(RoleConstants.BoardGamesManager))
-            {
                 visible = true;
-            }
 
             var games = await _boardGameService.GetBoardGames(categoryId, players, available, visible);
             var result = new List<BoardGameDto>();
             foreach (var game in games)
             {
                 var dto = _mapper.Map<BoardGameDto>(game);
-                HidePrivateBoardGameAttributes(user, dto);
+                this.HidePrivateBoardGameAttributes(user, dto);
                 result.Add(dto);
             }
 
@@ -152,7 +150,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<BoardGameDto> GetBoardGame(ClaimsPrincipal user, int boardGameId)
         {
             var dto = _mapper.Map<BoardGameDto>(await _boardGameService.GetBoardGame(boardGameId));
-            HidePrivateBoardGameAttributes(user, dto);
+            this.HidePrivateBoardGameAttributes(user, dto);
             return dto;
         }
 
