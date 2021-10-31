@@ -10,12 +10,13 @@ namespace KachnaOnline.App.Controllers
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : ControllerBase
     {
-        [HttpGet("{code?}")]
+        [Route("{code?}")]
+        [AcceptVerbs("GET", "POST", "PUT", "DELETE", "PATCH")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         [IgnoreAntiforgeryToken]
         public IActionResult Get(int? code)
         {
-            return Problem(statusCode: code);
+            return this.Problem(statusCode: code);
         }
     }
 }
