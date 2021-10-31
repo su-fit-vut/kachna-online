@@ -19,9 +19,9 @@ namespace KachnaOnline.App.Controllers
     [Authorize(Roles = RoleConstants.BoardGamesManager)]
     public class BoardGamesController : ControllerBase
     {
-        private readonly BoardGameFacade _facade;
+        private readonly BoardGamesFacade _facade;
 
-        public BoardGamesController(BoardGameFacade facade)
+        public BoardGamesController(BoardGamesFacade facade)
         {
             _facade = facade;
         }

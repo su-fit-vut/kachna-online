@@ -1,4 +1,4 @@
-// BoardGameFacade.cs
+// BoardGamesFacade.cs
 // Author: František Nečas
 
 using System;
@@ -15,12 +15,12 @@ using KachnaOnline.Business.Exceptions.BoardGames;
 
 namespace KachnaOnline.Business.Facades
 {
-    public class BoardGameFacade
+    public class BoardGamesFacade
     {
         private readonly IMapper _mapper;
         private readonly IBoardGameService _boardGameService;
 
-        public BoardGameFacade(IBoardGameService boardGameService, IMapper mapper)
+        public BoardGamesFacade(IBoardGameService boardGameService, IMapper mapper)
         {
             _boardGameService = boardGameService;
             _mapper = mapper;
