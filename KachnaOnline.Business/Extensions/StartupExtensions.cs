@@ -49,7 +49,7 @@ namespace KachnaOnline.Business.Extensions
 
             // Add facades.
             services.AddScoped<ClubInfoFacade>();
-            services.AddScoped<BoardGameFacade>();
+            services.AddScoped<BoardGamesFacade>();
         }
     }
 }
