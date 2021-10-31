@@ -1,6 +1,7 @@
 // KisMappings.cs
 // Author: Ondřej Ondryáš
 
+using System;
 using System.Linq;
 using AutoMapper;
 using KachnaOnline.Business.Configuration;
@@ -16,7 +17,7 @@ namespace KachnaOnline.Business.Mappings
         {
             this.CreateMap<KisArticle, OfferedItemDto>()
                 .ForMember(dto => dto.Labels, o =>
-                    o.MapFrom(a => a.Labels.Select(l => l.Name)))
+                    o.MapFrom(a => a.Labels == null ? Array.Empty<string>() : a.Labels.Select(l => l.Name)))
                 .ForMember(dto => dto.Prestige, o =>
                     o.MapFrom(a => (int)a.Prestige))
                 .ForMember(dto => dto.IsPermanentOffer, o =>

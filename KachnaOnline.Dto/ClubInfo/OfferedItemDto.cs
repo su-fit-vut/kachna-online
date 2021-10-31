@@ -1,6 +1,9 @@
 // OfferedItemDto.cs
 // Author: Ondřej Ondryáš
 
+using KachnaOnline.Dto.Swagger;
+using Newtonsoft.Json;
+
 namespace KachnaOnline.Dto.ClubInfo
 {
     /// <summary>
@@ -11,6 +14,7 @@ namespace KachnaOnline.Dto.ClubInfo
         /// <summary>
         /// The name of the item.
         /// </summary>
+        [SwaggerNotNull]
         public string Name { get; set; }
 
         /// <summary>
@@ -32,10 +36,11 @@ namespace KachnaOnline.Dto.ClubInfo
         /// Signalizes whether the item is a permanent offer.
         /// </summary>
         public bool IsPermanentOffer { get; set; }
-        
+
         /// <summary>
         /// The names of labels associated with the item.
         /// </summary>
-        public string[] Labels { get;set; }
+        [SwaggerNotNull]
+        public string[] Labels { get; set; }
     }
 }
