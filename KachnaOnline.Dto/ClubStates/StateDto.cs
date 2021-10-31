@@ -2,8 +2,8 @@
 // Author: Ondřej Ondryáš
 
 using System;
-using System.Text.Json.Serialization;
 using KachnaOnline.Dto.Swagger;
+using Newtonsoft.Json;
 
 namespace KachnaOnline.Dto.ClubStates
 {
@@ -28,8 +28,8 @@ namespace KachnaOnline.Dto.ClubStates
         public DateTime Start { get; set; }
 
         /// <summary>
-        /// The planned end of the state. If null, the state has no planned end and there is no state
-        /// planned in the future.
+        /// The planned end of the state.
+        /// Null if the state has no planned end and there is no state planned in the future.
         /// </summary>
         public DateTime? PlannedEnd { get; set; }
 
@@ -39,9 +39,9 @@ namespace KachnaOnline.Dto.ClubStates
         public string Note { get; set; }
 
         /// <summary>
-        /// The ID of an associated event. This is included in the response only when the state is linked to an event. 
+        /// The ID of an associated event.
+        /// Null if the state is not linked to an event. 
         /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? EventId { get; set; }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// An internal note. This is included in the response only when there's an internal note and the request
         /// is authorized to a state manager.
         /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string NoteInternal { get; set; }
     }
 }
