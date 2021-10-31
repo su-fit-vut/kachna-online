@@ -1,7 +1,6 @@
 // BoardGamesFacade.cs
 // Author: František Nečas
 
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -30,7 +29,7 @@ namespace KachnaOnline.Business.Facades
         /// Returns all categories of board games.
         /// </summary>
         /// <returns>A list of <see cref="CategoryDto"/>.</returns>
-        public async Task<List<CategoryDto>> GetCategories()
+        public async Task<IEnumerable<CategoryDto>> GetCategories()
         {
             var categories = await _boardGameService.GetBoardGameCategories();
             return _mapper.Map<List<CategoryDto>>(categories);
@@ -51,11 +50,11 @@ namespace KachnaOnline.Business.Facades
         /// <summary>
         /// Creates a new category.
         /// </summary>
-        /// <param name="category"><see cref="CategoryDto"/> to create.</param>
+        /// <param name="category"><see cref="CreateCategoryDto"/> to create.</param>
         /// <returns>The created <see cref="CategoryDto"/> with a filled ID.</returns>
         /// <exception cref="CategoryManipulationFailedException">Thrown when the category cannot be created.
         /// This can be caused by a database error.</exception>
-        public async Task<CategoryDto> CreateCategory(CategoryDto category)
+        public async Task<CategoryDto> CreateCategory(CreateCategoryDto category)
         {
             var createdCategory = await _boardGameService.CreateCategory(_mapper.Map<Category>(category));
             return _mapper.Map<CategoryDto>(createdCategory);
@@ -65,11 +64,11 @@ namespace KachnaOnline.Business.Facades
         /// Updates a category with the given ID.
         /// </summary>
         /// <param name="id">ID of the category to update.</param>
-        /// <param name="category"><see cref="CategoryDto"/> representing the new state.</param>
+        /// <param name="category"><see cref="CreateCategoryDto"/> representing the new state.</param>
         /// <exception cref="CategoryNotFoundException">When a category with the given <paramref name="id"/> does not
         /// exist.</exception>
         /// <exception cref="CategoryManipulationFailedException">When the category cannot be updated.</exception>
-        public async Task UpdateCategory(int id, CategoryDto category)
+        public async Task UpdateCategory(int id, CreateCategoryDto category)
         {
             await _boardGameService.UpdateCategory(id, _mapper.Map<Category>(category));
         }
@@ -88,24 +87,6 @@ namespace KachnaOnline.Business.Facades
         }
 
         /// <summary>
-        /// Sets <see cref="BoardGameDto"/> attributes to null if the given user does not have the right to see them.
-        /// </summary>
-        /// <param name="user">User to check the authorization for. All data is visible to board game manager.</param>
-        /// <param name="game">Game to hide details of.</param>
-        private void HidePrivateBoardGameAttributes(ClaimsPrincipal user, BoardGameDto game)
-        {
-            if (!user.IsInRole(RoleConstants.BoardGamesManager))
-            {
-                game.NoteInternal = null;
-                game.OwnerId = null;
-                game.DefaultReservationDays = null;
-                game.Visible = null;
-                game.InStock = null;
-                game.Unavailable = null;
-            }
-        }
-
-        /// <summary>
         /// Returns the list of board games.
         /// </summary>
         /// <param name="user">User requesting the data.</param>
@@ -114,9 +95,9 @@ namespace KachnaOnline.Business.Facades
         /// <param name="available">If set, returns only the board games of this availability.</param>
         /// <param name="visible">If set, returns only the boards games with this visibility. It is implicitly
         /// set to true for unauthenticated or regular users.</param>
-        /// <returns>A list of <see cref="BoardGameDto"/>. The attributes of each <see cref="BoardGameDto"/>
-        /// depend on the user requesting the data.</returns>
-        public async Task<List<BoardGameDto>> GetBoardGames(
+        /// <returns>A list of <see cref="BoardGameDto"/>. If the <paramref name="user"/> is an authorized
+        /// board games manager, returns a list of <see cref="ManagerBoardGameDto"/> instead.</returns>
+        public async Task<IEnumerable<BoardGameDto>> GetBoardGames(
             ClaimsPrincipal user,
             int? categoryId,
             int? players,
@@ -128,15 +109,12 @@ namespace KachnaOnline.Business.Facades
                 visible = true;
 
             var games = await _boardGameService.GetBoardGames(categoryId, players, available, visible);
-            var result = new List<BoardGameDto>();
-            foreach (var game in games)
+            if (user.IsInRole(RoleConstants.BoardGamesManager))
             {
-                var dto = _mapper.Map<BoardGameDto>(game);
-                this.HidePrivateBoardGameAttributes(user, dto);
-                result.Add(dto);
+                return _mapper.Map<List<ManagerBoardGameDto>>(games);
             }
 
-            return result;
+            return _mapper.Map<List<BoardGameDto>>(games);
         }
 
         /// <summary>
@@ -144,38 +122,62 @@ namespace KachnaOnline.Business.Facades
         /// </summary>
         /// <param name="user">User requesting the data.</param>
         /// <param name="boardGameId">ID of the <see cref="BoardGameDto"/> to return.</param>
-        /// <returns>A <see cref="BoardGameDto"/> with the given ID.</returns>
+        /// <returns>A <see cref="BoardGameDto"/> with the given ID. If the <paramref name="user"/> is an authorized
+        /// board games manager, returns <see cref="ManagerBoardGameDto"/> instead.</returns>
         /// <exception cref="BoardGameNotFoundException">Thrown when a board game with the given
         /// <paramref name="boardGameId"/> does not exist.</exception>
+        /// <exception cref="NotAuthenticatedException">Thrown when a board game with the given
+        /// <paramref name="boardGameId"/> exists but is invisible and the <paramref name="user"/>
+        /// is not authenticated.</exception>
+        /// <exception cref="NotABoardGamesManagerException">Thrown when a board game with the given
+        /// <paramref name="boardGameId"/> exists but is invisible and the <paramref name="user"/>
+        /// is not a board games manager.</exception>
         public async Task<BoardGameDto> GetBoardGame(ClaimsPrincipal user, int boardGameId)
         {
-            var dto = _mapper.Map<BoardGameDto>(await _boardGameService.GetBoardGame(boardGameId));
-            this.HidePrivateBoardGameAttributes(user, dto);
-            return dto;
+            var game = await _boardGameService.GetBoardGame(boardGameId);
+            if (!game.Visible)
+            {
+                if (!(user.Identity?.IsAuthenticated ?? false))
+                {
+                    throw new NotAuthenticatedException();
+                }
+
+                if (!user.IsInRole(RoleConstants.BoardGamesManager))
+                {
+                    throw new NotABoardGamesManagerException();
+                }
+            }
+
+            if (user.IsInRole(RoleConstants.BoardGamesManager))
+            {
+                return _mapper.Map<ManagerBoardGameDto>(game);
+            }
+
+            return _mapper.Map<BoardGameDto>(game);
         }
 
         /// <summary>
         /// Creates a new board game.
         /// </summary>
-        /// <param name="game"><see cref="BoardGameDto"/> to create.</param>
-        /// <returns>The created <see cref="BoardGameDto"/> with a filled ID.</returns>
+        /// <param name="game"><see cref="CreateBoardGameDto"/> to create.</param>
+        /// <returns>The created <see cref="ManagerBoardGameDto"/> with a filled ID.</returns>
         /// <exception cref="BoardGameManipulationFailedException">Thrown when the board game cannot be created.
         /// This can be caused by a database error.</exception>
         /// <exception cref="CategoryNotFoundException">When a category with the ID assigned to the game
         /// does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with the ID assigned to the game does
         /// not exist.</exception>
-        public async Task<BoardGameDto> CreateBoardGame(BoardGameDto game)
+        public async Task<BoardGameDto> CreateBoardGame(CreateBoardGameDto game)
         {
             var createdGame = await _boardGameService.CreateBoardGame(_mapper.Map<BoardGame>(game));
-            return _mapper.Map<BoardGameDto>(createdGame);
+            return _mapper.Map<ManagerBoardGameDto>(createdGame);
         }
 
         /// <summary>
         /// Updates a board game with the given ID.
         /// </summary>
         /// <param name="id">ID of the board game to update.</param>
-        /// <param name="game"><see cref="BoardGameDto"/> representing the new state.</param>
+        /// <param name="game"><see cref="CreateBoardGameDto"/> representing the new state.</param>
         /// <exception cref="BoardGameNotFoundException">When a board game with the given <paramref name="id"/> does not
         /// exist.</exception>
         /// <exception cref="BoardGameManipulationFailedException">When the board game cannot be updated.</exception>
@@ -183,7 +185,7 @@ namespace KachnaOnline.Business.Facades
         /// does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with the ID assigned to the game does
         /// not exist.</exception>
-        public async Task UpdateBoardGame(int id, BoardGameDto game)
+        public async Task UpdateBoardGame(int id, CreateBoardGameDto game)
         {
             await _boardGameService.UpdateBoardGame(id, _mapper.Map<BoardGame>(game));
         }
