@@ -38,29 +38,37 @@ namespace KachnaOnline.App.Controllers
         /// <param name="available">If present, only games with this availability will be returned.</param>
         /// <param name="visible">If present, only games with this visibility will be returned.
         /// Regular and unauthenticated users will always receive only visible games.</param>
-        /// <returns>A list of <see cref="BoardGameDto"/> corresponding to the given queries.</returns>
+        /// <returns>A list of <see cref="BoardGameDto"/> corresponding to the given queries. If the user
+        /// is an authorized board games manager, returns a list of <see cref="ManagerBoardGameDto"/></returns>
         /// <response code="200">The list of board games.</response>
         [AllowAnonymous]
         [ProducesResponseType(200)]
         [HttpGet]
-        public async Task<ActionResult<List<BoardGameDto>>> GetBoardGames(
+        public async Task<ActionResult<IEnumerable<BoardGameDto>>> GetBoardGames(
             int? categoryId,
             int? players,
             bool? available,
             bool? visible)
         {
-            return await _facade.GetBoardGames(this.User, categoryId, players, available, visible);
+            var dto = await _facade.GetBoardGames(this.User, categoryId, players, available, visible);
+            return new ActionResult<IEnumerable<BoardGameDto>>(dto);
         }
 
         /// <summary>
         /// Returns a board game with the given ID.
         /// </summary>
         /// <param name="id">ID of the board game to return.</param>
-        /// <returns>A <see cref="BoardGameDto"/> of a game corresponding to ID <paramref name="id"/>.</returns>
+        /// <returns>A <see cref="BoardGameDto"/> of a game corresponding to ID <paramref name="id"/>.
+        /// A <see cref="ManagerBoardGameDto"/> if the user is an authorized board games manager.</returns>
         /// <response code="200">The board game.</response>
+        /// <response code="401">The board game exists but is not visible and the user is not authenticated.</response>
+        /// <response code="403">The board game exists but is not visible and the user is not
+        /// a board games manager.</response>
         /// <response code="404">No such board game exists.</response>
         [AllowAnonymous]
         [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [HttpGet("{id}")]
         public async Task<ActionResult<BoardGameDto>> GetBoardGame(int id)
@@ -73,21 +81,27 @@ namespace KachnaOnline.App.Controllers
             {
                 return this.NotFound();
             }
+            catch (NotAuthenticatedException)
+            {
+                return this.Unauthorized();
+            }
+            catch (NotABoardGamesManagerException)
+            {
+                return this.Forbid();
+            }
         }
 
         /// <summary>
         /// Creates a new board game.
         /// </summary>
-        /// <param name="game"><see cref="BoardGameDto"/> to create.</param>
-        /// <returns>The created <see cref="BoardGameDto"/> if the creation succeeded.</returns>
+        /// <param name="game"><see cref="CreateBoardGameDto"/> to create.</param>
+        /// <returns>The created <see cref="ManagerBoardGameDto"/> if the creation succeeded.</returns>
         /// <response code="201">The created game.</response>
-        /// <response code="403">User not logged in or not a board game manager.</response>
         /// <response code="422">A category or user with the given ID does not exist.</response>
         [ProducesResponseType(201)]
-        [ProducesResponseType(403)]
         [ProducesResponseType(422)]
         [HttpPost]
-        public async Task<ActionResult<BoardGameDto>> CreateBoardGame([FromBody] BoardGameDto game)
+        public async Task<ActionResult<ManagerBoardGameDto>> CreateBoardGame(CreateBoardGameDto game)
         {
             try
             {
@@ -116,17 +130,15 @@ namespace KachnaOnline.App.Controllers
         /// Updates a board game with the given ID.
         /// </summary>
         /// <param name="id">ID of the board game to update.</param>
-        /// <param name="game"><see cref="BoardGameDto"/> representing the new state.</param>
+        /// <param name="game"><see cref="CreateBoardGameDto"/> representing the new state.</param>
         /// <response code="204">Board game was updated.</response>
-        /// <response code="403">User not logged in or not a board game manager.</response>
         /// <response code="404">Board game with the given ID does not exist.</response>
         /// <response code="422">A category or user with the given ID does not exist.</response>
         [ProducesResponseType(204)]
-        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateBoardGame(int id, [FromBody] BoardGameDto game)
+        public async Task<ActionResult> UpdateBoardGame(int id, CreateBoardGameDto game)
         {
             try
             {
@@ -161,13 +173,11 @@ namespace KachnaOnline.App.Controllers
         /// <param name="id">ID of the board game to update.</param>
         /// <param name="stock"><see cref="BoardGameStockDto"/> representing the new stock state.</param>
         /// <response code="204">Board game stock was updated.</response>
-        /// <response code="403">User not logged in or not a board game manager.</response>
         /// <response code="404">Board game with the given ID does not exist.</response>
         [ProducesResponseType(204)]
-        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [HttpPut("{id}/stock")]
-        public async Task<ActionResult> UpdateBoardGameStock(int id, [FromBody] BoardGameStockDto stock)
+        public async Task<ActionResult> UpdateBoardGameStock(int id, BoardGameStockDto stock)
         {
             try
             {
@@ -196,9 +206,9 @@ namespace KachnaOnline.App.Controllers
         [AllowAnonymous]
         [ProducesResponseType(200)]
         [HttpGet("categories")]
-        public async Task<ActionResult<List<CategoryDto>>> GetCategories()
+        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
         {
-            return await _facade.GetCategories();
+            return new ActionResult<IEnumerable<CategoryDto>>(await _facade.GetCategories());
         }
 
         /// <summary>
@@ -227,14 +237,12 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Creates a new board game category.
         /// </summary>
-        /// <param name="category"><see cref="CategoryDto"/> to create.</param>
+        /// <param name="category"><see cref="CreateCategoryDto"/> to create.</param>
         /// <returns>The created <see cref="CategoryDto"/> if the creation succeeded.</returns>
         /// <response code="201">The created category.</response>
-        /// <response code="403">User not logged in or not a board game manager.</response>
         [ProducesResponseType(201)]
-        [ProducesResponseType(403)]
         [HttpPost("categories")]
-        public async Task<ActionResult<CategoryDto>> CreateCategory([FromBody] CategoryDto category)
+        public async Task<ActionResult<CategoryDto>> CreateCategory(CreateCategoryDto category)
         {
             try
             {
@@ -255,15 +263,13 @@ namespace KachnaOnline.App.Controllers
         /// Updates a category with the given ID.
         /// </summary>
         /// <param name="id">ID of the category to update.</param>
-        /// <param name="category"><see cref="CategoryDto"/> representing the new state.</param>
+        /// <param name="category"><see cref="CreateCategoryDto"/> representing the new state.</param>
         /// <response code="204">Category was updated.</response>
-        /// <response code="403">User not logged in or not a board game manager.</response>
         /// <response code="404">Category with the given ID does not exist.</response>
         [ProducesResponseType(204)]
-        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [HttpPut("categories/{id}")]
-        public async Task<ActionResult> UpdateCategory(int id, [FromBody] CategoryDto category)
+        public async Task<ActionResult> UpdateCategory(int id, CreateCategoryDto category)
         {
             try
             {
@@ -289,12 +295,10 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <param name="id">ID of the category to delete.</param>
         /// <response code="204">Category was deleted.</response>
-        /// <response code="403">User not logged in or not a board game manager.</response>
         /// <response code="404">Category with the given ID does not exist.</response>
         /// <response code="409">Board games from this category must first be transferred. Returns the list
-        /// of conflicting board games.</response>
+        /// of IDs of conflicting board games.</response>
         [ProducesResponseType(204)]
-        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         [HttpDelete("categories/{id}")]
