@@ -2,6 +2,8 @@
 // Author: Ondřej Ondryáš
 
 using System;
+using System.Linq;
+using System.Reflection.Metadata;
 using System.Text.Json.Serialization;
 using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Extensions;
@@ -10,10 +12,13 @@ using KachnaOnline.Business.Data.Extensions;
 using KachnaOnline.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Serilog;
 
 namespace KachnaOnline.App
@@ -51,11 +56,17 @@ namespace KachnaOnline.App
 
             // Add MVC controllers.
             services.AddControllers()
-                .AddJsonOptions(options =>
+                .AddNewtonsoftJson(options =>
                 {
-                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
-                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                })
+                .AddMvcOptions(options =>
+                {
+                    var inputFormatter = options.InputFormatters.OfType<NewtonsoftJsonInputFormatter>().First();
+                    inputFormatter.SupportedMediaTypes.Clear();
+                    inputFormatter.SupportedMediaTypes.Add("application/json");
+                    inputFormatter.SupportedMediaTypes.Add("text/json");
                 });
 
             // Add JWT authorization.
