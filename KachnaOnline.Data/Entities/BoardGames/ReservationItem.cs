@@ -14,7 +14,7 @@ namespace KachnaOnline.Data.Entities.BoardGames
         [Key] public int Id { get; set; }
         [Required] public int ReservationId { get; set; }
         [Required] public int BoardGameId { get; set; }
-        public DateTime ExpiresOn { get; set; }
+        public DateTime? ExpiresOn { get; set; }
 
         // Navigation properties
         public virtual Reservation Reservation { get; set; }
