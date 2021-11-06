@@ -59,6 +59,7 @@ namespace KachnaOnline.Business.Extensions
             services.AddScoped<IKisService, KisService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBoardGamesService, BoardGamesService>();
+            services.AddScoped<IEventsService, EventsService>();
 
             // Add facades.
             services.AddScoped<ClubInfoFacade>();
