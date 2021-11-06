@@ -1,9 +1,9 @@
-// EventConstants.cs
+// EventOptions.cs
 // Author: David Chocholatý
 
-namespace KachnaOnline.Business.Constants
+namespace KachnaOnline.Business.Configuration
 {
-    public static class EventConstants
+    public static class EventOptions
     {
         // Default time span to query for in days.
         public const int QueryDaysTimeSpan = 180;
