@@ -2,6 +2,7 @@
 // Author: Ondřej Ondryáš
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using KachnaOnline.Data.Entities.Users;
 
@@ -35,5 +36,6 @@ namespace KachnaOnline.Data.Entities.BoardGames
         // Navigation properties
         public virtual Category Category { get; set; }
         public virtual User Owner { get; set; }
+        public virtual ICollection<ReservationItem> ReservationItems { get; set; }
     }
 }

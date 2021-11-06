@@ -447,7 +447,7 @@ namespace KachnaOnline.Data.Migrations
             modelBuilder.Entity("KachnaOnline.Data.Entities.BoardGames.ReservationItem", b =>
                 {
                     b.HasOne("KachnaOnline.Data.Entities.BoardGames.BoardGame", "BoardGame")
-                        .WithMany()
+                        .WithMany("ReservationItems")
                         .HasForeignKey("BoardGameId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -566,6 +566,11 @@ namespace KachnaOnline.Data.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("KachnaOnline.Data.Entities.BoardGames.BoardGame", b =>
+                {
+                    b.Navigation("ReservationItems");
                 });
 
             modelBuilder.Entity("KachnaOnline.Data.Entities.BoardGames.Category", b =>

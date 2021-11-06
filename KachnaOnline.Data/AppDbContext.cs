@@ -125,7 +125,7 @@ namespace KachnaOnline.Data
 
             builder.Entity<ReservationItem>()
                 .HasOne(e => e.BoardGame)
-                .WithMany()
+                .WithMany(e => e.ReservationItems)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
