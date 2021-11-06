@@ -314,7 +314,7 @@ namespace KachnaOnline.Business.Services
         /// <summary>
         /// Reads a stream that contains a JSON with KIS token data, deserializes it and uses the authorization token
         /// to fetch the corresponding user data using <see cref="FetchIdentity"/>. Returns a <see cref="KisIdentity"/>
-        /// object with the tokens and the fetched data. 
+        /// object with the tokens and the fetched data.
         /// </summary>
         /// <param name="responseStream">A <see cref="Stream"/> that contains a JSON with KIS token data.</param>
         /// <param name="client">An <see cref="HttpClient"/> instance to use when fetching the user data.</param>
@@ -357,7 +357,7 @@ namespace KachnaOnline.Business.Services
 
         /// <summary>
         /// Fetches user data from KIS using the specified authorization token <paramref name="authToken"/>
-        /// and an existing <see cref="HttpClient"/> instance <paramref name="client"/>. 
+        /// and an existing <see cref="HttpClient"/> instance <paramref name="client"/>.
         /// </summary>
         /// <param name="authToken">The user's KIS authorization token.</param>
         /// <param name="client">An <see cref="HttpClient"/> instance.</param>

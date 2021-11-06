@@ -7,14 +7,14 @@ namespace KachnaOnline.Business.Models.Kis
 {
     /// <summary>
     /// Maps KIS #/components/schemas/labels.
-    /// </summary> 
+    /// </summary>
     public class KisLabel
     {
         public string Color { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
     }
-    
+
     /// <summary>
     /// Maps a subset of KIS #/components/schemas/article_listing (and /offered_article by inheritance).
     /// </summary>

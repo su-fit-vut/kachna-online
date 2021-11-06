@@ -161,7 +161,7 @@ namespace KachnaOnline.Business.Services
                 userEntity.Name = kisData.Name;
                 userEntity.Email = kisData.Email;
 
-                // Only assign KIS nickname if the user hasn't set a custom nickname. 
+                // Only assign KIS nickname if the user hasn't set a custom nickname.
                 userEntity.Nickname ??= kisData.Nickname;
             }
 
@@ -232,7 +232,7 @@ namespace KachnaOnline.Business.Services
         {
             var mappings = _kisOptions.CurrentValue.RoleMappings;
 
-            // Select all local roles corresponding to the user's KIS roles 
+            // Select all local roles corresponding to the user's KIS roles
             var targetRoles = mappings
                 .Where(e => userKisRoles.Contains(e.Key))
                 .SelectMany(e => e.Value)

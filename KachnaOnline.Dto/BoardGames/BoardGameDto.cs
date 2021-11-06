@@ -13,7 +13,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// </summary>
         /// <example>1</example>
         public int Id { get; set; }
-        
+
         /// <summary>
         /// Nested <see cref="CategoryDto"/> object representing the category of the game.
         /// </summary>

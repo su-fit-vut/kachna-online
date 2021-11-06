@@ -10,7 +10,7 @@ namespace KachnaOnline.Business.Models.Users
         /// created this role assignment. May be null if this assignment was mapped from a KIS role.
         /// </summary>
         public User AssignedBy { get; set; }
-        
+
         /// <summary>
         /// The role name.
         /// </summary>

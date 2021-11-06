@@ -24,7 +24,7 @@ namespace KachnaOnline.Dto.ClubStates
 
         /// <summary>
         /// The ID of a user.
-        /// This is included in the response only when the request is authorized to a state manager or an admin. 
+        /// This is included in the response only when the request is authorized to a state manager or an admin.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? Id { get; set; }

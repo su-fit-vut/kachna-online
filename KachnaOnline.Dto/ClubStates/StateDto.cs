@@ -40,12 +40,12 @@ namespace KachnaOnline.Dto.ClubStates
 
         /// <summary>
         /// The ID of an associated event.
-        /// Null if the state is not linked to an event. 
+        /// Null if the state is not linked to an event.
         /// </summary>
         public int? EventId { get; set; }
 
         /// <summary>
-        /// The next planned state. 
+        /// The next planned state.
         /// </summary>
         [SwaggerNotNull]
         public StateDto FollowingState { get; set; }

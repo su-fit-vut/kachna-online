@@ -9,7 +9,7 @@ namespace KachnaOnline.Business.Configuration
         /// A secret key that is used to sign the issued JWTs.
         /// </summary>
         public string Secret { get; set; }
-        
+
         /// <summary>
         /// Validity (time between issuing and expiration) of issued JWTs in seconds.
         /// </summary>

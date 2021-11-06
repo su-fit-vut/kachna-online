@@ -19,7 +19,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// <summary>
         /// The ID of the user that has triggered the end of this state.
         /// This is included in the response only when the state was manually ended by a user.
-        /// This is included in the response only when the request is authorized to a state manager or an admin. 
+        /// This is included in the response only when the request is authorized to a state manager or an admin.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? ClosedBy { get; set; }

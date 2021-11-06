@@ -1,4 +1,4 @@
-// LoginController.cs
+// AuthController.cs
 // Author: Ondřej Ondryáš
 
 using System.ComponentModel.DataAnnotations;
@@ -22,14 +22,14 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Exchanges a KIS eduID session ID for a local access token. 
+        /// Exchanges a KIS eduID session ID for a local access token.
         /// </summary>
         /// <remarks>
         /// A KIS eduID session ID may be obtained by making a GET request to KIS /auth/eduid.
         /// A possible login flow is that a frontend calls KIS /auth/eduid and provides a URL pointing to this
         /// endpoint as the 'redirect' parameter. KIS returns an eduID redirect link to which the frontend redirects
         /// the user. After logging in, the user gets redirected by KIS to this endpoint with the <paramref name="session"/>
-        /// parameter set. This endpoint will then provide the user with an access token to this service's API. 
+        /// parameter set. This endpoint will then provide the user with an access token to this service's API.
         /// </remarks>
         /// <param name="session">A KIS eduID session ID.</param>
         /// <returns>A JWT Bearer token representing the user's identity.</returns>
