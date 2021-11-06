@@ -40,7 +40,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<KisIdentity> GetIdentityFromRefreshToken(string refreshToken);
 
         /// <summary>
-        /// Fetches current tap info from KIS for the configured tap IDs. 
+        /// Fetches current tap info from KIS for the configured tap IDs.
         /// </summary>
         /// <returns>A collection of <see cref="KisTapInfo"/> objects with information about the taps or null
         /// when no tap data can be fetched.

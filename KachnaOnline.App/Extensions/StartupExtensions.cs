@@ -97,7 +97,7 @@ namespace KachnaOnline.App.Extensions
         }
 
         /// <summary>
-        /// Configures and adds a Swagger generator. 
+        /// Configures and adds a Swagger generator.
         /// </summary>
         /// <param name="services">An <see cref="IServiceCollection"/> to add services to.</param>
         public static void AddCustomSwaggerGen(this IServiceCollection services)
@@ -130,7 +130,7 @@ namespace KachnaOnline.App.Extensions
                     }
                 });
 
-                // Filter out references to the ProblemDetails scheme 
+                // Filter out references to the ProblemDetails scheme
                 c.SchemaFilter<NullableFilter>();
                 // Add authorization info to endpoints
                 c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();

@@ -12,7 +12,7 @@ namespace KachnaOnline.Data.Entities.Users
 
         public bool ForceDisable { get; set; } = false;
         public int? AssignedByUserId { get; set; }
-        
+
         // Navigation properties
         public virtual User User { get; set; }
         public virtual User AssignedByUser { get; set; }

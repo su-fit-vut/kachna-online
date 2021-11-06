@@ -15,7 +15,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// </summary>
         /// <example>4</example>
         public int CategoryId { get; set; }
-        
+
         /// <summary>
         /// An internal note.
         /// </summary>

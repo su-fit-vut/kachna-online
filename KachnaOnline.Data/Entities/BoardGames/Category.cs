@@ -22,7 +22,7 @@ namespace KachnaOnline.Data.Entities.BoardGames
         [DefaultValue("000000")]
         [RegularExpression("[0-9a-f]{6}")]
         public string ColourHex { get; set; }
-        
+
         // Navigation properties
         public virtual ICollection<BoardGame> Games { get; set; }
     }

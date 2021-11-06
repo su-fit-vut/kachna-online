@@ -60,7 +60,7 @@ namespace KachnaOnline.Business.Facades
             {
                 return null;
             }
-            
+
             // If one of them is null, set to a blank list
             ret.Products ??= new List<OfferedItemDto>();
             ret.BeersOnTap ??= new List<OfferedItemDto>();
@@ -69,7 +69,7 @@ namespace KachnaOnline.Business.Facades
         }
 
         /// <summary>
-        /// Returns today's prestige leaderboard.  
+        /// Returns today's prestige leaderboard.
         /// </summary>
         /// <returns>A list of <see cref="LeaderboardItemDto"/> or null if an error occurs.
         /// The list is in ascending order – the first element denotes the person with the most prestige points.</returns>
@@ -118,7 +118,7 @@ namespace KachnaOnline.Business.Facades
 
             from = from.ToLocalTime();
             to = to.ToLocalTime();
-            
+
             var leaderboard =
                 await _kisService.GetLeaderboard(from, to, _kisOptionsMonitor.CurrentValue.NumberOfLeaderboardItems);
             if (leaderboard is null)

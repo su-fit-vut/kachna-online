@@ -29,7 +29,7 @@ namespace KachnaOnline.Business.Configuration
         /// <remarks>
         /// A display token is a long-lived token issued by KIS to a user with scope 'oo'
         /// that can be used to fetch certain range of information including product list,
-        /// current beers on tap or prestige leaderboard. 
+        /// current beers on tap or prestige leaderboard.
         /// </remarks>
         public string DisplayToken { get; set; }
 
