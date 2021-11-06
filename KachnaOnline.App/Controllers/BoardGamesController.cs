@@ -302,7 +302,7 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         [HttpDelete("categories/{id}")]
-        public async Task<ActionResult<List<BoardGameDto>>> DeleteCategory(int id)
+        public async Task<ActionResult> DeleteCategory(int id)
         {
             try
             {
