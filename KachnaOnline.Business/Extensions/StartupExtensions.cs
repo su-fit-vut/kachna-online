@@ -73,6 +73,7 @@ namespace KachnaOnline.Business.Extensions
 
             // Add facades.
             services.AddScoped<ClubInfoFacade>();
+            services.AddScoped<ClubStateFacade>();
             services.AddScoped<BoardGamesFacade>();
             services.AddScoped<EventsFacade>();
         }

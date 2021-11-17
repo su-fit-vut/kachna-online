@@ -42,6 +42,7 @@ namespace KachnaOnline.App
             // Load configuration objects.
             services.Configure<KisOptions>(this.Configuration.GetSection("Kis"));
             services.Configure<JwtOptions>(this.Configuration.GetSection("Jwt"));
+            services.Configure<ClubStateOptions>(this.Configuration.GetSection("States"));
             services.Configure<BoardGamesOptions>(this.Configuration.GetSection("BoardGames"));
             services.Configure<MailOptions>(this.Configuration.GetSection("Mail"));
             services.Configure<EventsOptions>(this.Configuration.GetSection("Events"));

@@ -13,6 +13,11 @@ namespace KachnaOnline.Dto.ClubStates
     public class StateDto
     {
         /// <summary>
+        /// The ID of the state.
+        /// </summary>
+        public int Id { get; set; }
+        
+        /// <summary>
         /// The current state of the club.
         /// </summary>
         public StateType State { get; set; }

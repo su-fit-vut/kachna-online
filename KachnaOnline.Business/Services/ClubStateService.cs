@@ -4,10 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using KachnaOnline.Business.Configuration;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
 using KachnaOnline.Business.Exceptions;
@@ -17,8 +19,9 @@ using KachnaOnline.Business.Models.ClubStates;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Business.Services.StatePlanning.Abstractions;
 using KachnaOnline.Data.Entities.ClubStates;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RepeatingStateEntity = KachnaOnline.Data.Entities.ClubStates.RepeatingState;
 using RepeatingState = KachnaOnline.Business.Models.ClubStates.RepeatingState;
 using StateType = KachnaOnline.Business.Models.ClubStates.StateType;
@@ -41,8 +44,9 @@ namespace KachnaOnline.Business.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IStatePlannerService _statePlannerService;
-        private readonly IStateTransitionService _stateTransitionService;
         private readonly IUserService _userService;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IOptionsMonitor<ClubStateOptions> _optionsMonitor;
         private readonly ILogger<ClubStateService> _logger;
         private readonly IPlannedStatesRepository _stateRepository;
         private readonly IRepeatingStatesRepository _repeatingStatesRepository;
@@ -63,13 +67,15 @@ namespace KachnaOnline.Business.Services
         }
 
         public ClubStateService(IUnitOfWork unitOfWork, IMapper mapper, IStatePlannerService statePlannerService,
-            IStateTransitionService stateTransitionService, IUserService userService, ILogger<ClubStateService> logger)
+            IUserService userService, IServiceProvider serviceProvider,
+            IOptionsMonitor<ClubStateOptions> optionsMonitor, ILogger<ClubStateService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _statePlannerService = statePlannerService;
-            _stateTransitionService = stateTransitionService;
             _userService = userService;
+            _serviceProvider = serviceProvider;
+            _optionsMonitor = optionsMonitor;
             _logger = logger;
 
             _stateRepository = unitOfWork.PlannedStates;
@@ -88,74 +94,76 @@ namespace KachnaOnline.Business.Services
                 throw new UserNotFoundException(userId);
         }
 
-        /// <summary>
-        /// Maps a <see cref="PlannedState"/> to a <see cref="State"/>. If its <see cref="PlannedState.NextPlannedStateId"/>
-        /// is specified, retrieves this state from the data source, maps it to a <see cref="State"/> and sets it as the
-        /// <see cref="State.FollowingState"/> of the primary state.
-        /// </summary>
-        /// <param name="stateEntity">The <see cref="PlannedState"/> entity to map.</param>
-        /// <returns>A mapped <see cref="State"/> with <see cref="State.FollowingState"/> set if applicable.</returns>
-        private async Task<State> MapAndGetFollowing(PlannedState stateEntity)
+        private async Task<State> GetClosedAfter(PlannedState previousStateEntity)
         {
-            var stateModel = _mapper.Map<State>(stateEntity);
-            if (stateEntity.NextPlannedStateId.HasValue)
-            {
-                var nextStateEntity = await _stateRepository.Get(stateEntity.NextPlannedStateId.Value);
-                if (nextStateEntity != null)
-                    stateModel.FollowingState = _mapper.Map<State>(nextStateEntity);
-            }
+            var nextStateEntity = await _stateRepository.GetNearest();
 
-            return stateModel;
+            // It is currently closed.
+            var closedStateModel = new State()
+            {
+                Start = previousStateEntity?.Ended ?? DateTime.MinValue,
+                PlannedEnd = nextStateEntity?.Start,
+                Type = StateType.Closed,
+                MadeById = previousStateEntity?.ClosedById,
+            };
+
+            if (nextStateEntity != null)
+                closedStateModel.FollowingState = _mapper.Map<State>(nextStateEntity);
+
+            return closedStateModel;
         }
+
 
         /// <inheritdoc />
         public async Task<State> GetCurrentState()
         {
-            var stateEntity = await _stateRepository.GetCurrent();
+            var stateEntity = await _stateRepository.GetCurrent(includeNext: true);
             if (stateEntity is null)
             {
                 var previousStateEntity = await _stateRepository.GetLastEnded();
-                var nextStateEntity = await _stateRepository.GetNearest();
-
-                // It is currently closed.
-                var closedStateModel = new State()
-                {
-                    Start = previousStateEntity?.Ended ?? DateTime.MinValue,
-                    PlannedEnd = nextStateEntity?.Start,
-                    Type = StateType.Closed,
-                    MadeById = previousStateEntity?.ClosedById,
-                };
-
-                if (nextStateEntity != null)
-                    closedStateModel.FollowingState = _mapper.Map<State>(nextStateEntity);
-
+                var closedStateModel = await this.GetClosedAfter(previousStateEntity);
                 return closedStateModel;
             }
 
-            var stateModel = await this.MapAndGetFollowing(stateEntity);
+            var stateModel = _mapper.Map<State>(stateEntity);
             return stateModel;
         }
 
         /// <inheritdoc />
         public async Task<State> GetState(int id)
         {
-            var stateEntity = await _stateRepository.Get(id);
+            var stateEntity = await _stateRepository.GetWithNext(id);
             if (stateEntity is null)
                 return null;
 
-            var stateModel = await this.MapAndGetFollowing(stateEntity);
+            var stateModel = _mapper.Map<State>(stateEntity);
             return stateModel;
         }
 
         /// <inheritdoc />
         public async Task<State> GetNextPlannedState(StateType type)
         {
+            if (type == StateType.Closed)
+            {
+                var currentState = await this.GetCurrentState();
+                if (currentState.Type == StateType.Closed)
+                {
+                    return currentState;
+                }
+
+                while (currentState.FollowingState != null)
+                {
+                    currentState = await this.GetState(currentState.FollowingState.Id);
+                }
+            }
+
             var stateEntity =
-                await _stateRepository.GetNearest(_mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType>(type));
+                await _stateRepository.GetNearest(_mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType>(type),
+                    null, true);
             if (stateEntity is null)
                 return null;
 
-            var stateModel = await this.MapAndGetFollowing(stateEntity);
+            var stateModel = _mapper.Map<State>(stateEntity);
             return stateModel;
         }
 
@@ -165,10 +173,12 @@ namespace KachnaOnline.Business.Services
             if (to < from)
                 throw new ArgumentException($"The {nameof(to)} argument must not be a datetime before {nameof(from)}.",
                     nameof(to));
-            if (to - from > TimeSpan.FromDays(60))
-                throw new ArgumentException("The maximum time span to get states for is 60 days.");
 
-            var stateEntities = _stateRepository.GetStartingBetween(from.RoundToMinutes(), to.RoundToMinutes(), true);
+            var currentMax = _optionsMonitor.CurrentValue.MaximumDaysSpanForStatesListAllowed;
+            if (to - from > TimeSpan.FromDays(currentMax))
+                throw new ArgumentException($"The maximum time span to get states for is {currentMax} days.");
+
+            var stateEntities = _stateRepository.GetStartingBetween(from.RoundToMinutes(), to.RoundToMinutes(), false);
             var returnList = new List<State>();
             await foreach (var stateEntity in stateEntities)
             {
@@ -251,7 +261,7 @@ namespace KachnaOnline.Business.Services
             var newEntity = _mapper.Map<RepeatingStateEntity>(newRepeatingState);
 
             // Get the first and last actual day of occurrence
-            var daysToAdd = ((int)newRepeatingState.DayOfWeek - (int)dateFrom.DayOfWeek + 7) % 7;
+            var daysToAdd = ((int) newRepeatingState.DayOfWeek - (int) dateFrom.DayOfWeek + 7) % 7;
             dateFrom = dateFrom.AddDays(daysToAdd);
 
             // Store the rounded values instead of the original ones
@@ -379,7 +389,7 @@ namespace KachnaOnline.Business.Services
                 state.NoteInternal = stateEntity.NoteInternal;
                 state.NotePublic = stateEntity.NotePublic;
                 if (modification.State.HasValue)
-                    state.State = (KachnaOnline.Data.Entities.ClubStates.StateType)modification.State.Value;
+                    state.State = (KachnaOnline.Data.Entities.ClubStates.StateType) modification.State.Value;
             }
 
             // Apply EffectiveTo modifications
@@ -670,7 +680,7 @@ namespace KachnaOnline.Business.Services
                 {
                     _logger.LogInformation(
                         "User {UserId} is changing StartDate of State {Id} from {OriginalStartDate} to {NewStartDate}",
-                        changeMadeByUserId, modifiedStateEntity.Start, startDate);
+                        changeMadeByUserId, modifiedStateEntity.Id, modifiedStateEntity.Start, startDate);
 
                     var previousStateEntity = await _stateRepository.GetPreviousFor(modifiedStateEntity.Id);
                     if (previousStateEntity != null)
@@ -690,7 +700,7 @@ namespace KachnaOnline.Business.Services
                 {
                     _logger.LogInformation(
                         "User {UserId} is changing PlannedEnd of State {Id} from {OriginalPlannedEnd} to {NewPlannedEnd}",
-                        changeMadeByUserId, modifiedStateEntity.PlannedEnd, endDate);
+                        changeMadeByUserId, modifiedStateEntity.Id, modifiedStateEntity.PlannedEnd, endDate);
 
                     if (isProlonged)
                     {
@@ -699,7 +709,7 @@ namespace KachnaOnline.Business.Services
                         {
                             TargetStateId = modifiedStateEntity.Id,
                             TargetStatePlannedEnd = modifiedStateEntity.PlannedEnd,
-                            OverlappingStatesIds = new List<int> { modifiedStateEntity.NextPlannedStateId.Value }
+                            OverlappingStatesIds = new List<int> {modifiedStateEntity.NextPlannedStateId.Value}
                         };
                     }
                     else
@@ -840,6 +850,7 @@ namespace KachnaOnline.Business.Services
                     throw new StateNotFoundException("No state is currently active.");
 
                 currentStateEntity.Ended = DateTime.Now;
+                currentStateEntity.ClosedById = closedByUserId;
                 currentStateId = currentStateEntity.Id;
                 await _unitOfWork.SaveChanges();
             }
@@ -861,7 +872,9 @@ namespace KachnaOnline.Business.Services
                 {
                     try
                     {
-                        await _stateTransitionService.TriggerStateEnd(currentStateId);
+                        await using var scope = _serviceProvider.CreateAsyncScope();
+                        var transitionService = scope.ServiceProvider.GetRequiredService<IStateTransitionService>();
+                        await transitionService.TriggerStateEnd(currentStateId);
                     }
                     catch (Exception e)
                     {
@@ -911,6 +924,11 @@ namespace KachnaOnline.Business.Services
 
             newState.PlannedEnd = newState.PlannedEnd.Value.RoundToMinutes();
 
+            if (newState.PlannedEnd <= newState.Start)
+            {
+                throw new InvalidOperationException("The state's planned end must come after its start.");
+            }
+
             // Check for blocking overlaps (already planned states that would start during the newly created one)
             var overlappingStateEntities = _stateRepository.GetStartingBetween(newState.Start.Value,
                 newState.PlannedEnd.Value);
@@ -929,7 +947,7 @@ namespace KachnaOnline.Business.Services
 
             if (overlappingIds.Count > 0)
             {
-                return new StatePlanningResult() { OverlappingStatesIds = overlappingIds };
+                return new StatePlanningResult() {OverlappingStatesIds = overlappingIds};
             }
 
             // TODO: map using automapper?
@@ -946,7 +964,7 @@ namespace KachnaOnline.Business.Services
             };
 
             // Check for non-blocking overlaps (the new state starts in the middle of another, already planned one)
-            var existingStateEntity = await _stateRepository.GetCurrent(newState.Start);
+            var existingStateEntity = await _stateRepository.GetCurrent(newState.Start, true);
 
             await _stateRepository.Add(newStateEntity);
 

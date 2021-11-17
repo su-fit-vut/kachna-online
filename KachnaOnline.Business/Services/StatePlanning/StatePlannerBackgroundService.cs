@@ -4,6 +4,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using KachnaOnline.Business.Data.Repositories.Abstractions;
 using KachnaOnline.Business.Services.StatePlanning.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,6 +33,28 @@ namespace KachnaOnline.Business.Services.StatePlanning
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("Starting the state planning service.");
+
+            // Do a consistency check: fix the Ended property of states in the past
+            await using (var scope = _serviceProvider.CreateAsyncScope())
+            {
+                var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+                var badStates = uow.PlannedStates.GetPastNotEnded();
+                await foreach (var state in badStates.WithCancellation(stoppingToken))
+                {
+                    state.Ended = state.NextPlannedStateId.HasValue ? state.NextPlannedState.Start : state.PlannedEnd;
+                    _logger.LogInformation("Fixing up Ended date on state {StateId} to {Ended}.", state.Id,
+                        state.Ended);
+                }
+
+                try
+                {
+                    await uow.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Cannot save fixed states.");
+                }
+            }
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -100,7 +123,7 @@ namespace KachnaOnline.Business.Services.StatePlanning
                     }
                 }
 
-                _logger.LogDebug(
+                _logger.LogInformation(
                     "Invoking transition triggers for state {NextStateId} (end transition: {IsEndTransition}).",
                     nextTransition.StateId, nextTransition.IsStateEnd);
 
@@ -111,16 +134,20 @@ namespace KachnaOnline.Business.Services.StatePlanning
                     try
                     {
                         // Create a scope for the scoped transition service
-                        using var scope = _serviceProvider.CreateScope();
+                        await using var scope = _serviceProvider.CreateAsyncScope();
                         var transitionService = scope.ServiceProvider.GetRequiredService<IStateTransitionService>();
 
                         // Process the triggers 
                         if (nextTransition.IsStateEnd)
                         {
                             await transitionService.TriggerStateEnd(nextTransition.StateId);
-                            
+
                             if (nextTransition.NextStateId.HasValue)
                             {
+                                _logger.LogInformation(
+                                    "Invoking transition triggers for state {NextStateId} (end transition: {IsEndTransition}).",
+                                    nextTransition.NextStateId.Value, false);
+
                                 await transitionService.TriggerStateStart(nextTransition.NextStateId.Value);
                             }
                         }

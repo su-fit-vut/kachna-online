@@ -18,7 +18,16 @@ namespace KachnaOnline.Business.Data.Repositories
         {
         }
 
-        public async Task<PlannedState> GetCurrent(DateTime? atTime = null, bool includeEndMinute = false)
+        public async Task<PlannedState> GetWithNext(int id)
+        {
+            return await Set
+                .Where(s => s.Id == id)
+                .Include(s => s.NextPlannedState)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<PlannedState> GetCurrent(DateTime? atTime = null, bool includeEndMinute = false,
+            bool includeNext = false)
         {
             var actualAtTime = atTime ?? DateTime.Now;
             IQueryable<PlannedState> query;
@@ -34,15 +43,20 @@ namespace KachnaOnline.Business.Data.Repositories
                     .Where(s => s.Start <= actualAtTime && s.PlannedEnd > actualAtTime && s.Ended == null);
             }
 
+            if (includeNext)
+            {
+                query = query.Include(q => q.NextPlannedState);
+            }
+
             return await query
                 .OrderByDescending(s => s.Start)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<PlannedState> GetNearest(StateType? ofType, DateTime? after)
+        public async Task<PlannedState> GetNearest(StateType? ofType, DateTime? after, bool includeNext)
         {
-            var currentState = await this.GetCurrent();
-            if (currentState is { NextPlannedStateId: not null })
+            var currentState = await this.GetCurrent(includeNext: includeNext);
+            if (currentState is {NextPlannedStateId: not null})
             {
                 var nextState = await this.Get(currentState.NextPlannedStateId.Value);
                 if ((!ofType.HasValue || nextState.State == ofType.Value) &&
@@ -53,11 +67,17 @@ namespace KachnaOnline.Business.Data.Repositories
             }
 
             var afterDate = after ?? DateTime.Now;
-            return await Set
+            IQueryable<PlannedState> query = Set
                 .Where(s => !ofType.HasValue || s.State == ofType.Value)
                 .Where(s => s.Start >= afterDate)
-                .OrderBy(s => s.Start)
-                .FirstOrDefaultAsync();
+                .OrderBy(s => s.Start);
+
+            if (includeNext)
+            {
+                query = query.Include(s => s.NextPlannedState);
+            }
+
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<PlannedState> GetLastEnded()
@@ -87,7 +107,7 @@ namespace KachnaOnline.Business.Data.Repositories
             return query.AsAsyncEnumerable();
         }
 
-        public IAsyncEnumerable<PlannedState> GetForRepeatingState(int repeatingStateId,DateTime? onlyAfter,
+        public IAsyncEnumerable<PlannedState> GetForRepeatingState(int repeatingStateId, DateTime? onlyAfter,
             bool includeNextStates)
         {
             var query = Set
@@ -100,6 +120,14 @@ namespace KachnaOnline.Business.Data.Repositories
                 query = query.Include(s => s.NextPlannedState);
 
             return query.AsAsyncEnumerable();
+        }
+
+        public IAsyncEnumerable<PlannedState> GetPastNotEnded()
+        {
+            return Set
+                .Where(s => s.PlannedEnd < DateTime.Now && !s.Ended.HasValue)
+                .Include(s => s.NextPlannedState)
+                .AsAsyncEnumerable();
         }
     }
 }
