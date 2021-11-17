@@ -28,15 +28,18 @@ namespace KachnaOnline.Business.Data.Repositories
                 .AsAsyncEnumerable();
         }
 
-        public IEnumerable<Event> GetNearest(DateTime? after = null)
+        public IAsyncEnumerable<Event> GetNearest(DateTime? after = null)
         {
             var afterDate = after ?? DateTime.Now;
 
-            return Set.Where(e => e.From >= DateTime.Now)
-                .AsEnumerable()
-                .GroupBy(e => e.From)
-                .OrderBy(g => g.Key)
-                .FirstOrDefault();
+            var eventEntity = Set.Where(e => e.From > afterDate).OrderBy(e => e.From).FirstOrDefaultAsync();
+
+            if (eventEntity is not null)
+            {
+                return Set.Where(e => e.From == eventEntity.Result.From).AsAsyncEnumerable();
+            }
+
+            return Enumerable.Empty<Event>() as IAsyncEnumerable<Event>;
         }
 
         public IAsyncEnumerable<Event> GetStartingBetween(DateTime from, DateTime to)

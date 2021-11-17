@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -71,15 +72,18 @@ namespace KachnaOnline.Business.Services
         /// <inheritdoc />
         public async Task<ICollection<Event>> GetNextPlannedEvents()
         {
+            var eventEntities = _eventsRepository.GetNearest();
             var resultList = new List<Event>();
 
-            var eventEntities = _eventsRepository.GetNearest();
-            if (eventEntities is not null)
+            try
             {
-                foreach (var eventEntity in eventEntities)
+                await foreach (var eventEntity in eventEntities)
                 {
                     resultList.Add(_mapper.Map<Event>(eventEntity));
                 }
+            }
+            catch (InvalidOperationException)
+            {
             }
 
             return resultList;
