@@ -119,5 +119,17 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <exception cref="CategoryHasBoardGamesException">When the category has linked board games. Only
         /// the property of conflicting <see cref="BoardGame"/> is filled by the service.</exception>
         Task DeleteCategory(int id);
+
+        /// <summary>
+        /// Creates a new reservation.
+        /// </summary>
+        /// <param name="reservation"><see cref="Reservation"/> to create.</param>
+        /// <param name="reservationGames">Array of game IDs to reserve.</param>
+        /// <returns>The created <see cref="Reservation"/> with a filled ID.</returns>
+        /// <exception cref="ArgumentNullException">When <paramref name="reservation"/> is null.</exception>
+        /// <exception cref="GameUnavailableException">When some of the requested board games are not
+        /// available.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be created.</exception>
+        Task<Reservation> CreateReservation(Reservation reservation, int[] reservationGames);
     }
 }

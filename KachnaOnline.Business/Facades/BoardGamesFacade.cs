@@ -1,6 +1,7 @@
 // BoardGamesFacade.cs
 // Author: František Nečas
 
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -201,6 +202,47 @@ namespace KachnaOnline.Business.Facades
         public async Task UpdateBoardGameStock(int id, BoardGameStockDto stock)
         {
             await _boardGamesService.UpdateBoardGame(id, stock.InStock, stock.Unavailable, stock.Visible);
+        }
+
+        /// <summary>
+        /// Returns a list of all user's reservation.
+        /// </summary>
+        /// <param name="user">User to get reservations of.</param>
+        /// <param name="state">Optional reservation filter based on state.</param>
+        /// <returns>The list of user's reservation.</returns>
+        public async Task<IEnumerable<ReservationDto>> GetUserReservations(int user,
+            ReservationState? state)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a list of all reservations.
+        /// </summary>
+        /// <param name="state">Optional reservation filter based on state.</param>
+        /// <param name="assignedTo">Optional reservation filter based on assigned board games manager ID.</param>
+        /// <returns>The list of all board games reservations, filtered by the given filters if requested.</returns>
+        public async Task<IEnumerable<ManagerReservationDto>> GetAllReservations(ReservationState? state,
+            int? assignedTo)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a single reservation.
+        /// </summary>
+        /// <param name="user">Currently authenticated user.</param>
+        /// <param name="reservationId">ID of the reservation to return.</param>
+        /// <returns>Reservation with ID <paramref name="reservationId"/>. Returns a
+        /// <see cref="ManagerReservationDto"/> if the requesting <paramref name="user"/>"/> is a board games
+        /// manager.</returns>
+        /// <exception cref="NotABoardGamesManagerException">Thrown when <paramref name="user"/> is not a board games
+        /// manager and the reservation is owned by someone else.</exception>
+        /// <exception cref="ReservationNotFoundException">When a reservation with <paramref name="reservationId"/>
+        /// does not exist.</exception>
+        public async Task<ReservationDto> GetReservation(ClaimsPrincipal user, int reservationId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -243,5 +243,11 @@ namespace KachnaOnline.Business.Services
                 throw new CategoryManipulationFailedException();
             }
         }
+
+        /// <inheritdoc />
+        public async Task<Reservation> CreateReservation(Reservation reservation, int[] reservationGames)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
