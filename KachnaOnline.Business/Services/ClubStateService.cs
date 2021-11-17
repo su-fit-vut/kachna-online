@@ -303,7 +303,7 @@ namespace KachnaOnline.Business.Services
         {
             var stateEntity = await _repeatingStatesRepository.Get(repeatingStateId);
             if (stateEntity is null)
-                throw new StateNotFoundException(repeatingStateId);
+                throw new RepeatingStateNotFoundException(repeatingStateId);
 
             // The repeating state has ended already – don't do anything
             if (stateEntity.EffectiveTo <= DateTime.Today)
@@ -833,7 +833,6 @@ namespace KachnaOnline.Business.Services
             await EnsureLock();
 
             var currentStateId = -1;
-
             try
             {
                 var currentStateEntity = await _stateRepository.GetCurrent();

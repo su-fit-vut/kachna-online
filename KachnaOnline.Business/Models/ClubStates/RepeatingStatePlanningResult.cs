@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace KachnaOnline.Business.Models.ClubStates
 {
+    /// <summary>
+    /// Represents a result of a repeating state planning attempt.
+    /// </summary>
     public class RepeatingStatePlanningResult
     {
         /// <summary>

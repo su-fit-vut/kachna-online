@@ -5,6 +5,9 @@ using System;
 
 namespace KachnaOnline.Business.Models.ClubStates
 {
+    /// <summary>
+    /// A model for planning a new state.
+    /// </summary>
     public class NewState
     {
         public int MadeById { get; set; }

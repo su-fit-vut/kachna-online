@@ -2,6 +2,10 @@ using System;
 
 namespace KachnaOnline.Business.Models.ClubStates
 {
+    /// <summary>
+    /// Represents a repeating state.
+    /// Also used as a model for creating a new repeating state.
+    /// </summary>
     public class RepeatingState
     {
         public int Id { get; set; }

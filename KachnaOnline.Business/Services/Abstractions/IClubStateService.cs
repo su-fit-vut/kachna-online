@@ -15,29 +15,37 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <summary>
         /// Returns the current state.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The current state. Its <see cref="State.FollowingState"/> is populated if the state has
+        /// a following state.</returns>
         Task<State> GetCurrentState();
 
         /// <summary>
         /// Returns the state with the specified <paramref name="id"/>.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The ID of the state.</param>
+        /// <returns>The state. Its <see cref="State.FollowingState"/> is populated if the state has
+        /// a following state.</returns>
         Task<State> GetState(int id);
 
         /// <summary>
         /// Returns the next (closest to now) planned state of the specified <paramref name="type"/>.
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type">The state type.</param>
+        /// <returns>The next planned state of the specified <paramref name="type"/>.
+        /// Its <see cref="State.FollowingState"/> is populated if the state has a following state.</returns>
         Task<State> GetNextPlannedState(StateType type);
 
         /// <summary>
         /// Returns a collection of all state records in the specified time range.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
+        /// <param name="from">Only returns states starting after this datetime.</param>
+        /// <param name="to">Only returns states starting before this datetime.</param>
+        /// <exception cref="ArgumentException">The <paramref name="to"/> datetime is before <paramref name="from"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">The time range specified by <paramref name="from"/> and
+        /// <paramref name="to"/> is longer than 60 days.</exception>
+        /// <returns>A collection of <see cref="State"/> objects. Their <see cref="State.FollowingState"/> field
+        /// is not populated.</returns>
         Task<ICollection<State>> GetStates(DateTime from, DateTime to);
 
         /// <summary>
@@ -47,29 +55,38 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// being after or equal to the specified value.</param>
         /// <param name="effectiveTo">If not null, only returns repeating states with their effective to date
         /// being before or equal to the specified value.</param>
-        /// <returns></returns>
+        /// <returns>A collection of <see cref="RepeatingState"/> objects.</returns>
         Task<ICollection<RepeatingState>> GetRepeatingStates(DateTime? effectiveFrom = null,
             DateTime? effectiveTo = null);
 
         /// <summary>
         /// Returns a collection of all repeating states that are effective at the specified date.
         /// </summary>
-        /// <param name="effectiveAt"></param>
-        /// <returns></returns>
+        /// <param name="effectiveAt">The date to return repeating states for.</param>
+        /// <returns>A collection of <see cref="RepeatingState"/> objects.</returns>
         Task<ICollection<RepeatingState>> GetRepeatingStates(DateTime effectiveAt);
 
         /// <summary>
         /// Returns a collection of all states that were planned based on the specified repeating state.
         /// </summary>
-        /// <param name="repeatingStateId"></param>
-        /// <param name="futureOnly"></param>
-        /// <returns></returns>
+        /// <param name="repeatingStateId">The ID of the repeating state.</param>
+        /// <param name="futureOnly">If true, only the planned states that haven't started yet will be returned.</param>
+        /// <returns>A collection of <see cref="State"/> objects describing the states planned for the repeating state.
+        /// Their <see cref="State.FollowingState"/> field is not populated.</returns>
         Task<ICollection<State>> GetStatesForRepeatingState(int repeatingStateId, bool futureOnly = true);
 
         /// <summary>
         /// Creates a new repeating state record and plans states accordingly.
         /// </summary>
-        /// <returns></returns>
+        /// <exception cref="ArgumentException"><see cref="RepeatingState.EffectiveTo"/> is before
+        /// <see cref="RepeatingState.EffectiveFrom"/>.</exception>
+        /// <exception cref="ArgumentException"><see cref="RepeatingState.TimeTo"/> represents a time earlier
+        /// than <see cref="RepeatingState.TimeFrom"/>.</exception>
+        /// <exception cref="ArgumentException"><see cref="RepeatingStateModification.State"/> is
+        /// set to <see cref="StateType.Closed"/>.</exception>
+        /// <exception cref="StatePlanningException">A locking or database error occurs.</exception>
+        /// <returns>A <see cref="RepeatingStatePlanningResult"/> with information about the ID of the newly
+        /// created repeating state and about existing overlapping planned states.</returns>
         Task<RepeatingStatePlanningResult> MakeRepeatingState(RepeatingState newRepeatingState);
 
         /// <summary>
@@ -79,7 +96,9 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// </summary>
         /// <param name="repeatingStateId">The ID of the repeating state to remove or end.</param>
         /// <param name="removedById">The ID of the user performing the operation.</param>
+        /// <remarks>See <see cref="ModifyRepeatingState"/> for information about exceptions.</remarks>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        /// <seealso cref="ModifyRepeatingState"/>
         Task RemoveRepeatingState(int repeatingStateId, int removedById);
 
         /// <summary>
@@ -93,8 +112,20 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// Repeating states of which the <see cref="RepeatingState.EffectiveTo"/>
         /// has already passed cannot be modified at all.
         /// </remarks>
-        /// <exception cref="InvalidOperationException">Thrown when one of the restrictions is violated.</exception>
-        /// <returns></returns>
+        /// <exception cref="RepeatingStateNotFoundException">No repeating state with the ID specified
+        /// in <paramref name="modification"/> exists.</exception>
+        /// <exception cref="RepeatingStateReadOnlyException">The target repeating state's
+        /// <see cref="RepeatingState.EffectiveTo"/> is today or in the past.</exception>
+        /// <exception cref="ArgumentException"><see cref="RepeatingStateModification.State"/> is
+        /// set to <see cref="StateType.Closed"/>.</exception>
+        /// <exception cref="ArgumentException"><see cref="RepeatingStateModification.EffectiveTo"/> is
+        /// set to a past date.</exception>
+        /// <exception cref="UserNotFoundException">The user doesn't exist.</exception>
+        /// <exception cref="UserUnprivilegedException"><see cref="RepeatingState.MadeById"/>
+        /// modification is requested by a non-administrator user.</exception>
+        /// <exception cref="StatePlanningException">A locking or database error occurs.</exception>
+        /// <returns>A <see cref="RepeatingStatePlanningResult"/> with information about existing overlapping
+        /// planned states. (Relevant iff the repeating state is prolonged.)</returns>
         Task<RepeatingStatePlanningResult> ModifyRepeatingState(RepeatingStateModification modification,
             int changeMadeByUserId);
 
@@ -107,18 +138,20 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// the <see cref="State.PlannedEnd"/> of the previously planned state is set to the newly planned state's
         /// beginning and its next state reference is set to the newly planned state.<br/>
         /// </remarks>
-        /// <returns></returns>
+        /// <returns>A <see cref="StatePlanningResult"/> with information about the newly planned state, a state that
+        /// was modified as a result of this new state or about states that it would overlap with.</returns>
         Task<StatePlanningResult> PlanState(NewState newState);
 
         /// <summary>
         /// Removes the specified planned state record.
         /// </summary>
-        /// <param name="id"></param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown when the specified state has already started or ended.</exception>
-        /// <exception cref="StateNotFoundException">Thrown when no state with the specified <paramref name="id"/>
+        /// <param name="id">The ID of the planned state to remove.</param>
+        /// <exception cref="StateReadOnlyException">
+        /// The specified state has already started or ended.</exception>
+        /// <exception cref="StateNotFoundException">No state with the specified <paramref name="id"/>
         /// exists.</exception>
-        /// <returns></returns>
+        /// <exception cref="StatePlanningException">A locking or database error occurs.</exception>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         Task RemovePlannedState(int id);
 
         /// <summary>
@@ -148,9 +181,12 @@ namespace KachnaOnline.Business.Services.Abstractions
         ///     </description></item>
         /// </list>
         /// </remarks>
-        /// <exception cref="InvalidOperationException">Thrown when one of the restrictions is violated.</exception>
-        /// <exception cref="StateNotFoundException">Thrown when no state with the specified
-        /// <see cref="StateModification.StateId"/> exists.</exception>
+        /// <exception cref="InvalidOperationException">One of the restrictions is violated.</exception>
+        /// <exception cref="StateNotFoundException">No state with the specified
+        /// <see cref="StateModification.StateId"/> exists or, if it's not specified, when no state is currently active.
+        /// </exception>
+        /// <exception cref="UserNotFoundException">The user doesn't exist.</exception>
+        /// <exception cref="StatePlanningException">A locking or database error occurs.</exception>
         /// <returns></returns>
         Task<StatePlanningResult> ModifyState(StateModification stateModification, int changeMadeByUserId);
 
@@ -161,8 +197,10 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// This sets the state's <see cref="State.Ended"/> to the current datetime.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the current state is <see cref="StateType.Closed"/> or when the specified user
-        /// is not a state manager.</exception>
+        /// The current state is <see cref="StateType.Closed"/>.</exception>
+        /// <exception cref="UserNotFoundException">The user doesn't exist.</exception>
+        /// <exception cref="StatePlanningException">A locking or database error occurs.</exception>
+        /// <exception cref="StateNotFoundException">No state is currently active.</exception>
         /// <returns></returns>
         Task CloseNow(int closedByUserId);
     }
