@@ -27,6 +27,17 @@ namespace KachnaOnline.Business.Services
 {
     public class ClubStateService : IClubStateService
     {
+        /// <summary>
+        /// Represents information whether a certain state is the current state, a past state or a planned (future) one.
+        /// Used by <see cref="ClubStateService.ModifyState"/>.
+        /// </summary>
+        private enum StateRelativeTime
+        {
+            Past,
+            Current,
+            Planned
+        }
+
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IStatePlannerService _statePlannerService;
@@ -39,6 +50,11 @@ namespace KachnaOnline.Business.Services
         private const int StatePlanningEnterTimeout = 1000;
         private static readonly SemaphoreSlim StatePlanningSemaphore = new(1);
 
+        /// <summary>
+        /// Attempts to acquire the state planning lock.
+        /// Throws if the lock isn't acquired in <see cref="StatePlanningEnterTimeout"/> milliseconds.
+        /// </summary>
+        /// <exception cref="StatePlanningException">Thrown if the lock isn't acquired in <see cref="StatePlanningEnterTimeout"/> milliseconds.</exception>
         private static async Task EnsureLock()
         {
             var hasLock = await StatePlanningSemaphore.WaitAsync(StatePlanningEnterTimeout);
@@ -60,6 +76,25 @@ namespace KachnaOnline.Business.Services
             _repeatingStatesRepository = unitOfWork.RepeatingStates;
         }
 
+        /// <summary>
+        /// Attempts to retrieve a user with the specified ID and throws if no such user exists. 
+        /// </summary>
+        /// <param name="userId">The user ID.</param>
+        /// <exception cref="UserNotFoundException">Thrown if no user with such ID exists.</exception>
+        private async Task EnsureUser(int userId)
+        {
+            var user = await _userService.GetUser(userId);
+            if (user is null)
+                throw new UserNotFoundException(userId);
+        }
+
+        /// <summary>
+        /// Maps a <see cref="PlannedState"/> to a <see cref="State"/>. If its <see cref="PlannedState.NextPlannedStateId"/>
+        /// is specified, retrieves this state from the data source, maps it to a <see cref="State"/> and sets it as the
+        /// <see cref="State.FollowingState"/> of the primary state.
+        /// </summary>
+        /// <param name="stateEntity">The <see cref="PlannedState"/> entity to map.</param>
+        /// <returns>A mapped <see cref="State"/> with <see cref="State.FollowingState"/> set if applicable.</returns>
         private async Task<State> MapAndGetFollowing(PlannedState stateEntity)
         {
             var stateModel = _mapper.Map<State>(stateEntity);
@@ -185,58 +220,6 @@ namespace KachnaOnline.Business.Services
             return returnList;
         }
 
-        private async Task<RepeatingStatePlanningResult> PlanStatesForRepeatingState(
-            RepeatingStateEntity repeatingStateEntity, DateTime dateFrom)
-        {
-            var dateTo = repeatingStateEntity.EffectiveTo;
-            var timeFrom = repeatingStateEntity.TimeFrom;
-            var timeTo = repeatingStateEntity.TimeTo;
-
-            try
-            {
-                await _unitOfWork.BeginTransaction();
-
-                var overlappingStates = new List<State>();
-                for (var date = dateFrom; date <= dateTo; date = date.AddDays(7))
-                {
-                    var newState = new NewState()
-                    {
-                        Start = date + timeFrom,
-                        Type = _mapper.Map<StateType>(repeatingStateEntity.State),
-                        NoteInternal = repeatingStateEntity.NoteInternal,
-                        NotePublic = repeatingStateEntity.NotePublic,
-                        PlannedEnd = date + timeTo,
-                        MadeById = repeatingStateEntity.MadeById,
-                        RepeatingStateId = repeatingStateEntity.Id
-                    };
-
-                    var result = await this.PlanStateInternal(newState);
-                    if (result.HasOverlappingStates)
-                    {
-                        foreach (var overlappingStateId in result.OverlappingStatesIds)
-                        {
-                            overlappingStates.Add(await this.GetState(overlappingStateId));
-                        }
-                    }
-                }
-
-                await _unitOfWork.CommitTransaction();
-                await _statePlannerService.NotifyPlanChanged();
-                return new RepeatingStatePlanningResult()
-                {
-                    OverlappingStates = overlappingStates,
-                    TargetRepeatingStateId = repeatingStateEntity.Id
-                };
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Cannot plan a new repeating state, rollbacking changes.");
-                await _unitOfWork.RollbackTransaction();
-                await _statePlannerService.NotifyPlanChanged();
-                throw;
-            }
-        }
-
         /// <inheritdoc />
         public async Task<RepeatingStatePlanningResult> MakeRepeatingState(RepeatingState newRepeatingState)
         {
@@ -262,9 +245,8 @@ namespace KachnaOnline.Business.Services
             if (newRepeatingState.State == StateType.Closed)
                 throw new ArgumentException("Cannot plan a 'Closed' repeating state.");
 
-            var user = await _userService.GetUser(newRepeatingState.MadeById);
-            if (user is null)
-                throw new UserNotFoundException(newRepeatingState.MadeById);
+            // Ensure the user exists
+            await this.EnsureUser(newRepeatingState.MadeById);
 
             var newEntity = _mapper.Map<RepeatingStateEntity>(newRepeatingState);
 
@@ -422,6 +404,7 @@ namespace KachnaOnline.Business.Services
                         // Prolonging the repeating state – plan new states
                         var originalEffectiveTo = stateEntity.EffectiveTo;
                         stateEntity.EffectiveTo = modification.EffectiveTo.Value;
+                        await _unitOfWork.SaveChanges();
                         return await this.PlanStatesForRepeatingState(stateEntity, originalEffectiveTo);
                     }
                 }
@@ -445,8 +428,8 @@ namespace KachnaOnline.Business.Services
                 if (modification.MadeById.HasValue)
                 {
                     if (!changeMadeByUserRoles.Any(r => r == RoleConstants.Admin))
-                        throw new InvalidOperationException(
-                            "Only administrators can change the MadeBy attribute of states.");
+                        throw new UserUnprivilegedException(changeMadeByUserId, RoleConstants.Admin,
+                            $"change the {nameof(RepeatingState.MadeById)} attribute of states");
 
                     var newMadeByUser = await _userService.GetUser(modification.MadeById.Value);
                     if (newMadeByUser is null)
@@ -500,104 +483,6 @@ namespace KachnaOnline.Business.Services
             }
         }
 
-        // TODO: give this a better name
-        private async Task<StatePlanningResult> PlanStateInternal(NewState newState)
-        {
-            if (newState.FollowingStateId.HasValue)
-            {
-                // Following state was specified: get the state and use its start date as the new state's start date
-                var followingStateEntity = await _stateRepository.Get(newState.FollowingStateId.Value);
-                if (followingStateEntity is null)
-                {
-                    throw new StateNotFoundException(newState.FollowingStateId.Value);
-                }
-
-                newState.PlannedEnd = followingStateEntity.Start;
-            }
-            else if (!newState.PlannedEnd.HasValue)
-            {
-                // Neither planned end nor following state was specified; get the first state that comes after 
-                // the specified start date and use it as the following state
-                var nextStateEntity = await _stateRepository.GetNearest(after: newState.Start);
-                if (nextStateEntity is null)
-                {
-                    throw new StateNotFoundException(
-                        "No state after the specified start date is planned. Planned end must be specified.");
-                }
-
-                newState.PlannedEnd = nextStateEntity.Start;
-                newState.FollowingStateId = nextStateEntity.Id;
-            }
-
-            newState.PlannedEnd = newState.PlannedEnd.Value.RoundToMinutes();
-
-            // Check for blocking overlaps (already planned states that would start during the newly created one)
-            var overlappingStateEntities = _stateRepository.GetStartingBetween(newState.Start.Value,
-                newState.PlannedEnd.Value);
-
-            int? followingStateId = null;
-            var overlappingIds = new List<int>();
-            await foreach (var overlappingStateEntity in overlappingStateEntities)
-            {
-                // If one of the 'overlapping' states actually begins at the exact same time when the planned state ends
-                // it will be the new state's following state
-                if (overlappingStateEntity.Start == newState.PlannedEnd.Value)
-                    followingStateId = overlappingStateEntity.Id;
-                else
-                    overlappingIds.Add(overlappingStateEntity.Id);
-            }
-
-            if (overlappingIds.Count > 0)
-            {
-                return new StatePlanningResult() { OverlappingStatesIds = overlappingIds };
-            }
-
-            // TODO: map using automapper?
-            var newStateEntity = new PlannedState()
-            {
-                MadeById = newState.MadeById,
-                NoteInternal = newState.NoteInternal,
-                NotePublic = newState.NotePublic,
-                Start = newState.Start.Value,
-                PlannedEnd = newState.PlannedEnd.Value,
-                State = _mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType>(newState.Type),
-                NextPlannedStateId = followingStateId,
-                RepeatingStateId = newState.RepeatingStateId
-            };
-
-            // Check for non-blocking overlaps (the new state starts in the middle of another, already planned one)
-            var existingStateEntity = await _stateRepository.GetCurrent(newState.Start);
-
-            await _stateRepository.Add(newStateEntity);
-
-            try
-            {
-                // First we have to create the new entity
-                await _unitOfWork.SaveChanges();
-
-                if (existingStateEntity != null)
-                {
-                    // ... and then relink the existing one
-                    existingStateEntity.PlannedEnd = newState.Start.Value;
-                    existingStateEntity.NextPlannedStateId = newStateEntity.Id;
-                    await _unitOfWork.SaveChanges();
-                }
-
-                return new StatePlanningResult()
-                {
-                    TargetStateId = newStateEntity.Id,
-                    TargetStatePlannedEnd = newStateEntity.PlannedEnd,
-                    ModifiedPreviousStateId = existingStateEntity?.Id,
-                    ModifiedPreviousStatePlannedEnd = existingStateEntity?.PlannedEnd
-                };
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Cannot save a new state.");
-                throw new StatePlanningException("Cannot save the new state.", e);
-            }
-        }
-
         /// <inheritdoc />
         public async Task<StatePlanningResult> PlanState(NewState newState)
         {
@@ -619,9 +504,8 @@ namespace KachnaOnline.Business.Services
                 newState.Start = DateTime.Now.RoundToMinutes();
             }
 
-            var user = await _userService.GetUser(newState.MadeById);
-            if (user is null)
-                throw new UserNotFoundException(newState.MadeById);
+            // Ensure the user exists
+            await this.EnsureUser(newState.MadeById);
 
             // Determine the end datetime.
             // The model may specify either one of PlannedEnd or FollowingStateId or nothing.
@@ -633,7 +517,7 @@ namespace KachnaOnline.Business.Services
             try
             {
                 await _unitOfWork.BeginTransaction();
-                var result = await this.PlanStateInternal(newState);
+                var result = await this.CheckAndCreatePlannedState(newState);
                 await _unitOfWork.CommitTransaction();
                 await _statePlannerService.NotifyPlanChanged();
                 return result;
@@ -680,25 +564,11 @@ namespace KachnaOnline.Business.Services
             }
         }
 
-        /// <summary>
-        /// Represents information whether a certain state is the current state, a past state or a planned (future) one.
-        /// Used by <see cref="ClubStateService.ModifyState"/>.
-        /// </summary>
-        private enum StateRelativeTime
-        {
-            Past,
-            Current,
-            Planned
-        }
-
         /// <inheritdoc />
         public async Task<StatePlanningResult> ModifyState(StateModification modification, int changeMadeByUserId)
         {
             if (modification is null)
                 throw new ArgumentNullException(nameof(modification));
-
-            IEnumerable<Exception> a = new List<ArgumentException>();
-
 
             PlannedState modifiedStateEntity;
             StateRelativeTime relativeTime;
@@ -912,8 +782,8 @@ namespace KachnaOnline.Business.Services
                 if (modification.MadeById.HasValue)
                 {
                     if (!changeMadeByUserRoles.Any(r => r == RoleConstants.Admin))
-                        throw new InvalidOperationException(
-                            "Only administrators can change the MadeBy attribute of states.");
+                        throw new UserUnprivilegedException(changeMadeByUserId, RoleConstants.Admin,
+                            $"change the {nameof(RepeatingState.MadeById)} attribute of states");
 
                     var newMadeByUser = await _userService.GetUser(modification.MadeById.Value);
                     if (newMadeByUser is null)
@@ -955,11 +825,8 @@ namespace KachnaOnline.Business.Services
         /// <inheritdoc />
         public async Task CloseNow(int closedByUserId)
         {
-            var isManager = await _userService.IsInRole(closedByUserId, RoleConstants.StatesManager);
-            if (isManager is null)
-                throw new UserNotFoundException(closedByUserId);
-            if (!isManager.Value)
-                throw new InvalidOperationException("User is not a states manager.");
+            // Ensure the user exists
+            await this.EnsureUser(closedByUserId);
 
             _logger.LogInformation("User {UserId} is closing the current state.", closedByUserId);
 
@@ -1005,6 +872,172 @@ namespace KachnaOnline.Business.Services
                     }
                 })
                 .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// A helper routine for <see cref="PlanState"/> and <see cref="PlanStatesForRepeatingState"/>.
+        /// Performs overlap checks for a new planned state, adjusts adjacent states and creates a database
+        /// entry for the new state.
+        /// </summary>
+        /// <remarks>
+        /// Calls to this method should be made inside of a database transaction and the state planning lock.
+        /// </remarks>
+        private async Task<StatePlanningResult> CheckAndCreatePlannedState(NewState newState)
+        {
+            if (newState.FollowingStateId.HasValue)
+            {
+                // Following state was specified: get the state and use its start date as the new state's start date
+                var followingStateEntity = await _stateRepository.Get(newState.FollowingStateId.Value);
+                if (followingStateEntity is null)
+                {
+                    throw new StateNotFoundException(newState.FollowingStateId.Value);
+                }
+
+                newState.PlannedEnd = followingStateEntity.Start;
+            }
+            else if (!newState.PlannedEnd.HasValue)
+            {
+                // Neither planned end nor following state was specified; get the first state that comes after 
+                // the specified start date and use it as the following state
+                var nextStateEntity = await _stateRepository.GetNearest(after: newState.Start);
+                if (nextStateEntity is null)
+                {
+                    throw new StateNotFoundException(
+                        "No state after the specified start date is planned. Planned end must be specified.");
+                }
+
+                newState.PlannedEnd = nextStateEntity.Start;
+                newState.FollowingStateId = nextStateEntity.Id;
+            }
+
+            newState.PlannedEnd = newState.PlannedEnd.Value.RoundToMinutes();
+
+            // Check for blocking overlaps (already planned states that would start during the newly created one)
+            var overlappingStateEntities = _stateRepository.GetStartingBetween(newState.Start.Value,
+                newState.PlannedEnd.Value);
+
+            int? followingStateId = null;
+            var overlappingIds = new List<int>();
+            await foreach (var overlappingStateEntity in overlappingStateEntities)
+            {
+                // If one of the 'overlapping' states actually begins at the exact same time when the planned state ends
+                // it will be the new state's following state
+                if (overlappingStateEntity.Start == newState.PlannedEnd.Value)
+                    followingStateId = overlappingStateEntity.Id;
+                else
+                    overlappingIds.Add(overlappingStateEntity.Id);
+            }
+
+            if (overlappingIds.Count > 0)
+            {
+                return new StatePlanningResult() { OverlappingStatesIds = overlappingIds };
+            }
+
+            // TODO: map using automapper?
+            var newStateEntity = new PlannedState()
+            {
+                MadeById = newState.MadeById,
+                NoteInternal = newState.NoteInternal,
+                NotePublic = newState.NotePublic,
+                Start = newState.Start.Value,
+                PlannedEnd = newState.PlannedEnd.Value,
+                State = _mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType>(newState.Type),
+                NextPlannedStateId = followingStateId,
+                RepeatingStateId = newState.RepeatingStateId
+            };
+
+            // Check for non-blocking overlaps (the new state starts in the middle of another, already planned one)
+            var existingStateEntity = await _stateRepository.GetCurrent(newState.Start);
+
+            await _stateRepository.Add(newStateEntity);
+
+            try
+            {
+                // First we have to create the new entity
+                await _unitOfWork.SaveChanges();
+
+                if (existingStateEntity != null)
+                {
+                    // ... and then relink the existing one
+                    existingStateEntity.PlannedEnd = newState.Start.Value;
+                    existingStateEntity.NextPlannedStateId = newStateEntity.Id;
+                    await _unitOfWork.SaveChanges();
+                }
+
+                return new StatePlanningResult()
+                {
+                    TargetStateId = newStateEntity.Id,
+                    TargetStatePlannedEnd = newStateEntity.PlannedEnd,
+                    ModifiedPreviousStateId = existingStateEntity?.Id,
+                    ModifiedPreviousStatePlannedEnd = existingStateEntity?.PlannedEnd
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot save a new state.");
+                throw new StatePlanningException("Cannot save the new state.", e);
+            }
+        }
+
+        /// <summary>
+        /// A helper routine for <see cref="MakeRepeatingState"/> and <see cref="ModifyRepeatingState"/>.
+        /// Creates <see cref="PlannedState"/> objects for a repeating state, starting from <param name="dateFrom"></param>,
+        /// and attempts to plan them using <see cref="CheckAndCreatePlannedState"/>. This is encapsulated in a database transaction
+        /// which is rollbacked in case of an error.
+        /// </summary>
+        /// <remarks>
+        /// Calls to this method should be made inside of the state planning lock.
+        /// </remarks>
+        private async Task<RepeatingStatePlanningResult> PlanStatesForRepeatingState(
+            RepeatingStateEntity repeatingStateEntity, DateTime dateFrom)
+        {
+            var dateTo = repeatingStateEntity.EffectiveTo;
+            var timeFrom = repeatingStateEntity.TimeFrom;
+            var timeTo = repeatingStateEntity.TimeTo;
+
+            try
+            {
+                await _unitOfWork.BeginTransaction();
+
+                var overlappingStates = new List<State>();
+                for (var date = dateFrom; date <= dateTo; date = date.AddDays(7))
+                {
+                    var newState = new NewState()
+                    {
+                        Start = date + timeFrom,
+                        Type = _mapper.Map<StateType>(repeatingStateEntity.State),
+                        NoteInternal = repeatingStateEntity.NoteInternal,
+                        NotePublic = repeatingStateEntity.NotePublic,
+                        PlannedEnd = date + timeTo,
+                        MadeById = repeatingStateEntity.MadeById,
+                        RepeatingStateId = repeatingStateEntity.Id
+                    };
+
+                    var result = await this.CheckAndCreatePlannedState(newState);
+                    if (result.HasOverlappingStates)
+                    {
+                        foreach (var overlappingStateId in result.OverlappingStatesIds)
+                        {
+                            overlappingStates.Add(await this.GetState(overlappingStateId));
+                        }
+                    }
+                }
+
+                await _unitOfWork.CommitTransaction();
+                await _statePlannerService.NotifyPlanChanged();
+                return new RepeatingStatePlanningResult()
+                {
+                    OverlappingStates = overlappingStates,
+                    TargetRepeatingStateId = repeatingStateEntity.Id
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot plan a new repeating state, rollbacking changes.");
+                await _unitOfWork.RollbackTransaction();
+                await _statePlannerService.NotifyPlanChanged();
+                throw;
+            }
         }
     }
 }

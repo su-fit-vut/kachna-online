@@ -73,17 +73,18 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<RepeatingStatePlanningResult> MakeRepeatingState(RepeatingState newRepeatingState);
 
         /// <summary>
-        /// Removes a repeating state record and all planned states that were based on it.
-        /// State records from the past are not removed.
+        /// Removes a repeating state record if its effective span hasn't started yet.
+        /// If it has, deletes all its planned states that haven't started yet and changes its
+        /// <see cref="RepeatingState.EffectiveTo"/> to today, making it ended and immutable.
         /// </summary>
-        /// <param name="repeatingStateId"></param>
-        /// <param name="removedById"></param>
-        /// <returns></returns>
+        /// <param name="repeatingStateId">The ID of the repeating state to remove or end.</param>
+        /// <param name="removedById">The ID of the user performing the operation.</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         Task RemoveRepeatingState(int repeatingStateId, int removedById);
 
         /// <summary>
         /// Changes details of the specified repeating state. Projects these changes into all
-        /// planned states that were based on it. State records from the past are not changed.
+        /// its planned states. Passed states are not affected.
         /// </summary>
         /// <remarks>
         /// When <see cref="RepeatingState.EffectiveTo"/> is changed, new states may be planned or existing
