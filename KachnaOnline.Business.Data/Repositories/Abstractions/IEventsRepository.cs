@@ -11,7 +11,7 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
     public interface IEventsRepository : IGenericRepository<Event, int>
     {
         IAsyncEnumerable<Event> GetCurrent(DateTime? at = null);
-        IEnumerable<Event> GetNearest(DateTime? after = null);
+        IAsyncEnumerable<Event> GetNearest(DateTime? after = null);
         IAsyncEnumerable<Event> GetStartingBetween(DateTime from, DateTime to);
     }
 }
