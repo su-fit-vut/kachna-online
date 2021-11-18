@@ -1,6 +1,8 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
 
 namespace KachnaOnline.Data.Migrations
 {
@@ -8,73 +10,59 @@ namespace KachnaOnline.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("MySql:CharSet", "utf8mb4");
-
             migrationBuilder.CreateTable(
                 name: "BoardGameCategories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ColourHex = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    ColourHex = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BoardGameCategories", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Email = table.Column<string>(type: "varchar(320)", maxLength: 320, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Nickname = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DiscordId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
-                    Disabled = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Email = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Nickname = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
+                    DiscordId = table.Column<decimal>(type: "numeric(20,0)", nullable: true),
+                    Disabled = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateTable(
                 name: "BoardGameReservations",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    MadeById = table.Column<int>(type: "int", nullable: false),
-                    MadeOn = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    NoteUser = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NoteInternal = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MadeById = table.Column<int>(type: "integer", nullable: false),
+                    MadeOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    NoteUser = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
+                    NoteInternal = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,31 +73,26 @@ namespace KachnaOnline.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateTable(
                 name: "BoardGames",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImageUrl = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PlayersMin = table.Column<int>(type: "int", nullable: true),
-                    PlayersMax = table.Column<int>(type: "int", nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    NoteInternal = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    OwnerId = table.Column<int>(type: "int", nullable: true),
-                    InStock = table.Column<int>(type: "int", nullable: false),
-                    Unavailable = table.Column<int>(type: "int", nullable: false),
-                    Visible = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    DefaultReservationTime = table.Column<TimeSpan>(type: "time(6)", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    ImageUrl = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
+                    PlayersMin = table.Column<int>(type: "integer", nullable: true),
+                    PlayersMax = table.Column<int>(type: "integer", nullable: true),
+                    CategoryId = table.Column<int>(type: "integer", nullable: false),
+                    NoteInternal = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
+                    OwnerId = table.Column<int>(type: "integer", nullable: true),
+                    InStock = table.Column<int>(type: "integer", nullable: false),
+                    Unavailable = table.Column<int>(type: "integer", nullable: false),
+                    Visible = table.Column<bool>(type: "boolean", nullable: false),
+                    DefaultReservationTime = table.Column<TimeSpan>(type: "interval", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -126,32 +109,24 @@ namespace KachnaOnline.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    MadeById = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Place = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PlaceUrl = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImageUrl = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ShortDescription = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    FullDescription = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Url = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    From = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    To = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MadeById = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Place = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    PlaceUrl = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
+                    ImageUrl = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
+                    ShortDescription = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
+                    FullDescription = table.Column<string>(type: "text", nullable: true),
+                    Url = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
+                    From = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    To = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -162,26 +137,23 @@ namespace KachnaOnline.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateTable(
                 name: "RepeatingStates",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    MadeById = table.Column<int>(type: "int", nullable: false),
-                    State = table.Column<int>(type: "int", nullable: false),
-                    DayOfWeek = table.Column<int>(type: "int", nullable: false),
-                    EffectiveFrom = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    EffectiveTo = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    TimeFrom = table.Column<TimeSpan>(type: "time(6)", nullable: false),
-                    TimeTo = table.Column<TimeSpan>(type: "time(6)", nullable: false),
-                    NoteInternal = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NotePublic = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MadeById = table.Column<int>(type: "integer", nullable: false),
+                    State = table.Column<int>(type: "integer", nullable: false),
+                    DayOfWeek = table.Column<int>(type: "integer", nullable: false),
+                    EffectiveFrom = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EffectiveTo = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    TimeFrom = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    TimeTo = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    NoteInternal = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
+                    NotePublic = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -192,17 +164,16 @@ namespace KachnaOnline.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateTable(
                 name: "UserRole",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    ForceDisable = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    AssignedByUserId = table.Column<int>(type: "int", nullable: true)
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    RoleId = table.Column<int>(type: "integer", nullable: false),
+                    ForceDisable = table.Column<bool>(type: "boolean", nullable: false),
+                    AssignedByUserId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -225,24 +196,23 @@ namespace KachnaOnline.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateTable(
                 name: "BoardGameReservationItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ReservationId = table.Column<int>(type: "int", nullable: false),
-                    BoardGameId = table.Column<int>(type: "int", nullable: false),
-                    ExpiresOn = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ReservationId = table.Column<int>(type: "integer", nullable: false),
+                    BoardGameId = table.Column<int>(type: "integer", nullable: false),
+                    ExpiresOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BoardGameReservationItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BoardGameReservationItems_BoardGameReservations_ReservationId",
+                        name: "FK_BoardGameReservationItems_BoardGameReservations_Reservation~",
                         column: x => x.ReservationId,
                         principalTable: "BoardGameReservations",
                         principalColumn: "Id",
@@ -253,28 +223,25 @@ namespace KachnaOnline.Data.Migrations
                         principalTable: "BoardGames",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateTable(
                 name: "PlannedStates",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    MadeById = table.Column<int>(type: "int", nullable: false),
-                    Start = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    PlannedEnd = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    State = table.Column<int>(type: "int", nullable: false),
-                    Ended = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ClosedById = table.Column<int>(type: "int", nullable: true),
-                    NoteInternal = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NotePublic = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NextPlannedStateId = table.Column<int>(type: "int", nullable: true),
-                    RepeatingStateId = table.Column<int>(type: "int", nullable: true),
-                    AssociatedEventId = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MadeById = table.Column<int>(type: "integer", nullable: false),
+                    Start = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    PlannedEnd = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    State = table.Column<int>(type: "integer", nullable: false),
+                    Ended = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ClosedById = table.Column<int>(type: "integer", nullable: true),
+                    NoteInternal = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
+                    NotePublic = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
+                    NextPlannedStateId = table.Column<int>(type: "integer", nullable: true),
+                    RepeatingStateId = table.Column<int>(type: "integer", nullable: true),
+                    AssociatedEventId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -289,8 +256,7 @@ namespace KachnaOnline.Data.Migrations
                         name: "FK_PlannedStates_PlannedStates_NextPlannedStateId",
                         column: x => x.NextPlannedStateId,
                         principalTable: "PlannedStates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PlannedStates_RepeatingStates_RepeatingStateId",
                         column: x => x.RepeatingStateId,
@@ -309,27 +275,25 @@ namespace KachnaOnline.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateTable(
                 name: "BoardGameReservationItemEvents",
                 columns: table => new
                 {
-                    ReservationItemId = table.Column<int>(type: "int", nullable: false),
-                    MadeOn = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    MadeById = table.Column<int>(type: "int", nullable: false),
-                    NewState = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    NewExpiryDateTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    NoteInternal = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    ReservationItemId = table.Column<int>(type: "integer", nullable: false),
+                    MadeOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    MadeById = table.Column<int>(type: "integer", nullable: false),
+                    NewState = table.Column<int>(type: "integer", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    NewExpiryDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    NoteInternal = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BoardGameReservationItemEvents", x => new { x.ReservationItemId, x.MadeOn });
                     table.ForeignKey(
-                        name: "FK_BoardGameReservationItemEvents_BoardGameReservationItems_Res~",
+                        name: "FK_BoardGameReservationItemEvents_BoardGameReservationItems_Re~",
                         column: x => x.ReservationItemId,
                         principalTable: "BoardGameReservationItems",
                         principalColumn: "Id",
@@ -340,8 +304,7 @@ namespace KachnaOnline.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BoardGameReservationItemEvents_MadeById",

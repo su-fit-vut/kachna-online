@@ -1,6 +1,7 @@
 // StartupExtensions.cs
 // Author: Ondřej Ondryáš
 
+using System;
 using KachnaOnline.Business.Data.Repositories;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
 using KachnaOnline.Data;
@@ -14,10 +15,11 @@ namespace KachnaOnline.Business.Data.Extensions
     {
         public static void AddAppData(this IServiceCollection services, IConfiguration configuration)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseMySql(configuration.GetConnectionString("AppDb"),
-                    ServerVersion.AutoDetect(configuration.GetConnectionString("AppDb")),
+                options.UseNpgsql(configuration.GetConnectionString("AppDb"),
                     mysqlOptions => mysqlOptions.MigrationsAssembly("KachnaOnline.Data"));
             });
 
