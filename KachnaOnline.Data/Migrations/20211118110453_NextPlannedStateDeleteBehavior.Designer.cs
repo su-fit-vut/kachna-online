@@ -3,6 +3,7 @@ using System;
 using KachnaOnline.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KachnaOnline.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211118110453_NextPlannedStateDeleteBehavior")]
+    partial class NextPlannedStateDeleteBehavior
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,9 +126,6 @@ namespace KachnaOnline.Data.Migrations
                         .HasMaxLength(1024)
                         .HasColumnType("character varying(1024)");
 
-                    b.Property<decimal?>("WebhookMessageId")
-                        .HasColumnType("numeric(20,0)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MadeById");
@@ -145,14 +144,8 @@ namespace KachnaOnline.Data.Migrations
                     b.Property<int>("BoardGameId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("ExpiresOn")
+                    b.Property<DateTime>("ExpiresOn")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("NotifiedBeforeExpiration")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("NotifiedOnExpiration")
-                        .HasColumnType("boolean");
 
                     b.Property<int>("ReservationId")
                         .HasColumnType("integer");
@@ -182,6 +175,10 @@ namespace KachnaOnline.Data.Migrations
 
                     b.Property<int>("NewState")
                         .HasColumnType("integer");
+
+                    b.Property<string>("NoteInternal")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
@@ -452,7 +449,7 @@ namespace KachnaOnline.Data.Migrations
             modelBuilder.Entity("KachnaOnline.Data.Entities.BoardGames.ReservationItem", b =>
                 {
                     b.HasOne("KachnaOnline.Data.Entities.BoardGames.BoardGame", "BoardGame")
-                        .WithMany("ReservationItems")
+                        .WithMany()
                         .HasForeignKey("BoardGameId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -572,11 +569,6 @@ namespace KachnaOnline.Data.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("KachnaOnline.Data.Entities.BoardGames.BoardGame", b =>
-                {
-                    b.Navigation("ReservationItems");
                 });
 
             modelBuilder.Entity("KachnaOnline.Data.Entities.BoardGames.Category", b =>
