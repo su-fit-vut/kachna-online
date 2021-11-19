@@ -22,6 +22,6 @@ namespace KachnaOnline.Dto.ClubStates
         /// This is included in the response only when the request is authorized to a state manager or an admin.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? ClosedBy { get; set; }
+        public StateMadeByDto ClosedBy { get; set; }
     }
 }

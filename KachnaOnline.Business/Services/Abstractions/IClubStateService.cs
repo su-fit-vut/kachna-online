@@ -133,10 +133,10 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// Creates a new planned state record.
         /// </summary>
         /// <remarks>
-        /// A state cannot be planned if it begins earlier than an already planned state that it would overlap.
-        /// However, it can be planned so that in begins in the middle of an already planned state. In that case,
+        /// A state cannot be planned if it begins earlier than an already planned state that it would overlap with.
+        /// However, it can be planned so that it begins in the middle of an already planned state. In that case,
         /// the <see cref="State.PlannedEnd"/> of the previously planned state is set to the newly planned state's
-        /// beginning and its next state reference is set to the newly planned state.<br/>
+        /// beginning and its next state reference is set to the newly planned state.
         /// </remarks>
         /// <returns>A <see cref="StatePlanningResult"/> with information about the newly planned state, a state that
         /// was modified as a result of this new state or about states that it would overlap with.</returns>
@@ -196,8 +196,6 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <remarks>
         /// This sets the state's <see cref="State.Ended"/> to the current datetime.
         /// </remarks>
-        /// <exception cref="InvalidOperationException">
-        /// The current state is <see cref="StateType.Closed"/>.</exception>
         /// <exception cref="UserNotFoundException">The user doesn't exist.</exception>
         /// <exception cref="StatePlanningException">A locking or database error occurs.</exception>
         /// <exception cref="StateNotFoundException">No state is currently active.</exception>

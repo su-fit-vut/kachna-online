@@ -28,7 +28,7 @@ namespace KachnaOnline.Dto.ClubStates
         public StateMadeByDto MadeBy { get; set; }
 
         /// <summary>
-        /// The beginning of the state.
+        /// The beginning and time of the state.
         /// </summary>
         public DateTime Start { get; set; }
 
@@ -41,6 +41,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// <summary>
         /// A public note.
         /// </summary>
+        /// <example>This is a note that will be visible to everyone.</example>
         public string Note { get; set; }
 
         /// <summary>
@@ -59,6 +60,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// An internal note. This is included in the response only when there's an internal note and the request
         /// is authorized to a state manager.
         /// </summary>
+        /// <example>This is a note that will only be visible to state managers.</example>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string NoteInternal { get; set; }
     }

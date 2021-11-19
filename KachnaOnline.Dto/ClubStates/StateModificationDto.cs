@@ -31,6 +31,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// Set to an empty string to remove the note.
         /// Set to null not to modify this property.
         /// </summary>
+        /// <example>This is a note that will only be visible to state managers.</example>
         public string NoteInternal { get; set; }
         
         /// <summary>
@@ -38,6 +39,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// Set to an empty string to remove the note.
         /// Set to null not to modify this property.
         /// </summary>
+        /// <example>This is a note that will be visible to everyone.</example>
         public string NotePublic { get; set; }
     }
 }
