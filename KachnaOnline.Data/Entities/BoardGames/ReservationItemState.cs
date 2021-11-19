@@ -1,9 +1,9 @@
-// ReservationState.cs
+// ReservationItemState.cs
 // Author: Ondřej Ondryáš
 
 namespace KachnaOnline.Data.Entities.BoardGames
 {
-    public enum ReservationState
+    public enum ReservationItemState
     {
         New = 0,
         Cancelled = 1,

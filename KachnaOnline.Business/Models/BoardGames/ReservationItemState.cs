@@ -1,12 +1,12 @@
-// ReservationState.cs
+// ReservationItemState.cs
 // Author: František Nečas
 
 namespace KachnaOnline.Business.Models.BoardGames
 {
     /// <summary>
-    /// Overall state of the reservation.
+    /// State of a single reservation item.
     /// </summary>
-    public enum ReservationState
+    public enum ReservationItemState
     {
         /// <summary>
         /// Newly created reservation, at least one item has not been assigned.
