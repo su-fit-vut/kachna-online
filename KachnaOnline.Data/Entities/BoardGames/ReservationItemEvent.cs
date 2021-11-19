@@ -17,7 +17,6 @@ namespace KachnaOnline.Data.Entities.BoardGames
         [Required] public ReservationState NewState { get; set; }
         [Required] public ReservationEventType Type { get; set; }
         public DateTime? NewExpiryDateTime { get; set; }
-        [StringLength(1024)] public string NoteInternal { get; set; }
 
         // Navigation properties
         public virtual ReservationItem ReservationItem { get; set; }
