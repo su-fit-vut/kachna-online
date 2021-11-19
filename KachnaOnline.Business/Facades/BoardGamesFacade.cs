@@ -12,6 +12,7 @@ using KachnaOnline.Dto.BoardGames;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
+using ReservationState = KachnaOnline.Dto.BoardGames.ReservationState;
 
 namespace KachnaOnline.Business.Facades
 {
