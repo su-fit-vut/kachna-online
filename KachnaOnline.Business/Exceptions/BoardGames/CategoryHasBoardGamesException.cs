@@ -2,7 +2,6 @@
 // Author: František Nečas
 
 using System;
-using System.Collections.Generic;
 
 namespace KachnaOnline.Business.Exceptions.BoardGames
 {

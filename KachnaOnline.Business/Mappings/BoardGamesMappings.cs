@@ -17,23 +17,23 @@ namespace KachnaOnline.Business.Mappings
         {
             // Categories
             this.CreateMap<KachnaOnline.Data.Entities.BoardGames.Category, Category>().ReverseMap();
-            this.CreateMap<Category, Dto.BoardGames.CategoryDto>().ReverseMap();
+            this.CreateMap<Category, CategoryDto>().ReverseMap();
 
             // Board games
             this.CreateMap<KachnaOnline.Data.Entities.BoardGames.BoardGame, BoardGame>();
             this.CreateMap<BoardGame, KachnaOnline.Data.Entities.BoardGames.BoardGame>()
                 .ForMember(dst => dst.Id, opt => opt.Ignore());
-            this.CreateMap<BoardGame, Dto.BoardGames.BoardGameDto>();
+            this.CreateMap<BoardGame, BoardGameDto>();
 
             // Board games - manager and creation
-            this.CreateMap<BoardGame, Dto.BoardGames.ManagerBoardGameDto>()
+            this.CreateMap<BoardGame, ManagerBoardGameDto>()
                 .ForMember(
                     dst => dst.DefaultReservationDays,
                     opt => opt.MapFrom<int?>(src =>
                         src.DefaultReservationTime == null
                             ? null
                             : src.DefaultReservationTime.Value.Days));
-            this.CreateMap<Dto.BoardGames.CreateBoardGameDto, BoardGame>()
+            this.CreateMap<CreateBoardGameDto, BoardGame>()
                 .ForMember(
                     dst => dst.DefaultReservationTime,
                     opt => opt.MapFrom<TimeSpan?>(src =>

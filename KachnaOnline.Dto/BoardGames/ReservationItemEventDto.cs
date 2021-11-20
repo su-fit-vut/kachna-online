@@ -2,7 +2,6 @@
 // Author: František Nečas
 
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace KachnaOnline.Dto.BoardGames
 {
