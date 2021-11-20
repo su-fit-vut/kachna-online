@@ -3,10 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using KachnaOnline.Business.Configuration;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
 using KachnaOnline.Business.Exceptions;
@@ -15,6 +15,7 @@ using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Business.Models.Events;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using EventEntity = KachnaOnline.Data.Entities.Events.Event;
 
 namespace KachnaOnline.Business.Services
@@ -26,24 +27,25 @@ namespace KachnaOnline.Business.Services
         private readonly ILogger<EventsService> _logger;
         private readonly IEventsRepository _eventsRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IOptionsMonitor<EventsOptions> _eventsOptionsMonitor;
 
-        private const int EventPlanningEnterTimeout = 1000;
         private static readonly SemaphoreSlim EventPlanningSemaphore = new(1);
 
         private static async Task EnsureLock()
         {
-            var hasLock = await EventPlanningSemaphore.WaitAsync(EventPlanningEnterTimeout);
+            var hasLock = await EventPlanningSemaphore.WaitAsync(EventsConstants.EventPlanningEnterTimeout);
             if (!hasLock)
                 throw new EventManipulationFailedException("Cannot acquire the event planning lock.");
         }
 
-        public EventsService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<EventsService> logger)
+        public EventsService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<EventsService> logger, IOptionsMonitor<EventsOptions> eventsOptionsMonitor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
             _eventsRepository = _unitOfWork.Events;
             _userRepository = _unitOfWork.Users;
+            _eventsOptionsMonitor = eventsOptionsMonitor;
         }
 
         /// <inheritdoc />
@@ -93,15 +95,15 @@ namespace KachnaOnline.Business.Services
         public async Task<ICollection<Event>> GetEvents(DateTime? from = null, DateTime? to = null)
         {
             from ??= DateTime.Now;
-            to ??= from.Value.AddDays(EventConstants.QueryDaysTimeSpan);
+            to ??= from.Value.AddDays(_eventsOptionsMonitor.CurrentValue.QueryDaysTimeSpan);
 
             if (to < from)
                 throw new ArgumentException(
                     $"The {nameof(to)} argument must not be a datetime before {nameof(from)}.");
 
-            if (to - from > TimeSpan.FromDays(EventConstants.QueryDaysTimeSpan))
+            if (to - from > TimeSpan.FromDays(_eventsOptionsMonitor.CurrentValue.QueryDaysTimeSpan))
                 throw new ArgumentException(
-                    $"The maximum time span to get events for is {EventConstants.QueryDaysTimeSpan} days.");
+                    $"The maximum time span to get events for is {_eventsOptionsMonitor.CurrentValue.QueryDaysTimeSpan} days.");
 
             var eventEntities = _eventsRepository.GetStartingBetween(
                 from.Value.RoundToMinutes(), to.Value.RoundToMinutes());
