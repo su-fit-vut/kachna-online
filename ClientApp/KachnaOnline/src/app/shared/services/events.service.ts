@@ -8,12 +8,13 @@ import { Event } from "../../models/event.model";
   providedIn: 'root'
 })
 export class EventsService {
-  readonly ApiUrl = "http://localhost:5000";
+  readonly ApiUrl = "http://localhost:5000"; // TODO: Use /api/...
   readonly EventsUrl = this.ApiUrl + '/events';
 
   constructor(private http:HttpClient) { }
 
   eventDetail: Event = new Event();
+  eventsList: Event[];
 
   getNextPlannedEvents():Observable<any[]> {
     return this.http.get<any>(this.EventsUrl + '/next');
@@ -23,11 +24,11 @@ export class EventsService {
     return this.http.get<Event>(this.EventsUrl + '/' + val);
   }
 
-  planEvent(val: any) {
-    return this.http.post(this.EventsUrl, val);
+  planEvent() {
+    return this.http.post(this.EventsUrl, this.eventDetail);
   }
 
-  ModifyEvent(eventId: number, modifiedEvent: any) {
+  modifyEvent(eventId: number, modifiedEvent: any) {
     return this.http.put(this.EventsUrl + '/' + eventId, modifiedEvent);
   }
 
