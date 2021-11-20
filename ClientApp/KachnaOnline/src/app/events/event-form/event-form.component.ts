@@ -3,7 +3,7 @@ import { Event } from '../../models/event.model';
 import { EventsService } from './../../shared/services/events.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-//import { ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-event-form',
@@ -14,7 +14,7 @@ export class EventFormComponent implements OnInit {
 
   constructor(
     public eventsService: EventsService,
-    // Toastr fro submission.
+    private toastrService: ToastrService,
     ) { }
 
   @Input() editMode: boolean = false;
@@ -23,6 +23,8 @@ export class EventFormComponent implements OnInit {
   ngOnInit(): void {
     if (this.editMode) {
       this.jumbotronText = "Upravit event";
+    } else {
+      this.eventsService.eventDetail = new Event();
     }
   }
 
@@ -38,13 +40,11 @@ export class EventFormComponent implements OnInit {
       res => {
         this.clearForm(form);
         this.eventsService.refreshEventsList();
-        // TODO: Add toastr successfull.
-        //this.toastr.success('Event úspěšně naplánován.', 'Event Operation')
+        this.toastrService.success('Event úspěšně naplánován.', 'Naplánovat event');
       },
       err => {
         console.log(err);
-        // TODO: Add toastr error.
-        //this.toastr.success('Event úspěšně naplánován.', 'Event Operation')
+        this.toastrService.error('Naplánování eventu selhalo.', 'Naplánovat event');
       }
     );
   }
@@ -52,14 +52,13 @@ export class EventFormComponent implements OnInit {
   modifyEventFromForm(form: NgForm) {
     this.eventsService.modifyEvent().subscribe(
       res => {
+        this.clearForm(form);
         this.eventsService.refreshEventsList();
-        // TODO: Add toastr successfull.
-        //this.toastr.info('Event úspěšně aktualizován.', 'Event operation')
+        this.toastrService.success('Event úspěšně upraven.', 'Upravit event');
       },
       err => {
         console.log(err);
-        // TODO: Add toastr error.
-        //this.toastr.info('Event úspěšně aktualizován.', 'Event operation')
+        this.toastrService.error('Úprava eventu selhala.', 'Upravit event');
       }
     );
   }

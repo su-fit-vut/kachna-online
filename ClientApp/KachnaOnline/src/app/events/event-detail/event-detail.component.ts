@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { EventsService } from './../../shared/services/events.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -13,19 +14,21 @@ export class EventDetailComponent implements OnInit {
 
   constructor(
     public eventsService: EventsService,
+    private toastrService: ToastrService,
     private route: ActivatedRoute,
     private router: Router
     ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.eventsService.getEvent(params.get('eventId')).subscribe(
+      let eventId = Number(params.get('eventId'));
+      this.eventsService.getEvent(eventId).subscribe(
         res => {
             this.event = res as Event;
         },
         err => {
           console.log(err);
-          // TODO: Show error toastr.
+          this.toastrService.error(`Nepodařilo se získat event s ID ${eventId}.`, "Načtení eventů");
         });
     });
   }
