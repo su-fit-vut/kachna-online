@@ -15,6 +15,7 @@ import { EventDetailComponent } from './events/event-detail/event-detail.compone
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventFormComponent } from './events/event-form/event-form.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { EventFormComponent } from './events/event-form/event-form.component';
     StatesComponent,
     EventDetailComponent,
     EventFormComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

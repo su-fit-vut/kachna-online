@@ -1,3 +1,4 @@
+import { HomeComponent } from './home/home.component';
 import { EventDetailComponent } from './events/event-detail/event-detail.component';
 import { StatesComponent } from './states/states.component';
 import { CurrentEventsComponent } from "./events/current-events/current-events.component";
@@ -12,6 +13,7 @@ The order of routes is important because the Router uses a first-match wins stra
   { path: 'events/current', component: CurrentEventsComponent},
   { path: "events/:eventId", component: EventDetailComponent },
   { path: 'states', component: StatesComponent},
+  { path: '', component: HomeComponent }, // Default home page.
   //{ path: '',   redirectTo: '/states', pathMatch: 'full' }, // Redirect to default states page.
   { path: '**', component: PageNotFoundComponent },  // Wildcard route for a 404 page.
 ];
