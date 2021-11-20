@@ -4,8 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using KachnaOnline.Business.Configuration;
+using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
@@ -13,11 +16,13 @@ using KachnaOnline.Business.Models.BoardGames;
 using KachnaOnline.Business.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace KachnaOnline.Business.Services
 {
     public class BoardGamesService : IBoardGamesService
     {
+        private readonly IOptionsMonitor<BoardGamesOptions> _boardGamesOptionsMonitor;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<BoardGamesService> _logger;
@@ -28,8 +33,10 @@ namespace KachnaOnline.Business.Services
         private readonly IReservationItemRepository _reservationItemRepository;
         private readonly IReservationItemEventRepository _reservationItemEventRepository;
 
-        public BoardGamesService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<BoardGamesService> logger)
+        public BoardGamesService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<BoardGamesService> logger,
+            IOptionsMonitor<BoardGamesOptions> boardGameOptionsMonitor)
         {
+            _boardGamesOptionsMonitor = boardGameOptionsMonitor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
@@ -398,7 +405,7 @@ namespace KachnaOnline.Business.Services
                 await _reservationItemRepository.Add(itemEntity);
                 await _unitOfWork.SaveChanges();
 
-                var creationEvent = new ReservationItemEvent(itemEntity.Id, createdBy);
+                var creationEvent = new ReservationItemEvent(ReservationEventType.Created, itemEntity.Id, createdBy);
                 var eventEntity =
                     _mapper.Map<KachnaOnline.Data.Entities.BoardGames.ReservationItemEvent>(creationEvent);
                 await _reservationItemEventRepository.Add(eventEntity);
@@ -440,10 +447,14 @@ namespace KachnaOnline.Business.Services
             // Re-throw exceptions related to game availability
             catch (BoardGameNotFoundException)
             {
+                _logger.LogError("Cannot add items to a reservation, rolling changes back.");
+                await _unitOfWork.RollbackTransaction();
                 throw;
             }
             catch (GameUnavailableException)
             {
+                _logger.LogError("Cannot add items to a reservation, rolling changes back.");
+                await _unitOfWork.RollbackTransaction();
                 throw;
             }
             catch (Exception e)
@@ -466,6 +477,7 @@ namespace KachnaOnline.Business.Services
             {
                 throw new ReservationNotFoundException();
             }
+
             try
             {
                 await _unitOfWork.BeginTransaction();
@@ -475,10 +487,14 @@ namespace KachnaOnline.Business.Services
             // Re-throw exceptions related to game availability
             catch (BoardGameNotFoundException)
             {
+                _logger.LogError("Cannot add items to a reservation, rolling changes back.");
+                await _unitOfWork.RollbackTransaction();
                 throw;
             }
             catch (GameUnavailableException)
             {
+                _logger.LogError("Cannot add items to a reservation, rolling changes back.");
+                await _unitOfWork.RollbackTransaction();
                 throw;
             }
             catch (Exception e)
@@ -559,6 +575,223 @@ namespace KachnaOnline.Business.Services
 
             return _mapper.Map<List<ReservationItemEvent>>(
                 await _reservationItemEventRepository.GetByItemIdChronologically(itemId));
+        }
+
+        /// <summary>
+        /// Handles a simple event transition which requires only a new event to be written to DB.
+        /// </summary>
+        /// <remarks>
+        /// Such events are:
+        ///     - Assigned
+        ///     - Cancelled
+        ///     - ExtensionRequested
+        ///     - ExtensionRefused
+        ///     - Returned
+        /// </remarks>
+        /// <param name="userId">ID of the user requesting the change.</param>
+        /// <param name="itemId">ID of the item the change ties to.</param>
+        /// <param name="eventType">Type of event to insert.</param>
+        private async Task HandleSimpleTransition(int userId, int itemId, ReservationEventType eventType)
+        {
+            var eventModel = new ReservationItemEvent(eventType, itemId, userId);
+            await _reservationItemEventRepository.Add(
+                _mapper.Map<KachnaOnline.Data.Entities.BoardGames.ReservationItemEvent>(eventModel));
+        }
+
+        /// <summary>
+        /// Handles an extension granted event.
+        /// </summary>
+        /// <param name="userId">ID of the user granting the extension.</param>
+        /// <param name="item">Item which the change ties to.</param>
+        private async Task HandleExtensionGrantedTransition(int userId, ReservationItem item)
+        {
+            // No way how ExpiresOn is null due to the automaton but make everyone happy and use a default.
+            var expiration =
+                (item.ExpiresOn ?? DateTime.Now).AddDays(_boardGamesOptionsMonitor.CurrentValue.ExtensionDays);
+            var eventModel =
+                new ReservationItemEvent(ReservationEventType.ExtensionGranted, item.Id, userId, expiration);
+            await _reservationItemEventRepository.Add(
+                _mapper.Map<KachnaOnline.Data.Entities.BoardGames.ReservationItemEvent>(eventModel));
+            await _reservationItemRepository.UpdateExpiration(item.Id, expiration);
+        }
+
+        /// <summary>
+        /// Handles a single reservation item state transition.
+        /// </summary>
+        /// <remarks>
+        /// Assumes that a transaction on <see cref="IUnitOfWork"/> is in progress.
+        ///
+        /// The logic is based on a finite automaton. Its transitions are the following:
+        ///     Created -> {Assigned, Cancelled}
+        ///     Cancelled -> {}
+        ///     Assigned -> {HandedOver}
+        ///     HandedOver -> {Returned, ExtensionGranted, ExtensionRequested}
+        ///     ExtensionRequested -> {Returned, ExtensionRefused, ExtensionGranted}
+        ///     ExtensionGranted -> {Returned, ExtensionRequested, ExtensionGranted}
+        ///     ExtensionRefused -> {Returned, ExtensionRequested, ExtensionGranted}
+        ///     Returned -> {}
+        ///
+        /// Assumes that the Created event is implicitly inserted on reservation creation.
+        /// </remarks>
+        /// <param name="userId">ID of the user requesting the change.</param>
+        /// <param name="item">Item which the change ties to.</param>
+        /// <param name="newEvent">Type of event to insert.</param>
+        /// <exception cref="InvalidTransitionException">When the transition cannot be performed (i.e. the requested
+        /// state cannot be reached from the last state).</exception>
+        private async Task HandleStateTransition(int userId, ReservationItem item, ReservationEventType newEvent)
+        {
+            var lastEvent =
+                _mapper.Map<ReservationItemEvent>(await _reservationItemEventRepository.GetLatestEvent(item.Id));
+            var now = DateTime.Now;
+            switch (lastEvent.Type)
+            {
+                case ReservationEventType.Created:
+                    if (newEvent is ReservationEventType.Assigned or ReservationEventType.Cancelled)
+                    {
+                        await this.HandleSimpleTransition(userId, item.Id, newEvent);
+                    }
+                    else
+                    {
+                        throw new InvalidTransitionException();
+                    }
+
+                    break;
+                case ReservationEventType.Assigned:
+                    if (newEvent == ReservationEventType.Cancelled)
+                    {
+                        await this.HandleSimpleTransition(userId, item.Id, newEvent);
+                    }
+                    else if (newEvent == ReservationEventType.HandedOver)
+                    {
+                        var game = await _boardGamesRepository.Get(item.BoardGameId);
+                        var expiration = now.Add(game.DefaultReservationTime ??
+                                                 TimeSpan.FromDays(_boardGamesOptionsMonitor.CurrentValue
+                                                     .DefaultReservationDays));
+                        var eventModel = new ReservationItemEvent(newEvent, item.Id, userId, expiration);
+                        await _reservationItemEventRepository.Add(
+                            _mapper.Map<KachnaOnline.Data.Entities.BoardGames.ReservationItemEvent>(eventModel));
+                        await _reservationItemRepository.UpdateExpiration(item.Id, expiration);
+                    }
+                    else
+                    {
+                        throw new InvalidTransitionException();
+                    }
+
+                    break;
+                case ReservationEventType.HandedOver:
+                    if (newEvent is ReservationEventType.Returned or ReservationEventType.ExtensionRequested)
+                    {
+                        await this.HandleSimpleTransition(userId, item.Id, newEvent);
+                    }
+                    else if (newEvent == ReservationEventType.ExtensionGranted)
+                    {
+                        await this.HandleExtensionGrantedTransition(userId, item);
+                    }
+                    else
+                    {
+                        throw new InvalidTransitionException();
+                    }
+
+                    break;
+                case ReservationEventType.ExtensionRequested:
+                    if (newEvent is ReservationEventType.Returned or ReservationEventType.ExtensionRefused)
+                    {
+                        await this.HandleSimpleTransition(userId, item.Id, newEvent);
+                    }
+                    else if (newEvent == ReservationEventType.ExtensionGranted)
+                    {
+                        await this.HandleExtensionGrantedTransition(userId, item);
+                    }
+                    else
+                    {
+                        throw new InvalidTransitionException();
+                    }
+
+                    break;
+                case ReservationEventType.ExtensionGranted:
+                    if (newEvent is ReservationEventType.Returned or ReservationEventType.ExtensionRequested)
+                    {
+                        await this.HandleSimpleTransition(userId, item.Id, newEvent);
+                    }
+                    else if (newEvent == ReservationEventType.ExtensionGranted)
+                    {
+                        await this.HandleExtensionGrantedTransition(userId, item);
+                    }
+                    else
+                    {
+                        throw new InvalidTransitionException();
+                    }
+
+                    break;
+                case ReservationEventType.ExtensionRefused:
+                    if (newEvent is ReservationEventType.Returned or ReservationEventType.ExtensionRequested)
+                    {
+                        await this.HandleSimpleTransition(userId, item.Id, newEvent);
+                    }
+                    else if (newEvent == ReservationEventType.ExtensionGranted)
+                    {
+                        await this.HandleExtensionGrantedTransition(userId, item);
+                    }
+                    else
+                    {
+                        throw new InvalidTransitionException();
+                    }
+
+                    break;
+                default:
+                    // Cancelled and Returned are finish states
+                    throw new InvalidTransitionException();
+            }
+
+            await _unitOfWork.SaveChanges();
+        }
+
+        /// <inheritdoc />
+        public async Task ModifyItemState(ClaimsPrincipal user, int reservationId, int itemId,
+            ReservationEventType newEvent)
+        {
+            var item = await _reservationItemRepository.Get(itemId);
+            var reservation = await _reservationRepository.Get(reservationId);
+            if (item is null || reservation is null || item.ReservationId != reservationId)
+            {
+                throw new ReservationNotFoundException();
+            }
+
+            // Facade has already blocked manager-only event types from regular users. A request from regular user
+            // with malicious intent hence could only be of type ExtensionRequested or Cancelled. Check authorization.
+            var userId = int.Parse(user.FindFirstValue(IdentityConstants.IdClaim));
+            // Only the user whose reservation this is can request extension.
+            if (newEvent == ReservationEventType.ExtensionRequested && userId != reservation.MadeById)
+            {
+                throw new ReservationAccessDeniedException();
+            }
+
+            // Only Cancelled request from a regular user is needed to be checked now. A board games manager
+            // can also request cancellation.
+            if (!user.IsInRole(RoleConstants.BoardGamesManager) && userId != reservation.MadeById)
+            {
+                throw new ReservationAccessDeniedException();
+            }
+
+            var itemModel = _mapper.Map<ReservationItem>(item);
+            try
+            {
+                await _unitOfWork.BeginTransaction();
+                await this.HandleStateTransition(userId, itemModel, newEvent);
+                await _unitOfWork.CommitTransaction();
+            }
+            catch (InvalidTransitionException)
+            {
+                _logger.LogError("Invalid item transition, rolling changes back.");
+                await _unitOfWork.RollbackTransaction();
+                throw;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot add new event to a reservation item, rolling changes back.");
+                await _unitOfWork.RollbackTransaction();
+                throw new ReservationManipulationFailedException();
+            }
         }
     }
 }

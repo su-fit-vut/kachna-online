@@ -339,15 +339,42 @@ namespace KachnaOnline.App.Controllers
         /// <param name="itemId">ID of the item in the reservation.</param>
         /// <param name="type">Type of the modification.</param>
         /// <response code="204">Item state updated.</response>
+        /// <response code="403">This type of event requires board games manager permissions or the requesting user
+        /// must be the owner of this reservation.</response>
         /// <response code="404">No such item or reservation exists.</response>
         /// <response code="409">Such modification is not possible.</response>
         [ProducesResponseType(204)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         [HttpPost("{id}/{itemId}/events")]
         public async Task<ActionResult> ModifyItemState(int id, int itemId, ReservationEventType type)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _facade.ModifyItemState(this.User, id, itemId, type);
+                return this.NoContent();
+            }
+            catch (ReservationAccessDeniedException)
+            {
+                return this.Forbid();
+            }
+            catch (NotABoardGamesManagerException)
+            {
+                return this.Forbid();
+            }
+            catch (ReservationNotFoundException)
+            {
+                return this.NotFound();
+            }
+            catch (InvalidTransitionException)
+            {
+                return this.Conflict();
+            }
+            catch (ReservationManipulationFailedException)
+            {
+                return this.Problem(statusCode: 500);
+            }
         }
     }
 }

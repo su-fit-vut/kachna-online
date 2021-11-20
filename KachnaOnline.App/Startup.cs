@@ -44,6 +44,7 @@ namespace KachnaOnline.App
             // Load configuration objects.
             services.Configure<KisOptions>(this.Configuration.GetSection("Kis"));
             services.Configure<JwtOptions>(this.Configuration.GetSection("Jwt"));
+            services.Configure<BoardGamesOptions>(this.Configuration.GetSection("BoardGames"));
 
             // Configures custom rules for Serilog's request logging.
             services.ConfigureSerilogRequestLogging();

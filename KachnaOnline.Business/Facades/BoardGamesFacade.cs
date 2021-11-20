@@ -14,6 +14,8 @@ using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
 using ReservationState = KachnaOnline.Dto.BoardGames.ReservationState;
+using ReservationEventType = KachnaOnline.Dto.BoardGames.ReservationEventType;
+using ReservationEventModelType = KachnaOnline.Business.Models.BoardGames.ReservationEventType;
 
 namespace KachnaOnline.Business.Facades
 {
@@ -385,6 +387,40 @@ namespace KachnaOnline.Business.Facades
         public async Task AddReservationItems(int reservationId, int addedBy, UpdateReservationItemsDto items)
         {
             await _boardGamesService.AddReservationItems(reservationId, addedBy, items.BoardGameIds);
+        }
+
+        /// <summary>
+        /// Creates a new event which modifies the state of a reservation item.
+        /// </summary>
+        /// <param name="user">User requesting the state change.</param>
+        /// <param name="reservationId">ID of reservation the item belongs to.</param>
+        /// <param name="itemId">ID of an item to add a new event to.</param>
+        /// <param name="eventType">Type of the event to create.</param>
+        /// <exception cref="ReservationNotFoundException">When no such item exists.</exception>
+        /// <exception cref="InvalidTransitionException">When the requested transition does not make sense in the 
+        /// current context.</exception>
+        /// <exception cref="NotABoardGamesManagerException">When the <paramref name="eventType"/> event can only be
+        /// performed by a board games manager.</exception>
+        /// <exception cref="ReservationAccessDeniedException">When the reservation belongs to another user.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>
+        public async Task ModifyItemState(ClaimsPrincipal user, int reservationId, int itemId,
+            ReservationEventType eventType)
+        {
+            // Created is implicit and can only be one.
+            if (eventType == ReservationEventType.Created)
+            {
+                throw new InvalidTransitionException();
+            }
+
+            if (eventType is ReservationEventType.Assigned or ReservationEventType.HandedOver or
+                ReservationEventType.ExtensionGranted or ReservationEventType.ExtensionRefused or
+                ReservationEventType.Returned && !user.IsInRole(RoleConstants.BoardGamesManager))
+            {
+                throw new NotABoardGamesManagerException();
+            }
+
+            var stateModel = _mapper.Map<ReservationEventModelType>(eventType);
+            await _boardGamesService.ModifyItemState(user, reservationId, itemId, stateModel);
         }
     }
 }

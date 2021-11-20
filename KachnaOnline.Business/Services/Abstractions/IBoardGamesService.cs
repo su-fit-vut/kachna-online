@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
@@ -218,5 +219,22 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// Sorted from the oldest to the newest events.</returns>
         /// <exception cref="ReservationNotFoundException">When no such item exists.</exception>
         Task<ICollection<ReservationItemEvent>> GetItemHistory(int reservationId, int itemId);
+
+        /// <summary>
+        /// Creates a new event which modifies the state of a reservation item.
+        /// </summary>
+        /// <param name="user">User requesting the change.</param>
+        /// <param name="reservationId">ID of reservation the item belongs to.</param>
+        /// <param name="itemId">ID of an item to add a new event to.</param>
+        /// <remarks>In the current implementation, the <paramref name="reservationId"/> is somewhat redundant.
+        /// Previously, the items were intended as a weak entity, however, currently, all items have a unique ID,
+        /// regardless of reservation. Hence in this case, it acts as a sanity check.</remarks>
+        /// <param name="newEvent">Type of the event to create.</param>
+        /// <exception cref="ReservationNotFoundException">When no such item exists.</exception>
+        /// <exception cref="InvalidTransitionException">When the requested transition does not make sense in the 
+        /// current context.</exception>
+        /// <exception cref="ReservationAccessDeniedException">When the reservation belongs to another user.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>
+        Task ModifyItemState(ClaimsPrincipal user, int reservationId, int itemId, ReservationEventType newEvent);
     }
 }
