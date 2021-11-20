@@ -49,10 +49,10 @@ namespace KachnaOnline.Business.Services
         /// of reservations.
         /// </remarks>
         /// <param name="game">Game to calculate the availability of.</param>
-        private async Task CalculateGameAvailability(BoardGame game)
+        private void CalculateGameAvailability(BoardGame game)
         {
-            // TODO: reservations (repository will be queried, hence the async which doesn't have an effect now)
-            game.Available = game.InStock - game.Unavailable;
+            var reserved = _reservationItemRepository.CountCurrentlyReservingGame(game.Id);
+            game.Available = game.InStock - game.Unavailable - reserved;
         }
 
         /// <inheritdoc />
@@ -63,10 +63,10 @@ namespace KachnaOnline.Business.Services
             bool? visible)
         {
             var result = new List<BoardGame>();
-            await foreach (var game in _boardGamesRepository.GetFilteredGames(category, players, available, visible))
+            foreach (var game in await _boardGamesRepository.GetFilteredGames(category, players, available, visible))
             {
                 var gameModel = _mapper.Map<BoardGame>(game);
-                await this.CalculateGameAvailability(gameModel);
+                this.CalculateGameAvailability(gameModel);
                 result.Add(gameModel);
             }
 
@@ -81,7 +81,7 @@ namespace KachnaOnline.Business.Services
                 throw new BoardGameNotFoundException();
 
             var gameModel = _mapper.Map<BoardGame>(game);
-            await this.CalculateGameAvailability(gameModel);
+            this.CalculateGameAvailability(gameModel);
             return gameModel;
         }
 
@@ -103,7 +103,7 @@ namespace KachnaOnline.Business.Services
             {
                 await _unitOfWork.SaveChanges();
                 var newGame = _mapper.Map<BoardGame>(gameEntity);
-                await this.CalculateGameAvailability(newGame);
+                this.CalculateGameAvailability(newGame);
                 return newGame;
             }
             catch (Exception e)

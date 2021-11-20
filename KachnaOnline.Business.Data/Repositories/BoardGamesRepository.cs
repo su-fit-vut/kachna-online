@@ -22,7 +22,7 @@ namespace KachnaOnline.Business.Data.Repositories
             return Set.Include(b => b.Category).FirstOrDefaultAsync(b => b.Id == boardGameId);
         }
 
-        public IAsyncEnumerable<BoardGame> GetFilteredGames(int? categoryId, int? players, bool? available,
+        public async Task<ICollection<BoardGame>> GetFilteredGames(int? categoryId, int? players, bool? available,
             bool? visible)
         {
             var result = Set.AsQueryable();
@@ -37,14 +37,17 @@ namespace KachnaOnline.Business.Data.Repositories
 
             if (available is not null)
             {
-                // TODO: reservations
-                result = result.Where(b => (b.InStock - b.Unavailable > 0) == available);
+                result = result.Where(b => (b.InStock - b.Unavailable - b.ReservationItems.Count(i =>
+                                                i.Events.All(e =>
+                                                    e.NewState != ReservationItemState.Cancelled &&
+                                                    e.NewState != ReservationItemState.Done)) >
+                                            0) == available);
             }
 
             if (visible is not null)
                 result = result.Where(b => b.Visible == visible);
 
-            return result.Include(b => b.Category).AsAsyncEnumerable();
+            return await result.Include(b => b.Category).ToListAsync();
         }
     }
 }

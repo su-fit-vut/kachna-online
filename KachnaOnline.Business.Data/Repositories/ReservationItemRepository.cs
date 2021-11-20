@@ -21,5 +21,11 @@ namespace KachnaOnline.Business.Data.Repositories
         {
             return await Set.Where(i => i.ReservationId == reservationId).ToListAsync();
         }
+
+        public int CountCurrentlyReservingGame(int gameId)
+        {
+            return Set.Where(i => i.BoardGameId == gameId).Count(i => i.Events.All(e =>
+                e.NewState != ReservationItemState.Cancelled && e.NewState != ReservationItemState.Done));
+        }
     }
 }

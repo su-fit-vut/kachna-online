@@ -9,7 +9,7 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
 {
     public interface IBoardGamesRepository : IGenericRepository<BoardGame, int>
     {
-        IAsyncEnumerable<BoardGame> GetFilteredGames(int? categoryId, int? players, bool? available, bool? visible);
+        Task<ICollection<BoardGame>> GetFilteredGames(int? categoryId, int? players, bool? available, bool? visible);
 
         Task<BoardGame> GetWithCategory(int boardGameId);
     }
