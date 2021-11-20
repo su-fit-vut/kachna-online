@@ -1,6 +1,7 @@
+import { ToastrService } from 'ngx-toastr';
 import { EventsComponent } from './../../events/events.component';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Event } from "../../models/event.model";
 
@@ -11,7 +12,10 @@ export class EventsService {
   readonly ApiUrl = "http://localhost:5000"; // TODO: Use /api/...
   readonly EventsUrl = this.ApiUrl + '/events';
 
-  constructor(private http:HttpClient) { }
+  constructor(
+    private http:HttpClient,
+    private toastrService: ToastrService,
+    ) { }
 
   eventDetail: Event = new Event();
   eventsList: Event[];
@@ -20,12 +24,20 @@ export class EventsService {
     return this.http.get<any>(this.EventsUrl + '/next');
   }
 
-  getFromAllEvents():Observable<Event[]> {
-    return this.http.get<Event[]>(this.EventsUrl);
+  getFromToEvents(from: string = "", to: string = ""):Observable<Event[]> {
+    let params = new HttpParams();
+    if (from != "") {
+      params.set('from', from);
+    }
+    if (to != "") {
+      params.set('to', to);
+    }
+
+    return this.http.get<Event[]>(this.EventsUrl, {params});
   }
 
-  getEvent(val: any): Observable<Event> {
-    return this.http.get<Event>(this.EventsUrl + '/' + val);
+  getEvent(eventId: number): Observable<Event> {
+    return this.http.get<Event>(`${this.EventsUrl}/${eventId}`);
   }
 
   planEvent() {
@@ -33,20 +45,21 @@ export class EventsService {
   }
 
   modifyEvent() {
-    return this.http.put(this.EventsUrl + '/' + this.eventDetail.id, this.eventDetail);
+    return this.http.put(`${this.EventsUrl}/${this.eventDetail.id}`, this.eventDetail);
   }
 
-  removeEvent(eventId: any):Observable<any> {
-    return this.http.delete(this.EventsUrl + '/' + eventId);
+  removeEvent(eventId: number):Observable<any> {
+    return this.http.delete(`${this.EventsUrl}/${eventId}`);
   }
 
   refreshEventsList() {
-    this.getFromAllEvents().subscribe(
+    this.getFromToEvents().subscribe(
       res => {
         this.eventsList = res as Event[];
       },
       err => {
         console.log(err);
+        this.toastrService.error("Nepodařilo se získat eventy.", "Načtení eventů");
       }
     );
   }

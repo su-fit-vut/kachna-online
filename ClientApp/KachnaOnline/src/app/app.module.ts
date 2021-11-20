@@ -18,6 +18,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventFormComponent } from './events/event-form/event-form.component';
 import { HomeComponent } from './home/home.component';
 import { EventsFromAllComponent } from './events/events-from-all/events-from-all.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { EventsFromAllComponent } from './events/events-from-all/events-from-all
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(), // TODO: Change options?
   ],
   providers: [ EventsService, ],
   bootstrap: [AppComponent]
