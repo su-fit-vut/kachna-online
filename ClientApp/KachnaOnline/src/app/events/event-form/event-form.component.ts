@@ -17,11 +17,8 @@ export class EventFormComponent implements OnInit {
     // Toastr fro submission.
     ) { }
 
-
-
-
+  @Input() editMode: boolean = false;
   jumbotronText: string = "Naplánovat event";
-  editMode: boolean = false;
 
   ngOnInit(): void {
     if (this.editMode) {
@@ -30,7 +27,7 @@ export class EventFormComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    if (this.eventsService.eventDetail.id == -1)
+    if (this.eventsService.eventDetail.id == -1) // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
       this.planEventFromForm(form);
     else
       this.modifyEventFromForm(form);
@@ -40,6 +37,7 @@ export class EventFormComponent implements OnInit {
     this.eventsService.planEvent().subscribe(
       res => {
         this.clearForm(form);
+        this.eventsService.refreshEventsList();
         // TODO: Add toastr successfull.
         //this.toastr.success('Event úspěšně naplánován.', 'Event Operation')
       },
@@ -52,9 +50,9 @@ export class EventFormComponent implements OnInit {
   }
 
   modifyEventFromForm(form: NgForm) {
-    this.eventsService.modifyEvent(this.eventsService.eventDetail.id, form).subscribe(
+    this.eventsService.modifyEvent().subscribe(
       res => {
-        this.clearForm(form);
+        this.eventsService.refreshEventsList();
         // TODO: Add toastr successfull.
         //this.toastr.info('Event úspěšně aktualizován.', 'Event operation')
       },
@@ -65,7 +63,6 @@ export class EventFormComponent implements OnInit {
       }
     );
   }
-
 
   clearForm(form: NgForm) {
     form.form.reset();

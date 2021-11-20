@@ -44,15 +44,15 @@
         <label class="mr-1">Krátký popis</label>
             <div style="color: grey;">(povinné)</div>
         </div>
-        <input class="form-control form-control-lg" placeholder="Krátký popis eventu" name="shortDescription"
+        <textarea class="form-control form-control-lg" placeholder="Krátký popis eventu" name="shortDescription"
             #shortDescription="ngModel" [(ngModel)]="eventsService.eventDetail.shortDescription"
-            required maxlength="512" [class.invalid]="shortDescription.invalid && shortDescription.touched">
+            required maxlength="512" [class.invalid]="shortDescription.invalid && shortDescription.touched"></textarea>
     </div>
 
     <div class="form-group">
         <label>Podrobný popis</label>
-        <input class="form-control form-control-lg" placeholder="Podrobný popis eventu" name="fullDescription"
-            #fullDescription="ngModel" [(ngModel)]="eventsService.eventDetail.fullDescription">
+        <textarea class="form-control form-control-lg" placeholder="Podrobný popis eventu" name="fullDescription"
+            #fullDescription="ngModel" [(ngModel)]="eventsService.eventDetail.fullDescription"></textarea>
     </div>
 
     <div class="form-group">

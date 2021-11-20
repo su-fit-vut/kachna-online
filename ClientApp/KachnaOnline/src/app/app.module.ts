@@ -1,3 +1,4 @@
+import { EventsService } from './shared/services/events.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -16,6 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventFormComponent } from './events/event-form/event-form.component';
 import { HomeComponent } from './home/home.component';
+import { EventsFromAllComponent } from './events/events-from-all/events-from-all.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { HomeComponent } from './home/home.component';
     EventDetailComponent,
     EventFormComponent,
     HomeComponent,
+    EventsFromAllComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,7 @@ import { HomeComponent } from './home/home.component';
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [ EventsService, ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
