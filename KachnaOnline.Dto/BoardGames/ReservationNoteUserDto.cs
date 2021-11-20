@@ -14,6 +14,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// A user note.
         /// </summary>
         /// <example>For an upcoming party.</example>
+        [Required]
         [StringLength(1024)]
         public string NoteUser { get; set; }
     }

@@ -350,9 +350,91 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
+        public async Task<Reservation> GetReservation(int reservationId)
+        {
+            var reservation = await _reservationRepository.Get(reservationId);
+            if (reservation is null)
+            {
+                throw new ReservationNotFoundException();
+            }
+
+            return _mapper.Map<Reservation>(reservation);
+        }
+
+        /// <inheritdoc />
         public async Task<Reservation> CreateReservation(Reservation reservation, int[] reservationGames)
         {
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public async Task UpdateReservationNote(int id, int userId, string note)
+        {
+            if (note is null)
+            {
+                throw new ArgumentNullException(nameof(note));
+            }
+            var reservation = await _reservationRepository.Get(id);
+            if (reservation is null)
+            {
+                throw new ReservationNotFoundException();
+            }
+
+            if (reservation.MadeById != userId)
+            {
+                throw new ReservationAccessDeniedException();
+            }
+
+            reservation.NoteUser = note;
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot update user note in reservation.");
+                await _unitOfWork.ClearTrackedChanges();
+                throw new ReservationManipulationFailedException();
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task UpdateReservationNoteInternal(int id, string note)
+        {
+            if (note is null)
+            {
+                throw new ArgumentNullException(nameof(note));
+            }
+            var reservation = await _reservationRepository.Get(id);
+            if (reservation is null)
+            {
+                throw new ReservationNotFoundException();
+            }
+
+            reservation.NoteInternal = note;
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot update internal note in reservation.");
+                await _unitOfWork.ClearTrackedChanges();
+                throw new ReservationManipulationFailedException();
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<ICollection<ReservationItemEvent>> GetItemHistory(int reservationId, int itemId)
+        {
+            var item = await _reservationItemRepository.Get(itemId);
+            if (item is null || item.ReservationId != reservationId)
+            {
+                throw new ReservationNotFoundException();
+            }
+
+            return _mapper.Map<List<ReservationItemEvent>>(
+                await _reservationItemEventRepository.GetByItemIdChronologically(itemId));
         }
     }
 }

@@ -16,20 +16,25 @@ namespace KachnaOnline.Dto.BoardGames
         /// </summary>
         /// <example>1</example>
         public int Id { get; set; }
-        
+
+        /// <summary>
+        /// ID of the user whom the reservation belongs to.
+        /// </summary>
+        public int MadeById { get; set; }
+
         /// <summary>
         /// Date which the reservation was made on.
         /// </summary>
         /// <example>2021-11-05T20:00</example>
         public DateTime MadeOn { get; set; }
-        
+
         /// <summary>
         /// A user note.
         /// </summary>
         /// <example>For an upcoming party.</example>
         [StringLength(1024)]
         public string NoteUser { get; set; }
-        
+
         /// <summary>
         /// Array of items in the reservation.
         /// </summary>

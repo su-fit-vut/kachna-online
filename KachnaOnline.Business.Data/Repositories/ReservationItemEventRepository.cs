@@ -18,9 +18,9 @@ namespace KachnaOnline.Business.Data.Repositories
         {
         }
 
-        public IAsyncEnumerable<ReservationItemEvent> GetByItemId(int itemId)
+        public async Task<ICollection<ReservationItemEvent>> GetByItemIdChronologically(int itemId)
         {
-            return Set.Where(e => e.ReservationItemId == itemId).AsAsyncEnumerable();
+            return await Set.Where(e => e.ReservationItemId == itemId).OrderBy(e => e.MadeOn).ToListAsync();
         }
 
         public Task<ReservationItemEvent> GetLatestEvent(int itemId)

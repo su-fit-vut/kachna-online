@@ -14,25 +14,21 @@ namespace KachnaOnline.Dto.BoardGames
         /// <summary>
         /// The creator of the change in state.
         /// </summary>
-        [Required]
         public int MadeById { get; set; }
 
         /// <summary>
         /// When the change was done.
         /// </summary>
-        [Required]
         public DateTime MadeOn { get; set; }
 
         /// <summary>
         /// New overall state of the reservation item.
         /// </summary>
-        [Required]
         public ReservationItemState NewState { get; set; }
 
         /// <summary>
         /// Type of change.
         /// </summary>
-        [Required]
         public ReservationEventType Type { get; set; }
 
         /// <summary>

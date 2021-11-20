@@ -147,7 +147,24 @@ namespace KachnaOnline.App.Controllers
         [HttpPut("{id}/note")]
         public async Task<ActionResult> UpdateReservationNote(int id, ReservationNoteUserDto noteDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var userId = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
+                await _facade.UpdateReservationNote(id, userId, noteDto);
+                return this.NoContent();
+            }
+            catch (ReservationAccessDeniedException)
+            {
+                return this.Forbid();
+            }
+            catch (ReservationNotFoundException)
+            {
+                return this.NotFound();
+            }
+            catch (ReservationManipulationFailedException)
+            {
+                return this.Problem(statusCode: 500);
+            }
         }
 
         /// <summary>
@@ -163,7 +180,19 @@ namespace KachnaOnline.App.Controllers
         [HttpPut("{id}/noteInternal")]
         public async Task<ActionResult> UpdateReservationNoteInternal(int id, ReservationNoteInternalDto noteDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _facade.UpdateReservationNoteInternal(id, noteDto);
+                return this.NoContent();
+            }
+            catch (ReservationNotFoundException)
+            {
+                return this.NotFound();
+            }
+            catch (ReservationManipulationFailedException)
+            {
+                return this.Problem(statusCode: 500);
+            }
         }
 
         /// <summary>
@@ -219,7 +248,14 @@ namespace KachnaOnline.App.Controllers
         [HttpGet("{id}/{itemId}/events")]
         public async Task<ActionResult<IEnumerable<ReservationItemEventDto>>> GetItemHistory(int id, int itemId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return new ActionResult<IEnumerable<ReservationItemEventDto>>(await _facade.GetItemHistory(id, itemId));
+            }
+            catch (ReservationNotFoundException)
+            {
+                return this.NotFound();
+            }
         }
 
         /// <summary>

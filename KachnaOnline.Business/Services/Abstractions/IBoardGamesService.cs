@@ -145,7 +145,15 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <returns>The list of reservation items within reservation with ID
         /// <paramref name="reservationId"/>.</returns>
         Task<ICollection<ReservationItem>> GetReservationItems(int reservationId);
-        
+
+        /// <summary>
+        /// Returns a reservation with the given ID.
+        /// </summary>
+        /// <param name="reservationId">ID of a reservation to return.</param>
+        /// <returns><see cref="Reservation"/> with ID <paramref name="reservationId"/></returns>
+        /// <exception cref="ReservationNotFoundException">Thrown when no such reservation exists.</exception>
+        Task<Reservation> GetReservation(int reservationId);
+
         /// <summary>
         /// Creates a new reservation.
         /// </summary>
@@ -157,5 +165,40 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// available.</exception>
         /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be created.</exception>
         Task<Reservation> CreateReservation(Reservation reservation, int[] reservationGames);
+
+        /// <summary>
+        /// Updates user note in a reservation.
+        /// </summary>
+        /// <param name="id">ID of the reservation to update.</param>
+        /// <param name="userId">ID of the user requesting the change.</param>
+        /// <param name="note">The new user note.</param>
+        /// <exception cref="ReservationNotFoundException">When no such reservation exists.</exception>
+        /// <exception cref="ReservationAccessDeniedException">When the user does not own the reservation.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>
+        /// <exception cref="ArgumentNullException">When <paramref name="note"/> is null.</exception>
+        Task UpdateReservationNote(int id, int userId, string note);
+
+        /// <summary>
+        /// Updates internal note in a reservation.
+        /// </summary>
+        /// <param name="id">ID of the reservation to update.</param>
+        /// <param name="note">The new internal note.</param>
+        /// <exception cref="ReservationNotFoundException">When no such reservation exists.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>
+        /// <exception cref="ArgumentNullException">When <paramref name="note"/> is null.</exception>
+        Task UpdateReservationNoteInternal(int id, string note);
+
+        /// <summary>
+        /// Returns state history of a single item.
+        /// </summary>
+        /// <param name="reservationId">ID of reservation the item belongs to.</param>
+        /// <param name="itemId">ID of an item to get history of.</param>
+        /// <remarks>In the current implementation, the <paramref name="reservationId"/> is somewhat redundant.
+        /// Previously, the items were intended as a weak entity, however, currently, all items have a unique ID,
+        /// regardless of reservation. Hence in this case, it acts as a sanity check.</remarks>
+        /// <returns>The history of <paramref name="itemId"/> from reservation <paramref name="reservationId"/>.
+        /// Sorted from the oldest to the newest events.</returns>
+        /// <exception cref="ReservationNotFoundException">When no such item exists.</exception>
+        Task<ICollection<ReservationItemEvent>> GetItemHistory(int reservationId, int itemId);
     }
 }

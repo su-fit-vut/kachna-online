@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -222,6 +223,7 @@ namespace KachnaOnline.Business.Facades
                 dto.Items = _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(dto.Id));
                 dtos.Add(dto);
             }
+
             return dtos;
         }
 
@@ -242,6 +244,7 @@ namespace KachnaOnline.Business.Facades
                 dto.Items = _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(dto.Id));
                 dtos.Add(dto);
             }
+
             return dtos;
         }
 
@@ -259,7 +262,62 @@ namespace KachnaOnline.Business.Facades
         /// does not exist.</exception>
         public async Task<ReservationDto> GetReservation(ClaimsPrincipal user, int reservationId)
         {
-            throw new NotImplementedException();
+            var reservation = await _boardGamesService.GetReservation(reservationId);
+            if (user.IsInRole(RoleConstants.BoardGamesManager))
+            {
+                var managerDto = _mapper.Map<ManagerReservationDto>(reservation);
+                managerDto.Items =
+                    _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(managerDto.Id));
+                return managerDto;
+            }
+
+            if (reservation.MadeById != int.Parse(user.FindFirstValue(IdentityConstants.IdClaim)))
+            {
+                throw new NotABoardGamesManagerException();
+            }
+
+            var userDto = _mapper.Map<ReservationDto>(reservation);
+            userDto.Items = _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(userDto.Id));
+            return userDto;
+        }
+
+        /// <summary>
+        /// Updates user note in a reservation.
+        /// </summary>
+        /// <param name="id">ID of the reservation to update.</param>
+        /// <param name="userId">ID of the user requesting the change.</param>
+        /// <param name="note"><see cref="ReservationNoteUserDto"/> containing the new user note.</param>
+        /// <exception cref="ReservationNotFoundException">When no such reservation exists.</exception>
+        /// <exception cref="ReservationAccessDeniedException">When the user does not own the reservation.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>
+        public async Task UpdateReservationNote(int id, int userId, ReservationNoteUserDto note)
+        {
+            await _boardGamesService.UpdateReservationNote(id, userId, note.NoteUser);
+        }
+        
+        /// <summary>
+        /// Updates internal note in a reservation.
+        /// </summary>
+        /// <param name="id">ID of the reservation to update.</param>
+        /// <param name="note"><see cref="ReservationNoteInternalDto"/> containing the new internal note.</param>
+        /// <exception cref="ReservationNotFoundException">When no such reservation exists.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>
+        public async Task UpdateReservationNoteInternal(int id, ReservationNoteInternalDto note)
+        {
+            await _boardGamesService.UpdateReservationNoteInternal(id, note.NoteInternal);
+        }
+
+        /// <summary>
+        /// Returns state history of a single item.
+        /// </summary>
+        /// <param name="reservationId">ID of reservation the item belongs to.</param>
+        /// <param name="itemId">ID of an item to get history of.</param>
+        /// <returns>List of <see cref="ReservationItemEventDto"/> sorted from oldest to newest.</returns>
+        /// <exception cref="ReservationNotFoundException">When no such item exists.</exception>
+        public async Task<IEnumerable<ReservationItemEventDto>> GetItemHistory(int reservationId, int itemId)
+        {
+            var events = await _boardGamesService.GetItemHistory(reservationId, itemId);
+            return _mapper.Map<IEnumerable<ReservationItemEventDto>>(events);
         }
     }
 }

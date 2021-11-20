@@ -14,6 +14,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// An internal note.
         /// </summary>
         /// <example>Do not extend anymore.</example>
+        [Required]
         [StringLength(1024)]
         public string NoteInternal { get; set; }
     }
