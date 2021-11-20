@@ -10,6 +10,12 @@ namespace KachnaOnline.Business.Models.BoardGames
     /// </summary>
     public class ReservationItem
     {
+        public ReservationItem(int reservationId, int boardGameId)
+        {
+            this.ReservationId = reservationId;
+            this.BoardGameId = boardGameId;
+        }
+        
         /// <summary>
         /// Unique ID of the item.
         /// </summary>

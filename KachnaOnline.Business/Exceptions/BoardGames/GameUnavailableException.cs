@@ -10,11 +10,11 @@ namespace KachnaOnline.Business.Exceptions.BoardGames
     /// </summary>
     public class GameUnavailableException : Exception
     {
-        public int[] UnavailableBoardGameIds { get; }
+        public int UnavailableBoardGameId { get; }
 
-        public GameUnavailableException(int[] unavailable) : base("Some games are unavailable")
+        public GameUnavailableException(int unavailable) : base("Some games are unavailable")
         {
-            UnavailableBoardGameIds = unavailable;
+            this.UnavailableBoardGameId = unavailable;
         }
     }
 }

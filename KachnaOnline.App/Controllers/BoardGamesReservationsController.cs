@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Constants;
+using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
 using KachnaOnline.Business.Facades;
 using KachnaOnline.Dto.BoardGames;
@@ -123,14 +124,38 @@ namespace KachnaOnline.App.Controllers
         /// <param name="creationDto"><see cref="CreateReservationDto"/> to create.</param>
         /// <returns>The created <see cref="ReservationDto"/> if the creation succeeded.</returns>
         /// <response code="201">The created reservation.</response>
+        /// <response code="404">When a requested game does not exist.</response>
         /// <response code="409">All of the given board games could not be reserved (e.g. are not available).
-        /// Returns the list of conflicting board game IDs.</response>
+        /// Returns the first conflicting board game ID.</response>
         [ProducesResponseType(201)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         [HttpPost]
         public async Task<ActionResult<ReservationDto>> CreateReservation(CreateReservationDto creationDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
+                var reservation = await _facade.CreateNewReservation(user, creationDto);
+                return this.CreatedAtAction(nameof(this.GetReservation), new { id = reservation.Id }, reservation);
+            }
+            catch (BoardGameNotFoundException)
+            {
+                return this.NotFound();
+            }
+            catch (UserNotFoundException)
+            {
+                // Should not happen, just to be safe.
+                return this.NotFound();
+            }
+            catch (GameUnavailableException e)
+            {
+                return this.Conflict(e.UnavailableBoardGameId);
+            }
+            catch (ReservationManipulationFailedException)
+            {
+                return this.Problem(statusCode: 500);
+            }
         }
 
         /// <summary>
@@ -200,18 +225,41 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <param name="userId">ID of the user to create the reservation for.</param>
         /// <param name="creationDto"><see cref="ManagerCreateReservationDto"/> to create.</param>
-        /// <returns>The created <see cref="ReservationDto"/> if the creation succeeded.</returns>
+        /// <returns>The created <see cref="ManagerReservationDto"/> if the creation succeeded.</returns>
         /// <response code="201">The created reservation.</response>
+        /// <response code="404">When a requested game or user to create for does not exist.</response>
         /// <response code="409">All of the given board games could not be reserved (e.g. are not available).
         /// Returns the list of conflicting board game IDs.</response>
         [Authorize(Roles = RoleConstants.BoardGamesManager)]
         [ProducesResponseType(201)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         [HttpPost("madeFor/{userId}")]
-        public async Task<ActionResult<ReservationDto>> ManagerCreateReservation(int userId,
+        public async Task<ActionResult<ManagerReservationDto>> ManagerCreateReservation(int userId,
             ManagerCreateReservationDto creationDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var creatingUser = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
+                var reservation = await _facade.ManagerCreateNewReservation(creatingUser, userId, creationDto);
+                return this.CreatedAtAction(nameof(this.GetReservation), new { id = reservation.Id }, reservation);
+            }
+            catch (BoardGameNotFoundException)
+            {
+                return this.NotFound();
+            }
+            catch (UserNotFoundException)
+            {
+                return this.NotFound();
+            }
+            catch (GameUnavailableException e)
+            {
+                return this.Conflict(e.UnavailableBoardGameId);
+            }
+            catch (ReservationManipulationFailedException)
+            {
+                return this.Problem(statusCode: 500);
+            }
         }
 
         /// <summary>
@@ -220,7 +268,7 @@ namespace KachnaOnline.App.Controllers
         /// <param name="id">ID of the reservation to update.</param>
         /// <param name="newItems"><see cref="UpdateReservationItemsDto"/> containing the items to be added.</param>
         /// <response code="204">The reservation was updated.</response>
-        /// <response code="404">No such reservation exists.</response>
+        /// <response code="404">No such reservation exists or a requested game does not exist.</response>
         /// <response code="409">All of the given board games could not be reserved (e.g. are not available).
         /// Returns the list of conflicting board game IDs.</response>
         [Authorize(Roles = RoleConstants.BoardGamesManager)]
@@ -230,7 +278,33 @@ namespace KachnaOnline.App.Controllers
         [HttpPut("{id}/items")]
         public async Task<ActionResult> UpdateReservationItems(int id, UpdateReservationItemsDto newItems)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
+                await _facade.AddReservationItems(id, user, newItems);
+                return this.NoContent();
+            }
+            catch (BoardGameNotFoundException)
+            {
+                return this.NotFound();
+            }
+            catch (ReservationNotFoundException)
+            {
+                return this.NotFound();
+            }
+            catch (UserNotFoundException)
+            {
+                // Should not happen, just to be safe.
+                return this.NotFound();
+            }
+            catch (GameUnavailableException e)
+            {
+                return this.Conflict(e.UnavailableBoardGameId);
+            }
+            catch (ReservationManipulationFailedException)
+            {
+                return this.Problem(statusCode: 500);
+            }
         }
 
         /// <summary>

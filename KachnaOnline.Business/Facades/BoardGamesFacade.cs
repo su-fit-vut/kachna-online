@@ -294,7 +294,7 @@ namespace KachnaOnline.Business.Facades
         {
             await _boardGamesService.UpdateReservationNote(id, userId, note.NoteUser);
         }
-        
+
         /// <summary>
         /// Updates internal note in a reservation.
         /// </summary>
@@ -318,6 +318,73 @@ namespace KachnaOnline.Business.Facades
         {
             var events = await _boardGamesService.GetItemHistory(reservationId, itemId);
             return _mapper.Map<IEnumerable<ReservationItemEventDto>>(events);
+        }
+
+        /// <summary>
+        /// Creates a new reservation for a user.
+        /// </summary>
+        /// <param name="userId">ID of the user requesting the reservation.</param>
+        /// <param name="reservation"><see cref="CreateReservationDto"/> containing the requested games.</param>
+        /// <returns>The created <see cref="ReservationDto"/>.</returns>
+        /// <exception cref="GameUnavailableException">When the whole request cannot be satisfied due to a game
+        /// not being available.</exception>
+        /// <exception cref="BoardGameNotFoundException">When a requested game does not exist.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation created failed.</exception>
+        /// <exception cref="UserNotFoundException">When a user with ID <paramref name="userId"/> does not exist.
+        /// Should not normally happen.</exception>
+        public async Task<ReservationDto> CreateNewReservation(int userId, CreateReservationDto reservation)
+        {
+            var reservationModel = _mapper.Map<Reservation>(reservation);
+            reservationModel.MadeById = userId;
+            var created =
+                await _boardGamesService.CreateReservation(reservationModel, userId, reservation.BoardGameIds);
+            var createdDto = _mapper.Map<ReservationDto>(created);
+            createdDto.Items =
+                _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(createdDto.Id));
+            return createdDto;
+        }
+
+        /// <summary>
+        /// Creates a new reservation for a user by someone else (a board games manager).
+        /// </summary>
+        /// <param name="madeBy">ID of the user who is creating the reservation.</param>
+        /// <param name="madeFor">ID of the user who the games are reserved for.</param>
+        /// <param name="reservation"><see cref="ManagerCreateReservationDto"/> containing the requested games.</param>
+        /// <returns>The created <see cref="ManagerReservationDto"/>.</returns>
+        /// <exception cref="GameUnavailableException">When the whole request cannot be satisfied due to a game
+        /// not being available.</exception>
+        /// <exception cref="BoardGameNotFoundException">When a request game does not exist.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation created failed.</exception>
+        /// <exception cref="UserNotFoundException">When a user with ID <paramref name="madeFor"/> does not exist.</exception>
+        public async Task<ManagerReservationDto> ManagerCreateNewReservation(int madeBy, int madeFor,
+            ManagerCreateReservationDto reservation)
+        {
+            var reservationModel = _mapper.Map<Reservation>(reservation);
+            reservationModel.MadeById = madeFor;
+            var created =
+                await _boardGamesService.CreateReservation(reservationModel, madeBy, reservation.BoardGameIds);
+            var createdDto = _mapper.Map<ManagerReservationDto>(created);
+            createdDto.Items =
+                _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(createdDto.Id));
+            return createdDto;
+        }
+
+        /// <summary>
+        /// Adds new items to a reservation.
+        /// </summary>
+        /// <param name="reservationId">ID of the reservation to add items to.</param>
+        /// <param name="addedBy">ID of the user who is adding the games.</param>
+        /// <param name="items"><see cref="UpdateReservationItemsDto"/> containing the new items.</param>
+        /// <exception cref="BoardGameNotFoundException">When a requested game does not exist.</exception>
+        /// <exception cref="GameUnavailableException">When some of the requested board games are not
+        /// available.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be created.</exception>
+        /// <exception cref="ReservationNotFoundException">When a reservation with ID
+        /// <paramref name="reservationId"/> does not exist.</exception>
+        /// <exception cref="UserNotFoundException">When a user with ID <paramref name="addedBy"/> does not exist.</exception>
+        public async Task AddReservationItems(int reservationId, int addedBy, UpdateReservationItemsDto items)
+        {
+            await _boardGamesService.AddReservationItems(reservationId, addedBy, items.BoardGameIds);
         }
     }
 }

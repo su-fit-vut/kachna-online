@@ -158,13 +158,31 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// Creates a new reservation.
         /// </summary>
         /// <param name="reservation"><see cref="Reservation"/> to create.</param>
+        /// <param name="createdBy">ID of the user who requested the creation.</param>
         /// <param name="reservationGames">Array of game IDs to reserve.</param>
         /// <returns>The created <see cref="Reservation"/> with a filled ID.</returns>
         /// <exception cref="ArgumentNullException">When <paramref name="reservation"/> is null.</exception>
+        /// <exception cref="BoardGameNotFoundException">When a requested game does not exist.</exception>
         /// <exception cref="GameUnavailableException">When some of the requested board games are not
         /// available.</exception>
         /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be created.</exception>
-        Task<Reservation> CreateReservation(Reservation reservation, int[] reservationGames);
+        /// <exception cref="UserNotFoundException">When a user with ID <paramref name="createdBy"/> does not exist.</exception>
+        Task<Reservation> CreateReservation(Reservation reservation, int createdBy, IEnumerable<int> reservationGames);
+
+        /// <summary>
+        /// Adds new items to a reservation.
+        /// </summary>
+        /// <param name="reservationId">ID of the reservation to add items to.</param>
+        /// <param name="addedBy">ID of the user who is adding the games.</param>
+        /// <param name="newGames">Array of game IDs to reserve.</param>
+        /// <exception cref="BoardGameNotFoundException">When a requested game does not exist.</exception>
+        /// <exception cref="GameUnavailableException">When some of the requested board games are not
+        /// available.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be created.</exception>
+        /// <exception cref="ReservationNotFoundException">When a reservation with ID
+        /// <paramref name="reservationId"/> does not exist.</exception>
+        /// <exception cref="UserNotFoundException">When a user with ID <paramref name="addedBy"/> does not exist.</exception>
+        Task AddReservationItems(int reservationId, int addedBy, IEnumerable<int> newGames);
 
         /// <summary>
         /// Updates user note in a reservation.

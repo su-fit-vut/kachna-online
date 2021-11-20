@@ -11,6 +11,20 @@ namespace KachnaOnline.Business.Models.BoardGames
     public class ReservationItemEvent
     {
         /// <summary>
+        /// Creates a "Created" event.
+        /// </summary>
+        /// <param name="reservationItemId">ID of the reservation item this event ties to.</param>
+        /// <param name="madeById">ID of the user that is creating the reservation.</param>
+        public ReservationItemEvent(int reservationItemId, int madeById)
+        {
+            this.ReservationItemId = reservationItemId;
+            this.MadeById = madeById;
+            this.MadeOn = DateTime.Now;
+            this.Type = ReservationEventType.Created;
+            this.NewState = ReservationItemState.New;
+        }
+        
+        /// <summary>
         /// ID of the item that the event modifies.
         /// </summary>
         public int ReservationItemId { get; set; }

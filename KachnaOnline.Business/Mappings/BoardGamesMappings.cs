@@ -52,7 +52,7 @@ namespace KachnaOnline.Business.Mappings
                 .ReverseMap();
             this.CreateMap<KachnaOnline.Data.Entities.BoardGames.ReservationItemState, ReservationItemState>()
                 .ReverseMap();
-            
+
             // DTOs
             this.CreateMap<Reservation, ReservationDto>();
             this.CreateMap<Reservation, ManagerReservationDto>();
@@ -64,6 +64,11 @@ namespace KachnaOnline.Business.Mappings
 
             this.CreateMap<ReservationItemEvent, ReservationItemEventDto>();
             this.CreateMap<KachnaOnline.Dto.BoardGames.ReservationEventType, ReservationEventType>().ReverseMap();
+
+            this.CreateMap<CreateReservationDto, Reservation>()
+                .ForMember(dst => dst.MadeOn, opt => opt.MapFrom(src => DateTime.Now));
+            this.CreateMap<ManagerCreateReservationDto, Reservation>()
+                .ForMember(dst => dst.MadeOn, opt => opt.MapFrom(src => DateTime.Now));
         }
     }
 }

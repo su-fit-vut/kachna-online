@@ -361,10 +361,132 @@ namespace KachnaOnline.Business.Services
             return _mapper.Map<Reservation>(reservation);
         }
 
-        /// <inheritdoc />
-        public async Task<Reservation> CreateReservation(Reservation reservation, int[] reservationGames)
+        /// <summary>
+        /// Creates new reservation items.
+        /// </summary>
+        /// <remarks>
+        /// Assumes that a transaction on <see cref="IUnitOfWork"/> is in progress.
+        ///
+        /// Also creates a <see cref="ReservationItemEvent"/> of type Created.
+        /// </remarks>
+        /// <param name="reservationId">ID which the items will belong to.</param>
+        /// <param name="createdBy">ID of the user requesting the creation.</param>
+        /// <param name="reservationGames">Array of game IDs to reserve.</param>
+        /// <exception cref="BoardGameNotFoundException">When a requested game does not exist.</exception>
+        /// <exception cref="GameUnavailableException">When a requested game is not available.</exception>
+        private async Task CreateReservationItems(int reservationId, int createdBy, IEnumerable<int> reservationGames)
         {
-            throw new NotImplementedException();
+            foreach (var gameId in reservationGames)
+            {
+                var game = await _boardGamesRepository.Get(gameId);
+                if (game is null)
+                {
+                    await _unitOfWork.RollbackTransaction();
+                    throw new BoardGameNotFoundException();
+                }
+
+                var gameModel = _mapper.Map<BoardGame>(game);
+                this.CalculateGameAvailability(gameModel);
+                if (gameModel.Available <= 0)
+                {
+                    await _unitOfWork.RollbackTransaction();
+                    throw new GameUnavailableException(gameId);
+                }
+
+                var reservationItem = new ReservationItem(reservationId, gameId);
+                var itemEntity = _mapper.Map<KachnaOnline.Data.Entities.BoardGames.ReservationItem>(reservationItem);
+                await _reservationItemRepository.Add(itemEntity);
+                await _unitOfWork.SaveChanges();
+
+                var creationEvent = new ReservationItemEvent(itemEntity.Id, createdBy);
+                var eventEntity =
+                    _mapper.Map<KachnaOnline.Data.Entities.BoardGames.ReservationItemEvent>(creationEvent);
+                await _reservationItemEventRepository.Add(eventEntity);
+                await _unitOfWork.SaveChanges();
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<Reservation> CreateReservation(Reservation reservation, int createdBy,
+            IEnumerable<int> reservationGames)
+        {
+            if (reservation is null)
+            {
+                throw new ArgumentNullException(nameof(reservation));
+            }
+
+            if (await _userRepository.Get(reservation.MadeById) is null)
+            {
+                throw new UserNotFoundException(reservation.MadeById);
+            }
+
+            if (await _userRepository.Get(createdBy) is null)
+            {
+                throw new UserNotFoundException(createdBy);
+            }
+
+            try
+            {
+                await _unitOfWork.BeginTransaction();
+                var entity = _mapper.Map<KachnaOnline.Data.Entities.BoardGames.Reservation>(reservation);
+                await _reservationRepository.Add(entity);
+                await _unitOfWork.SaveChanges();
+
+                var createdReservation = _mapper.Map<Reservation>(entity);
+                await this.CreateReservationItems(createdReservation.Id, createdBy, reservationGames);
+                await _unitOfWork.CommitTransaction();
+                return createdReservation;
+            }
+            // Re-throw exceptions related to game availability
+            catch (BoardGameNotFoundException)
+            {
+                throw;
+            }
+            catch (GameUnavailableException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot create a reservation, rolling changes back.");
+                await _unitOfWork.RollbackTransaction();
+                throw new ReservationManipulationFailedException();
+            }
+        }
+
+        public async Task AddReservationItems(int reservationId, int addedBy, IEnumerable<int> newGames)
+        {
+            if (await _userRepository.Get(addedBy) is null)
+            {
+                throw new UserNotFoundException(addedBy);
+            }
+
+            var reservation = await _reservationRepository.Get(reservationId);
+            if (reservation is null)
+            {
+                throw new ReservationNotFoundException();
+            }
+            try
+            {
+                await _unitOfWork.BeginTransaction();
+                await this.CreateReservationItems(reservationId, addedBy, newGames);
+                await _unitOfWork.CommitTransaction();
+            }
+            // Re-throw exceptions related to game availability
+            catch (BoardGameNotFoundException)
+            {
+                throw;
+            }
+            catch (GameUnavailableException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot add items to a reservation, rolling changes back.");
+                await _unitOfWork.RollbackTransaction();
+                throw new ReservationManipulationFailedException();
+            }
         }
 
         /// <inheritdoc />
@@ -374,6 +496,7 @@ namespace KachnaOnline.Business.Services
             {
                 throw new ArgumentNullException(nameof(note));
             }
+
             var reservation = await _reservationRepository.Get(id);
             if (reservation is null)
             {
@@ -405,6 +528,7 @@ namespace KachnaOnline.Business.Services
             {
                 throw new ArgumentNullException(nameof(note));
             }
+
             var reservation = await _reservationRepository.Get(id);
             if (reservation is null)
             {
