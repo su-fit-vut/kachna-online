@@ -211,9 +211,11 @@
   }
 
   footer {
-    margin-top: 8px;
     display: flex;
+    padding: 0 16px;
+    flex-direction: column;
     align-items: center;
+    margin-top: 8px;
     line-height: 20px;
   }
 
