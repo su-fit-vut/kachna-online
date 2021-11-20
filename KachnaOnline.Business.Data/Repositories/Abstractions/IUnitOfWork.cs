@@ -16,5 +16,8 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
         IReservationItemEventRepository ReservationItemEvents { get; }
         Task SaveChanges();
         Task ClearTrackedChanges();
+        Task BeginTransaction();
+        Task CommitTransaction();
+        Task RollbackTransaction();
     }
 }

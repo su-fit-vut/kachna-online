@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
 using KachnaOnline.Data;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace KachnaOnline.Business.Data.Repositories
 {
@@ -18,6 +19,8 @@ namespace KachnaOnline.Business.Data.Repositories
         public IReservationRepository Reservations { get; }
         public IReservationItemRepository ReservationItems { get; }
         public IReservationItemEventRepository ReservationItemEvents { get; }
+
+        private IDbContextTransaction _transaction;
 
         public UnitOfWork(AppDbContext dbContext)
         {
@@ -51,6 +54,31 @@ namespace KachnaOnline.Business.Data.Repositories
         public async ValueTask DisposeAsync()
         {
             await _dbContext.DisposeAsync();
+        }
+
+        public async Task BeginTransaction()
+        {
+            _transaction = await _dbContext.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransaction()
+        {
+            if (_transaction != null)
+            {
+                await _transaction.CommitAsync();
+                await _transaction.DisposeAsync();
+                _transaction = null;
+            }
+        }
+
+        public async Task RollbackTransaction()
+        {
+            if (_transaction != null)
+            {
+                await _transaction.RollbackAsync();
+                await _transaction.DisposeAsync();
+                _transaction = null;
+            }
         }
     }
 }
