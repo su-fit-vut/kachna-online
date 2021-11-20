@@ -1,9 +1,7 @@
 import { EventsService } from './../../shared/services/events.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, of } from 'rxjs';
 import { Event } from '../../models/event.model';
-import { switchMap, } from 'rxjs/operators';
 
 @Component({
   selector: 'app-event-detail',
@@ -11,7 +9,7 @@ import { switchMap, } from 'rxjs/operators';
   styleUrls: ['./event-detail.component.css']
 })
 export class EventDetailComponent implements OnInit {
-  event: Event;
+  event: Event = new Event();
 
   constructor(
     public eventsService: EventsService,
@@ -21,14 +19,14 @@ export class EventDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.eventsService.getEvent(params.get('eventId'))
-        .toPromise().then(res => {
+      this.eventsService.getEvent(params.get('eventId')).subscribe(
+        res => {
             this.event = res as Event;
-            console.log(this.event.id);
-        })
-      });
+        },
+        err => {
+          console.log(err);
+          // TODO: Show error toastr.
+        });
+    });
   }
-
-
-
 }
