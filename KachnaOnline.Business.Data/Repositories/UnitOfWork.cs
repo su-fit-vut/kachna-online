@@ -15,6 +15,9 @@ namespace KachnaOnline.Business.Data.Repositories
         public IRoleRepository Roles { get; }
         public IBoardGamesRepository BoardGames { get; }
         public IBoardGameCategoriesRepository BoardGamesCategories { get; }
+        public IReservationRepository Reservations { get; }
+        public IReservationItemRepository ReservationItems { get; }
+        public IReservationItemEventRepository ReservationItemEvents { get; }
 
         public UnitOfWork(AppDbContext dbContext)
         {
@@ -24,6 +27,9 @@ namespace KachnaOnline.Business.Data.Repositories
             this.Roles = new RoleRepository(dbContext);
             this.BoardGames = new BoardGamesRepository(dbContext);
             this.BoardGamesCategories = new BoardGameCategoriesRepository(dbContext);
+            this.Reservations = new ReservationRepository(dbContext);
+            this.ReservationItems = new ReservationItemRepository(dbContext);
+            this.ReservationItemEvents = new ReservationItemEventRepository(dbContext);
         }
 
         public async Task SaveChanges()

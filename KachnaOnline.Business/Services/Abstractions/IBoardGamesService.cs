@@ -121,6 +121,32 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task DeleteCategory(int id);
 
         /// <summary>
+        /// Returns a list of user's reservation.
+        /// </summary>
+        /// <param name="user">ID of user to get reservations of.</param>
+        /// <param name="state">Optional state filter.</param>
+        /// <returns>A list of <see cref="Reservation"/> made by the <paramref name="user"/> in state
+        /// <paramref name="state"/>.</returns>
+        Task<ICollection<Reservation>> GetUserReservations(int user, ReservationState? state);
+
+        /// <summary>
+        /// Returns a list of all reservations.
+        /// </summary>
+        /// <param name="state">If not null, filtering based on overall reservation state will be done.</param>
+        /// <param name="assignedTo">If not null, filtering based on assigned board game manager will be done.</param>
+        /// <returns>A list of <see cref="Reservation"/> in state <paramref name="state"/> assigned to board game
+        /// manager <paramref name="assignedTo"/></returns>
+        Task<ICollection<Reservation>> GetAllReservations(ReservationState? state, int? assignedTo);
+
+        /// <summary>
+        /// Returns a list of items in a reservation.
+        /// </summary>
+        /// <param name="reservationId">Reservation ID to get items of.</param>
+        /// <returns>The list of reservation items within reservation with ID
+        /// <paramref name="reservationId"/>.</returns>
+        Task<ICollection<ReservationItem>> GetReservationItems(int reservationId);
+        
+        /// <summary>
         /// Creates a new reservation.
         /// </summary>
         /// <param name="reservation"><see cref="Reservation"/> to create.</param>

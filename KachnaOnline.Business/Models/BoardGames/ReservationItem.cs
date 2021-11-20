@@ -29,5 +29,10 @@ namespace KachnaOnline.Business.Models.BoardGames
         /// Expiration date of the item. May be null before the game is handed over.
         /// </summary>
         public DateTime? ExpiresOn { get; set; }
+        
+        /// <summary>
+        /// Current state of the item.
+        /// </summary>
+        public ReservationItemState State { get; set; }
     }
 }

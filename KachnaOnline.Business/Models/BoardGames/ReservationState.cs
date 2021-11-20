@@ -1,7 +1,7 @@
 // ReservationState.cs
 // Author: František Nečas
 
-namespace KachnaOnline.Dto.BoardGames
+namespace KachnaOnline.Business.Models.BoardGames
 {
     /// <summary>
     /// Overall state of the reservation.

@@ -25,7 +25,7 @@ namespace KachnaOnline.Business.Models.BoardGames
         /// <summary>
         /// New overall state of the reservation after the change.
         /// </summary>
-        public ReservationState NewState { get; set; }
+        public ReservationItemState NewState { get; set; }
         /// <summary>
         /// Type of the change.
         /// </summary>

@@ -27,7 +27,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// New overall state of the reservation item.
         /// </summary>
         [Required]
-        public ReservationState NewState { get; set; }
+        public ReservationItemState NewState { get; set; }
 
         /// <summary>
         /// Type of change.

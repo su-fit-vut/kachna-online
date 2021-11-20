@@ -139,7 +139,7 @@ namespace KachnaOnline.App.Controllers
         /// <param name="id">ID of the reservation to update.</param>
         /// <param name="noteDto"><see cref="ReservationNoteUserDto"/> containing the new user note.</param>
         /// <response code="204">The reservation was updated.</response>
-        /// <response code="403">The user is not a board games manager and it belong to another user.</response>
+        /// <response code="403">The reservation belongs to another user.</response>
         /// <response code="404">No such reservation exists.</response>
         [ProducesResponseType(204)]
         [ProducesResponseType(403)]

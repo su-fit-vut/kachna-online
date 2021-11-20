@@ -214,7 +214,15 @@ namespace KachnaOnline.Business.Facades
         public async Task<IEnumerable<ReservationDto>> GetUserReservations(int user,
             ReservationState? state)
         {
-            throw new NotImplementedException();
+            var stateModel = _mapper.Map<Models.BoardGames.ReservationState?>(state);
+            var dtos = new List<ReservationDto>();
+            foreach (var reservation in await _boardGamesService.GetUserReservations(user, stateModel))
+            {
+                var dto = _mapper.Map<ReservationDto>(reservation);
+                dto.Items = _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(dto.Id));
+                dtos.Add(dto);
+            }
+            return dtos;
         }
 
         /// <summary>
@@ -226,7 +234,15 @@ namespace KachnaOnline.Business.Facades
         public async Task<IEnumerable<ManagerReservationDto>> GetAllReservations(ReservationState? state,
             int? assignedTo)
         {
-            throw new NotImplementedException();
+            var stateModel = _mapper.Map<Models.BoardGames.ReservationState?>(state);
+            var dtos = new List<ManagerReservationDto>();
+            foreach (var reservation in await _boardGamesService.GetAllReservations(stateModel, assignedTo))
+            {
+                var dto = _mapper.Map<ManagerReservationDto>(reservation);
+                dto.Items = _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(dto.Id));
+                dtos.Add(dto);
+            }
+            return dtos;
         }
 
         /// <summary>

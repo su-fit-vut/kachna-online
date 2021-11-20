@@ -1,7 +1,7 @@
 // ReservationItemState.cs
 // Author: František Nečas
 
-namespace KachnaOnline.Business.Models.BoardGames
+namespace KachnaOnline.Dto.BoardGames
 {
     /// <summary>
     /// State of a single reservation item.
@@ -32,7 +32,7 @@ namespace KachnaOnline.Business.Models.BoardGames
         /// The game has been returned.
         /// </summary>
         Done = 4,
-        
+
         /// <summary>
         /// The game's reservation has expired.
         /// </summary>

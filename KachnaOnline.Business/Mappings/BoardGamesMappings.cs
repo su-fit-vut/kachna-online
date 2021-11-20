@@ -4,6 +4,10 @@
 using System;
 using AutoMapper;
 using KachnaOnline.Business.Models.BoardGames;
+using KachnaOnline.Dto.BoardGames;
+using ReservationEventType = KachnaOnline.Business.Models.BoardGames.ReservationEventType;
+using ReservationItemState = KachnaOnline.Business.Models.BoardGames.ReservationItemState;
+using ReservationState = KachnaOnline.Business.Models.BoardGames.ReservationState;
 
 namespace KachnaOnline.Business.Mappings
 {
@@ -12,17 +16,15 @@ namespace KachnaOnline.Business.Mappings
         public BoardGamesMappings()
         {
             // Categories
-            this.CreateMap<KachnaOnline.Data.Entities.BoardGames.Category, Category>();
-            this.CreateMap<Category, KachnaOnline.Data.Entities.BoardGames.Category>();
-            this.CreateMap<Category, Dto.BoardGames.CategoryDto>();
-            this.CreateMap<Dto.BoardGames.CreateCategoryDto, Category>();
+            this.CreateMap<KachnaOnline.Data.Entities.BoardGames.Category, Category>().ReverseMap();
+            this.CreateMap<Category, Dto.BoardGames.CategoryDto>().ReverseMap();
 
             // Board games
             this.CreateMap<KachnaOnline.Data.Entities.BoardGames.BoardGame, BoardGame>();
             this.CreateMap<BoardGame, KachnaOnline.Data.Entities.BoardGames.BoardGame>()
                 .ForMember(dst => dst.Id, opt => opt.Ignore());
             this.CreateMap<BoardGame, Dto.BoardGames.BoardGameDto>();
-            
+
             // Board games - manager and creation
             this.CreateMap<BoardGame, Dto.BoardGames.ManagerBoardGameDto>()
                 .ForMember(
@@ -38,6 +40,28 @@ namespace KachnaOnline.Business.Mappings
                         src.DefaultReservationDays == null
                             ? null
                             : TimeSpan.FromDays(src.DefaultReservationDays.Value)));
+
+            // Reservations
+            // Entities <-> Models
+            this.CreateMap<KachnaOnline.Data.Entities.BoardGames.Reservation, Reservation>().ReverseMap();
+            this.CreateMap<KachnaOnline.Data.Entities.BoardGames.ReservationItem, ReservationItem>().ReverseMap();
+
+            this.CreateMap<KachnaOnline.Data.Entities.BoardGames.ReservationItemEvent, ReservationItemEvent>()
+                .ReverseMap();
+            this.CreateMap<KachnaOnline.Data.Entities.BoardGames.ReservationEventType, ReservationEventType>()
+                .ReverseMap();
+            this.CreateMap<KachnaOnline.Data.Entities.BoardGames.ReservationItemState, ReservationItemState>()
+                .ReverseMap();
+            
+            // DTOs
+            this.CreateMap<Reservation, ReservationDto>();
+            this.CreateMap<Reservation, ManagerReservationDto>();
+            this.CreateMap<KachnaOnline.Dto.BoardGames.ReservationState, ReservationState>().ReverseMap();
+
+            this.CreateMap<ReservationItem, ReservationItemDto>();
+            this.CreateMap<ReservationItem, ManagerReservationDto>();
+            this.CreateMap<KachnaOnline.Dto.BoardGames.ReservationItemState, ReservationItemState>().ReverseMap();
+            
         }
     }
 }

@@ -24,6 +24,9 @@ namespace KachnaOnline.Business.Services
         private readonly IBoardGamesRepository _boardGamesRepository;
         private readonly IBoardGameCategoriesRepository _boardGamesCategoryRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IReservationRepository _reservationRepository;
+        private readonly IReservationItemRepository _reservationItemRepository;
+        private readonly IReservationItemEventRepository _reservationItemEventRepository;
 
         public BoardGamesService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<BoardGamesService> logger)
         {
@@ -33,6 +36,9 @@ namespace KachnaOnline.Business.Services
             _boardGamesRepository = _unitOfWork.BoardGames;
             _boardGamesCategoryRepository = _unitOfWork.BoardGamesCategories;
             _userRepository = _unitOfWork.Users;
+            _reservationRepository = _unitOfWork.Reservations;
+            _reservationItemRepository = _unitOfWork.ReservationItems;
+            _reservationItemEventRepository = _unitOfWork.ReservationItemEvents;
         }
 
         /// <summary>
@@ -242,6 +248,105 @@ namespace KachnaOnline.Business.Services
                 await _unitOfWork.ClearTrackedChanges();
                 throw new CategoryManipulationFailedException();
             }
+        }
+
+        /// <summary>
+        /// Updates the state of a single reservation item based on events.
+        /// </summary>
+        /// <param name="item">Reservation item to update.</param>
+        private async Task UpdateReservationItemState(ReservationItem item)
+        {
+            var now = DateTime.Now;
+            if ((item.ExpiresOn ?? now) < now)
+            {
+                item.State = ReservationItemState.Expired;
+            }
+            else
+            {
+                var lastEvent =
+                    _mapper.Map<ReservationItemEvent>(await _reservationItemEventRepository.GetLatestEvent(item.Id));
+                if (lastEvent is not null)
+                {
+                    item.State = lastEvent.NewState;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if a reservation is in a given state.
+        /// </summary>
+        /// <param name="reservationId">ID of a reservation to check.</param>
+        /// <param name="state">Requested state.</param>
+        /// <returns>Whether the reservation is in the given state.</returns>
+        private async Task<bool> ReservationInState(int reservationId, ReservationState? state)
+        {
+            if (state is null)
+            {
+                return true;
+            }
+
+            var items = new List<ReservationItem>();
+            foreach (var item in await _reservationItemRepository.ItemsInReservation(reservationId))
+            {
+                var itemModel = _mapper.Map<ReservationItem>(item);
+                await this.UpdateReservationItemState(itemModel);
+                items.Add(itemModel);
+            }
+
+            return state switch
+            {
+                ReservationState.New => items.Any(i => i.State == ReservationItemState.New),
+                ReservationState.Expired => items.Any(i => i.State == ReservationItemState.Expired),
+                ReservationState.Done => items.All(i =>
+                    i.State is ReservationItemState.Done or ReservationItemState.Cancelled),
+                ReservationState.Current => items.Any(i =>
+                    i.State is not ReservationItemState.Done and not ReservationItemState.Cancelled),
+                _ => false
+            };
+        }
+
+        /// <inheritdoc />
+        public async Task<ICollection<Reservation>> GetUserReservations(int user, ReservationState? state)
+        {
+            var reservations = new List<Reservation>();
+            foreach (var reservation in await _reservationRepository.GetByUserId(user))
+            {
+                if (!state.HasValue || await this.ReservationInState(reservation.Id, state.Value))
+                {
+                    reservations.Add(_mapper.Map<Reservation>(reservation));
+                }
+            }
+
+            return reservations;
+        }
+
+        /// <inheritdoc />
+        public async Task<ICollection<Reservation>> GetAllReservations(ReservationState? state, int? assignedTo)
+        {
+            var reservations = new List<Reservation>();
+            foreach (var reservation in await _reservationRepository.GetByAssignedUserId(assignedTo))
+            {
+                if (!state.HasValue || await this.ReservationInState(reservation.Id, state.Value))
+                {
+                    reservations.Add(_mapper.Map<Reservation>(reservation));
+                }
+            }
+
+            return reservations;
+        }
+
+        /// <inheritdoc />
+        public async Task<ICollection<ReservationItem>> GetReservationItems(int reservationId)
+        {
+            var items = new List<ReservationItem>();
+            foreach (var item in await _reservationItemRepository.ItemsInReservation(reservationId))
+            {
+                var itemModel = _mapper.Map<ReservationItem>(item);
+                await this.UpdateReservationItemState(itemModel);
+                items.Add(itemModel);
+            }
+
+            return items;
         }
 
         /// <inheritdoc />

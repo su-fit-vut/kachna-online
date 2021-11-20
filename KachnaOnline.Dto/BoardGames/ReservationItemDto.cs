@@ -27,5 +27,10 @@ namespace KachnaOnline.Dto.BoardGames
         /// May be null if it is not set yet (i.e. the game has not been handed over).
         /// </summary>
         public DateTime? ExpiresOn { get; set; }
+        
+        /// <summary>
+        /// Current state of the reservation item.
+        /// </summary>
+        public ReservationItemState State { get; set; }
     }
 }

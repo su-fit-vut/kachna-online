@@ -11,6 +11,9 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
         IRoleRepository Roles { get; }
         IBoardGamesRepository BoardGames { get; }
         IBoardGameCategoriesRepository BoardGamesCategories { get; }
+        IReservationRepository Reservations { get; }
+        IReservationItemRepository ReservationItems { get; }
+        IReservationItemEventRepository ReservationItemEvents { get; }
         Task SaveChanges();
         Task ClearTrackedChanges();
     }
