@@ -20,6 +20,10 @@ export class EventsService {
     return this.http.get<any>(this.EventsUrl + '/next');
   }
 
+  getFromAllEvents():Observable<Event[]> {
+    return this.http.get<Event[]>(this.EventsUrl);
+  }
+
   getEvent(val: any): Observable<Event> {
     return this.http.get<Event>(this.EventsUrl + '/' + val);
   }
@@ -28,11 +32,22 @@ export class EventsService {
     return this.http.post(this.EventsUrl, this.eventDetail);
   }
 
-  modifyEvent(eventId: number, modifiedEvent: any) {
-    return this.http.put(this.EventsUrl + '/' + eventId, modifiedEvent);
+  modifyEvent() {
+    return this.http.put(this.EventsUrl + '/' + this.eventDetail.id, this.eventDetail);
   }
 
-  RemoveEvent(eventId: any):Observable<any> {
+  removeEvent(eventId: any):Observable<any> {
     return this.http.delete(this.EventsUrl + '/' + eventId);
+  }
+
+  refreshEventsList() {
+    this.getFromAllEvents().subscribe(
+      res => {
+        this.eventsList = res as Event[];
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 }

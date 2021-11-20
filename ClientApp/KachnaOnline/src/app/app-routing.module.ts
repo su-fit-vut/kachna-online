@@ -5,12 +5,14 @@ import { CurrentEventsComponent } from "./events/current-events/current-events.c
 import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
 import { NgModule, Component } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { EventsFromAllComponent } from './events/events-from-all/events-from-all.component';
 
 const routes: Routes = [
   /* Route order
 The order of routes is important because the Router uses a first-match wins strategy when matching routes, so more specific routes should be placed above less specific routes. List routes with a static path first, followed by an empty path route, which matches the default route. The wildcard route comes last because it matches every URL and the Router selects it only if no other routes match first.
 */
   { path: 'events/current', component: CurrentEventsComponent},
+  { path: "events/all", component: EventsFromAllComponent },
   { path: "events/:eventId", component: EventDetailComponent },
   { path: 'states', component: StatesComponent},
   { path: '', component: HomeComponent }, // Default home page.
