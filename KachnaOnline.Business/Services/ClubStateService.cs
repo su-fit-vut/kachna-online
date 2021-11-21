@@ -141,7 +141,7 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
-        public async Task<State> GetNextPlannedState(StateType type)
+        public async Task<State> GetNextPlannedState(StateType? type, bool enablePrivate)
         {
             if (type == StateType.Closed)
             {
@@ -157,11 +157,24 @@ namespace KachnaOnline.Business.Services
                 }
             }
 
-            var stateEntity =
-                await _stateRepository.GetNearest(_mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType>(type),
-                    null, true);
+            if (type == StateType.Private && !enablePrivate)
+            {
+                return null;
+            }
+
+
+            var typeMapped = _mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType?>(type);
+            var stateEntity = await _stateRepository.GetNearest(typeMapped, null, true);
             if (stateEntity is null)
                 return null;
+
+            while (stateEntity.State == KachnaOnline.Data.Entities.ClubStates.StateType.Private && !enablePrivate)
+            {
+                stateEntity = await _stateRepository.GetNearest(typeMapped, stateEntity.Ended ?? stateEntity.PlannedEnd,
+                    true);
+                if (stateEntity is null)
+                    return null;
+            }
 
             var stateModel = _mapper.Map<State>(stateEntity);
             return stateModel;
@@ -171,14 +184,16 @@ namespace KachnaOnline.Business.Services
         public async Task<ICollection<State>> GetStates(DateTime from, DateTime to)
         {
             if (to < from)
-                throw new ArgumentException($"The {nameof(to)} argument must not be a datetime before {nameof(from)}.",
+                throw new ArgumentException(
+                    $"The {nameof(to)} argument must not be a datetime before {nameof(from)}.",
                     nameof(to));
 
             var currentMax = _optionsMonitor.CurrentValue.MaximumDaysSpanForStatesListAllowed;
             if (to - from > TimeSpan.FromDays(currentMax))
                 throw new ArgumentException($"The maximum time span to get states for is {currentMax} days.");
 
-            var stateEntities = _stateRepository.GetStartingBetween(from.RoundToMinutes(), to.RoundToMinutes(), false);
+            var stateEntities =
+                _stateRepository.GetStartingBetween(from.RoundToMinutes(), to.RoundToMinutes(), false);
             var returnList = new List<State>();
             await foreach (var stateEntity in stateEntities)
             {
@@ -216,7 +231,8 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
-        public async Task<ICollection<State>> GetStatesForRepeatingState(int repeatingStateId, bool futureOnly = true)
+        public async Task<ICollection<State>> GetStatesForRepeatingState(int repeatingStateId,
+            bool futureOnly = true)
         {
             var stateEntities = _stateRepository.GetForRepeatingState(repeatingStateId,
                 futureOnly ? DateTime.Now : null, true);
@@ -359,7 +375,8 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
-        public async Task<RepeatingStatePlanningResult> ModifyRepeatingState(RepeatingStateModification modification,
+        public async Task<RepeatingStatePlanningResult> ModifyRepeatingState(
+            RepeatingStateModification modification,
             int changeMadeByUserId)
         {
             var stateEntity = await _repeatingStatesRepository.Get(modification.RepeatingStateId);
@@ -815,7 +832,8 @@ namespace KachnaOnline.Business.Services
                         "User {UserId} changed public note of state {StateId}. Original note: {OriginalNote}.",
                         changeMadeByUserId, modifiedStateEntity.Id, modifiedStateEntity.NotePublic);
 
-                if (modification.NoteInternal != null && modification.NoteInternal != modifiedStateEntity.NoteInternal)
+                if (modification.NoteInternal != null &&
+                    modification.NoteInternal != modifiedStateEntity.NoteInternal)
                     _logger.LogInformation(
                         "User {UserId} changed internal note of state {StateId}. Original note: {OriginalNote}.",
                         changeMadeByUserId, modifiedStateEntity.Id, modifiedStateEntity.NoteInternal);

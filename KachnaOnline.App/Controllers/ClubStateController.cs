@@ -109,7 +109,7 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [AllowAnonymous]
-        public async Task<ActionResult<StateDto>> GetNext([Required] StateType type)
+        public async Task<ActionResult<StateDto>> GetNext(StateType? type)
         {
             if (type == StateType.Private)
             {

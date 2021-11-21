@@ -28,12 +28,13 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<State> GetState(int id);
 
         /// <summary>
-        /// Returns the next (closest to now) planned state of the specified <paramref name="type"/>.
+        /// Returns the next (closest to now) planned state of the given <paramref name="type"/>, if specified.
         /// </summary>
-        /// <param name="type">The state type.</param>
-        /// <returns>The next planned state of the specified <paramref name="type"/>.
+        /// <param name="type">The state type. If null, no restrictions are placed on the returned state type.</param>
+        /// <param name="enablePrivate">If false, private states will never be returned.</param>
+        /// <returns>The next planned state.
         /// Its <see cref="State.FollowingState"/> is populated if the state has a following state.</returns>
-        Task<State> GetNextPlannedState(StateType type);
+        Task<State> GetNextPlannedState(StateType? type, bool enablePrivate = true);
 
         /// <summary>
         /// Returns a collection of all state records in the specified time range.

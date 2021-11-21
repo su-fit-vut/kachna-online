@@ -253,14 +253,15 @@ namespace KachnaOnline.Business.Facades
             return result;
         }
 
-        public async Task<StateDto> GetNext(StateType type)
+        public async Task<StateDto> GetNext(StateType? type)
         {
             if (type == StateType.Private && !this.IsUserManager())
             {
                 return null;
             }
 
-            var state = await _clubStateService.GetNextPlannedState(_mapper.Map<Models.ClubStates.StateType>(type));
+            var state = await _clubStateService.GetNextPlannedState(_mapper.Map<Models.ClubStates.StateType?>(type),
+                this.IsUserManager());
 
             var dto = await this.MapState(state);
             return dto;
