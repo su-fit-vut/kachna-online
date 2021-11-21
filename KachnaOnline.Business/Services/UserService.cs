@@ -17,7 +17,6 @@ using KachnaOnline.Business.Exceptions.Roles;
 using KachnaOnline.Business.Models.Kis;
 using KachnaOnline.Business.Models.Users;
 using KachnaOnline.Business.Services.Abstractions;
-using KachnaOnline.Data.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -25,6 +24,8 @@ using Microsoft.IdentityModel.Tokens;
 using Role = KachnaOnline.Business.Models.Users.Role;
 using User = KachnaOnline.Business.Models.Users.User;
 using UserEntity = KachnaOnline.Data.Entities.Users.User;
+using UserRole = KachnaOnline.Business.Models.Users.UserRole;
+using UserRoleEntity = KachnaOnline.Data.Entities.Users.UserRole;
 
 namespace KachnaOnline.Business.Services
 {
@@ -33,12 +34,13 @@ namespace KachnaOnline.Business.Services
         private readonly IOptionsMonitor<KisOptions> _kisOptions;
         private readonly IOptionsMonitor<JwtOptions> _jwtOptions;
         private readonly IKisService _kisService;
-        private readonly IRoleRepository _roleRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<UserService> _logger;
         private readonly IMapper _mapper;
 
         private readonly IUserRepository _userRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
 
         public UserService(IKisService kisService, IUnitOfWork unitOfWork, ILogger<UserService> logger,
             IMapper mapper, IOptionsMonitor<KisOptions> kisOptions, IOptionsMonitor<JwtOptions> jwtOptions)
@@ -52,6 +54,7 @@ namespace KachnaOnline.Business.Services
 
             _userRepository = unitOfWork.Users;
             _roleRepository = unitOfWork.Roles;
+            _userRoleRepository = unitOfWork.UserRoles;
         }
 
         /// <inheritdoc />
@@ -163,7 +166,7 @@ namespace KachnaOnline.Business.Services
                     Name = kisData.Name,
                     Email = kisData.Email,
                     Nickname = kisData.Nickname,
-                    Roles = new List<UserRole>()
+                    Roles = new List<UserRoleEntity>()
                 };
 
                 await _userRepository.Add(userEntity);
@@ -267,14 +270,14 @@ namespace KachnaOnline.Business.Services
                 if (existingAssociation is null)
                 {
                     // The user doesn't have the role they should have
-                    userEntity.Roles.Add(new UserRole { RoleId = role.Id });
+                    userEntity.Roles.Add(new UserRoleEntity { RoleId = role.Id });
                     _logger.LogInformation("Adding role {RoleName} to user {UserId} (based on a KIS mapping).",
                         role.Name, userEntity.Id);
                 }
             }
 
             // Remove non-manually assigned roles from the user
-            var toRemove = new List<UserRole>();
+            var toRemove = new List<UserRoleEntity>();
             foreach (var existingAssociation in userEntity.Roles)
             {
                 if (existingAssociation.Role != null &&
@@ -308,6 +311,56 @@ namespace KachnaOnline.Business.Services
             }
 
             return _mapper.Map<Role>(role);
+        }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            var users = await _userRepository.All().ToListAsync();
+            return _mapper.Map<IEnumerable<User>>(users);
+        }
+
+        /// <inheritdoc />
+        public async Task AssignRole(UserRole assignment)
+        {
+            if (await _userRoleRepository.Get(assignment.UserId, assignment.RoleId) is not null)
+            {
+                throw new RoleAlreadyAssignedException(assignment.UserId, assignment.RoleId);
+            }
+
+            await _userRoleRepository.Add(_mapper.Map<UserRoleEntity>(assignment));
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Role assignment failed.");
+                await _unitOfWork.ClearTrackedChanges();
+                throw new RoleManipulationFailedException();
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task RevokeRole(int userId, int roleId)
+        {
+            var entity = await _userRoleRepository.Get(userId, roleId);
+            if (entity is null)
+            {
+                throw new RoleNotFoundException();
+            }
+
+            await _userRoleRepository.Delete(entity);
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Role revocation failed.");
+                await _unitOfWork.ClearTrackedChanges();
+                throw new RoleManipulationFailedException();
+            }
         }
     }
 }

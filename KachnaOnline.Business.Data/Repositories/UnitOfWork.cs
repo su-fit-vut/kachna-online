@@ -19,6 +19,9 @@ namespace KachnaOnline.Business.Data.Repositories
         private IRoleRepository _roles;
         public IRoleRepository Roles => _roles ??= new RoleRepository(_dbContext);
 
+        private IUserRoleRepository _userRoles;
+        public IUserRoleRepository UserRoles => _userRoles ??= new UserRoleRepository(_dbContext);
+
         private IPlannedStatesRepository _plannedStates;
         public IPlannedStatesRepository PlannedStates => _plannedStates ??= new PlannedStatesRepository(_dbContext);
 

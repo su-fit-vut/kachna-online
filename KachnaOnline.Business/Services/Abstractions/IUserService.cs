@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Models.Users;
 using KachnaOnline.Business.Exceptions.Roles;
+using KachnaOnline.Business.Exceptions;
 
 namespace KachnaOnline.Business.Services.Abstractions
 {
@@ -77,5 +78,28 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <returns>A <see cref="Role"/> with ID <paramref name="id"/>.</returns>
         /// <exception cref="RoleNotFoundException">No such role exists.</exception>
         Task<Role> GetRole(int id);
+
+        /// <summary>
+        /// Returns all users.
+        /// </summary>
+        /// <returns>An enumerable of all users.</returns>
+        Task<IEnumerable<User>> GetUsers();
+
+        /// <summary>
+        /// Assigns a role to a user.
+        /// </summary>
+        /// <param name="assignment">The role assignment to add.</param>
+        /// <exception cref="RoleAlreadyAssignedException">When the role has already been assigned.</exception>
+        /// <exception cref="RoleManipulationFailedException">When the assignment failed.</exception>
+        Task AssignRole(UserRole assignment);
+
+        /// <summary>
+        /// Revokes a role from a user.
+        /// </summary>
+        /// <param name="userId">ID of the user to revoke the role from.</param>
+        /// <param name="roleId">ID of the role to revoke from the user.</param>
+        /// <exception cref="RoleNotFoundException">When the assignment to revoke was not found.</exception>
+        /// <exception cref="RoleManipulationFailedException">When the revocation failed.</exception>
+        Task RevokeRole(int userId, int roleId);
     }
 }
