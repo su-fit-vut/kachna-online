@@ -45,6 +45,14 @@ export class AccountPopupComponent implements OnInit {
     this.userService.LoggedIn = !this.userService.LoggedIn;
   }
 
+  clickMyAccountButton() {
+
+  }
+
+  clickRegisterButton() {
+
+  }
+
   getUserName() {
     return "David Chocholatý";
   }

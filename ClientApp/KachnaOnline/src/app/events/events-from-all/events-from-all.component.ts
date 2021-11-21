@@ -1,5 +1,4 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventDetailComponent } from './../event-detail/event-detail.component';
 import { ToastrService } from 'ngx-toastr';
 import { EventsService } from '../../shared/services/events.service';
 import { Event } from '../../models/event.model';
@@ -52,7 +51,6 @@ export class EventsFromAllComponent implements OnInit {
   onModifyButtonClicked(selectedEventDetail: Event) {
     this.populateForm(selectedEventDetail);
     this.activateEditEventModal = true;
-
   }
 
   onCloseModalClicked() {
