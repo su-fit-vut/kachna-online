@@ -11,11 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KachnaOnline.Business.Data.Repositories
 {
-    public class ReservationItemEventRepository : GenericRepository<ReservationItemEvent, int>,
-        IReservationItemEventRepository
+    public class ReservationItemEventRepository : IReservationItemEventRepository
     {
-        public ReservationItemEventRepository(AppDbContext dbContext) : base(dbContext)
+        protected AppDbContext Context;
+        protected DbSet<ReservationItemEvent> Set;
+        public ReservationItemEventRepository(AppDbContext dbContext)
         {
+            Context = dbContext;
+            Set = dbContext.Set<ReservationItemEvent>();
         }
 
         public async Task<ICollection<ReservationItemEvent>> GetByItemIdChronologically(int itemId)
@@ -26,6 +29,12 @@ namespace KachnaOnline.Business.Data.Repositories
         public Task<ReservationItemEvent> GetLatestEvent(int itemId)
         {
             return Set.Where(e => e.ReservationItemId == itemId).OrderByDescending(e => e.MadeOn).Take(1).SingleAsync();
+        }
+
+        public Task Add(ReservationItemEvent entity)
+        {
+            Set.Add(entity);
+            return Task.CompletedTask;
         }
     }
 }

@@ -7,9 +7,10 @@ using KachnaOnline.Data.Entities.BoardGames;
 
 namespace KachnaOnline.Business.Data.Repositories.Abstractions
 {
-    public interface IReservationItemEventRepository : IGenericRepository<ReservationItemEvent, int>
+    public interface IReservationItemEventRepository
     {
         Task<ICollection<ReservationItemEvent>> GetByItemIdChronologically(int itemId);
         Task<ReservationItemEvent> GetLatestEvent(int itemId);
+        Task Add(ReservationItemEvent entity);
     }
 }
