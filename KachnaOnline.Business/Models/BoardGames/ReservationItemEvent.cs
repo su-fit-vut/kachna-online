@@ -16,7 +16,9 @@ namespace KachnaOnline.Business.Models.BoardGames
         /// <param name="type">Type of the event.</param>
         /// <param name="reservationItemId">ID of the reservation item this event ties to.</param>
         /// <param name="madeById">ID of the user that requested the event.</param>
-        public ReservationItemEvent(ReservationEventType type, int reservationItemId, int madeById)
+        /// <param name="newExpiryDateTime">New expiration.</param>
+        public ReservationItemEvent(ReservationEventType type, int reservationItemId, int madeById,
+            DateTime? newExpiryDateTime = null)
         {
             this.ReservationItemId = reservationItemId;
             this.MadeById = madeById;
@@ -43,19 +45,6 @@ namespace KachnaOnline.Business.Models.BoardGames
                     break;
             }
 
-            this.NewExpiryDateTime = null;
-        }
-
-        /// <summary>
-        /// Creates a new event with a new expiration date.
-        /// </summary>
-        /// <param name="type">Type of the event.</param>
-        /// <param name="reservationItemId">ID of the reservation item this event ties to.</param>
-        /// <param name="madeById">ID of the user that requested the event.</param>
-        /// <param name="newExpiryDateTime">New expiration.</param>
-        public ReservationItemEvent(ReservationEventType type, int reservationItemId, int madeById,
-            DateTime newExpiryDateTime) : this(type, reservationItemId, madeById)
-        {
             this.NewExpiryDateTime = newExpiryDateTime;
         }
 
