@@ -108,10 +108,6 @@ namespace KachnaOnline.App.Controllers
                 var createdGame = await _facade.CreateBoardGame(game);
                 return this.CreatedAtAction(nameof(this.GetBoardGame), new { id = createdGame.Id }, createdGame);
             }
-            catch (NotABoardGamesManagerException)
-            {
-                return this.Forbid();
-            }
             catch (CategoryNotFoundException)
             {
                 return this.UnprocessableEntity();
@@ -144,10 +140,6 @@ namespace KachnaOnline.App.Controllers
             {
                 await _facade.UpdateBoardGame(id, game);
                 return this.NoContent();
-            }
-            catch (NotABoardGamesManagerException)
-            {
-                return this.Forbid();
             }
             catch (BoardGameNotFoundException)
             {
@@ -183,10 +175,6 @@ namespace KachnaOnline.App.Controllers
             {
                 await _facade.UpdateBoardGameStock(id, stock);
                 return this.NoContent();
-            }
-            catch (NotABoardGamesManagerException)
-            {
-                return this.Forbid();
             }
             catch (BoardGameNotFoundException)
             {
@@ -249,10 +237,6 @@ namespace KachnaOnline.App.Controllers
                 var createdCategory = await _facade.CreateCategory(category);
                 return this.CreatedAtAction(nameof(this.GetCategory), new { id = createdCategory.Id }, createdCategory);
             }
-            catch (NotABoardGamesManagerException)
-            {
-                return this.Forbid();
-            }
             catch (CategoryManipulationFailedException)
             {
                 return this.Problem();
@@ -275,10 +259,6 @@ namespace KachnaOnline.App.Controllers
             {
                 await _facade.UpdateCategory(id, category);
                 return this.NoContent();
-            }
-            catch (NotABoardGamesManagerException)
-            {
-                return this.Forbid();
             }
             catch (CategoryNotFoundException)
             {
