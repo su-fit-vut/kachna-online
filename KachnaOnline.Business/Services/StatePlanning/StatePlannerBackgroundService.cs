@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
 using KachnaOnline.Business.Services.StatePlanning.Abstractions;
+using KachnaOnline.Business.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -129,40 +130,29 @@ namespace KachnaOnline.Business.Services.StatePlanning
 
                 // Process the triggers in a 'fire-and-forget' fashion – we don't really have to wait for
                 // the HTTP requests to finish...
-                _ = Task.Run(async () =>
+                TaskUtils.FireAndForget(_serviceProvider, _logger, async (services, logger) =>
                 {
-                    try
+                    var transitionService = services.GetRequiredService<IStateTransitionService>();
+
+                    // Process the triggers 
+                    if (nextTransition.IsStateEnd)
                     {
-                        // Create a scope for the scoped transition service
-                        await using var scope = _serviceProvider.CreateAsyncScope();
-                        var transitionService = scope.ServiceProvider.GetRequiredService<IStateTransitionService>();
+                        await transitionService.TriggerStateEnd(nextTransition.StateId);
 
-                        // Process the triggers 
-                        if (nextTransition.IsStateEnd)
+                        if (nextTransition.NextStateId.HasValue)
                         {
-                            await transitionService.TriggerStateEnd(nextTransition.StateId);
+                            logger.LogInformation(
+                                "Invoking transition triggers for state {NextStateId} (end transition: {IsEndTransition}).",
+                                nextTransition.NextStateId.Value, false);
 
-                            if (nextTransition.NextStateId.HasValue)
-                            {
-                                _logger.LogInformation(
-                                    "Invoking transition triggers for state {NextStateId} (end transition: {IsEndTransition}).",
-                                    nextTransition.NextStateId.Value, false);
-
-                                await transitionService.TriggerStateStart(nextTransition.NextStateId.Value);
-                            }
-                        }
-                        else
-                        {
-                            await transitionService.TriggerStateStart(nextTransition.StateId);
+                            await transitionService.TriggerStateStart(nextTransition.NextStateId.Value);
                         }
                     }
-                    catch (Exception e)
+                    else
                     {
-                        _logger.LogCritical(e,
-                            "An exception occurred when processing the state transition triggers for state {StateId}.",
-                            nextTransition.StateId);
+                        await transitionService.TriggerStateStart(nextTransition.StateId);
                     }
-                }).ConfigureAwait(false);
+                });
             }
 
             _logger.LogInformation("The state planning service has ended.");

@@ -1,7 +1,4 @@
-// TaskUtils.cs
-// Author: Ondřej Ondryáš
-
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,7 +21,7 @@ namespace KachnaOnline.Business.Utils
             ILogger<T> logger, Func<IServiceProvider, ILogger<T>, Task> action)
         {
             var scope = serviceProvider.CreateAsyncScope();
-
+            
             _ = Task.Run(async () =>
             {
                 try

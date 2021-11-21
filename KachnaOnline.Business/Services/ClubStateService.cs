@@ -18,6 +18,7 @@ using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Models.ClubStates;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Business.Services.StatePlanning.Abstractions;
+using KachnaOnline.Business.Utils;
 using KachnaOnline.Data.Entities.ClubStates;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -886,22 +887,11 @@ namespace KachnaOnline.Business.Services
             await _statePlannerService.NotifyPlanChanged();
 
             // ... and run the triggers manually (in the background)
-            _ = Task.Run(async () =>
-                {
-                    try
-                    {
-                        await using var scope = _serviceProvider.CreateAsyncScope();
-                        var transitionService = scope.ServiceProvider.GetRequiredService<IStateTransitionService>();
-                        await transitionService.TriggerStateEnd(currentStateId);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogCritical(e,
-                            "An exception occurred when processing the state transition triggers for state {StateId}.",
-                            currentStateId);
-                    }
-                })
-                .ConfigureAwait(false);
+            TaskUtils.FireAndForget(_serviceProvider, _logger, async (services, _) =>
+            {
+                var transitionService = services.GetRequiredService<IStateTransitionService>();
+                await transitionService.TriggerStateEnd(currentStateId);
+            });
         }
 
         /// <summary>
