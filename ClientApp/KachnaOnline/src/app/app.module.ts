@@ -20,6 +20,7 @@ import { HomeComponent } from './home/home.component';
 import { EventsFromAllComponent } from './events/events-from-all/events-from-all.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { LoginComponent } from './user/login/login.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ToastrModule } from 'ngx-toastr';
     EventFormComponent,
     HomeComponent,
     EventsFromAllComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

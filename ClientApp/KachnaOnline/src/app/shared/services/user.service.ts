@@ -1,3 +1,4 @@
+import { AuthenticationService } from './authentication.service';
 import { Injectable } from '@angular/core';
 
 import { AccountPopupComponent } from '../../navigation-bar/account-popup/account-popup.component';
@@ -7,9 +8,14 @@ import { AccountPopupComponent } from '../../navigation-bar/account-popup/accoun
 })
 export class UserService {
 
-  constructor() { }
+  constructor(
+    private authentizationService: AuthenticationService,
+  ) { }
 
   private _LoggedIn: boolean = false;
+
+  public authenticationToken: string;
+
   private setUserAccountPopoverContent: () => void;
 
   onAccountPopupInitialized(fn: () => void) {
@@ -29,5 +35,9 @@ export class UserService {
 
   onLoggedInChanged() {
     this.setUserAccountPopoverContent();
+  }
+
+  onLogInButtonsClicked() {
+    this.authentizationService.getSessionIdFromKisEduId();
   }
 }

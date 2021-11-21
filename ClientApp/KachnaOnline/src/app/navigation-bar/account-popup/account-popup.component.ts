@@ -42,6 +42,9 @@ export class AccountPopupComponent implements OnInit {
 
   clickLogInOutButton() {
     // TODO: Do the actual Log in/out.
+    if (!this.userService.LoggedIn) {
+      this.userService.onLogInButtonsClicked();
+    }
     this.userService.LoggedIn = !this.userService.LoggedIn;
   }
 
