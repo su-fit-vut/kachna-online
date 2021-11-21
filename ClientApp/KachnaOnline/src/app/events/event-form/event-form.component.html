@@ -1,99 +1,99 @@
 
 <div class="jumbotron py-1">
-    <h1 class="display-5 text-center">{{jumbotronText}}</h1>
+  <h1 class="display-5 text-center">{{jumbotronText}}</h1>
 </div>
 
 <form novalidate autocomplete="off" #form="ngForm" (submit)="onSubmit(form)">
-    <input type="hidden" name="id" [value]="eventsService.eventDetail.id" />
+  <input type="hidden" name="id" [value]="eventsService.eventDetail.id" />
 
-    <div class="form-group">
-        <div class="form-row">
-            <label class="mr-1">Název</label>
-            <div style="color: grey;">(povinné)</div>
-        </div>
-        <input class="form-control form-control-lg" placeholder="Název eventu" name="name"
-            #name="ngModel" [(ngModel)]="eventsService.eventDetail.name"
-            required maxlength="128" [class.invalid]="name.invalid && name.touched">
-    </div>
-
+  <div class="form-group">
     <div class="form-row">
-        <div class="form-group col-md-6">
-            <label>Místo konání</label>
-            <input class="form-control form-control-lg" placeholder="Místo konání eventu" name="place"
-                #place="ngModel" [(ngModel)]="eventsService.eventDetail.place"
-                maxlength="256">
-        </div>
+      <label class="mr-1">Název</label>
+      <div style="color: grey;">(povinné)</div>
+    </div>
+    <input class="form-control form-control-lg" placeholder="Název eventu" name="name"
+    #name="ngModel" [(ngModel)]="eventsService.eventDetail.name"
+    required maxlength="128" [class.invalid]="name.invalid && name.touched">
+  </div>
 
-        <div class="form-group col-md-6">
-            <label>URL místa konání</label>
-            <input class="form-control form-control-lg" placeholder="URL místa konání eventu" name="placeUrl"
-                #placeUrl="ngModel" [(ngModel)]="eventsService.eventDetail.placeUrl"
-                maxlength="512">
-        </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label>Místo konání</label>
+      <input class="form-control form-control-lg" placeholder="Místo konání eventu" name="place"
+      #place="ngModel" [(ngModel)]="eventsService.eventDetail.place"
+      maxlength="256">
     </div>
 
-    <div class="form-group">
-        <label>URL obrázku</label>
-        <input class="form-control form-control-lg" placeholder="URL obrázku eventu" name="imageUrl"
-            #imageUrl="ngModel" [(ngModel)]="eventsService.eventDetail.imageUrl"
-            maxlength="512">
+    <div class="form-group col-md-6">
+      <label>URL místa konání</label>
+      <input class="form-control form-control-lg" placeholder="URL místa konání eventu" name="placeUrl"
+      #placeUrl="ngModel" [(ngModel)]="eventsService.eventDetail.placeUrl"
+      maxlength="512">
     </div>
+  </div>
 
-    <div class="form-group">
-        <div class="form-row">
-        <label class="mr-1">Krátký popis</label>
-            <div style="color: grey;">(povinné)</div>
-        </div>
-        <textarea class="form-control form-control-lg" placeholder="Krátký popis eventu" name="shortDescription"
-            #shortDescription="ngModel" [(ngModel)]="eventsService.eventDetail.shortDescription"
-            required maxlength="512" [class.invalid]="shortDescription.invalid && shortDescription.touched"></textarea>
-    </div>
+  <div class="form-group">
+    <label>URL obrázku</label>
+    <input class="form-control form-control-lg" placeholder="URL obrázku eventu" name="imageUrl"
+    #imageUrl="ngModel" [(ngModel)]="eventsService.eventDetail.imageUrl"
+    maxlength="512">
+  </div>
 
-    <div class="form-group">
-        <label>Podrobný popis</label>
-        <textarea class="form-control form-control-lg" placeholder="Podrobný popis eventu" name="fullDescription"
-            #fullDescription="ngModel" [(ngModel)]="eventsService.eventDetail.fullDescription"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label>URL</label>
-        <input class="form-control form-control-lg" placeholder="URL eventu" name="url"
-            #url="ngModel" [(ngModel)]="eventsService.eventDetail.url"
-            maxlength="512">
-    </div>
-
+  <div class="form-group">
     <div class="form-row">
-        <div class="form-group col-md-6">
-        <div class="form-row">
-            <label class="mr-1">Trvání od</label>
-            <div style="color: grey;">(povinné)</div>
-        </div>
-            <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání eventu od" name="from"
-                #from="ngModel" [(ngModel)]="eventsService.eventDetail.from"
-                required [class.invalid]="from.invalid && from.touched">
-        </div>
+      <label class="mr-1">Krátký popis</label>
+      <div style="color: grey;">(povinné)</div>
+    </div>
+    <textarea class="form-control form-control-lg" placeholder="Krátký popis eventu" name="shortDescription"
+    #shortDescription="ngModel" [(ngModel)]="eventsService.eventDetail.shortDescription"
+    required maxlength="512" [class.invalid]="shortDescription.invalid && shortDescription.touched"></textarea>
+  </div>
 
-        <div class="form-group col-md-6">
-        <div class="form-row">
-            <label class="mr-1">Trvání do</label>
-            <div style="color: grey;">(povinné)</div>
-        </div>
-            <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání eventu do" name="to"
-                #to="ngModel" [(ngModel)]="eventsService.eventDetail.to"
-                required [class.invalid]="to.invalid && to.touched">
-        </div>
+  <div class="form-group">
+    <label>Podrobný popis</label>
+    <textarea class="form-control form-control-lg" placeholder="Podrobný popis eventu" name="fullDescription"
+    #fullDescription="ngModel" [(ngModel)]="eventsService.eventDetail.fullDescription"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>URL</label>
+    <input class="form-control form-control-lg" placeholder="URL eventu" name="url"
+    #url="ngModel" [(ngModel)]="eventsService.eventDetail.url"
+    maxlength="512">
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <div class="form-row">
+        <label class="mr-1">Trvání od</label>
+        <div style="color: grey;">(povinné)</div>
+      </div>
+      <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání eventu od" name="from"
+      #from="ngModel" [(ngModel)]="eventsService.eventDetail.from"
+      required [class.invalid]="from.invalid && from.touched">
     </div>
 
-    <div class="form-row">
-        <div class="form-group col-md-4">
-        <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="form.invalid">Potvrdit</button>
-        </div>
-        <div class="form-group col-md-4">
-        <button class="btn btn-info btn-lg btn-block" type="button" (click)="clearForm(form)">Smazat</button>
-        </div>
-        <div class="form-group col-md-4">
-        <button class="btn btn-info btn-lg btn-block" type="button" (click)="clearForm(form)">Zrušit</button> <!-- TODO: zrusit zadavani noveho eventu.-->
-        </div>
+    <div class="form-group col-md-6">
+      <div class="form-row">
+        <label class="mr-1">Trvání do</label>
+        <div style="color: grey;">(povinné)</div>
+      </div>
+      <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání eventu do" name="to"
+      #to="ngModel" [(ngModel)]="eventsService.eventDetail.to"
+      required [class.invalid]="to.invalid && to.touched">
     </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="form.invalid">Potvrdit</button>
+    </div>
+    <div class="form-group col-md-4">
+      <button class="btn btn-info btn-lg btn-block" type="button" (click)="clearForm(form)">Smazat</button>
+    </div>
+    <div class="form-group col-md-4">
+      <button class="btn btn-info btn-lg btn-block" type="button" (click)="clearForm(form)">Zrušit</button> <!-- TODO: zrusit zadavani noveho eventu.-->
+    </div>
+  </div>
 
 </form>
