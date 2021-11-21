@@ -13,13 +13,16 @@ using AutoMapper;
 using KachnaOnline.Business.Configuration;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
+using KachnaOnline.Business.Exceptions.Roles;
 using KachnaOnline.Business.Models.Kis;
 using KachnaOnline.Business.Models.Users;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Data.Entities.Users;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Role = KachnaOnline.Business.Models.Users.Role;
 using User = KachnaOnline.Business.Models.Users.User;
 using UserEntity = KachnaOnline.Data.Entities.Users.User;
 
@@ -286,6 +289,25 @@ namespace KachnaOnline.Business.Services
 
             foreach (var userRole in toRemove)
                 userEntity.Roles.Remove(userRole);
+        }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<Role>> GetRoles()
+        {
+            var roles = await _roleRepository.All().ToListAsync();
+            return _mapper.Map<IEnumerable<Role>>(roles);
+        }
+
+        /// <inheritdoc />
+        public async Task<Role> GetRole(int id)
+        {
+            var role = await _roleRepository.Get(id);
+            if (role is null)
+            {
+                throw new RoleNotFoundException(id);
+            }
+
+            return _mapper.Map<Role>(role);
         }
     }
 }

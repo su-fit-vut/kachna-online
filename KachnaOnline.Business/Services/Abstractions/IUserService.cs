@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Models.Users;
+using KachnaOnline.Business.Exceptions.Roles;
 
 namespace KachnaOnline.Business.Services.Abstractions
 {
@@ -56,11 +57,25 @@ namespace KachnaOnline.Business.Services.Abstractions
 
         /// <summary>
         /// Checks whether the user corresponding to the specified <paramref name="userId"/> has the role specified
-        /// by <paramref name="role"/>. 
+        /// by <paramref name="role"/>.
         /// </summary>
         /// <param name="userId">The user ID to check the role for.</param>
         /// <param name="role">The name of the role to check.</param>
         /// <returns>Null if such user doesn't exist. True if the user has the specified role. False otherwise.</returns>
         Task<bool?> IsInRole(int userId, string role);
+
+        /// <summary>
+        /// Returns all roles present in the system.
+        /// </summary>
+        /// <returns>An enumerable of all roles.</returns>
+        Task<IEnumerable<Role>> GetRoles();
+
+        /// <summary>
+        /// Returns a role with the given ID.
+        /// </summary>
+        /// <param name="id">ID of the role to return.</param>
+        /// <returns>A <see cref="Role"/> with ID <paramref name="id"/>.</returns>
+        /// <exception cref="RoleNotFoundException">No such role exists.</exception>
+        Task<Role> GetRole(int id);
     }
 }
