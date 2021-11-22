@@ -14,5 +14,10 @@ namespace KachnaOnline.Business.Configuration
         /// The number of days for which a reservation is extended.
         /// </summary>
         public int ExtensionDays { get; set; }
+        
+        /// <summary>
+        /// Webhook URL to Student Union Discord for board games related information.
+        /// </summary>
+        public string SuWebhookUrl { get; set; }
     }
 }

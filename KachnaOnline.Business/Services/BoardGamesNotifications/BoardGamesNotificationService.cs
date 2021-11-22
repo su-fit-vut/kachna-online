@@ -42,6 +42,26 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications
         }
 
         /// <inheritdoc />
+        public async Task TriggerReservationFullyAssigned(int reservationId)
+        {
+            _logger.LogDebug("Processing trigger actions for the full assignment of reservation {ReservationId}",
+                reservationId);
+            foreach (var notificationHandler in _notificationHandlers)
+            {
+                try
+                {
+                    await notificationHandler.PerformReservationFullyAssigned(reservationId);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e,
+                        "An error occurred when performing reservation full assignment action {ActionName}",
+                        notificationHandler.GetType().Name);
+                }
+            }
+        }
+
+        /// <inheritdoc />
         public async Task TriggerReservationItemExtensionRequest(int itemId)
         {
             _logger.LogDebug("Processing trigger actions for the reservation item extension of item {ItemId}", itemId);
