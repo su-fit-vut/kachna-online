@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
 import { Injectable } from '@angular/core';
 
@@ -10,9 +11,10 @@ export class UserService {
 
   constructor(
     private authentizationService: AuthenticationService,
+    private http: HttpClient,
   ) { }
 
-  private _LoggedIn: boolean = false;
+  private _loggedIn: boolean = false;
 
   public authenticationToken: string;
 
@@ -22,13 +24,13 @@ export class UserService {
     this.setUserAccountPopoverContent = fn;
   }
 
-  get LoggedIn(): boolean {
-    return this._LoggedIn;
+  get loggedIn(): boolean {
+    return this._loggedIn;
   }
 
-  set LoggedIn(value: boolean) {
-      if (value !== this._LoggedIn) {
-          this._LoggedIn= value;
+  set loggedIn(value: boolean) {
+      if (value !== this._loggedIn) {
+          this._loggedIn= value;
           this.onLoggedInChanged();
       }
   }
@@ -37,7 +39,31 @@ export class UserService {
     this.setUserAccountPopoverContent();
   }
 
-  onLogInButtonsClicked() {
+  logIn() {
     this.authentizationService.getSessionIdFromKisEduId();
+  }
+
+  logOut() {
+    this.authentizationService.logOut();
+  }
+
+  getInformationAboutUser() {
+    this.http.get<any>('https://su-int.fit.vutbr.cz/kis/api/users/me').subscribe( // TODO: Change return value into a model.
+      res => {
+        console.log(res);
+      }
+    );
+  }
+
+  getUserName() {
+    return 'David Chocholatý';
+  }
+
+  isLoggedIn() {
+    return this.authentizationService.isLoggedIn();
+  }
+
+  getPrestigeAmount() {
+    return 42;
   }
 }

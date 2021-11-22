@@ -23,9 +23,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { LoginComponent } from './user/login/login.component';
 import { JwtModule } from '@auth0/angular-jwt';
+import { LoggedInContentComponent } from './navigation-bar/account-popup/logged-in-content/logged-in-content.component';
+import { LoggedOutContentComponent } from './navigation-bar/account-popup/logged-out-content/logged-out-content.component';
 
 export function tokenGetter() {
-  return localStorage.getItem("authenticationToken");
+  return localStorage.getItem('authenticationToken');
 }
 
 @NgModule({
@@ -43,6 +45,8 @@ export function tokenGetter() {
     HomeComponent,
     EventsFromAllComponent,
     LoginComponent,
+    LoggedInContentComponent,
+    LoggedOutContentComponent,
   ],
   imports: [
     BrowserModule,
