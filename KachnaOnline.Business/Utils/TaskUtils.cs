@@ -23,12 +23,14 @@ namespace KachnaOnline.Business.Utils
         public static void FireAndForget<T>(IServiceProvider serviceProvider,
             ILogger<T> logger, Func<IServiceProvider, ILogger<T>, Task> action)
         {
+            var scope = serviceProvider.CreateAsyncScope();
+
             _ = Task.Run(async () =>
             {
                 try
                 {
-                    await using var scope = serviceProvider.CreateAsyncScope();
                     await action(scope.ServiceProvider, logger);
+                    await scope.DisposeAsync();
                 }
                 catch (Exception e)
                 {
