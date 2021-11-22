@@ -13,5 +13,6 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
         Task<ICollection<ReservationItem>> GetItemsInReservation(int reservationId);
         int CountCurrentlyReservingGame(int gameId);
         Task UpdateExpiration(int itemId, DateTime newExpiration);
+        Task<ICollection<ReservationItem>> GetExpiredUnnotified(DateTime? willExpireOn = null);
     }
 }

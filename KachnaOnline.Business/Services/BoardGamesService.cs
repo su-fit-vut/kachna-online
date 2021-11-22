@@ -829,6 +829,13 @@ namespace KachnaOnline.Business.Services
             {
                 await _unitOfWork.BeginTransaction();
                 await this.HandleStateTransition(userId, itemModel, newEvent);
+                // Extension resets the notification status.
+                if (newEvent == ReservationEventType.ExtensionGranted)
+                {
+                    item.NotifiedBeforeExpiration = false;
+                    item.NotifiedOnExpiration = false;
+                    await _unitOfWork.SaveChanges();
+                }
                 await _unitOfWork.CommitTransaction();
                 if (newEvent == ReservationEventType.ExtensionRequested)
                 {

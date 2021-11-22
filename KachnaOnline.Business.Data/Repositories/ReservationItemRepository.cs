@@ -37,5 +37,26 @@ namespace KachnaOnline.Business.Data.Repositories
                 item.ExpiresOn = newExpiration;
             }
         }
+
+        public async Task<ICollection<ReservationItem>> GetExpiredUnnotified(DateTime? willExpireOn = null)
+        {
+            var checkingFuture = true;
+            if (!willExpireOn.HasValue)
+            {
+                willExpireOn = DateTime.Now;
+                checkingFuture = false;
+            }
+
+            var result = Set
+                .Where(i => i.ExpiresOn != null)
+                .Where(i => i.Events.All(e =>
+                    e.NewState != ReservationItemState.Done)) // only Handed-Over or Done will have expiration
+                .Where(i => i.ExpiresOn <= willExpireOn);
+            if (checkingFuture)
+            {
+                return await result.Where(i => !i.NotifiedBeforeExpiration).ToListAsync();
+            }
+            return await result.Where(i => !i.NotifiedOnExpiration).ToListAsync();
+        }
     }
 }
