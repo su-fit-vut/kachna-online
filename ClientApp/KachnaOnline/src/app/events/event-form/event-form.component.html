@@ -1,8 +1,3 @@
-
-<div class="jumbotron py-1">
-  <h1 class="display-5 text-center">{{jumbotronText}}</h1>
-</div>
-
 <form novalidate autocomplete="off" #form="ngForm" (submit)="onSubmit(form)">
   <input type="hidden" name="id" [value]="eventsService.eventDetail.id" />
 

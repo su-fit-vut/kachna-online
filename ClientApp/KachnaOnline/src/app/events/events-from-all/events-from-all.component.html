@@ -48,6 +48,11 @@
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Zavřít" (click)="onCloseModalClicked()"><span>&times;</span></button>
       </div>
       <div class="modal-body">
+
+        <div class="jumbotron py-1">
+          <h1 class="display-5 text-center">Upravit akci</h1>
+        </div>
+
         <app-event-form [editMode]="true" *ngIf="activateEditEventModal"></app-event-form>
       </div>
     </div>
