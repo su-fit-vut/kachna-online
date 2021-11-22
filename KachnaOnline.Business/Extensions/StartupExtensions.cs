@@ -49,6 +49,7 @@ namespace KachnaOnline.Business.Extensions
             services.AddTransient<IBoardGamesNotificationHandler, DiscordBoardGamesNotificationHandler>();
             services.AddTransient<IBoardGamesNotificationHandler, MailBoardGamesNotificationHandler>();
             services.AddScoped<IBoardGamesNotificationService, BoardGamesNotificationService>();
+            services.AddHostedService<BoardGamesNotificationBackgroundService>();
 
             // Add custom services.
             services.AddScoped<IKisService, KisService>();
