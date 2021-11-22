@@ -1,11 +1,6 @@
 <ng-template #popContent>
-  {{UserAccountPopoverTextContent}}
-
-  <div class="group row">
-    <button *ngIf="!userService.LoggedIn"(click)="clickRegisterButton()">Zaregistrovat se</button>
-    <button *ngIf="userService.LoggedIn"(click)="clickMyAccountButton()">Můj účet</button>
-    <button (click)="clickLogInOutButton()">{{LogInOutButtonText}}</button>
-  </div>
+  <app-logged-in-content *ngIf="userService.isLoggedIn()"></app-logged-in-content>
+  <app-logged-out-content *ngIf="!userService.isLoggedIn()"></app-logged-out-content>
 </ng-template>
 
 <button type="button" class="btn btn-outline-secondary mr-2" placement="auto" autoClose="outside"

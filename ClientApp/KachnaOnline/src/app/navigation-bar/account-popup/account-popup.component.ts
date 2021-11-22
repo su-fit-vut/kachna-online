@@ -10,50 +10,7 @@ export class AccountPopupComponent implements OnInit {
 
   constructor(public userService: UserService) { }
 
-  UserAccountPopoverTextContent: string = "";
-  LogInOutButtonText = "Přihlásit se";
-
   ngOnInit(): void {
-    this.setUserAccountPopoverContent();
-    this.userService.onAccountPopupInitialized(this.setUserAccountPopoverContent.bind(this));
-  }
-
-  setUserAccountPopoverContent() {
-    this.setLogInOutButtonText();
-    this.setUserAccountPopoverTextContent();
-
-  }
-
-  setUserAccountPopoverTextContent() {
-    if (this.userService.LoggedIn == true) {
-      this.UserAccountPopoverTextContent = this.getUserName();
-    } else {
-      this.UserAccountPopoverTextContent = "Nejste přihlášen/a.";
-    }
-  }
-
-  setLogInOutButtonText() {
-    if (this.userService.LoggedIn == true) {
-      this.LogInOutButtonText = "Odhlásit se";
-    } else {
-      this.LogInOutButtonText = "Přihlásit se";
-    }
-  }
-
-  clickLogInOutButton() {
-    // TODO: Do the actual Log in/out.
-    if (!this.userService.LoggedIn) {
-      this.userService.onLogInButtonsClicked();
-    }
-    this.userService.LoggedIn = !this.userService.LoggedIn;
-  }
-
-  clickMyAccountButton() {
-
-  }
-
-  clickRegisterButton() {
-
   }
 
   getUserName() {
