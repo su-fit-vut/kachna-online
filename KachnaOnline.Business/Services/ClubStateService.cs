@@ -231,12 +231,18 @@ namespace KachnaOnline.Business.Services
             return returnList;
         }
 
+        public async Task<RepeatingState> GetRepeatingState(int id)
+        {
+            var repeatingStateEntity = await _repeatingStatesRepository.Get(id);
+            return _mapper.Map<RepeatingState>(repeatingStateEntity);
+        }
+
         /// <inheritdoc />
         public async Task<ICollection<State>> GetStatesForRepeatingState(int repeatingStateId,
             bool futureOnly = true)
         {
             var stateEntities = _stateRepository.GetForRepeatingState(repeatingStateId,
-                futureOnly ? DateTime.Now : null, true);
+                futureOnly ? DateTime.Now : null, false);
 
             var returnList = new List<State>();
             await foreach (var stateEntity in stateEntities)

@@ -70,10 +70,11 @@ namespace KachnaOnline.Business.Mappings
                     options.MapFrom(m => m.NotePublic));
 
             this.CreateMap<RepeatingState, RepeatingStateManagerDto>()
-                .ForMember(dto => dto.Note, options =>
-                    options.MapFrom(m => m.NotePublic))
+                .IncludeBase<RepeatingState, RepeatingStateDto>()
                 .ForMember(dto => dto.MadeBy, options =>
                     options.Ignore());
+
+            this.CreateMap<RepeatingStatePlanningDto, RepeatingState>();
 
             this.CreateMap<State, StateDto>()
                 .ForMember(dto => dto.State, options =>

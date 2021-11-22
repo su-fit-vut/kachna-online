@@ -68,6 +68,13 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<ICollection<RepeatingState>> GetRepeatingStates(DateTime effectiveAt);
 
         /// <summary>
+        /// Returns a repeating state with the specified <paramref name="id"/>.
+        /// </summary>
+        /// <param name="id">The ID of the repeating state.</param>
+        /// <returns>A <see cref="RepeatingState"/> object.</returns>
+        Task<RepeatingState> GetRepeatingState(int id);
+
+        /// <summary>
         /// Returns a collection of all states that were planned based on the specified repeating state.
         /// </summary>
         /// <param name="repeatingStateId">The ID of the repeating state.</param>

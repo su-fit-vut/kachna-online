@@ -60,6 +60,7 @@ namespace KachnaOnline.Business.Extensions
 
             // Add state planner.
             services.AddTransient<IStateTransitionHandler, SaveEndedDateTimeTransitionHandler>();
+            services.AddTransient<IStateTransitionHandler, DiscordTransitionHandler>();
             services.AddScoped<IStateTransitionService, StateTransitionService>();
             services.AddSingleton<IStatePlannerService, StatePlannerService>();
             services.AddHostedService<StatePlannerBackgroundService>();
@@ -74,6 +75,7 @@ namespace KachnaOnline.Business.Extensions
             // Add facades.
             services.AddScoped<ClubInfoFacade>();
             services.AddScoped<ClubStateFacade>();
+            services.AddScoped<RepeatingStatesFacade>();
             services.AddScoped<BoardGamesFacade>();
             services.AddScoped<EventsFacade>();
         }

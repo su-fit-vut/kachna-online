@@ -45,17 +45,14 @@ namespace KachnaOnline.Business.Facades
             int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(IdentityConstants.IdClaim) ??
                       throw new InvalidOperationException("No valid user found in the current request."));
 
-        private bool IsUserManager()
-        {
-            var user = _httpContextAccessor.HttpContext?.User;
-            return user != null && user.IsInRole(RoleConstants.StatesManager);
-        }
+        private bool IsUserManager
+            => _httpContextAccessor.HttpContext?.User?.IsInRole(RoleConstants.StatesManager) ?? false;
 
         private void EnsureUserStateVisibility(State inputState)
         {
             if (inputState.Type == Models.ClubStates.StateType.Private)
             {
-                if (!this.IsUserManager())
+                if (!this.IsUserManager)
                 {
                     inputState.Type = Models.ClubStates.StateType.Closed;
                     inputState.Id = 0;
@@ -69,25 +66,7 @@ namespace KachnaOnline.Business.Facades
 
         private async Task<StateMadeByDto> MakeMadeByDto(int? userId)
         {
-            if (!userId.HasValue)
-                return null;
-
-            var user = await _userService.GetUser(userId.Value);
-            if (user is null)
-                return null;
-
-            var dto = new StateMadeByDto()
-            {
-                Name = user.Nickname ?? user.Name,
-                DiscordId = user.DiscordId?.ToString()
-            };
-
-            if (this.IsUserManager())
-            {
-                dto.Id = user.Id;
-            }
-
-            return dto;
+            return await _userService.GetUserMadeByDto(userId, this.IsUserManager);
         }
 
         private async Task<StateDto> MapState(State state)
@@ -97,12 +76,12 @@ namespace KachnaOnline.Business.Facades
                 return null;
             }
 
-            if (!string.IsNullOrEmpty(state.NoteInternal) && !this.IsUserManager())
+            if (!string.IsNullOrEmpty(state.NoteInternal) && !this.IsUserManager)
             {
                 state.NoteInternal = null;
             }
 
-            if (!string.IsNullOrEmpty(state.FollowingState?.NoteInternal) && !this.IsUserManager())
+            if (!string.IsNullOrEmpty(state.FollowingState?.NoteInternal) && !this.IsUserManager)
             {
                 state.FollowingState.NoteInternal = null;
             }
@@ -126,7 +105,7 @@ namespace KachnaOnline.Business.Facades
             dto.MadeBy = await this.MakeMadeByDto(state.MadeById);
             if (state.FollowingState?.MadeById != null)
             {
-                dto.FollowingState.MadeBy = await this.MakeMadeByDto(state.FollowingState.MadeById);
+                ((StateDto) dto.FollowingState).MadeBy = await this.MakeMadeByDto(state.FollowingState.MadeById);
             }
 
             return dto;
@@ -195,7 +174,7 @@ namespace KachnaOnline.Business.Facades
                 return null;
             }
 
-            if (state.Type == Models.ClubStates.StateType.Private && !this.IsUserManager())
+            if (state.Type == Models.ClubStates.StateType.Private && !this.IsUserManager)
             {
                 return null;
             }
@@ -238,14 +217,13 @@ namespace KachnaOnline.Business.Facades
 
             var states = await _clubStateService.GetStates(actualFrom, actualTo);
             var result = new List<StateDto>();
-            var isManager = this.IsUserManager();
+            var isManager = this.IsUserManager;
 
             foreach (var state in states)
             {
                 if (state.Type == Models.ClubStates.StateType.Private && !isManager)
                     continue;
 
-                state.FollowingState = null;
                 var dto = await this.MapState(state);
                 result.Add(dto);
             }
@@ -255,13 +233,13 @@ namespace KachnaOnline.Business.Facades
 
         public async Task<StateDto> GetNext(StateType? type)
         {
-            if (type == StateType.Private && !this.IsUserManager())
+            if (type == StateType.Private && !this.IsUserManager)
             {
                 return null;
             }
 
             var state = await _clubStateService.GetNextPlannedState(_mapper.Map<Models.ClubStates.StateType?>(type),
-                this.IsUserManager());
+                this.IsUserManager);
 
             var dto = await this.MapState(state);
             return dto;

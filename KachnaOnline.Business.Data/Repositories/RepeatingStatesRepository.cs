@@ -22,10 +22,10 @@ namespace KachnaOnline.Business.Data.Repositories
             var query = Set.AsQueryable();
 
             if (effectiveFrom.HasValue)
-                query = query.Where(rs => rs.EffectiveFrom >= effectiveFrom.Value);
+                query = query.Where(rs => rs.EffectiveFrom <= effectiveFrom.Value);
 
-            if (effectiveFrom.HasValue)
-                query = query.Where(rs => rs.EffectiveTo <= effectiveTo.Value);
+            if (effectiveTo.HasValue)
+                query = query.Where(rs => rs.EffectiveTo >= effectiveTo.Value);
 
             return query.OrderBy(rs => rs.EffectiveFrom).AsAsyncEnumerable();
         }
