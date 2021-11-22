@@ -149,7 +149,7 @@ Tvoje KachnaOnline";
         /// <inheritdoc />
         /// <remarks>
         /// Sends an email to the user who reserved the game notifying about the expiration and the option
-        /// of extending the reservation. Also sends an email to the assigned board games manager.
+        /// of extending the reservation.
         /// </remarks>
         public async Task PerformReservationItemExpired(int itemId)
         {

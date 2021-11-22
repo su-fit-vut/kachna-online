@@ -171,7 +171,16 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
                 var user = await _userService.GetUser(reservation.MadeById);
                 
                 var name = user is null ? "" : user.Name;
-                var msg = $"Uživatel {name} právě zažádal o prodloužení rezervace na hru {game.Name}, která končí {item.ExpiresOn}.";
+                var msg = $"Uživatel {name} právě zažádal o prodloužení rezervace na hru {game.Name}";
+                if (item.ExpiresOn.HasValue)
+                {
+                    var expiration = item.ExpiresOn.Value;
+                    msg += $", jejíž platnost končí {expiration.Day}. {expiration.Month}. {expiration.Year}.";
+                }
+                else
+                {
+                    msg += ".";
+                }
                 await this.SendWebhookMessage(msg);
             }
             catch (ReservationNotFoundException)
