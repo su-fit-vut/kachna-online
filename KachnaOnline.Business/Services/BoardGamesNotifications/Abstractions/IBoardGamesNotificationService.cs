@@ -19,6 +19,13 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.Abstractions
         Task TriggerReservationCreated(int reservationId);
 
         /// <summary>
+        /// Performs actions for reservation full assignment..
+        /// </summary>
+        /// <param name="reservationId">ID of the fully assigned reservation.</param>
+        /// <returns><see cref="Task"/> that represents the asynchronous operation.</returns>
+        Task TriggerReservationFullyAssigned(int reservationId);
+        
+        /// <summary>
         /// Performs actions for request of reservation extension.
         /// </summary>
         /// <param name="itemId">ID of the reservation item where extension was requested.</param>

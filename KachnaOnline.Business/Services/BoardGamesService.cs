@@ -14,7 +14,10 @@ using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
 using KachnaOnline.Business.Models.BoardGames;
 using KachnaOnline.Business.Services.Abstractions;
+using KachnaOnline.Business.Services.BoardGamesNotifications.Abstractions;
+using KachnaOnline.Business.Utils;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -32,9 +35,10 @@ namespace KachnaOnline.Business.Services
         private readonly IReservationRepository _reservationRepository;
         private readonly IReservationItemRepository _reservationItemRepository;
         private readonly IReservationItemEventRepository _reservationItemEventRepository;
+        private readonly IServiceProvider _serviceProvider;
 
         public BoardGamesService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<BoardGamesService> logger,
-            IOptionsMonitor<BoardGamesOptions> boardGamesOptionsMonitor)
+            IOptionsMonitor<BoardGamesOptions> boardGamesOptionsMonitor, IServiceProvider serviceProvider)
         {
             _boardGamesOptionsMonitor = boardGamesOptionsMonitor;
             _unitOfWork = unitOfWork;
@@ -46,6 +50,7 @@ namespace KachnaOnline.Business.Services
             _reservationRepository = _unitOfWork.Reservations;
             _reservationItemRepository = _unitOfWork.ReservationItems;
             _reservationItemEventRepository = _unitOfWork.ReservationItemEvents;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -357,6 +362,20 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
+        public async Task<ReservationItem> GetReservationItem(int itemId)
+        {
+            var item = await _reservationItemRepository.Get(itemId);
+            if (item is null)
+            {
+                return null;
+            }
+
+            var itemModel = _mapper.Map<ReservationItem>(item);
+            await this.UpdateReservationItemState(itemModel);
+            return itemModel;
+        }
+
+        /// <inheritdoc />
         public async Task<Reservation> GetReservation(int reservationId)
         {
             var reservation = await _reservationRepository.Get(reservationId);
@@ -442,6 +461,16 @@ namespace KachnaOnline.Business.Services
                 var createdReservation = _mapper.Map<Reservation>(entity);
                 await this.CreateReservationItems(createdReservation.Id, createdBy, reservationGames);
                 await _unitOfWork.CommitTransaction();
+                // Only notify for user-created reservation (not created by a manager)
+                if (createdReservation.MadeById == createdBy)
+                {
+                    TaskUtils.FireAndForget(_serviceProvider, _logger, async (services, _) =>
+                    {
+                        var notificationService = services.GetRequiredService<IBoardGamesNotificationService>();
+                        await notificationService.TriggerReservationCreated(createdReservation.Id);
+                    });
+                }
+
                 return createdReservation;
             }
             // Re-throw exceptions related to game availability
@@ -559,6 +588,28 @@ namespace KachnaOnline.Business.Services
             catch (Exception e)
             {
                 _logger.LogError(e, "Cannot update internal note in reservation.");
+                await _unitOfWork.ClearTrackedChanges();
+                throw new ReservationManipulationFailedException();
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task UpdateReservationDiscordMessageId(int id, ulong messageId)
+        {
+            var reservation = await _reservationRepository.Get(id);
+            if (reservation is null)
+            {
+                throw new ReservationNotFoundException();
+            }
+
+            reservation.WebhookMessageId = messageId;
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot update webhook message ID in reservation.");
                 await _unitOfWork.ClearTrackedChanges();
                 throw new ReservationManipulationFailedException();
             }
@@ -779,6 +830,26 @@ namespace KachnaOnline.Business.Services
                 await _unitOfWork.BeginTransaction();
                 await this.HandleStateTransition(userId, itemModel, newEvent);
                 await _unitOfWork.CommitTransaction();
+                if (newEvent == ReservationEventType.ExtensionRequested)
+                {
+                    TaskUtils.FireAndForget(_serviceProvider, _logger, async (services, _) =>
+                    {
+                        var notificationService = services.GetRequiredService<IBoardGamesNotificationService>();
+                        await notificationService.TriggerReservationItemExtensionRequest(itemId);
+                    });
+                }
+                else if (newEvent == ReservationEventType.Assigned)
+                {
+                    var items = await this.GetReservationItems(reservationId);
+                    if (items.All(i => i.State != ReservationItemState.New))
+                    {
+                        TaskUtils.FireAndForget(_serviceProvider, _logger, async (services, _) =>
+                        {
+                            var notificationService = services.GetRequiredService<IBoardGamesNotificationService>();
+                            await notificationService.TriggerReservationFullyAssigned(reservationId);
+                        });
+                    }
+                }
             }
             catch (InvalidTransitionException)
             {

@@ -148,13 +148,20 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<ICollection<ReservationItem>> GetReservationItems(int reservationId);
 
         /// <summary>
+        /// Returns a reservation item with the given ID.
+        /// </summary>
+        /// <param name="itemId">ID of an item to return.</param>
+        /// <returns>An item with ID <paramref name="itemId"/>. Returns null if the item was not found.</returns>
+        Task<ReservationItem> GetReservationItem(int itemId);
+
+        /// <summary>
         /// Returns a reservation with the given ID.
         /// </summary>
         /// <param name="reservationId">ID of a reservation to return.</param>
         /// <returns><see cref="Reservation"/> with ID <paramref name="reservationId"/></returns>
         /// <exception cref="ReservationNotFoundException">Thrown when no such reservation exists.</exception>
         Task<Reservation> GetReservation(int reservationId);
-
+        
         /// <summary>
         /// Creates a new reservation.
         /// </summary>
@@ -207,6 +214,15 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <exception cref="ArgumentNullException">When <paramref name="note"/> is null.</exception>
         Task UpdateReservationNoteInternal(int id, string note);
 
+        /// <summary>
+        /// Updates discord message ID of a reservation.
+        /// </summary>
+        /// <param name="id">ID of the reservation to update.</param>
+        /// <param name="messageId">Discord message ID to save.</param>
+        /// <exception cref="ReservationNotFoundException">When no such reservation exists.</exception>
+        /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>
+        Task UpdateReservationDiscordMessageId(int id, ulong messageId);
+        
         /// <summary>
         /// Returns state history of a single item.
         /// </summary>

@@ -9,6 +9,9 @@ using KachnaOnline.Business.Facades;
 using KachnaOnline.Business.Mappings;
 using KachnaOnline.Business.Services;
 using KachnaOnline.Business.Services.Abstractions;
+using KachnaOnline.Business.Services.BoardGamesNotifications;
+using KachnaOnline.Business.Services.BoardGamesNotifications.Abstractions;
+using KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHandlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,6 +44,10 @@ namespace KachnaOnline.Business.Extensions
 
             // Add memory cache.
             services.AddMemoryCache();
+            
+            // Add notification service
+            services.AddTransient<IBoardGamesNotificationHandler, DiscordBoardGamesNotificationHandler>();
+            services.AddScoped<IBoardGamesNotificationService, BoardGamesNotificationService>();
 
             // Add custom services.
             services.AddScoped<IKisService, KisService>();
