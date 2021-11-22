@@ -34,5 +34,10 @@ namespace KachnaOnline.Business.Models.BoardGames
         /// Note related to the reservation private to the managers.
         /// </summary>
         public string NoteInternal { get; set; }
+        
+        /// <summary>
+        /// ID of Discord message sent by a webhook, present if a Discord message was successfully sent.
+        /// </summary>
+        public ulong? WebhookMessageId { get; set; }
     }
 }

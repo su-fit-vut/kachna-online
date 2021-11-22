@@ -17,6 +17,7 @@ namespace KachnaOnline.Data.Entities.BoardGames
         [Required] public DateTime MadeOn { get; set; }
         [StringLength(1024)] public string NoteUser { get; set; }
         [StringLength(1024)] public string NoteInternal { get; set; }
+        public ulong? WebhookMessageId { get; set; }
 
         // Navigation properties
         public virtual User MadeBy { get; set; }
