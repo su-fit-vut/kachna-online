@@ -6,12 +6,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Configuration;
-using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
 using KachnaOnline.Business.Models.Discord;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Business.Services.BoardGamesNotifications.Abstractions;
-using KachnaOnline.Data.Entities.Users;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -50,6 +48,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
         {
             if (string.IsNullOrEmpty(_boardGamesOptionsMonitor.CurrentValue.SuWebhookUrl) || message == null)
             {
+                _logger.LogError("Webhook URL not available");
                 return null;
             }
 
@@ -77,6 +76,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
         {
             if (string.IsNullOrEmpty(_boardGamesOptionsMonitor.CurrentValue.SuWebhookUrl))
             {
+                _logger.LogError("Webhook URL not available");
                 return;
             }
 
@@ -160,6 +160,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
             var item = await _boardGamesService.GetReservationItem(itemId);
             if (item is null)
             {
+                _logger.LogError("Item with requested extension not found in DB.");
                 return;
             }
 
@@ -203,6 +204,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
             var item = await _boardGamesService.GetReservationItem(itemId);
             if (item is null)
             {
+                _logger.LogError("Expired item not found in DB.");
                 return;
             }
 
