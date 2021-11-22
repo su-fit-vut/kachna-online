@@ -10,13 +10,8 @@ namespace KachnaOnline.Dto.ClubStates
     /// <summary>
     /// Represents the current or a future (planned) state of the club.
     /// </summary>
-    public class StateDto
+    public class StateDto : StateStubDto
     {
-        /// <summary>
-        /// The ID of the state.
-        /// </summary>
-        public int Id { get; set; }
-        
         /// <summary>
         /// The current state of the club.
         /// </summary>
@@ -53,8 +48,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// <summary>
         /// The next planned state.
         /// </summary>
-        [SwaggerNotNull]
-        public StateDto FollowingState { get; set; }
+        public StateStubDto FollowingState { get; set; }
 
         /// <summary>
         /// An internal note. This is included in the response only when there's an internal note and the request
