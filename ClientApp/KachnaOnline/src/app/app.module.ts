@@ -25,6 +25,7 @@ import { LoginComponent } from './user/login/login.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoggedInContentComponent } from './navigation-bar/account-popup/logged-in-content/logged-in-content.component';
 import { LoggedOutContentComponent } from './navigation-bar/account-popup/logged-out-content/logged-out-content.component';
+import { PlanEventsComponent } from './events/plan-events/plan-events.component';
 
 export function tokenGetter() {
   return localStorage.getItem('authenticationToken');
@@ -47,6 +48,7 @@ export function tokenGetter() {
     LoginComponent,
     LoggedInContentComponent,
     LoggedOutContentComponent,
+    PlanEventsComponent,
   ],
   imports: [
     BrowserModule,

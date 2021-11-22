@@ -1,3 +1,4 @@
+import { PlanEventsComponent } from '../app/events/plan-events/plan-events.component';
 import { EventsComponent } from './events/events.component';
 import { LoginComponent } from './user/login/login.component';
 import { HomeComponent } from './home/home.component';
@@ -27,6 +28,10 @@ The order of routes is important because the Router uses a first-match wins stra
           {
             path: 'all',
             component: EventsFromAllComponent,
+          },
+          {
+            path: 'plan',
+            component: PlanEventsComponent,
           },
           {
             path: ':eventId',
