@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment';
 import { EventsService } from './shared/services/events.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -21,6 +22,11 @@ import { EventsFromAllComponent } from './events/events-from-all/events-from-all
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { LoginComponent } from './user/login/login.component';
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem("authenticationToken");
+}
 
 @NgModule({
   declarations: [
@@ -47,6 +53,13 @@ import { LoginComponent } from './user/login/login.component';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(), // TODO: Change options?
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: [environment.baseApiUrlDomain /*, 'localhost:5000', 'localhost:5001'*/],
+        //disallowedRoutes: [],
+      },
+    }),
   ],
   providers: [ EventsService, ],
   bootstrap: [AppComponent]

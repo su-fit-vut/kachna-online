@@ -21,10 +21,10 @@ export class EventsService {
 
   eventDetail: Event = new Event();
   eventsList: Event[];
-  headers = new HttpHeaders().set('Authorization', `Bearer ${this.userService.authenticationToken}`)
+  //headers = new HttpHeaders().set('Authorization', `Bearer ${this.userService.authenticationToken}`);
 
   getNextPlannedEvents():Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.EventsUrl}/next`, { headers: this.headers});
+    return this.http.get<Event[]>(`${this.EventsUrl}/next`);
   }
 
   getFromToEvents(from: string = "", to: string = ""):Observable<Event[]> {
@@ -33,23 +33,23 @@ export class EventsService {
       .set('to', to);
       // TODO: Handle from or to being empty strings. Is it possible it is handled automatically? Probably.
 
-    return this.http.get<Event[]>(this.EventsUrl, {params: params, headers: this.headers});
+    return this.http.get<Event[]>(this.EventsUrl, {params: params});
   }
 
   getEvent(eventId: number): Observable<Event> {
-    return this.http.get<Event>(`${this.EventsUrl}/${eventId}`, { headers: this.headers});
+    return this.http.get<Event>(`${this.EventsUrl}/${eventId}`);
   }
 
   planEvent() {
-    return this.http.post(this.EventsUrl, this.eventDetail, { headers: this.headers});
+    return this.http.post(this.EventsUrl, this.eventDetail);
   }
 
   modifyEvent() {
-    return this.http.put(`${this.EventsUrl}/${this.eventDetail.id}`, this.eventDetail, { headers: this.headers});
+    return this.http.put(`${this.EventsUrl}/${this.eventDetail.id}`, this.eventDetail);
   }
 
   removeEvent(eventId: number):Observable<any> {
-    return this.http.delete(`${this.EventsUrl}/${eventId}`, { headers: this.headers});
+    return this.http.delete(`${this.EventsUrl}/${eventId}`);
   }
 
   refreshEventsList() {
