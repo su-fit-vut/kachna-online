@@ -63,7 +63,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
         }
 
         /// <summary>
-        /// Sends an e-mail via SMTP
+        /// Sends an e-mail via SMTP.
         /// </summary>
         /// <param name="subject">Subject of the e-mail.</param>
         /// <param name="content">HTML Contents of the e-mail.</param>
@@ -131,7 +131,7 @@ Tvá rezervace na deskovou hru <b>{game.Name}</b> již brzy vyprší, konkrétn�
 Domluv se, prosím, s někým ze Studentské Unie na vrácení hry zpět do klubu. V případě, že
 se ti hra zalíbila a rád bys ji měl půjčenou ještě déle, můžeš také požádat v portálu člena
 o prodloužení, nebo ti ji může prodloužit člen Studentské Unie, pokud se s ním domluvíš.<br><br>
-Tvoje KachnaOnline";
+Tvoje Kachna Online";
                 await this.SendEmail("Platnost rezervace deskové hry v klubu U Kachničky brzy skončí!", message, user);
             }
             catch (ReservationNotFoundException)
@@ -177,7 +177,7 @@ Tvá rezervace na deskovou hru <b>{game.Name}</b> vypršela.
 Domluv se, prosím, s někým ze Studentské Unie na vrácení hry zpět do klubu. V případě, že
 se ti hra zalíbila a rád bys ji měl půjčenou ještě déle, můžeš také požádat v portálu člena
 o prodloužení, nebo ti ji může prodloužit člen Studentské Unie, pokud se s ním domluvíš.<br><br>
-Tvoje KachnaOnline";
+Tvoje Kachna Online";
                 await this.SendEmail("Platnost rezervace deskové hry v klubu U Kachničky vypršela!", message, user);
             }
             catch (ReservationNotFoundException)

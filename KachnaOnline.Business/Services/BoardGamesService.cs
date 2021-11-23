@@ -836,6 +836,7 @@ namespace KachnaOnline.Business.Services
                     item.NotifiedOnExpiration = false;
                     await _unitOfWork.SaveChanges();
                 }
+
                 await _unitOfWork.CommitTransaction();
                 if (newEvent == ReservationEventType.ExtensionRequested)
                 {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace KachnaOnline.Business.Services.BoardGamesNotifications.Abstractions
 {
     /// <summary>
-    /// Represents a single type of action that happens when a board game stata changes or is about to change.
+    /// Represents a single type of action that happens when a reservation item state changes or is about to change.
     /// </summary>
     public interface IBoardGamesNotificationHandler
     {
@@ -16,7 +16,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.Abstractions
         /// <param name="reservationId">ID of the newly created reservation.</param>
         /// <returns><see cref="Task"/> that represents the asynchronous operation.</returns>
         Task PerformReservationCreated(int reservationId);
-        
+
         /// <summary>
         /// Performs this handler's action for reservation full assignment.
         /// </summary>

@@ -44,7 +44,7 @@ namespace KachnaOnline.Business.Extensions
 
             // Add memory cache.
             services.AddMemoryCache();
-            
+
             // Add notification service
             services.AddTransient<IBoardGamesNotificationHandler, DiscordBoardGamesNotificationHandler>();
             services.AddTransient<IBoardGamesNotificationHandler, MailBoardGamesNotificationHandler>();

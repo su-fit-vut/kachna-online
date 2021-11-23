@@ -8,6 +8,6 @@ namespace KachnaOnline.Business.Constants
         /// <summary>
         /// Name of the sender included in e-mails.
         /// </summary>
-        public const string SenderName = "KachnaOnline";
+        public const string SenderName = "Kachna Online";
     }
 }
