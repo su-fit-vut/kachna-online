@@ -169,7 +169,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
                 var game = await _boardGamesService.GetBoardGame(item.BoardGameId);
                 var reservation = await _boardGamesService.GetReservation(item.ReservationId);
                 var user = await _userService.GetUser(reservation.MadeById);
-                
+
                 var name = user is null ? "" : user.Name;
                 var msg = $"Uživatel {name} právě zažádal o prodloužení rezervace na hru {game.Name}";
                 if (item.ExpiresOn.HasValue)
@@ -181,6 +181,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
                 {
                     msg += ".";
                 }
+
                 await this.SendWebhookMessage(msg);
             }
             catch (ReservationNotFoundException)
@@ -222,7 +223,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
                 var game = await _boardGamesService.GetBoardGame(item.BoardGameId);
                 var reservation = await _boardGamesService.GetReservation(item.ReservationId);
                 var user = await _userService.GetUser(reservation.MadeById);
-                
+
                 var name = user is null ? "" : user.Name;
                 var msg = $"Uživateli {name} právě vypršela rezervace na hru {game.Name}.";
                 await this.SendWebhookMessage(msg);

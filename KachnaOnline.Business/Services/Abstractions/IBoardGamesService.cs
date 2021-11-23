@@ -161,7 +161,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <returns><see cref="Reservation"/> with ID <paramref name="reservationId"/></returns>
         /// <exception cref="ReservationNotFoundException">Thrown when no such reservation exists.</exception>
         Task<Reservation> GetReservation(int reservationId);
-        
+
         /// <summary>
         /// Creates a new reservation.
         /// </summary>
@@ -222,7 +222,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <exception cref="ReservationNotFoundException">When no such reservation exists.</exception>
         /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>
         Task UpdateReservationDiscordMessageId(int id, ulong messageId);
-        
+
         /// <summary>
         /// Returns state history of a single item.
         /// </summary>

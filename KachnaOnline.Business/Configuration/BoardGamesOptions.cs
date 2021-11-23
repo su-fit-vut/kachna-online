@@ -25,7 +25,7 @@ namespace KachnaOnline.Business.Configuration
         /// Number of days before expiration when the user is informed about an upcoming reservation expiration.
         /// </summary>
         public int NotifyBeforeExpirationDays { get; set; } = 3;
-        
+
         /// <summary>
         /// Webhook URL to Student Union Discord for board games related information.
         /// </summary>

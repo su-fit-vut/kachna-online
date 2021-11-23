@@ -80,7 +80,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications
                             var notificationService = services.GetRequiredService<IBoardGamesNotificationService>();
                             await notificationService.TriggerReservationItemExpiresSoon(item.Id);
                         });
-                        item.NotifiedBeforeExpiration= true;
+                        item.NotifiedBeforeExpiration = true;
                         try
                         {
                             await uow.SaveChanges();
@@ -89,7 +89,6 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications
                         {
                             _logger.LogError(e, "Failed to save notification flag to database.");
                         }
-                        
                     }
                 }
 

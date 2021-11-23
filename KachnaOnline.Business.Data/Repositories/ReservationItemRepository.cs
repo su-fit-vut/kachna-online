@@ -56,6 +56,7 @@ namespace KachnaOnline.Business.Data.Repositories
             {
                 return await result.Where(i => !i.NotifiedBeforeExpiration).ToListAsync();
             }
+
             return await result.Where(i => !i.NotifiedOnExpiration).ToListAsync();
         }
     }
