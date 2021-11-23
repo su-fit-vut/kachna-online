@@ -34,9 +34,9 @@ namespace KachnaOnline.Business.Services
         private readonly IReservationItemEventRepository _reservationItemEventRepository;
 
         public BoardGamesService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<BoardGamesService> logger,
-            IOptionsMonitor<BoardGamesOptions> boardGameOptionsMonitor)
+            IOptionsMonitor<BoardGamesOptions> boardGamesOptionsMonitor)
         {
-            _boardGamesOptionsMonitor = boardGameOptionsMonitor;
+            _boardGamesOptionsMonitor = boardGamesOptionsMonitor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
@@ -285,7 +285,7 @@ namespace KachnaOnline.Business.Services
         /// <param name="reservationId">ID of a reservation to check.</param>
         /// <param name="state">Requested state.</param>
         /// <returns>Whether the reservation is in the given state.</returns>
-        private async Task<bool> ReservationInState(int reservationId, ReservationState? state)
+        private async Task<bool> IsReservationInState(int reservationId, ReservationState? state)
         {
             if (state is null)
             {
@@ -293,7 +293,7 @@ namespace KachnaOnline.Business.Services
             }
 
             var items = new List<ReservationItem>();
-            foreach (var item in await _reservationItemRepository.ItemsInReservation(reservationId))
+            foreach (var item in await _reservationItemRepository.GetItemsInReservation(reservationId))
             {
                 var itemModel = _mapper.Map<ReservationItem>(item);
                 await this.UpdateReservationItemState(itemModel);
@@ -318,7 +318,7 @@ namespace KachnaOnline.Business.Services
             var reservations = new List<Reservation>();
             foreach (var reservation in await _reservationRepository.GetByUserId(user))
             {
-                if (!state.HasValue || await this.ReservationInState(reservation.Id, state.Value))
+                if (!state.HasValue || await this.IsReservationInState(reservation.Id, state.Value))
                 {
                     reservations.Add(_mapper.Map<Reservation>(reservation));
                 }
@@ -333,7 +333,7 @@ namespace KachnaOnline.Business.Services
             var reservations = new List<Reservation>();
             foreach (var reservation in await _reservationRepository.GetByAssignedUserId(assignedTo))
             {
-                if (!state.HasValue || await this.ReservationInState(reservation.Id, state.Value))
+                if (!state.HasValue || await this.IsReservationInState(reservation.Id, state.Value))
                 {
                     reservations.Add(_mapper.Map<Reservation>(reservation));
                 }
@@ -346,7 +346,7 @@ namespace KachnaOnline.Business.Services
         public async Task<ICollection<ReservationItem>> GetReservationItems(int reservationId)
         {
             var items = new List<ReservationItem>();
-            foreach (var item in await _reservationItemRepository.ItemsInReservation(reservationId))
+            foreach (var item in await _reservationItemRepository.GetItemsInReservation(reservationId))
             {
                 var itemModel = _mapper.Map<ReservationItem>(item);
                 await this.UpdateReservationItemState(itemModel);

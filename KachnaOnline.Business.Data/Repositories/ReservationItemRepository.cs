@@ -18,7 +18,7 @@ namespace KachnaOnline.Business.Data.Repositories
         {
         }
 
-        public async Task<ICollection<ReservationItem>> ItemsInReservation(int reservationId)
+        public async Task<ICollection<ReservationItem>> GetItemsInReservation(int reservationId)
         {
             return await Set.Where(i => i.ReservationId == reservationId).ToListAsync();
         }
