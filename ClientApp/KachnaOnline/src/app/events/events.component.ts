@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CurrentEventsComponent } from "./current-events/current-events.component";
 
 @Component({
   selector: 'app-events',

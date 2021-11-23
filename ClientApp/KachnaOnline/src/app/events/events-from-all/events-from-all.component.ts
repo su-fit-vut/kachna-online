@@ -1,4 +1,4 @@
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EventsService } from '../../shared/services/events.service';
 import { Event } from '../../models/event.model';
@@ -15,7 +15,6 @@ export class EventsFromAllComponent implements OnInit {
     public eventsService: EventsService,
     private toastrService: ToastrService,
     private router: Router,
-    private route: ActivatedRoute,
   ) { }
 
   activateEditEventModal: boolean = false;
@@ -29,7 +28,7 @@ export class EventsFromAllComponent implements OnInit {
   }
 
   openEventDetail(eventDetail: Event) {
-    this.router.navigate([`/events/${eventDetail.id}`]); // FIXME: Open in modal view.
+    this.router.navigate([`/events/${eventDetail.id}`]).then(() => null); // FIXME: Open in modal view.
   }
 
   onDeleteButtonClicked(selectedEventDetail: Event) {

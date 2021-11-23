@@ -2,15 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
 import { Injectable } from '@angular/core';
 
-import { AccountPopupComponent } from '../../navigation-bar/account-popup/account-popup.component';
-
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
   constructor(
-    private authentizationService: AuthenticationService,
+    private authenticationService: AuthenticationService,
     private http: HttpClient,
   ) { }
 
@@ -40,11 +38,11 @@ export class UserService {
   }
 
   logIn() {
-    this.authentizationService.getSessionIdFromKisEduId();
+    this.authenticationService.getSessionIdFromKisEduId();
   }
 
   logOut() {
-    this.authentizationService.logOut();
+    this.authenticationService.logOut();
   }
 
   getInformationAboutUser() {
@@ -60,7 +58,7 @@ export class UserService {
   }
 
   isLoggedIn() {
-    return this.authentizationService.isLoggedIn();
+    return this.authenticationService.isLoggedIn();
   }
 
   getPrestigeAmount() {

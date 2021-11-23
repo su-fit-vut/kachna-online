@@ -1,8 +1,7 @@
 import { UserService } from './user.service';
 import { ToastrService } from 'ngx-toastr';
-import { EventsComponent } from './../../events/events.component';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Event } from "../../models/event.model";
@@ -16,12 +15,10 @@ export class EventsService {
   constructor(
     private http:HttpClient,
     private toastrService: ToastrService,
-    private userService: UserService,
     ) { }
 
   eventDetail: Event = new Event();
   eventsList: Event[];
-  //headers = new HttpHeaders().set('Authorization', `Bearer ${this.userService.authenticationToken}`);
 
   getNextPlannedEvents():Observable<Event[]> {
     return this.http.get<Event[]>(`${this.EventsUrl}/next`);
