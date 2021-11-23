@@ -1,3 +1,8 @@
+.collapsing {
+    -webkit-transition: none;
+    transition: none;
+    display: none;
+}
 .navbar {
     /*background-color: #fcc859;*/
 }

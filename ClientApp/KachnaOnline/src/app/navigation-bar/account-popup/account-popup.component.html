@@ -3,7 +3,7 @@
   <app-logged-out-content *ngIf="!userService.isLoggedIn()"></app-logged-out-content>
 </ng-template>
 
-<button type="button" class="btn btn-outline-secondary mr-2" placement="auto" autoClose="outside"
+<button type="button" class="btn btn-outline-secondary btn-block" placement="auto" autoClose="outside"
 [ngbPopover]="popContent" #p="ngbPopover" popoverTitle="Můj účet">
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
   <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
