@@ -1,4 +1,4 @@
-import { UserService } from './../../../shared/services/user.service';
+import { UserService } from '../../../shared/services/user.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -13,10 +13,6 @@ export class LoggedInContentComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-  }
-
-  clickMyAccountButton() {
-
   }
 
   clickMyReservationsButton() {

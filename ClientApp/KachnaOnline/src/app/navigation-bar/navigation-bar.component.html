@@ -1,19 +1,18 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3 fixed-top">
   <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed" data-toggle="collapse"
-     aria-controls="navbarsExample04" data-target="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
-    &#9776;
+  aria-controls="navbarsExample04" data-target="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+  &#9776;
   </button>
 
   <div class="group" >
     <a class="navbar-brand" routerLink="" (click)="isMenuCollapsed = true">
-    <img class="image" style="cursor: pointer;" width="40" routerLink="" (click)="isMenuCollapsed = true" alt="Angular Logo"
-    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="/>
+      <img class="image" style="cursor: pointer;" width="40" routerLink="" (click)="isMenuCollapsed = true" alt="Angular Logo"
+      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="/>
       Kachna Online
     </a>
   </div>
 
-
-  <app-account-popup *ngIf="!isMenuCollapsed"></app-account-popup>
+  <app-account-popup class="d-lg-none d-xl-none"></app-account-popup>
 
   <div id="navbarsExample04" [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
 
@@ -28,7 +27,7 @@
             <button class="dropdown-item" href="#" ngbDropdownItem>Změnit aktuální stav</button>
             <button class="dropdown-item" href="#" ngbDropdownItem>Naplánovat budoucí stav</button>
             <button class="dropdown-item" href="#" ngbDropdownItem>Plán stavů</button>
-            <button style="color: red;" class="dropdown-item" href="#" ngbDropdownItem>Ukončit aktuální stav</button>
+            <button style="color: rgb(245, 116, 116);" class="dropdown-item" href="#" ngbDropdownItem>Ukončit aktuální stav</button>
           </div>
         </div>
       </li>
@@ -83,5 +82,6 @@
       </li>
     </ul>
   </div>
-  <app-account-popup *ngIf="isMenuCollapsed"></app-account-popup>
+
+  <app-account-popup class="d-none d-lg-block d-xl-block"></app-account-popup>
 </nav>

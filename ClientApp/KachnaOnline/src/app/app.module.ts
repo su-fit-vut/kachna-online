@@ -1,4 +1,4 @@
-import { environment } from './../environments/environment';
+import { environment } from '../environments/environment';
 import { EventsService } from './shared/services/events.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccountPopupComponent } from './navigation-bar/account-popup/account-popup.component';
-import { UserComponent } from './user/user.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 import { EventsComponent } from './events/events.component';
 import { CurrentEventsComponent } from './events/current-events/current-events.component';
@@ -21,7 +21,7 @@ import { HomeComponent } from './home/home.component';
 import { EventsFromAllComponent } from './events/events-from-all/events-from-all.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-import { LoginComponent } from './user/login/login.component';
+import { LoginComponent } from './user-profile/login/login.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoggedInContentComponent } from './navigation-bar/account-popup/logged-in-content/logged-in-content.component';
 import { LoggedOutContentComponent } from './navigation-bar/account-popup/logged-out-content/logged-out-content.component';
@@ -35,7 +35,7 @@ export function tokenGetter() {
   declarations: [
     AppComponent,
     AccountPopupComponent,
-    UserComponent,
+    UserProfileComponent,
     NavigationBarComponent,
     EventsComponent,
     CurrentEventsComponent,

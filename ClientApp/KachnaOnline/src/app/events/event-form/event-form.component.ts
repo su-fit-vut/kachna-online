@@ -1,6 +1,5 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { Event } from '../../models/event.model';
-import { EventsService } from './../../shared/services/events.service';
+import { EventsService } from '../../shared/services/events.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';

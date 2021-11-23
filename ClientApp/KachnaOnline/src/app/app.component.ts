@@ -1,4 +1,3 @@
-import { AccountPopupComponent } from './navigation-bar/account-popup/account-popup.component';
 import { Component } from '@angular/core';
 
 @Component({

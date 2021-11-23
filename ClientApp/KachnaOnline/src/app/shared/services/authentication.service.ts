@@ -1,13 +1,11 @@
-import { AccessTokens } from './../../models/access-tokens.model';
-import { environment } from './../../../environments/environment';
-import { KisResponse } from './../../models/kis-response.model';
+import { environment } from '../../../environments/environment';
+import { KisResponse } from '../../models/kis-response.model';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { HttpParams, HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpParams, HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { UserService } from './user.service';
 
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
@@ -88,11 +86,7 @@ export class AuthenticationService {
   }
 
   isLoggedIn() {
-    if (localStorage.getItem(STORAGE_TOKEN_KEY) != null) {
-      return true;
-    } else {
-      return false;
-    }
+    return localStorage.getItem(STORAGE_TOKEN_KEY) != null;
   }
 
   refreshAuthToken() {
