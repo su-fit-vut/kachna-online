@@ -10,6 +10,7 @@ using KachnaOnline.Business.Exceptions.Events;
 using KachnaOnline.Business.Facades;
 using KachnaOnline.Dto.Events;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KachnaOnline.App.Controllers
@@ -27,31 +28,29 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns the list of events being held at the specified time.
+        /// Returns a list of events being held at the given date and time.
         /// </summary>
-        /// <param name="at">Specifies the date and time when the events have to be held.</param>
-        /// <returns>A List of <see cref="KachnaOnline.Dto.Events.EventDto"/> corresponding to the <paramref name="at"/> date and time.</returns>
+        /// <param name="at">The date and time.</param>
+        /// <returns>An enumerable of <see cref="EventDto"/> corresponding to the <paramref name="at"/> date and time.</returns>
         /// <response code="200">The list of events.</response>
         [AllowAnonymous]
         [HttpGet("at/{at}")]
-        [ProducesResponseType(typeof(IEnumerable<EventDto>), 200)]
-        public async Task<ActionResult<IEnumerable<EventDto>>> GetEvents(DateTime at)
+        [ProducesResponseType(typeof(IEnumerable<EventDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetEvents(DateTime at)
         {
-            var events = await _eventsFacade.GetEvents(at);
-            return new ActionResult<IEnumerable<EventDto>>(events);
+            return this.Ok(await _eventsFacade.GetEvents(at));
         }
 
         /// <summary>
         /// Returns an event with the given ID.
         /// </summary>
         /// <param name="eventId">ID of the event to return.</param>
-        /// <returns>An <see cref="KachnaOnline.Dto.Events.EventDto"/> of a game corresponding to ID <paramref name="eventId"/>.</returns>
         /// <response code="200">The event.</response>
         /// <response code="404">No such event exists.</response>
         [AllowAnonymous]
         [HttpGet("{eventId}")]
-        [ProducesResponseType(typeof(EventDto), 200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EventDto>> GetEvent(int eventId)
         {
             try
@@ -65,72 +64,69 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns the list of current events.
+        /// Returns a list of events that are happening at the moment.
         /// </summary>
-        /// <returns>A List of <see cref="KachnaOnline.Dto.Events.EventDto"/>.</returns>
         /// <response code="200">The list of current events.</response>
         [AllowAnonymous]
         [HttpGet("current")]
-        [ProducesResponseType(typeof(IEnumerable<EventDto>), 200)]
-        public async Task<ActionResult<IEnumerable<EventDto>>> GetCurrentEvents()
+        [ProducesResponseType(typeof(IEnumerable<EventDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCurrentEvents()
         {
-            var events = await _eventsFacade.GetCurrentEvents();
-            return new ActionResult<IEnumerable<EventDto>>(events);
+            return this.Ok(await _eventsFacade.GetCurrentEvents());
         }
 
         /// <summary>
-        /// Returns the list of next planned events.
+        /// Returns a list of the next planned events.
         /// </summary>
-        /// <returns>A List of <see cref="KachnaOnline.Dto.Events.EventDto"/> of the next planned events.</returns>
+        /// <remarks>
+        /// Several events may start at the same time. Thus, a list is returned instead of a single event.
+        /// </remarks>
         /// <response code="200">The list of the next planned events.</response>
         [AllowAnonymous]
         [HttpGet("next")]
-        [ProducesResponseType(typeof(IEnumerable<EventDto>), 200)]
-        public async Task<ActionResult<IEnumerable<EventDto>>> GetNextPlannedEvents()
+        [ProducesResponseType(typeof(IEnumerable<EventDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetNextPlannedEvents()
         {
-            var events = await _eventsFacade.GetNextPlannedEvents();
-            return new ActionResult<IEnumerable<EventDto>>(events);
+            return this.Ok(await _eventsFacade.GetNextPlannedEvents());
         }
 
         /// <summary>
-        /// Returns the list of the events planned in the specified timespan.
+        /// Returns a list of events planned in the specified time range.
         /// </summary>
-        /// <returns>A List of <see cref="KachnaOnline.Dto.Events.EventDto"/> of the events planned in the timespan
-        /// specified by <paramref name="from"/> and <paramref name="to"/>.</returns>
-        /// <response code="200">The list of the events.</response>
-        /// <response code="422">Wrong arguments.</response>
+        /// <response code="200">The list of events.</response>
+        /// <response code="400">The specified time range is too long or `<paramref name="to"/>` comes before
+        /// `<paramref name="from"/>`.</response>
         [AllowAnonymous]
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<EventDto>), 200)]
-        [ProducesResponseType(422)]
-        public async Task<ActionResult<IEnumerable<EventDto>>> GetEvents(
+        [ProducesResponseType(typeof(IEnumerable<EventDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetEvents(
             DateTime? from = null,
             DateTime? to = null)
         {
             try
             {
                 var events = await _eventsFacade.GetEvents(from, to);
-                return new ActionResult<IEnumerable<EventDto>>(events);
+                return this.Ok(events);
             }
             catch (ArgumentException)
             {
-                return this.Problem(
-                    title: "Wrong arguments",
-                    detail: "Got wrong arguments in the request.",
-                    statusCode: 422);
+                return this.BadRequest();
             }
         }
 
         /// <summary>
         /// Plans a new event.
         /// </summary>
-        /// <param name="newEvent"><see ref="KachnaOnline.Dto.Events.NewEventDto"/> to create.</param>
+        /// <param name="newEvent">An event to create.</param>
         /// <returns>A planned <see cref="KachnaOnline.Dto.Events.EventDto"/> if the creation succeeded.</returns>
         /// <response code="201">The new event.</response>
-        /// <response code="422">A user with the given ID does not exist.</response>
+        /// <response code="400">Invalid event parameters.</response>
+        /// <response code="422">The user does not exist.</response>
         [HttpPost]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(422)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<ManagerEventDto>> PlanEvent(BaseEventDto newEvent)
         {
             try
@@ -143,7 +139,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (ArgumentException)
             {
-                return this.UnprocessableEntity();
+                return this.Conflict();
             }
             catch (EventManipulationFailedException)
             {
@@ -155,16 +151,16 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Modifies an event with the given ID.
+        /// Replaces details of an event with the given ID.
         /// </summary>
         /// <param name="eventId">ID of the event to update.</param>
-        /// <param name="baseEvent"><see ref="KachnaOnline.Dto.Events.BaseEventDto"/> representing the new state.</param>
+        /// <param name="baseEvent">An event model with the new event details.</param>
         /// <response code="204">The event was updated.</response>
         /// <response code="404">The event with the given ID does not exist.</response>
         /// <response code="409">The event from the past cannot be modified.</response>
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPut("{eventId}")]
         public async Task<ActionResult> ModifyEvent(int eventId, BaseEventDto baseEvent)
         {
@@ -189,22 +185,22 @@ namespace KachnaOnline.App.Controllers
             {
                 return this.Problem(
                     title: "Modification failed",
-                    detail: $"Modification of the event failed.",
+                    detail: "Modification of the event failed.",
                     statusCode: 500);
             }
         }
 
         /// <summary>
-        /// Removes an event with the given ID.
+        /// Deletes an event with the given ID.
         /// </summary>
         /// <param name="eventId">ID of the event to delete.</param>
         /// <response code="204">The event was deleted.</response>
-        /// <response code="404">The event with the given ID does not exist.</response>
-        /// <response code="409">The event from the past cannot be removed.</response>
+        /// <response code="404">The event does not exist.</response>
+        /// <response code="409">A past event cannot be removed.</response>
         [HttpDelete("{eventId}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult> RemoveEvent(int eventId)
         {
             try

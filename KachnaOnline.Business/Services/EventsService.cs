@@ -187,7 +187,7 @@ namespace KachnaOnline.Business.Services
 
             await EnsureLock();
 
-            _mapper.Map<ModifiedEvent, EventEntity>(modifiedEvent, eventEntity);
+            _mapper.Map(modifiedEvent, eventEntity);
 
             try
             {

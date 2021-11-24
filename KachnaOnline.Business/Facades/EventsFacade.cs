@@ -30,6 +30,26 @@ namespace KachnaOnline.Business.Facades
             _mapper = mapper;
         }
 
+        private IEnumerable<EventDto> MapEvents(ICollection<Event> events)
+        {
+            if (events is not { Count: >0 })
+                return new List<EventDto>();
+
+            if (this.IsUserEventsManager())
+                return _mapper.Map<List<ManagerEventDto>>(events);
+
+            return _mapper.Map<List<EventDto>>(events);
+        }
+
+        private EventDto MapEvent(Event @event)
+        {
+            if (this.IsUserEventsManager())
+                return _mapper.Map<ManagerEventDto>(@event);
+
+            return _mapper.Map<EventDto>(@event);
+        }
+
+
         /// <summary>
         /// Checks whether the current user is an events manager.
         /// </summary>
@@ -46,7 +66,7 @@ namespace KachnaOnline.Business.Facades
         /// <exception cref="InvalidOperationException"> thrown when the current user could not be found.</exception>
         private int CurrentUserId =>
             int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(IdentityConstants.IdClaim) ??
-            throw new InvalidOperationException("No valid user found in the current request."));
+                      throw new InvalidOperationException("No valid user found in the current request."));
 
 
         /// <summary>
@@ -57,15 +77,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<IEnumerable<EventDto>> GetCurrentEvents()
         {
             var events = await _eventsService.GetCurrentEvents();
-            if (events is { Count: > 0 })
-            {
-                if (this.IsUserEventsManager())
-                    return events.Select(e => _mapper.Map<ManagerEventDto>(e)).ToList();
-
-                return events.Select(e => _mapper.Map<EventDto>(e)).ToList();
-            }
-
-            return new List<EventDto>();
+            return this.MapEvents(events);
         }
 
         /// <summary>
@@ -76,15 +88,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<IEnumerable<EventDto>> GetEvents(DateTime at)
         {
             var events = await _eventsService.GetEvents(at);
-            if (events is { Count: > 0 })
-            {
-                if (this.IsUserEventsManager())
-                    return events.Select(e => _mapper.Map<ManagerEventDto>(e)).ToList();
-
-                return events.Select(e => _mapper.Map<EventDto>(e)).ToList();
-            }
-
-            return new List<EventDto>();
+            return this.MapEvents(events);
         }
 
         /// <summary>
@@ -96,15 +100,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<IEnumerable<EventDto>> GetEvents(DateTime? from = null, DateTime? to = null)
         {
             var events = await _eventsService.GetEvents(from, to);
-            if (events is { Count: > 0 })
-            {
-                if (this.IsUserEventsManager())
-                    return events.Select(e => _mapper.Map<ManagerEventDto>(e)).ToList();
-
-                return events.Select(e => _mapper.Map<EventDto>(e)).ToList();
-            }
-
-            return new List<EventDto>();
+            return this.MapEvents(events);
         }
 
         /// <summary>
@@ -117,11 +113,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<EventDto> GetEvent(int eventId)
         {
             var returnedEvent = await _eventsService.GetEvent(eventId);
-
-            if (this.IsUserEventsManager())
-                return _mapper.Map<ManagerEventDto>(returnedEvent);
-
-            return _mapper.Map<EventDto>(returnedEvent);
+            return this.MapEvent(returnedEvent);
         }
 
         /// <summary>
@@ -132,15 +124,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<IEnumerable<EventDto>> GetNextPlannedEvents()
         {
             var events = await _eventsService.GetNextPlannedEvents();
-            if (events is { Count: > 0 })
-            {
-                if (this.IsUserEventsManager())
-                    return events.Select(e => _mapper.Map<ManagerEventDto>(e)).ToList();
-
-                return events.Select(e => _mapper.Map<EventDto>(e)).ToList();
-            }
-
-            return new List<EventDto>();
+            return this.MapEvents(events);
         }
 
         /// <summary>
