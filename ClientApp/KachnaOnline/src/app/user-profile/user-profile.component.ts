@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from "../shared/services/user.service";
 import {NgForm} from "@angular/forms";
+import {AuthenticationService} from "../shared/services/authentication.service";
 
 @Component({
   selector: 'app-user',
@@ -11,11 +11,11 @@ export class UserProfileComponent implements OnInit {
   public isCardInfoCollapsed: boolean = false;
 
   constructor(
-    public userService: UserService,
+    public authenticationService: AuthenticationService,
   ) { }
 
   ngOnInit(): void {
-    this.userService.getInformationAboutUser();
+    this.authenticationService.getInformationAboutUser();
   }
 
   onSaveChanges(form: NgForm) {

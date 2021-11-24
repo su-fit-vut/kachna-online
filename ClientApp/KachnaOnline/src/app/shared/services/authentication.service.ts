@@ -8,6 +8,7 @@ import {Location} from '@angular/common';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {LocalTokenContent} from "../../models/local-token-content.model";
 import {RoleTypes} from "../../models/role-types.model";
+import {User} from "../../models/user.model";
 
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
@@ -28,6 +29,8 @@ export class AuthenticationService {
 
   localTokenContent: LocalTokenContent = new LocalTokenContent();
 
+  userDetail: User = new User();
+  public authenticationToken: string;
 
   getSessionIdFromKisEduId() {
     let params = new HttpParams().set('redirect', `${window.location.origin}/login`)
@@ -57,6 +60,7 @@ export class AuthenticationService {
         /*res as AccessTokens*/
         localStorage.setItem(STORAGE_TOKEN_KEY, res);
         this.decodeToken(res);
+        this.getInformationAboutUser();
 
         setInterval( () => {
             console.log("calling refresh token");
@@ -127,4 +131,31 @@ export class AuthenticationService {
     return this.localTokenContent.role.indexOf(role_type) !== -1;
   }
 
+
+  getInformationAboutUser() {
+    this.http.get<any>('https://su-int.fit.vutbr.cz/kis/api/users/me').subscribe( // TODO: Change return value into a model.
+      res => {
+        console.log(res);
+      }
+    );
+
+    this.assignDataFromLocalTokenContent();
+  }
+
+  getUserName() {
+    return this.userDetail.name;
+  }
+
+  getPrestigeAmount() {
+    return 42;
+  }
+
+  getUserEmail() {
+    return this.userDetail.email;
+  }
+
+  private assignDataFromLocalTokenContent() {
+    this.userDetail.name = this.localTokenContent.given_name;
+    this.userDetail.email = this.localTokenContent.email;
+  }
 }

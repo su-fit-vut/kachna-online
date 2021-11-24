@@ -1,6 +1,6 @@
 <ng-template #popContent>
-  <app-logged-in-content *ngIf="userService.isLoggedIn()"></app-logged-in-content>
-  <app-logged-out-content *ngIf="!userService.isLoggedIn()"></app-logged-out-content>
+  <app-logged-in-content *ngIf="authenticationService.isLoggedIn()"></app-logged-in-content>
+  <app-logged-out-content *ngIf="authenticationService.isLoggedOut()"></app-logged-out-content>
 </ng-template>
 
 <button type="button" class="btn btn-outline-secondary btn-block" placement="auto" autoClose="outside"
