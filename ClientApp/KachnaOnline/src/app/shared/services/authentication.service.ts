@@ -1,12 +1,13 @@
-import { environment } from '../../../environments/environment';
-import { KisResponse } from '../../models/kis-response.model';
-import { ToastrService } from 'ngx-toastr';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Injectable } from '@angular/core';
-import { HttpParams, HttpClient } from '@angular/common/http';
-import { Location } from '@angular/common';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import {environment} from '../../../environments/environment';
+import {KisResponse} from '../../models/kis-response.model';
+import {ToastrService} from 'ngx-toastr';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Location} from '@angular/common';
+import {JwtHelperService} from '@auth0/angular-jwt';
 import {LocalTokenContent} from "../../models/local-token-content.model";
+import {RoleTypes} from "../../models/role-types.model";
 
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
@@ -26,6 +27,7 @@ export class AuthenticationService {
   ) { }
 
   localTokenContent: LocalTokenContent = new LocalTokenContent();
+
 
   getSessionIdFromKisEduId() {
     let params = new HttpParams().set('redirect', `${window.location.origin}/login`)
@@ -115,7 +117,14 @@ export class AuthenticationService {
 
   private decodeToken(token: string) {
     this.localTokenContent = this.jwtHelper.decodeToken(token) as LocalTokenContent;
-    console.log(this.localTokenContent);
+  }
+
+  getUserRoles() {
+    return this.localTokenContent.role;
+  }
+
+  hasRole(role_type: RoleTypes): boolean {
+    return this.localTokenContent.role.indexOf(role_type) !== -1;
   }
 
 }
