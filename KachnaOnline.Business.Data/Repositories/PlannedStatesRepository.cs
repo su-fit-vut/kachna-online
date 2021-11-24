@@ -33,20 +33,14 @@ namespace KachnaOnline.Business.Data.Repositories
             IQueryable<PlannedState> query;
 
             if (includeEndMinute)
-            {
                 query = Set
                     .Where(s => s.Start <= actualAtTime && s.PlannedEnd >= actualAtTime && s.Ended == null);
-            }
             else
-            {
                 query = Set
                     .Where(s => s.Start <= actualAtTime && s.PlannedEnd > actualAtTime && s.Ended == null);
-            }
 
             if (includeNext)
-            {
                 query = query.Include(q => q.NextPlannedState);
-            }
 
             return await query
                 .OrderByDescending(s => s.Start)
@@ -56,14 +50,12 @@ namespace KachnaOnline.Business.Data.Repositories
         public async Task<PlannedState> GetNearest(StateType? ofType, DateTime? after, bool includeNext)
         {
             var currentState = await this.GetCurrent(includeNext: includeNext);
-            if (currentState is {NextPlannedStateId: not null})
+            if (currentState is { NextPlannedStateId: not null })
             {
                 var nextState = await this.Get(currentState.NextPlannedStateId.Value);
                 if ((!ofType.HasValue || nextState.State == ofType.Value) &&
                     (!after.HasValue || nextState.Start >= after.Value))
-                {
                     return nextState;
-                }
             }
 
             var afterDate = after ?? DateTime.Now;
@@ -73,9 +65,7 @@ namespace KachnaOnline.Business.Data.Repositories
                 .OrderBy(s => s.Start);
 
             if (includeNext)
-            {
                 query = query.Include(s => s.NextPlannedState);
-            }
 
             return await query.FirstOrDefaultAsync();
         }

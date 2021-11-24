@@ -30,7 +30,8 @@ namespace KachnaOnline.Business.Data.Repositories
         public IBoardGamesRepository BoardGames => _boardGames ??= new BoardGamesRepository(_dbContext);
 
         private IBoardGameCategoriesRepository _boardGameCategories;
-        public IBoardGameCategoriesRepository BoardGamesCategories => _boardGameCategories ??= new BoardGameCategoriesRepository(_dbContext);
+        public IBoardGameCategoriesRepository BoardGamesCategories =>
+            _boardGameCategories ??= new BoardGameCategoriesRepository(_dbContext);
 
         private IEventsRepository _events;
         public IEventsRepository Events => _events ??= new EventsRepository(_dbContext);

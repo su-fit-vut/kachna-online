@@ -35,9 +35,7 @@ namespace KachnaOnline.Business.Data.Repositories
             var eventEntity = Set.Where(e => e.From > afterDate).OrderBy(e => e.From).FirstOrDefaultAsync();
 
             if (eventEntity is not null)
-            {
                 return Set.Where(e => e.From == eventEntity.Result.From).AsAsyncEnumerable();
-            }
 
             return Enumerable.Empty<Event>() as IAsyncEnumerable<Event>;
         }

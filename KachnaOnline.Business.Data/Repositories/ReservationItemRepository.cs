@@ -53,9 +53,7 @@ namespace KachnaOnline.Business.Data.Repositories
                     e.NewState != ReservationItemState.Done)) // only Handed-Over or Done will have expiration
                 .Where(i => i.ExpiresOn <= willExpireOn);
             if (checkingFuture)
-            {
                 return await result.Where(i => !i.NotifiedBeforeExpiration).ToListAsync();
-            }
 
             return await result.Where(i => !i.NotifiedOnExpiration).ToListAsync();
         }
