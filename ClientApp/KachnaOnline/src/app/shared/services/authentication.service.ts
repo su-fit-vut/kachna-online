@@ -54,7 +54,10 @@ export class AuthenticationService {
         setInterval( () => {
             console.log("calling refresh token");
             this.http.get(`${AUTH_API}/refreshedAccessToken`, { responseType: 'text' }).subscribe(
-              res => localStorage.setItem(STORAGE_TOKEN_KEY, res),
+              res => {
+                localStorage.setItem(STORAGE_TOKEN_KEY, res);
+                console.log(localStorage.getItem(STORAGE_TOKEN_KEY));
+              },
               err => {
                 console.log(err);
                 this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
