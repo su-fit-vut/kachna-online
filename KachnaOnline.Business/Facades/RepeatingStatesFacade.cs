@@ -142,10 +142,7 @@ namespace KachnaOnline.Business.Facades
 
             if (result.HasOverlappingStates)
             {
-                dto.ConflictResultDto = new StatePlanningConflictResultDto
-                {
-                    CollidingStates = await this.MapStateCollection(result.OverlappingStates)
-                };
+                dto.CollidingStates = await this.MapStateCollection(result.OverlappingStates);
             }
 
             newState = await _clubStateService.GetRepeatingState(result.TargetRepeatingStateId);
@@ -172,10 +169,7 @@ namespace KachnaOnline.Business.Facades
 
             if (result.HasOverlappingStates)
             {
-                dto.ConflictResultDto = new StatePlanningConflictResultDto
-                {
-                    CollidingStates = await this.MapStateCollection(result.OverlappingStates)
-                };
+                dto.CollidingStates = await this.MapStateCollection(result.OverlappingStates);
             }
 
             var modifiedState = await _clubStateService.GetRepeatingState(result.TargetRepeatingStateId);

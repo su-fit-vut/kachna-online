@@ -1,4 +1,5 @@
-﻿using KachnaOnline.Dto.Swagger;
+﻿using System.Collections.Generic;
+using KachnaOnline.Dto.Swagger;
 using Newtonsoft.Json;
 
 namespace KachnaOnline.Dto.ClubStates
@@ -15,10 +16,10 @@ namespace KachnaOnline.Dto.ClubStates
         public RepeatingStateManagerDto TargetRepeatingState { get; set; }
 
         /// <summary>
-        /// Details of state planning conflicts that occurred when (re-)planning the occurrences of the repeating state.
+        /// A list of existing states that prevent a new repeating state occurrence from being planned.
         /// Not included in the response if no conflicts occured.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public StatePlanningConflictResultDto ConflictResultDto { get; set; }
+        public List<StateDto> CollidingStates { get; set; }
     }
 }
