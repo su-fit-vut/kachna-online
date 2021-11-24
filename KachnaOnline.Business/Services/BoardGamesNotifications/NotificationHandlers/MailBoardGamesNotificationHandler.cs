@@ -20,12 +20,12 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
     /// </summary>
     public class MailBoardGamesNotificationHandler : IBoardGamesNotificationHandler
     {
-        private readonly IOptionsMonitor<SmtpOptions> _smtpOptionsMonitor;
+        private readonly IOptionsMonitor<MailOptions> _smtpOptionsMonitor;
         private readonly ILogger<MailBoardGamesNotificationHandler> _logger;
         private readonly IBoardGamesService _boardGamesService;
         private readonly IUserService _userService;
 
-        public MailBoardGamesNotificationHandler(IOptionsMonitor<SmtpOptions> smtpOptionsMonitor,
+        public MailBoardGamesNotificationHandler(IOptionsMonitor<MailOptions> smtpOptionsMonitor,
             ILogger<MailBoardGamesNotificationHandler> logger, IBoardGamesService boardGamesService,
             IUserService userService)
         {
@@ -70,31 +70,36 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
         /// <param name="user">User to send the e-mail to.</param>
         private async Task SendEmail(string subject, string content, User user)
         {
+            // TODO: Cache SMTP clients. Making a new one for each e-mail may lead to starvation.
+
             var config = _smtpOptionsMonitor.CurrentValue;
-            if (string.IsNullOrEmpty(config.Address) || string.IsNullOrEmpty(config.Host) ||
+            if (string.IsNullOrEmpty(config.FromAddress) || string.IsNullOrEmpty(config.Host) ||
                 string.IsNullOrEmpty(config.Password))
             {
                 _logger.LogError("SMTP authentication not available.");
                 return;
             }
 
-            var fromAddress = new MailAddress(config.Address, SmtpConstants.SenderName);
+            var fromAddress = new MailAddress(config.FromAddress, config.DisplayName);
             var toAddress = new MailAddress(user.Email, user.Name);
-            var smtp = new SmtpClient()
+
+            using var smtp = new SmtpClient()
             {
                 Host = config.Host,
                 Port = config.Port,
-                EnableSsl = true,
+                EnableSsl = config.UseSsl,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(config.Address, config.Password)
+                Credentials = new NetworkCredential(config.Username, config.Password)
             };
+
             var message = new MailMessage(fromAddress, toAddress)
             {
                 Subject = subject,
                 Body = content,
                 IsBodyHtml = true,
             };
+
             await smtp.SendMailAsync(message);
         }
 
@@ -126,13 +131,13 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
                 var expiration = item.ExpiresOn.Value;
                 // TODO: possibly include a link to frontend card where the game can be extended.
                 var message = $@"Ahoj,<br><br>
-Tvá rezervace na deskovou hru <b>{game.Name}</b> již brzy vyprší, konkrétně 
-<b>{expiration.Day}. {expiration.Month}. {expiration.Year}</b>.
-Domluv se, prosím, s někým ze Studentské Unie na vrácení hry zpět do klubu. V případě, že
-se ti hra zalíbila a rád bys ji měl půjčenou ještě déle, můžeš také požádat v portálu člena
-o prodloužení, nebo ti ji může prodloužit člen Studentské Unie, pokud se s ním domluvíš.<br><br>
+Tvá výpůjčka deskové hry <b>{game.Name}</b> již brzy vyprší, konkrétně 
+<b>{expiration:dd. MM. yyyy}</b>.
+Domluv se, prosím, s někým ze Studentské unie na vrácení hry zpět do klubu. V případě, že
+se ti hra zalíbila a rád bys ji měl*a půjčenou ještě déle, můžeš na webu Kachna Online požádat
+o prodloužení nebo ti ji může prodloužit člen Studentské unie, pokud se s ním domluvíš.<br><br>
 Tvoje Kachna Online";
-                await this.SendEmail("Platnost rezervace deskové hry v klubu U Kachničky brzy skončí!", message, user);
+                await this.SendEmail("Výpůjční doba deskové hry v klubu U Kachničky brzy vyprší", message, user);
             }
             catch (ReservationNotFoundException)
             {
@@ -173,12 +178,12 @@ Tvoje Kachna Online";
 
                 // TODO: possibly include a link to frontend card where the game can be extended.
                 var message = $@"Ahoj,<br><br>
-Tvá rezervace na deskovou hru <b>{game.Name}</b> vypršela. 
-Domluv se, prosím, s někým ze Studentské Unie na vrácení hry zpět do klubu. V případě, že
-se ti hra zalíbila a rád bys ji měl půjčenou ještě déle, můžeš také požádat v portálu člena
-o prodloužení, nebo ti ji může prodloužit člen Studentské Unie, pokud se s ním domluvíš.<br><br>
+Tvá výpůjčka deskové hry <b>{game.Name}</b> vypršela. 
+Domluv se, prosím, s někým ze Studentské unie na vrácení hry zpět do klubu. V případě, že
+se ti hra zalíbila a rád bys ji měl*a půjčenou ještě déle, můžeš na webu Kachna Online požádat
+o prodloužení nebo ti ji může prodloužit člen Studentské unie, pokud se s ním domluvíš.<br><br>
 Tvoje Kachna Online";
-                await this.SendEmail("Platnost rezervace deskové hry v klubu U Kachničky vypršela!", message, user);
+                await this.SendEmail("Výpůjční doba deskové hry v klubu U Kachničky vypršela", message, user);
             }
             catch (ReservationNotFoundException)
             {
