@@ -27,6 +27,7 @@ namespace KachnaOnline.App
     /// </summary>
     public class Startup
     {
+        private const string LocalCorsPolicy = "LocalPolicy";
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -40,6 +41,13 @@ namespace KachnaOnline.App
         /// <param name="services">A service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add CORS for local development
+            services.AddCors(o => o.AddPolicy(LocalCorsPolicy, builder =>
+            {
+                builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+                builder.WithOrigins("https://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+            }));
+
             // Load configuration objects.
             services.Configure<KisOptions>(this.Configuration.GetSection("Kis"));
             services.Configure<JwtOptions>(this.Configuration.GetSection("Jwt"));
@@ -102,6 +110,7 @@ namespace KachnaOnline.App
 
             if (env.IsDevelopment())
             {
+                app.UseCors(LocalCorsPolicy);
                 app.UseDeveloperExceptionPage();
             }
             else
