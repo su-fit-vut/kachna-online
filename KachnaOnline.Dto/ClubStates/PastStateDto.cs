@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace KachnaOnline.Dto.ClubStates
 {
     /// <summary>
-    /// Represents a state of the club that has already ended.
+    /// A state of the club that has already ended.
     /// </summary>
     public class PastStateDto : StateDto
     {

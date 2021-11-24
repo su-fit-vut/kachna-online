@@ -4,7 +4,7 @@
 namespace KachnaOnline.Dto.ClubStates
 {
     /// <summary>
-    /// Represents a state the club may be in.
+    /// A type of state the club may be in.
     /// </summary>
     public enum StateType
     {

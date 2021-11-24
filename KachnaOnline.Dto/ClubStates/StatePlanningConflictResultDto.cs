@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace KachnaOnline.Dto.ClubStates
 {
+    /// <summary>
+    /// Contains a list of existing states that prevent a state from being planned or changed.
+    /// </summary>
     public class StatePlanningConflictResultDto
     {
         /// <summary>

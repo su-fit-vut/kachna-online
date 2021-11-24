@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace KachnaOnline.Dto.ClubStates
 {
     /// <summary>
-    /// Represents a set of identifiers of a state manager.
+    /// A set of identifiers of a state manager.
     /// </summary>
     public class StateMadeByDto
     {

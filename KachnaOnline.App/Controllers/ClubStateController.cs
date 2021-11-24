@@ -32,11 +32,11 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns information about the current state.
+        /// Returns details of the current state.
         /// </summary>
         /// <remarks>
         /// If no state is active (it is closed), a Closed-type state is returned.
-        /// Its <code>start</code> property points to the end of the last state, its <code>plannedEnd</code>
+        /// Its `start` property points to the end of the last state, its `plannedEnd`
         /// property points to the beginning of the next planned state. If no state is planned, it is null.
         /// </remarks>
         /// <returns>A <see cref="StateDto"/> describing the current state.</returns>
@@ -50,7 +50,7 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns information about a state with the given ID.
+        /// Returns details of a state with the given ID.
         /// </summary>
         /// <param name="id">The ID of the state to return.</param>
         /// <returns>A <see cref="StateDto"/> describing the specified state or a <see cref="NotFoundResult"/>.</returns>
@@ -70,20 +70,20 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns a collection of near states or states starting between in the specified time range.
+        /// Returns an array of details of near states or states starting in the specified time range.
         /// </summary>
         /// <remarks>
         /// The default maximum time range to return states in is 62 days.
-        /// If one of <code><paramref name="from"/></code> or <code><paramref name="to"/></code> is not provided,
+        /// If one of `<paramref name="from"/>` or `<paramref name="to"/>` is not provided,
         /// the other will be set so that the maximum time range is used.
-        /// If both are not provided, <code><paramref name="from"/></code> will be set to the first day of the current
+        /// If both are not provided, `<paramref name="from"/>` will be set to the first day of the current
         /// month.
         /// </remarks>
         /// <param name="from">The start of the target time range.</param>
         /// <param name="to">The end of the target time range.</param>
-        /// <response code="200">The requested collection of states.</response>
-        /// <response code="400">The specified time range is too long or <code><paramref name="to"/></code> comes before
-        /// <code><paramref name="from"/></code></response>
+        /// <response code="200">An array of states.</response>
+        /// <response code="400">The specified time range is too long or `<paramref name="to"/>` comes before
+        /// `<paramref name="from"/>`.</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -98,7 +98,7 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns the next planned state of the given type.
+        /// Returns details of the next planned state of the given type.
         /// </summary>
         /// <param name="type">The state type.</param>
         /// <response code="200">The state.</response>
@@ -133,7 +133,7 @@ namespace KachnaOnline.App.Controllers
         /// A state cannot be planned if it begins earlier than an already planned state that it would overlap with.
         /// 
         /// However, it can be planned so that it begins in the middle of an already planned state. In that case,
-        /// the <code>plannedEnd</code> of the previously planned state is set to the newly planned state's beginning.
+        /// the `plannedEnd` of the previously planned state is set to the newly planned state's beginning.
         ///
         /// Planned start must be set to a date after now and before the state's planned end.
         /// 
@@ -141,11 +141,11 @@ namespace KachnaOnline.App.Controllers
         /// planned state will be used as the planned end (if such state exists).
         /// </remarks>
         /// <param name="newState">A new state model.</param>
-        /// <response code="201">Information of the newly created state and, potentially, about a state that
+        /// <response code="201">Details of the newly created state and, potentially, of a state that
         /// has been shortened by the new state.</response>
         /// <response code="400">Some of the restrictions are violated.</response>
-        /// <response code="404">No <code>plannedEnd</code> was specified and there is no state planned in the future.</response>
-        /// <response code="409">The state would collide with existing states. Information of these is returned.</response>
+        /// <response code="404">No `plannedEnd` was specified and there is no state planned in the future.</response>
+        /// <response code="409">The state would collide with existing states. Details of these is returned.</response>
         [HttpPost]
         [ProducesResponseType(typeof(StatePlanningSuccessResultDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -158,7 +158,7 @@ namespace KachnaOnline.App.Controllers
                 var result = await _facade.PlanNew(newState);
                 if (result.SuccessResultDto != null)
                 {
-                    return this.CreatedAtAction("Get", new {id = result.SuccessResultDto.NewState.Id},
+                    return this.CreatedAtAction("Get", new { id = result.SuccessResultDto.NewState.Id },
                         result.SuccessResultDto);
                 }
 
@@ -185,15 +185,16 @@ namespace KachnaOnline.App.Controllers
         ///
         /// Planned end must be set to a date after the state's start.
         ///
-        /// Administrators (only) can also change <code>madeById</code>.
+        /// Administrators (only) can also change `madeById`.
         /// </remarks>
         /// <param name="data">A modification model.</param>
-        /// <response code="200">Information of the modified state and, potentially, about a state that
+        /// <response code="200">Details of the modified state and, potentially, of a state that
         /// has been shortened because of a change of the modified state's start date.</response>
         /// <response code="400">Some of the restrictions are violated.</response>
-        /// <response code="403">A non-administrator user attempted to change <code>madeById</code>.</response>
-        /// <response code="404">No state is currently active or an user does not exist.</response>
-        /// <response code="409">The state would collide with existing states. Information of these is returned.</response>
+        /// <response code="403">A non-administrator user attempted to change `madeById`.</response>
+        /// <response code="404">No state is currently active.</response>
+        /// <response code="409">The state would collide with existing states. Details of these are returned.</response>
+        /// <response code="422">The user does not exist.</response>
         [HttpPatch("current")]
         [ProducesResponseType(typeof(StatePlanningSuccessResultDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -220,16 +221,17 @@ namespace KachnaOnline.App.Controllers
         ///
         /// For states that already ended, only the internal note can be changed.
         ///
-        /// Administrators (only) can also change <code>madeById</code>.
+        /// Administrators (only) can also change `madeById`.
         /// </remarks>
         /// <param name="id">The ID of the state to change.</param>
         /// <param name="data">A modification model.</param>
-        /// <response code="200">Information of the modified state and, potentially, about a state that
+        /// <response code="200">Details of the modified state and, potentially, of a state that
         /// has been shortened because of a change of the modified state's start date.</response>
         /// <response code="400">Some of the restrictions are violated.</response>
-        /// <response code="403">A non-administrator user attempted to change <code>madeById</code>.</response>
-        /// <response code="404">A state or user does not exist.</response>
-        /// <response code="409">The state would collide with existing states. Information of these is returned.</response>
+        /// <response code="403">A non-administrator user attempted to change `madeById`.</response>
+        /// <response code="404">The state does not exist.</response>
+        /// <response code="409">The state would collide with existing states. Details of these are returned.</response>
+        /// <response code="422">The user does not exist.</response>
         [HttpPatch("{id}")]
         [ProducesResponseType(typeof(StatePlanningSuccessResultDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -246,11 +248,11 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <remarks>
         /// A state that has started and hasn't ended, that is, the current state, may be closed using DELETE
-        /// <code>/states/current</code>. An ended state cannot be deleted.
+        /// `/states/current`. An ended state cannot be deleted.
         /// </remarks>
         /// <param name="id">The ID of the state to delete.</param>
         /// <response code="204">The state was deleted.</response>
-        /// <response code="404">No such state exists.</response>
+        /// <response code="404">The state does not exist..</response>
         /// <response code="409">The state has already started.</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -319,7 +321,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (UserNotFoundException)
             {
-                return this.NotFound("The specified user does not exist.");
+                return this.UnprocessableEntity("The specified user does not exist.");
             }
             catch (UserUnprivilegedException)
             {

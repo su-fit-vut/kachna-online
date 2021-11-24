@@ -5,6 +5,9 @@ using System;
 
 namespace KachnaOnline.Dto.ClubStates
 {
+    /// <summary>
+    /// A model for planning a new state.
+    /// </summary>
     public class StatePlanningDto
     {
         /// <summary>
@@ -25,8 +28,7 @@ namespace KachnaOnline.Dto.ClubStates
         public DateTime? PlannedEnd { get; set; }
 
         /// <summary>
-        /// An internal note. This is included in the response only when there's an internal note and the request
-        /// is authorized to a state manager.
+        /// An internal note.
         /// </summary>
         /// <example>This is a note that will only be visible to state managers.</example>
         public string NoteInternal { get; set; }

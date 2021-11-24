@@ -1,7 +1,7 @@
 ﻿namespace KachnaOnline.Dto.ClubStates
 {
     /// <summary>
-    /// Represents a state of the club with no additional info apart from its ID.
+    /// A state of the club with no additional info apart from its ID.
     /// </summary>
     /// <remarks>
     /// This is a 'stub' parent class of <see cref="StateDto"/>. It is used as the type of its

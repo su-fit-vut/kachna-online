@@ -2,6 +2,9 @@
 
 namespace KachnaOnline.Dto.ClubStates
 {
+    /// <summary>
+    /// A modification of a repeating state.
+    /// </summary>
     public class RepeatingStateModificationDto
     {
         /// <summary>

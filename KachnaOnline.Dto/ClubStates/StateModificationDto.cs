@@ -5,6 +5,9 @@ using System;
 
 namespace KachnaOnline.Dto.ClubStates
 {
+    /// <summary>
+    /// A modification of a planned (or current) state.
+    /// </summary>
     public class StateModificationDto
     {
         /// <summary>
