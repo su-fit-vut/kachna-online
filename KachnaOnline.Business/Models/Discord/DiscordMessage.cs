@@ -18,12 +18,12 @@ namespace KachnaOnline.Business.Models.Discord
         /// Unique ID of the message.
         /// </summary>
         public ulong Id { get; set; }
-        
+
         /// <summary>
         /// ID of the channel that the message is in.
         /// </summary>
         public ulong ChannelId { get; set; }
-        
+
         /// <summary>
         /// When the message was posted.
         /// </summary>

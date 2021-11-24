@@ -38,7 +38,8 @@ namespace KachnaOnline.Business.Services
                 throw new EventManipulationFailedException("Cannot acquire the event planning lock.");
         }
 
-        public EventsService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<EventsService> logger, IOptionsMonitor<EventsOptions> eventsOptionsMonitor)
+        public EventsService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<EventsService> logger,
+            IOptionsMonitor<EventsOptions> eventsOptionsMonitor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -98,12 +99,16 @@ namespace KachnaOnline.Business.Services
             to ??= from.Value.AddDays(_eventsOptionsMonitor.CurrentValue.QueryDaysTimeSpan);
 
             if (to < from)
+            {
                 throw new ArgumentException(
-                    $"The {nameof(to)} argument must not be a datetime before {nameof(from)}.");
+                    $"The {nameof(to)} argument must not be a datetime before {nameof(@from)}.");
+            }
 
             if (to - from > TimeSpan.FromDays(_eventsOptionsMonitor.CurrentValue.QueryDaysTimeSpan))
+            {
                 throw new ArgumentException(
                     $"The maximum time span to get events for is {_eventsOptionsMonitor.CurrentValue.QueryDaysTimeSpan} days.");
+            }
 
             var eventEntities = _eventsRepository.GetStartingBetween(
                 from.Value.RoundToMinutes(), to.Value.RoundToMinutes());

@@ -13,7 +13,8 @@ namespace KachnaOnline.Business.Exceptions.ClubStates
         {
         }
 
-        public RepeatingStateNotFoundException(int repeatingStateId) : base($"No repeating state with ID {repeatingStateId} exists.")
+        public RepeatingStateNotFoundException(int repeatingStateId) : base(
+            $"No repeating state with ID {repeatingStateId} exists.")
         {
             this.RepeatingStateId = repeatingStateId;
         }

@@ -32,7 +32,7 @@ namespace KachnaOnline.Business.Models.ClubStates
         /// Null if no state has been modified.
         /// </summary>
         public DateTime? ModifiedPreviousStatePlannedEnd { get; init; }
-        
+
         /// <summary>
         /// An array of already planned states that prevented the state to be planned. 
         /// </summary>

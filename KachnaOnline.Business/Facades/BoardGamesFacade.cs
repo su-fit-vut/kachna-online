@@ -113,9 +113,7 @@ namespace KachnaOnline.Business.Facades
 
             var games = await _boardGamesService.GetBoardGames(categoryId, players, available, visible);
             if (user.IsInRole(RoleConstants.BoardGamesManager))
-            {
                 return _mapper.Map<List<ManagerBoardGameDto>>(games);
-            }
 
             return _mapper.Map<List<BoardGameDto>>(games);
         }
@@ -141,20 +139,14 @@ namespace KachnaOnline.Business.Facades
             if (!game.Visible)
             {
                 if (!(user.Identity?.IsAuthenticated ?? false))
-                {
                     throw new NotAuthenticatedException();
-                }
 
                 if (!user.IsInRole(RoleConstants.BoardGamesManager))
-                {
                     throw new NotABoardGamesManagerException();
-                }
             }
 
             if (user.IsInRole(RoleConstants.BoardGamesManager))
-            {
                 return _mapper.Map<ManagerBoardGameDto>(game);
-            }
 
             return _mapper.Map<BoardGameDto>(game);
         }
@@ -272,9 +264,7 @@ namespace KachnaOnline.Business.Facades
             }
 
             if (reservation.MadeById != int.Parse(user.FindFirstValue(IdentityConstants.IdClaim)))
-            {
                 throw new NotABoardGamesManagerException();
-            }
 
             var userDto = _mapper.Map<ReservationDto>(reservation);
             userDto.Items = _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(userDto.Id));
@@ -406,16 +396,12 @@ namespace KachnaOnline.Business.Facades
         {
             // Created is implicit and can only be one.
             if (eventType == ReservationEventType.Created)
-            {
                 throw new InvalidTransitionException();
-            }
 
             if (eventType is ReservationEventType.Assigned or ReservationEventType.HandedOver or
                 ReservationEventType.ExtensionGranted or ReservationEventType.ExtensionRefused or
                 ReservationEventType.Returned && !user.IsInRole(RoleConstants.BoardGamesManager))
-            {
                 throw new NotABoardGamesManagerException();
-            }
 
             var stateModel = _mapper.Map<ReservationEventModelType>(eventType);
             await _boardGamesService.ModifyItemState(user, reservationId, itemId, stateModel);

@@ -24,8 +24,7 @@ namespace KachnaOnline.Business.Models.Kis
         [JsonPropertyName("image_url")] public string ImageUrl { get; set; }
         public string Name { get; set; }
         public KisLabel[] Labels { get; set; }
-        [JsonPropertyName("in_stock")]
-        public decimal? InStock { get; set; }
+        [JsonPropertyName("in_stock")] public decimal? InStock { get; set; }
         public decimal Price { get; set; }
         public decimal Prestige { get; set; }
     }

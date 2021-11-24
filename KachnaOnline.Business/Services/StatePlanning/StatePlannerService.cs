@@ -86,7 +86,7 @@ namespace KachnaOnline.Business.Services.StatePlanning
                         CancellationToken = _cts.Token,
                         TransitionDate = nextState.Start,
                         IsStateEnd = false,
-                        PlanExists = true,
+                        PlanExists = true
                     };
             }
 

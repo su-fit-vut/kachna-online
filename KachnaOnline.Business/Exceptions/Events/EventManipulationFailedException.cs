@@ -25,7 +25,8 @@ namespace KachnaOnline.Business.Exceptions.Events
             this.EventId = eventId;
         }
 
-        public EventManipulationFailedException(string message, Exception innerException) : base(message, innerException)
+        public EventManipulationFailedException(string message, Exception innerException) : base(message,
+            innerException)
         {
         }
 

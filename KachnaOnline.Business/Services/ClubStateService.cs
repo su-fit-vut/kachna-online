@@ -84,7 +84,7 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <summary>
-        /// Attempts to retrieve a user with the specified ID and throws if no such user exists. 
+        /// Attempts to retrieve a user with the specified ID and throws if no such user exists.
         /// </summary>
         /// <param name="userId">The user ID.</param>
         /// <exception cref="UserNotFoundException">Thrown if no user with such ID exists.</exception>
@@ -105,7 +105,7 @@ namespace KachnaOnline.Business.Services
                 Start = previousStateEntity?.Ended ?? DateTime.MinValue,
                 PlannedEnd = nextStateEntity?.Start,
                 Type = StateType.Closed,
-                MadeById = previousStateEntity?.ClosedById,
+                MadeById = previousStateEntity?.ClosedById
             };
 
             if (nextStateEntity != null)
@@ -148,9 +148,7 @@ namespace KachnaOnline.Business.Services
             {
                 var currentState = await this.GetCurrentState();
                 if (currentState.Type == StateType.Closed)
-                {
                     return currentState;
-                }
 
                 while (currentState.FollowingState != null)
                 {
@@ -159,9 +157,7 @@ namespace KachnaOnline.Business.Services
             }
 
             if (type == StateType.Private && !enablePrivate)
-            {
                 return null;
-            }
 
 
             var typeMapped = _mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType?>(type);
@@ -185,9 +181,11 @@ namespace KachnaOnline.Business.Services
         public async Task<ICollection<State>> GetStates(DateTime from, DateTime to)
         {
             if (to < from)
+            {
                 throw new ArgumentException(
-                    $"The {nameof(to)} argument must not be a datetime before {nameof(from)}.",
+                    $"The {nameof(to)} argument must not be a datetime before {nameof(@from)}.",
                     nameof(to));
+            }
 
             var currentMax = _optionsMonitor.CurrentValue.MaximumDaysSpanForStatesListAllowed;
             if (to - from > TimeSpan.FromDays(currentMax))
@@ -260,14 +258,18 @@ namespace KachnaOnline.Business.Services
             var dateTo = newRepeatingState.EffectiveTo.Date;
 
             if (dateTo <= dateFrom)
+            {
                 throw new ArgumentException(
                     $"The {nameof(RepeatingState.EffectiveTo)} date must come after the {nameof(RepeatingState.EffectiveFrom)}.");
+            }
 
             var timeFrom = newRepeatingState.TimeFrom.RoundToMinutes();
             var timeTo = newRepeatingState.TimeTo.RoundToMinutes();
             if (timeTo <= timeFrom)
+            {
                 throw new ArgumentException(
                     $"The {nameof(RepeatingState.TimeTo)} time must come after the {nameof(RepeatingState.TimeFrom)}.");
+            }
 
             if (!Enum.IsDefined(typeof(DayOfWeek), newRepeatingState.DayOfWeek))
                 throw new ArgumentException($"The value of {nameof(RepeatingState.DayOfWeek)} is not valid.");
@@ -400,8 +402,10 @@ namespace KachnaOnline.Business.Services
                 throw new ArgumentException("Cannot plan a 'Closed' repeating state.");
 
             if (modification.EffectiveTo < DateTime.Today)
+            {
                 throw new ArgumentException(
                     $"Cannot change a repeating state's {nameof(RepeatingState.EffectiveTo)} to a date before today.");
+            }
 
 
             // Check user and modify MadeById for the R.S. and the linked states
@@ -411,8 +415,10 @@ namespace KachnaOnline.Business.Services
             ModifyNotes();
 
             if (modification.State.HasValue)
+            {
                 stateEntity.State =
                     _mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType>(modification.State.Value);
+            }
 
             var hasStateAtEnd = false;
             // Change the properties of the linked states *in the future*
@@ -462,7 +468,7 @@ namespace KachnaOnline.Business.Services
                         if (hasStateAtEnd)
                         {
                             // Ensure that if the repeating state is planned so that its EffectiveTo is equal to the
-                            // final state's start date, this final state won't be replanned 
+                            // final state's start date, this final state won't be replanned
                             daysToAdd += 7;
                         }
 
@@ -493,8 +499,10 @@ namespace KachnaOnline.Business.Services
                 if (modification.MadeById.HasValue)
                 {
                     if (!changeMadeByUserRoles.Any(r => r == RoleConstants.Admin))
+                    {
                         throw new UserUnprivilegedException(changeMadeByUserId, RoleConstants.Admin,
                             $"change the {nameof(RepeatingState.MadeById)} attribute of states");
+                    }
 
                     var newMadeByUser = await _userService.GetUser(modification.MadeById.Value);
                     if (newMadeByUser is null)
@@ -536,14 +544,22 @@ namespace KachnaOnline.Business.Services
                 if (modified)
                 {
                     if (modification.NotePublic == string.Empty)
+                    {
                         stateEntity.NotePublic = null;
+                    }
                     else if (modification.NotePublic != null)
+                    {
                         stateEntity.NotePublic = modification.NotePublic;
+                    }
 
                     if (modification.NoteInternal == string.Empty)
+                    {
                         stateEntity.NoteInternal = null;
+                    }
                     else if (modification.NoteInternal != null)
+                    {
                         stateEntity.NoteInternal = modification.NoteInternal;
+                    }
                 }
             }
         }
@@ -554,9 +570,11 @@ namespace KachnaOnline.Business.Services
             if (newState is null)
                 throw new ArgumentNullException(nameof(newState));
             if (newState.Type == StateType.Closed)
+            {
                 throw new ArgumentException(
                     $"Cannot plan a closed state. Use {nameof(this.CloseNow)} to close the current state instead.",
                     nameof(newState));
+            }
 
             if (newState.Start.HasValue)
             {
@@ -648,8 +666,10 @@ namespace KachnaOnline.Business.Services
                 // Check that a state is currently active
                 modifiedStateEntity = await _stateRepository.GetCurrent();
                 if (modifiedStateEntity is null)
+                {
                     throw new StateNotFoundException(
                         "Cannot modify the current state because no state is active at the moment.");
+                }
             }
             else
             {
@@ -719,11 +739,13 @@ namespace KachnaOnline.Business.Services
                 throw new InvalidOperationException("Cannot change the start date of a state to the past.");
 
             if (endDate <= startDate)
+            {
                 throw new InvalidOperationException(
                     "The new end date and time would be before the new start date and time.");
+            }
 
             // At this point this is true: startDate >= now && endDate > startDate
-            // so we can safely assume that endDate > now 
+            // so we can safely assume that endDate > now
 
             // If we're changing the planned start, check if there isn't a previous state linked to this one
             // If there is, change its NextStateId to null
@@ -847,8 +869,10 @@ namespace KachnaOnline.Business.Services
                 if (modification.MadeById.HasValue)
                 {
                     if (!changeMadeByUserRoles.Any(r => r == RoleConstants.Admin))
+                    {
                         throw new UserUnprivilegedException(changeMadeByUserId, RoleConstants.Admin,
                             $"change the {nameof(RepeatingState.MadeById)} attribute of states");
+                    }
 
                     var newMadeByUser = await _userService.GetUser(modification.MadeById.Value);
                     if (newMadeByUser is null)
@@ -866,25 +890,37 @@ namespace KachnaOnline.Business.Services
             void ModifyNotes()
             {
                 if (modification.NotePublic != null && modification.NotePublic != modifiedStateEntity.NotePublic)
+                {
                     _logger.LogInformation(
                         "User {UserId} changed public note of state {StateId}. Original note: {OriginalNote}.",
                         changeMadeByUserId, modifiedStateEntity.Id, modifiedStateEntity.NotePublic);
+                }
 
                 if (modification.NoteInternal != null &&
                     modification.NoteInternal != modifiedStateEntity.NoteInternal)
+                {
                     _logger.LogInformation(
                         "User {UserId} changed internal note of state {StateId}. Original note: {OriginalNote}.",
                         changeMadeByUserId, modifiedStateEntity.Id, modifiedStateEntity.NoteInternal);
+                }
 
                 if (modification.NotePublic == string.Empty)
+                {
                     modifiedStateEntity.NotePublic = null;
+                }
                 else if (modification.NotePublic != null)
+                {
                     modifiedStateEntity.NotePublic = modification.NotePublic;
+                }
 
                 if (modification.NoteInternal == string.Empty)
+                {
                     modifiedStateEntity.NoteInternal = null;
+                }
                 else if (modification.NoteInternal != null)
+                {
                     modifiedStateEntity.NoteInternal = modification.NoteInternal;
+                }
             }
         }
 
@@ -946,15 +982,13 @@ namespace KachnaOnline.Business.Services
                 // Following state was specified: get the state and use its start date as the new state's start date
                 var followingStateEntity = await _stateRepository.Get(newState.FollowingStateId.Value);
                 if (followingStateEntity is null)
-                {
                     throw new StateNotFoundException(newState.FollowingStateId.Value);
-                }
 
                 newState.PlannedEnd = followingStateEntity.Start;
             }
             else if (!newState.PlannedEnd.HasValue)
             {
-                // Neither planned end nor following state was specified; get the first state that comes after 
+                // Neither planned end nor following state was specified; get the first state that comes after
                 // the specified start date and use it as the following state
                 var nextStateEntity = await _stateRepository.GetNearest(after: newState.Start);
                 if (nextStateEntity is null)
@@ -970,9 +1004,7 @@ namespace KachnaOnline.Business.Services
             newState.PlannedEnd = newState.PlannedEnd.Value.RoundToMinutes();
 
             if (newState.PlannedEnd <= newState.Start)
-            {
                 throw new InvalidOperationException("The state's planned end must come after its start.");
-            }
 
             // Check for blocking overlaps (already planned states that would start during the newly created one)
             var overlappingStateEntities = _stateRepository.GetStartingBetween(newState.Start.Value,
@@ -991,9 +1023,7 @@ namespace KachnaOnline.Business.Services
             }
 
             if (overlappingIds.Count > 0)
-            {
                 return new StatePlanningResult() { OverlappingStatesIds = overlappingIds };
-            }
 
             // TODO: map using automapper?
             var newStateEntity = new PlannedState()

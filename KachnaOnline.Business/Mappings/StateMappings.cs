@@ -15,14 +15,10 @@ namespace KachnaOnline.Business.Mappings
         public State Resolve(PlannedState source, State destination, State destMember, ResolutionContext context)
         {
             if (source.NextPlannedState != null)
-            {
                 return context.Mapper.Map<State>(source.NextPlannedState);
-            }
 
             if (source.NextPlannedStateId.HasValue)
-            {
-                return new State() {Id = source.NextPlannedStateId.Value};
-            }
+                return new State() { Id = source.NextPlannedStateId.Value };
 
             return null;
         }
@@ -34,14 +30,10 @@ namespace KachnaOnline.Business.Mappings
             ResolutionContext context)
         {
             if (source.FollowingState == null)
-            {
                 return null;
-            }
-            
+
             if (source.FollowingState.Start == default)
-            {
-                return new StateStubDto() {Id = source.FollowingState.Id};
-            }
+                return new StateStubDto() { Id = source.FollowingState.Id };
 
             return context.Mapper.Map<StateDto>(source.FollowingState);
         }

@@ -69,12 +69,10 @@ namespace KachnaOnline.Business.Services
         public async Task<KisIdentity> GetIdentityFromSession(string sessionId)
         {
             _logger.LogDebug("Creating KIS identity from session ID {SessionId}.",
-                (sessionId is null or { Length: <6 }) ? sessionId : (sessionId[..6] + "..."));
+                sessionId is null or { Length: <6 } ? sessionId : sessionId[..6] + "...");
 
             if (string.IsNullOrEmpty(sessionId))
-            {
                 return null;
-            }
 
             return await this.GetIdentityFromSession(sessionId, 0);
         }
@@ -83,12 +81,10 @@ namespace KachnaOnline.Business.Services
         public async Task<KisIdentity> GetIdentityFromRefreshToken(string refreshToken)
         {
             _logger.LogDebug("Creating KIS identity from refresh token {RefreshToken}.",
-                (refreshToken is null or { Length: <6 }) ? refreshToken : (refreshToken[..6] + "..."));
+                refreshToken is null or { Length: <6 } ? refreshToken : refreshToken[..6] + "...");
 
             if (string.IsNullOrEmpty(refreshToken))
-            {
                 return null;
-            }
 
             var client = _httpClientFactory.CreateClient(KisConstants.KisHttpClient);
 
@@ -106,13 +102,9 @@ namespace KachnaOnline.Business.Services
                     tokenResponse.StatusCode);
 
                 if (tokenResponse.StatusCode == HttpStatusCode.NotFound)
-                {
                     return new KisIdentity();
-                }
                 else
-                {
                     return null;
-                }
             }
         }
 
@@ -178,9 +170,7 @@ namespace KachnaOnline.Business.Services
             }
 
             if (atLeastOneOk)
-            {
                 return tapInfos;
-            }
 
             return null;
         }
@@ -302,13 +292,9 @@ namespace KachnaOnline.Business.Services
                     tokenResponse.StatusCode);
 
                 if (tokenResponse.StatusCode == HttpStatusCode.NotFound)
-                {
                     return new KisIdentity();
-                }
                 else
-                {
                     return null;
-                }
             }
         }
 
@@ -334,9 +320,7 @@ namespace KachnaOnline.Business.Services
 
                 var userData = await this.FetchIdentity(responseJson.AuthToken, client);
                 if (userData is null)
-                {
                     return null;
-                }
 
                 var identity = new KisIdentity()
                 {

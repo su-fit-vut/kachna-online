@@ -15,7 +15,7 @@ namespace KachnaOnline.Business.Models.BoardGames
             this.ReservationId = reservationId;
             this.BoardGameId = boardGameId;
         }
-        
+
         /// <summary>
         /// Unique ID of the item.
         /// </summary>
@@ -35,7 +35,7 @@ namespace KachnaOnline.Business.Models.BoardGames
         /// Expiration date of the item. May be null before the game is handed over.
         /// </summary>
         public DateTime? ExpiresOn { get; set; }
-        
+
         /// <summary>
         /// Current state of the item.
         /// </summary>

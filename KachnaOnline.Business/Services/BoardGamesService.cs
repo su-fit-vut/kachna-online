@@ -293,9 +293,7 @@ namespace KachnaOnline.Business.Services
         private async Task<bool> IsReservationInState(int reservationId, ReservationState? state)
         {
             if (state is null)
-            {
                 return true;
-            }
 
             var items = new List<ReservationItem>();
             foreach (var item in await _reservationItemRepository.GetItemsInReservation(reservationId))
@@ -366,9 +364,7 @@ namespace KachnaOnline.Business.Services
         {
             var item = await _reservationItemRepository.Get(itemId);
             if (item is null)
-            {
                 return null;
-            }
 
             var itemModel = _mapper.Map<ReservationItem>(item);
             await this.UpdateReservationItemState(itemModel);
@@ -380,9 +376,7 @@ namespace KachnaOnline.Business.Services
         {
             var reservation = await _reservationRepository.Get(reservationId);
             if (reservation is null)
-            {
                 throw new ReservationNotFoundException();
-            }
 
             return _mapper.Map<Reservation>(reservation);
         }
@@ -437,19 +431,13 @@ namespace KachnaOnline.Business.Services
             IEnumerable<int> reservationGames)
         {
             if (reservation is null)
-            {
                 throw new ArgumentNullException(nameof(reservation));
-            }
 
             if (await _userRepository.Get(reservation.MadeById) is null)
-            {
                 throw new UserNotFoundException(reservation.MadeById);
-            }
 
             if (await _userRepository.Get(createdBy) is null)
-            {
                 throw new UserNotFoundException(createdBy);
-            }
 
             try
             {
@@ -497,15 +485,11 @@ namespace KachnaOnline.Business.Services
         public async Task AddReservationItems(int reservationId, int addedBy, IEnumerable<int> newGames)
         {
             if (await _userRepository.Get(addedBy) is null)
-            {
                 throw new UserNotFoundException(addedBy);
-            }
 
             var reservation = await _reservationRepository.Get(reservationId);
             if (reservation is null)
-            {
                 throw new ReservationNotFoundException();
-            }
 
             try
             {
@@ -538,20 +522,14 @@ namespace KachnaOnline.Business.Services
         public async Task UpdateReservationNote(int id, int userId, string note)
         {
             if (note is null)
-            {
                 throw new ArgumentNullException(nameof(note));
-            }
 
             var reservation = await _reservationRepository.Get(id);
             if (reservation is null)
-            {
                 throw new ReservationNotFoundException();
-            }
 
             if (reservation.MadeById != userId)
-            {
                 throw new ReservationAccessDeniedException();
-            }
 
             reservation.NoteUser = note;
             try
@@ -570,15 +548,11 @@ namespace KachnaOnline.Business.Services
         public async Task UpdateReservationNoteInternal(int id, string note)
         {
             if (note is null)
-            {
                 throw new ArgumentNullException(nameof(note));
-            }
 
             var reservation = await _reservationRepository.Get(id);
             if (reservation is null)
-            {
                 throw new ReservationNotFoundException();
-            }
 
             reservation.NoteInternal = note;
             try
@@ -598,9 +572,7 @@ namespace KachnaOnline.Business.Services
         {
             var reservation = await _reservationRepository.Get(id);
             if (reservation is null)
-            {
                 throw new ReservationNotFoundException();
-            }
 
             reservation.WebhookMessageId = messageId;
             try
@@ -620,9 +592,7 @@ namespace KachnaOnline.Business.Services
         {
             var item = await _reservationItemRepository.Get(itemId);
             if (item is null || item.ReservationId != reservationId)
-            {
                 throw new ReservationNotFoundException();
-            }
 
             return _mapper.Map<List<ReservationItemEvent>>(
                 await _reservationItemEventRepository.GetByItemIdChronologically(itemId));
@@ -804,25 +774,19 @@ namespace KachnaOnline.Business.Services
             var item = await _reservationItemRepository.Get(itemId);
             var reservation = await _reservationRepository.Get(reservationId);
             if (item is null || reservation is null || item.ReservationId != reservationId)
-            {
                 throw new ReservationNotFoundException();
-            }
 
             // Facade has already blocked manager-only event types from regular users. A request from regular user
             // with malicious intent hence could only be of type ExtensionRequested or Cancelled. Check authorization.
             var userId = int.Parse(user.FindFirstValue(IdentityConstants.IdClaim));
             // Only the user whose reservation this is can request extension.
             if (newEvent == ReservationEventType.ExtensionRequested && userId != reservation.MadeById)
-            {
                 throw new ReservationAccessDeniedException();
-            }
 
             // Only Cancelled request from a regular user is needed to be checked now. A board games manager
             // can also request cancellation.
             if (!user.IsInRole(RoleConstants.BoardGamesManager) && userId != reservation.MadeById)
-            {
                 throw new ReservationAccessDeniedException();
-            }
 
             var itemModel = _mapper.Map<ReservationItem>(item);
             try

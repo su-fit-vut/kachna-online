@@ -15,6 +15,7 @@ namespace KachnaOnline.Business.Models.ClubStates
         /// The ID of the created or modified Repeating State
         /// </summary>
         public int TargetRepeatingStateId { get; set; }
+
         public List<State> OverlappingStates { get; set; }
         public bool HasOverlappingStates => this.OverlappingStates is { Count: >0 };
     }

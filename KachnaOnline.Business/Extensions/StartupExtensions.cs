@@ -33,9 +33,7 @@ namespace KachnaOnline.Business.Extensions
             var kisUrl = kisOptions.ApiBaseUrl;
             var kisDisplayToken = kisOptions.DisplayToken;
             if (!Uri.TryCreate(kisUrl, UriKind.RelativeOrAbsolute, out var kisUri))
-            {
                 throw new Exception("Invalid KIS configuration: invalid KIS API URL.");
-            }
 
             // Add unauthorized client (used for making login requests).
             services.AddHttpClient(KisConstants.KisHttpClient, client => client.BaseAddress = kisUri);

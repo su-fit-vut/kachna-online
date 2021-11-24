@@ -21,7 +21,7 @@ namespace KachnaOnline.Business.Utils
             ILogger<T> logger, Func<IServiceProvider, ILogger<T>, Task> action)
         {
             var scope = serviceProvider.CreateAsyncScope();
-            
+
             _ = Task.Run(async () =>
             {
                 try

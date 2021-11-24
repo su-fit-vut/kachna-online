@@ -134,7 +134,7 @@ namespace KachnaOnline.Business.Services.StatePlanning
                 {
                     var transitionService = services.GetRequiredService<IStateTransitionService>();
 
-                    // Process the triggers 
+                    // Process the triggers
                     if (nextTransition.IsStateEnd)
                     {
                         await transitionService.TriggerStateEnd(nextTransition.StateId);

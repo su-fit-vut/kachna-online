@@ -18,7 +18,7 @@ namespace KachnaOnline.Business.Models.ClubStates
 
         public string NoteInternal { get; set; }
         public string NotePublic { get; set; }
-        
+
         internal int? RepeatingStateId { get; set; }
     }
 }

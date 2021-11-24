@@ -57,9 +57,7 @@ namespace KachnaOnline.Business.Facades
             // If both are null, there's probably a problem in the configuration (expired display token)
             // Signalize that to the user by returning null here (and sending a HTTP 500 from the controller)
             if (items == null && taps == null)
-            {
                 return null;
-            }
 
             // If one of them is null, set to a blank list
             ret.Products ??= new List<OfferedItemDto>();
@@ -81,9 +79,7 @@ namespace KachnaOnline.Business.Facades
             var leaderboard =
                 await _kisService.GetLeaderboard(from, to, _kisOptionsMonitor.CurrentValue.NumberOfLeaderboardItems);
             if (leaderboard is null)
-            {
                 return null;
-            }
 
             return leaderboard.Select(l => _mapper.Map<LeaderboardItemDto>(l))
                 .ToList();
@@ -122,9 +118,7 @@ namespace KachnaOnline.Business.Facades
             var leaderboard =
                 await _kisService.GetLeaderboard(from, to, _kisOptionsMonitor.CurrentValue.NumberOfLeaderboardItems);
             if (leaderboard is null)
-            {
                 return null;
-            }
 
             return leaderboard.Select(l => _mapper.Map<LeaderboardItemDto>(l))
                 .ToList();

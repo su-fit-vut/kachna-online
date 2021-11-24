@@ -76,9 +76,7 @@ namespace KachnaOnline.Business.Facades
             var states = await _clubStateService.GetRepeatingStates(effectiveAt);
 
             if (!this.IsUserManager)
-            {
                 return _mapper.Map<List<RepeatingStateDto>>(states);
-            }
 
             var dtos = new List<RepeatingStateDto>();
             foreach (var state in states)
@@ -123,9 +121,7 @@ namespace KachnaOnline.Business.Facades
         {
             var states = await _clubStateService.GetStatesForRepeatingState(repeatingStateId, futureOnly);
             if (states.Count == 0)
-            {
                 return null;
-            }
 
             var dtos = await this.MapStateCollection(states);
             return dtos;

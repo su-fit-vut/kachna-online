@@ -97,7 +97,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
             {
                 Subject = subject,
                 Body = content,
-                IsBodyHtml = true,
+                IsBodyHtml = true
             };
 
             await smtp.SendMailAsync(message);

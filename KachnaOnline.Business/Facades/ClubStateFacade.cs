@@ -72,9 +72,7 @@ namespace KachnaOnline.Business.Facades
         private async Task<StateDto> MapState(State state)
         {
             if (state is null)
-            {
                 return null;
-            }
 
             if (!string.IsNullOrEmpty(state.NoteInternal) && !this.IsUserManager)
             {
@@ -117,7 +115,7 @@ namespace KachnaOnline.Business.Facades
 
             if (result.HasOverlappingStates)
             {
-                dto.ConflictResultDto = new StatePlanningConflictResultDto {CollidingStates = new List<StateDto>()};
+                dto.ConflictResultDto = new StatePlanningConflictResultDto { CollidingStates = new List<StateDto>() };
                 foreach (var overlappingStateId in result.OverlappingStatesIds)
                 {
                     var state = await _clubStateService.GetState(overlappingStateId);
@@ -170,14 +168,10 @@ namespace KachnaOnline.Business.Facades
         {
             var state = await _clubStateService.GetState(id);
             if (state is null)
-            {
                 return null;
-            }
 
             if (state.Type == Models.ClubStates.StateType.Private && !this.IsUserManager)
-            {
                 return null;
-            }
 
             var dto = await this.MapState(state);
             return dto;
@@ -207,9 +201,7 @@ namespace KachnaOnline.Business.Facades
             {
                 var difference = to.Value - from.Value;
                 if (difference < TimeSpan.Zero || difference > TimeSpan.FromDays(currentMax))
-                {
                     return null;
-                }
 
                 actualFrom = from.Value;
                 actualTo = to.Value;
@@ -234,9 +226,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<StateDto> GetNext(StateType? type)
         {
             if (type == StateType.Private && !this.IsUserManager)
-            {
                 return null;
-            }
 
             var state = await _clubStateService.GetNextPlannedState(_mapper.Map<Models.ClubStates.StateType?>(type),
                 this.IsUserManager);

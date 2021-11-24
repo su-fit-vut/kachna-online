@@ -59,9 +59,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
             var response = await client.PostAsync($"{url}?wait={waitString}",
                 new StringContent(content, Encoding.UTF8, "application/json"));
             if (response.StatusCode != HttpStatusCode.OK)
-            {
                 return null;
-            }
 
             var responseData = await response.Content.ReadAsStringAsync();
             _logger.LogDebug("Webhook response payload: {data}", responseData);

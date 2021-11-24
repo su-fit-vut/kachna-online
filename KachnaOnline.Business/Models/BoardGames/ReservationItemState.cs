@@ -32,10 +32,10 @@ namespace KachnaOnline.Business.Models.BoardGames
         /// The game has been returned.
         /// </summary>
         Done = 4,
-        
+
         /// <summary>
         /// The game's reservation has expired.
         /// </summary>
-        Expired = 5,
+        Expired = 5
     }
 }

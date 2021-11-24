@@ -4,7 +4,6 @@
 using AutoMapper;
 using KachnaOnline.Business.Models.Events;
 using KachnaOnline.Dto.Events;
-
 using EventEntity = KachnaOnline.Data.Entities.Events.Event;
 
 namespace KachnaOnline.Business.Mappings
