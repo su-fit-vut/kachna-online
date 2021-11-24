@@ -283,8 +283,8 @@ namespace KachnaOnline.Business.Services
 
             var newEntity = _mapper.Map<RepeatingStateEntity>(newRepeatingState);
 
-            // Get the first and last actual day of occurrence
-            var daysToAdd = ((int) newRepeatingState.DayOfWeek - (int) dateFrom.DayOfWeek + 7) % 7;
+            // Get the first actual day of occurrence
+            var daysToAdd = ((int)newRepeatingState.DayOfWeek - (int)dateFrom.DayOfWeek + 7) % 7;
             dateFrom = dateFrom.AddDays(daysToAdd);
 
             // Store the rounded values instead of the original ones
@@ -390,6 +390,9 @@ namespace KachnaOnline.Business.Services
             if (stateEntity is null)
                 throw new RepeatingStateNotFoundException(modification.RepeatingStateId);
 
+            if (modification.EffectiveTo.HasValue)
+                modification.EffectiveTo = modification.EffectiveTo.Value.Date;
+
             if (stateEntity.EffectiveTo <= DateTime.Today)
                 throw new RepeatingStateReadOnlyException(modification.RepeatingStateId);
 
@@ -407,13 +410,22 @@ namespace KachnaOnline.Business.Services
             // Apply note modifications
             ModifyNotes();
 
+            if (modification.State.HasValue)
+                stateEntity.State =
+                    _mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType>(modification.State.Value);
+
+            var hasStateAtEnd = false;
             // Change the properties of the linked states *in the future*
             await foreach (var state in _stateRepository.GetForRepeatingState(stateEntity.Id, DateTime.Now))
             {
+                if (state.Start.Date == stateEntity.EffectiveTo)
+                {
+                    hasStateAtEnd = true;
+                }
+
                 state.NoteInternal = stateEntity.NoteInternal;
                 state.NotePublic = stateEntity.NotePublic;
-                if (modification.State.HasValue)
-                    state.State = (KachnaOnline.Data.Entities.ClubStates.StateType) modification.State.Value;
+                state.State = stateEntity.State;
             }
 
             // Apply EffectiveTo modifications
@@ -425,21 +437,40 @@ namespace KachnaOnline.Business.Services
                     if (modification.EffectiveTo < stateEntity.EffectiveTo)
                     {
                         // Shortening the repeating state – delete the states and that's it
+
+                        var deleteStatesFromDate = modification.EffectiveTo.Value;
+                        if (modification.EffectiveTo.Value.DayOfWeek == stateEntity.DayOfWeek)
+                        {
+                            // Make sure the final day stays included if it a day of the state's occurrence
+                            deleteStatesFromDate = deleteStatesFromDate.AddDays(1);
+                        }
+
                         await foreach (var state in _stateRepository.GetForRepeatingState(stateEntity.Id,
-                            modification.EffectiveTo))
+                            deleteStatesFromDate))
                         {
                             await _stateRepository.Delete(state);
                         }
 
+                        stateEntity.EffectiveTo = modification.EffectiveTo.Value;
                         await _unitOfWork.SaveChanges();
                     }
                     else
                     {
                         // Prolonging the repeating state – plan new states
                         var originalEffectiveTo = stateEntity.EffectiveTo;
+                        var daysToAdd = ((int)stateEntity.DayOfWeek - (int)originalEffectiveTo.DayOfWeek + 7) % 7;
+                        if (hasStateAtEnd)
+                        {
+                            // Ensure that if the repeating state is planned so that its EffectiveTo is equal to the
+                            // final state's start date, this final state won't be replanned 
+                            daysToAdd += 7;
+                        }
+
+                        var makeStatesFrom = originalEffectiveTo.AddDays(daysToAdd);
+
                         stateEntity.EffectiveTo = modification.EffectiveTo.Value;
                         await _unitOfWork.SaveChanges();
-                        return await this.PlanStatesForRepeatingState(stateEntity, originalEffectiveTo);
+                        return await this.PlanStatesForRepeatingState(stateEntity, makeStatesFrom);
                     }
                 }
                 finally
@@ -733,7 +764,7 @@ namespace KachnaOnline.Business.Services
                         {
                             TargetStateId = modifiedStateEntity.Id,
                             TargetStatePlannedEnd = modifiedStateEntity.PlannedEnd,
-                            OverlappingStatesIds = new List<int> {modifiedStateEntity.NextPlannedStateId.Value}
+                            OverlappingStatesIds = new List<int> { modifiedStateEntity.NextPlannedStateId.Value }
                         };
                     }
                     else
@@ -961,7 +992,7 @@ namespace KachnaOnline.Business.Services
 
             if (overlappingIds.Count > 0)
             {
-                return new StatePlanningResult() {OverlappingStatesIds = overlappingIds};
+                return new StatePlanningResult() { OverlappingStatesIds = overlappingIds };
             }
 
             // TODO: map using automapper?
