@@ -12,7 +12,7 @@ export class UserService {
     private http: HttpClient,
   ) { }
 
-  userDetail: User;
+  userDetail: User = new User();
 
   public authenticationToken: string;
 
@@ -30,10 +30,12 @@ export class UserService {
         console.log(res);
       }
     );
+
+    this.assignDataFromLocalTokenContent();
   }
 
   getUserName() {
-    return 'David Chocholatý';
+    return this.userDetail.name;
   }
 
   isLoggedIn() {
@@ -45,6 +47,11 @@ export class UserService {
   }
 
   getUserEmail() {
-    return "example@emaildomain.com"
+    return this.userDetail.email;
+  }
+
+  private assignDataFromLocalTokenContent() {
+    this.userDetail.name = this.authenticationService.localTokenContent.given_name;
+    this.userDetail.email = this.authenticationService.localTokenContent.email;
   }
 }

@@ -15,6 +15,7 @@ export class UserProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.userService.getInformationAboutUser();
   }
 
   onSaveChanges(form: NgForm) {
