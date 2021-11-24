@@ -89,7 +89,6 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// Assigns a role to a user.
         /// </summary>
         /// <param name="assignment">The role assignment to add.</param>
-        /// <exception cref="RoleAlreadyAssignedException">When the role has already been assigned.</exception>
         /// <exception cref="RoleManipulationFailedException">When the assignment failed.</exception>
         Task AssignRole(UserRole assignment);
 

@@ -82,7 +82,6 @@ namespace KachnaOnline.App.Controllers
         /// <param name="roleId">ID of the role to assign.</param>
         /// <response code="204">The role has been assigned.</response>
         /// <response code="404">No user with ID <paramref name="id"/> exists.</response>
-        /// <response code="409">The role has already been assigned.</response>
         /// <response code="422">No role with ID <paramref name="roleId"/> exists.</response>
         [Authorize(Roles=RoleConstants.Admin)]
         [ProducesResponseType(204)]
@@ -101,10 +100,6 @@ namespace KachnaOnline.App.Controllers
             catch (UserNotFoundException)
             {
                 return this.NotFound();
-            }
-            catch (RoleAlreadyAssignedException)
-            {
-                return this.Conflict();
             }
             catch (RoleNotFoundException)
             {

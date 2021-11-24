@@ -67,7 +67,6 @@ namespace KachnaOnline.Business.Facades
         /// <param name="userId">ID of the user to assign the role to.</param>
         /// <param name="roleId">ID of the role to assign.</param>
         /// <exception cref="UserNotFoundException">When the user does not exist.</exception>
-        /// <exception cref="RoleAlreadyAssignedException">When the role has already been assigned.</exception>
         /// <exception cref="RoleNotFoundException">When the role does not exist.</exception>
         /// <exception cref="RoleManipulationFailedException">When the assignment failed.</exception>
         public async Task AssignRole(int assignedBy, int userId, int roleId)

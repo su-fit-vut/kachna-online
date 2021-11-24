@@ -323,12 +323,16 @@ namespace KachnaOnline.Business.Services
         /// <inheritdoc />
         public async Task AssignRole(UserRole assignment)
         {
-            if (await _userRoleRepository.Get(assignment.UserId, assignment.RoleId) is not null)
+            var existingAssignment = await _userRoleRepository.Get(assignment.UserId, assignment.RoleId);
+            if (existingAssignment is null)
             {
-                throw new RoleAlreadyAssignedException(assignment.UserId, assignment.RoleId);
+                await _userRoleRepository.Add(_mapper.Map<UserRoleEntity>(assignment));
+            }
+            else
+            {
+                existingAssignment.AssignedByUserId = assignment.AssignedByUserId;
             }
 
-            await _userRoleRepository.Add(_mapper.Map<UserRoleEntity>(assignment));
             try
             {
                 await _unitOfWork.SaveChanges();
