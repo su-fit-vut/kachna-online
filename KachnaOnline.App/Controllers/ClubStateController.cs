@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
@@ -131,12 +130,12 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <remarks>
         /// A state cannot be planned if it begins earlier than an already planned state that it would overlap with.
-        /// 
+        ///
         /// However, it can be planned so that it begins in the middle of an already planned state. In that case,
         /// the `plannedEnd` of the previously planned state is set to the newly planned state's beginning.
         ///
         /// Planned start must be set to a date after now and before the state's planned end.
-        /// 
+        ///
         /// Planned end must be set to a date after the state's start. If it's set to null, the start of the following
         /// planned state will be used as the planned end (if such state exists).
         /// </remarks>
@@ -166,8 +165,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (StateNotFoundException)
             {
-                return this.NotFound(
-                    $"{nameof(newState.PlannedEnd)} must be specified because no state is planned after this one.");
+                return this.NotFound();
             }
             catch (ArgumentException e)
             {
@@ -207,7 +205,7 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Changes details of a state with the given ID. Past states cannot be modified. 
+        /// Changes details of a state with the given ID. Past states cannot be modified.
         /// </summary>
         /// <remarks>
         /// A state cannot be changed in a way that would cause another state's <b>start</b> to be changed.
@@ -267,7 +265,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (StateReadOnlyException)
             {
-                return this.Conflict("The state has already started and cannot be deleted.");
+                return this.Conflict();
             }
             catch (StateNotFoundException)
             {
@@ -321,7 +319,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (UserNotFoundException)
             {
-                return this.UnprocessableEntity("The specified user does not exist.");
+                return this.UnprocessableEntity();
             }
             catch (UserUnprivilegedException)
             {
