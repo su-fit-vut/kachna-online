@@ -32,7 +32,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// </summary>
         /// <example>This is a note that will only be visible to state managers.</example>
         public string NoteInternal { get; set; }
-        
+
         /// <summary>
         /// A public note.
         /// </summary>

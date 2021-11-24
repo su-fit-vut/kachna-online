@@ -16,7 +16,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// <example>For an upcoming party.</example>
         [StringLength(1024)]
         public string NoteUser { get; set; }
-        
+
         /// <summary>
         /// IDs of games to reserve. If multiple copies of a game are to be reserved, its ID must be included
         /// multiple times. Must not be empty.

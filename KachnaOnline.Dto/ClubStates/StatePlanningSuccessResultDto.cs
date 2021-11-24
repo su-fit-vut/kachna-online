@@ -11,7 +11,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// Details of the newly planned state.
         /// </summary>
         public StateDto NewState { get; set; }
-        
+
         /// <summary>
         /// Details of another state has been modified as a result of the newly (re-)planned state.
         /// Not included in the response if no other state has been modified.

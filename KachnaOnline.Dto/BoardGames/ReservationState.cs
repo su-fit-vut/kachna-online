@@ -22,10 +22,10 @@ namespace KachnaOnline.Dto.BoardGames
         /// Games have been returned or the whole reservation has been cancelled.
         /// </summary>
         Done = 2,
-        
+
         /// <summary>
         /// At least one item in the whole reservation has expired borrowing period.
         /// </summary>
-        Expired = 3,
+        Expired = 3
     }
 }

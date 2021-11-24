@@ -36,6 +36,6 @@ namespace KachnaOnline.Dto.BoardGames
         /// <summary>
         /// The game's reservation has expired.
         /// </summary>
-        Expired = 5,
+        Expired = 5
     }
 }
