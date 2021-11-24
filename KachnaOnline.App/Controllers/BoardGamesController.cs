@@ -9,6 +9,7 @@ using KachnaOnline.Business.Exceptions.BoardGames;
 using KachnaOnline.Business.Facades;
 using KachnaOnline.Dto.BoardGames;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KachnaOnline.App.Controllers
@@ -41,7 +42,7 @@ namespace KachnaOnline.App.Controllers
         /// is an authorized board games manager, returns a list of <see cref="ManagerBoardGameDto"/></returns>
         /// <response code="200">The list of board games.</response>
         [AllowAnonymous]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BoardGameDto>>> GetBoardGames(
             int? categoryId,
@@ -65,10 +66,10 @@ namespace KachnaOnline.App.Controllers
         /// a board games manager.</response>
         /// <response code="404">No such board game exists.</response>
         [AllowAnonymous]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
         public async Task<ActionResult<BoardGameDto>> GetBoardGame(int id)
         {
@@ -97,8 +98,8 @@ namespace KachnaOnline.App.Controllers
         /// <returns>The created <see cref="ManagerBoardGameDto"/> if the creation succeeded.</returns>
         /// <response code="201">The created game.</response>
         /// <response code="422">A category or user with the given ID does not exist.</response>
-        [ProducesResponseType(201)]
-        [ProducesResponseType(422)]
+        [ProducesResponseType(typeof(ManagerBoardGameDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [HttpPost]
         public async Task<ActionResult<ManagerBoardGameDto>> CreateBoardGame(CreateBoardGameDto game)
         {
@@ -121,7 +122,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (BoardGameManipulationFailedException)
             {
-                return this.Problem(statusCode: 500);
+                return this.Problem();
             }
         }
 
@@ -133,11 +134,11 @@ namespace KachnaOnline.App.Controllers
         /// <response code="204">Board game was updated.</response>
         /// <response code="404">Board game with the given ID does not exist.</response>
         /// <response code="422">A category or user with the given ID does not exist.</response>
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(422)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateBoardGame(int id, CreateBoardGameDto game)
+        public async Task<IActionResult> UpdateBoardGame(int id, CreateBoardGameDto game)
         {
             try
             {
@@ -162,7 +163,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (BoardGameManipulationFailedException)
             {
-                return this.Problem(statusCode: 500);
+                return this.Problem();
             }
         }
 
@@ -173,10 +174,10 @@ namespace KachnaOnline.App.Controllers
         /// <param name="stock"><see cref="BoardGameStockDto"/> representing the new stock state.</param>
         /// <response code="204">Board game stock was updated.</response>
         /// <response code="404">Board game with the given ID does not exist.</response>
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}/stock")]
-        public async Task<ActionResult> UpdateBoardGameStock(int id, BoardGameStockDto stock)
+        public async Task<IActionResult> UpdateBoardGameStock(int id, BoardGameStockDto stock)
         {
             try
             {
@@ -193,7 +194,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (BoardGameManipulationFailedException)
             {
-                return this.Problem(statusCode: 500);
+                return this.Problem();
             }
         }
 
@@ -203,11 +204,11 @@ namespace KachnaOnline.App.Controllers
         /// <returns>A list of <see cref="CategoryDto"/>.</returns>
         /// <response code="200">The list of board game categories.</response>
         [AllowAnonymous]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("categories")]
-        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
+        public async Task<ActionResult<List<CategoryDto>>> GetCategories()
         {
-            return new ActionResult<IEnumerable<CategoryDto>>(await _facade.GetCategories());
+            return await _facade.GetCategories();
         }
 
         /// <summary>
@@ -218,8 +219,8 @@ namespace KachnaOnline.App.Controllers
         /// <response code="200">The category.</response>
         /// <response code="404">No such category exists.</response>
         [AllowAnonymous]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("categories/{id}")]
         public async Task<ActionResult<CategoryDto>> GetCategory(int id)
         {
@@ -239,7 +240,7 @@ namespace KachnaOnline.App.Controllers
         /// <param name="category"><see cref="CreateCategoryDto"/> to create.</param>
         /// <returns>The created <see cref="CategoryDto"/> if the creation succeeded.</returns>
         /// <response code="201">The created category.</response>
-        [ProducesResponseType(201)]
+        [ProducesResponseType(typeof(CategoryDto), StatusCodes.Status201Created)]
         [HttpPost("categories")]
         public async Task<ActionResult<CategoryDto>> CreateCategory(CreateCategoryDto category)
         {
@@ -254,7 +255,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (CategoryManipulationFailedException)
             {
-                return this.Problem(statusCode: 500);
+                return this.Problem();
             }
         }
 
@@ -265,10 +266,10 @@ namespace KachnaOnline.App.Controllers
         /// <param name="category"><see cref="CreateCategoryDto"/> representing the new state.</param>
         /// <response code="204">Category was updated.</response>
         /// <response code="404">Category with the given ID does not exist.</response>
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("categories/{id}")]
-        public async Task<ActionResult> UpdateCategory(int id, CreateCategoryDto category)
+        public async Task<IActionResult> UpdateCategory(int id, CreateCategoryDto category)
         {
             try
             {
@@ -285,7 +286,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (CategoryManipulationFailedException)
             {
-                return this.Problem(statusCode: 500);
+                return this.Problem();
             }
         }
 
@@ -297,11 +298,11 @@ namespace KachnaOnline.App.Controllers
         /// <response code="404">Category with the given ID does not exist.</response>
         /// <response code="409">Board games from this category must first be transferred. Returns the list
         /// of IDs of conflicting board games.</response>
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpDelete("categories/{id}")]
-        public async Task<ActionResult> DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCategory(int id)
         {
             try
             {
@@ -318,7 +319,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (CategoryManipulationFailedException)
             {
-                return this.Problem(statusCode: 500);
+                return this.Problem();
             }
             catch (CategoryHasBoardGamesException e)
             {

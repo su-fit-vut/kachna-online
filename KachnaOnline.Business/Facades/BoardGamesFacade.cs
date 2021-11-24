@@ -32,7 +32,7 @@ namespace KachnaOnline.Business.Facades
         /// Returns all categories of board games.
         /// </summary>
         /// <returns>A list of <see cref="CategoryDto"/>.</returns>
-        public async Task<IEnumerable<CategoryDto>> GetCategories()
+        public async Task<List<CategoryDto>> GetCategories()
         {
             var categories = await _boardGamesService.GetBoardGameCategories();
             return _mapper.Map<List<CategoryDto>>(categories);
@@ -212,7 +212,7 @@ namespace KachnaOnline.Business.Facades
         /// <param name="user">User to get reservations of.</param>
         /// <param name="state">Optional reservation filter based on state.</param>
         /// <returns>The list of user's reservation.</returns>
-        public async Task<IEnumerable<ReservationDto>> GetUserReservations(int user,
+        public async Task<List<ReservationDto>> GetUserReservations(int user,
             ReservationState? state)
         {
             var stateModel = _mapper.Map<Models.BoardGames.ReservationState?>(state);
@@ -233,7 +233,7 @@ namespace KachnaOnline.Business.Facades
         /// <param name="state">Optional reservation filter based on state.</param>
         /// <param name="assignedTo">Optional reservation filter based on assigned board games manager ID.</param>
         /// <returns>The list of all board games reservations, filtered by the given filters if requested.</returns>
-        public async Task<IEnumerable<ManagerReservationDto>> GetAllReservations(ReservationState? state,
+        public async Task<List<ManagerReservationDto>> GetAllReservations(ReservationState? state,
             int? assignedTo)
         {
             var stateModel = _mapper.Map<Models.BoardGames.ReservationState?>(state);
@@ -314,10 +314,10 @@ namespace KachnaOnline.Business.Facades
         /// <param name="itemId">ID of an item to get history of.</param>
         /// <returns>List of <see cref="ReservationItemEventDto"/> sorted from oldest to newest.</returns>
         /// <exception cref="ReservationNotFoundException">When no such item exists.</exception>
-        public async Task<IEnumerable<ReservationItemEventDto>> GetItemHistory(int reservationId, int itemId)
+        public async Task<List<ReservationItemEventDto>> GetItemHistory(int reservationId, int itemId)
         {
             var events = await _boardGamesService.GetItemHistory(reservationId, itemId);
-            return _mapper.Map<IEnumerable<ReservationItemEventDto>>(events);
+            return _mapper.Map<List<ReservationItemEventDto>>(events);
         }
 
         /// <summary>
