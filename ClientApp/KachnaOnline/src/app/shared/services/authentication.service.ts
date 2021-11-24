@@ -24,20 +24,19 @@ export class AuthenticationService {
     private route: ActivatedRoute,
   ) { }
 
-  kisResponse: KisResponse = new KisResponse();
-
   getSessionIdFromKisEduId() {
     let params = new HttpParams().set('redirect', `${window.location.origin}/login`)
-    this.http.get<KisResponse>('https://su-int.fit.vutbr.cz/kis/api/auth/eduid', { params: params }).subscribe(
-    res => this.kisResponse = res,
-    err => {
-      console.log(err);
-      this.toastr.error("Přihlášení se ke KIS selhalo.", "Autentizace");
-      return;
-    }
-    );
-
-    window.open(this.kisResponse.wayf_url, '_self');
+    this.http.get<KisResponse>('https://su-int.fit.vutbr.cz/kis/api/auth/eduid', { params: params }).toPromise()
+      .then(function(res: KisResponse) {
+        let kisResponse = res;
+        console.log(kisResponse.wayf_url)
+        console.log("Navigating");
+        window.open(kisResponse.wayf_url, '_self');
+      }).catch((error: any) => {
+        console.log(error);
+        this.toastr.error("Přihlášení se ke KIS selhalo.", "Autentizace");
+        return;
+    });
   }
 
   logIn() {
@@ -48,7 +47,6 @@ export class AuthenticationService {
     });
 
     let params = new HttpParams().set('session', sessionId);
-
     this.http.get(`${environment.baseApiUrl}/auth/accessTokenFromSession`, { params: params, responseType: 'text'}).subscribe(
       res  => { // TODO: Parse JSON with access tokens information.
         /*res as AccessTokens*/
@@ -85,8 +83,13 @@ export class AuthenticationService {
     }
   }
 
-  isLoggedIn() {
+  isLoggedIn(): boolean {
     return localStorage.getItem(STORAGE_TOKEN_KEY) != null;
+  }
+
+
+  isLoggedOut(): boolean {
+    return !this.isLoggedIn();
   }
 
   refreshAuthToken() {
