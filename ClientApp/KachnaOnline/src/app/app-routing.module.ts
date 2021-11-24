@@ -9,20 +9,25 @@ import { NgModule} from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EventsFromAllComponent } from './events/events-from-all/events-from-all.component';
 import {UserProfileComponent} from "./user-profile/user-profile.component";
+import {EventsManagerGuard} from "./events/events-manager.guard";
+import {ForbiddenComponent} from "./forbidden/forbidden.component";
+import {UserLoggedInGuard} from "./user-profile/user-logged-in.guard";
 
 const routes: Routes = [
   /* Route order
 The order of routes is important because the Router uses a first-match wins strategy when matching routes, so more specific routes should be placed above less specific routes. List routes with a static path first, followed by an empty path route, which matches the default route. The wildcard route comes last because it matches every URL and the Router selects it only if no other routes match first.
 */
   { path: 'login', component: LoginComponent },
-  { path: 'user', component: UserProfileComponent },
+  {
+    path: 'user',
+    component: UserProfileComponent,
+    canActivate: [UserLoggedInGuard],
+  },
   {
     path: 'events',
     children: [
       {
-        path: '',
-        children: [
-          {
+        path: '', children: [ {
             path: 'current',
             component: CurrentEventsComponent,
           },
@@ -33,6 +38,7 @@ The order of routes is important because the Router uses a first-match wins stra
           {
             path: 'plan',
             component: PlanEventsComponent,
+            canActivate: [EventsManagerGuard],
           },
           {
             path: ':eventId',
@@ -43,6 +49,7 @@ The order of routes is important because the Router uses a first-match wins stra
     ]
   },
   { path: 'states', component: StatesComponent },
+  { path: 'forbidden', component: ForbiddenComponent },
 
   { path: '', component: HomeComponent }, // Default home page.
   //{ path: '',   redirectTo: '/states', pathMatch: 'full' }, // Redirect to default states page.

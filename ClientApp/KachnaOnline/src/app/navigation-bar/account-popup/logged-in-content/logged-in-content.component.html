@@ -1,9 +1,9 @@
 <div class="card">
   <div class="card-header">
-    {{userService.getUserName()}}
+    {{authenticationService.getUserName()}}
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">Prestiž: {{userService.getPrestigeAmount()}}</li>
+    <li class="list-group-item">Prestiž: {{authenticationService.getPrestigeAmount()}}</li>
     <li class="list-group-item">
       <button class="btn btn-secondary btn-block" routerLink="/user" routerLinkActive="true">Můj profil</button>
     </li>

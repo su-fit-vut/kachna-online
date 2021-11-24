@@ -1,4 +1,3 @@
-import { UserService } from './user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';

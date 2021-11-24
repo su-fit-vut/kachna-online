@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from 'src/app/shared/services/user.service';
+import {AuthenticationService} from "../../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-logged-out-content',
@@ -9,14 +9,14 @@ import { UserService } from 'src/app/shared/services/user.service';
 export class LoggedOutContentComponent implements OnInit {
 
   constructor(
-    public userService: UserService,
+    public authenticationService: AuthenticationService,
   ) { }
 
   ngOnInit(): void {
   }
 
   clickLogInButton() {
-    this.userService.logIn();
+    this.authenticationService.getSessionIdFromKisEduId();
   }
 
   clickRegisterButton() {

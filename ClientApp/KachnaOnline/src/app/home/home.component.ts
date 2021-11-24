@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../shared/services/user.service';
+import {AuthenticationService} from "../shared/services/authentication.service";
 
 @Component({
   selector: 'app-home',
@@ -9,7 +9,7 @@ import { UserService } from '../shared/services/user.service';
 export class HomeComponent implements OnInit {
 
   constructor(
-    public userService: UserService,
+    public authenticationService: AuthenticationService,
   ) { }
 
   jumbotronStateMainText: string = "Kachna je zavřená.";

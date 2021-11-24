@@ -1,5 +1,5 @@
-import { UserService } from '../../../shared/services/user.service';
 import { Component, OnInit } from '@angular/core';
+import {AuthenticationService} from "../../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-logged-in-content',
@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class LoggedInContentComponent implements OnInit {
 
   constructor(
-    public userService: UserService,
+    public authenticationService: AuthenticationService,
   ) { }
 
   ngOnInit(): void {
@@ -24,7 +24,7 @@ export class LoggedInContentComponent implements OnInit {
   }
 
   clickLogOutButton() {
-    this.userService.logOut();
+    this.authenticationService.logOut();
   }
 
 }

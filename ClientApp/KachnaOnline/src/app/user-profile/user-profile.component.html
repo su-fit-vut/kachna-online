@@ -9,7 +9,7 @@
     <div class="form-group row">
       <label for="staticName" class="col-sm-2 col-form-label">Jméno</label>
       <div class="col-sm-10">
-        <input #name="ngModel" [(ngModel)]="userService.userDetail.name" class="form-control-plaintext" id="staticName" name="name" placeholder="Jméno"
+        <input #name="ngModel" [(ngModel)]="authenticationService.userDetail.name" class="form-control-plaintext" id="staticName" name="name" placeholder="Jméno"
                readonly type="text">
       </div>
     </div>
@@ -17,7 +17,7 @@
     <div class="form-group row">
       <label for="staticEmail" class="col-sm-2 col-form-label">E-mail</label>
       <div class="col-sm-10">
-        <input #email="ngModel" [(ngModel)]="userService.userDetail.email" class="form-control-plaintext" id="staticEmail" name="email" placeholder="E-mail"
+        <input #email="ngModel" [(ngModel)]="authenticationService.userDetail.email" class="form-control-plaintext" id="staticEmail" name="email" placeholder="E-mail"
                readonly type="text">
       </div>
     </div>
@@ -25,14 +25,14 @@
     <div class="form-group row">
       <label for="nickname" class="col-sm-3 col-form-label">Přezdívka</label>
       <div class="col-sm-9">
-        <input #nickname="ngModel" [(ngModel)]="userService.userDetail.nickname" [class.invalid]="nickname.invalid" class="form-control" id="nickname" name="nickname" placeholder="Přezdívka"
+        <input #nickname="ngModel" [(ngModel)]="authenticationService.userDetail.nickname" [class.invalid]="nickname.invalid" class="form-control" id="nickname" name="nickname" placeholder="Přezdívka"
                type="text" maxlength="128" > <!--  FIXME: What is the max length? -->
       </div>
     </div>
 
     <div class="form-group row">
       <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="gamificationCheckbox" name="gamification" #gamification="ngModel" [(ngModel)]="userService.userDetail.gamification">
+        <input type="checkbox" class="custom-control-input" id="gamificationCheckbox" name="gamification" #gamification="ngModel" [(ngModel)]="authenticationService.userDetail.gamification">
         <label class="custom-control-label" for="gamificationCheckbox">Souhlas s gamifikací</label>
         <!-- todo: add question mark with tooltip about gamification. -->
       </div>
@@ -48,7 +48,7 @@
         <div class="form-group row">
           <label for="card" class="col-sm-3 col-form-label">Kód karty</label>
           <div class="col-sm-9">
-            <input #card="ngModel" [(ngModel)]="userService.userDetail.card" [class.invalid]="card.invalid" class="form-control" id="card" name="card" placeholder="Kód karty"
+            <input #card="ngModel" [(ngModel)]="authenticationService.userDetail.card" [class.invalid]="card.invalid" class="form-control" id="card" name="card" placeholder="Kód karty"
                    type="text" maxlength="128" > <!--  FIXME: What is the max length? -->
           </div>
           <!-- todo: add question mark with tooltip about gamification. -->

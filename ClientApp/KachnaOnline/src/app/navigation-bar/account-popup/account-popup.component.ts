@@ -1,5 +1,5 @@
-import { UserService } from '../../shared/services/user.service';
 import { Component, OnInit } from '@angular/core';
+import {AuthenticationService} from "../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-account-popup',
@@ -8,12 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccountPopupComponent implements OnInit {
 
-  constructor(public userService: UserService) { }
+  constructor(public authenticationService: AuthenticationService) { }
 
   ngOnInit(): void {
   }
 
-  getUserName() {
-    return "David Chocholatý"; // FIXME: Implement.
-  }
 }
