@@ -54,4 +54,5 @@ export class UserService {
     this.userDetail.name = this.authenticationService.localTokenContent.given_name;
     this.userDetail.email = this.authenticationService.localTokenContent.email;
   }
+
 }
