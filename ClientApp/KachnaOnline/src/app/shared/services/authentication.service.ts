@@ -89,6 +89,7 @@ export class AuthenticationService {
 
   logOut() {
     localStorage.removeItem(STORAGE_TOKEN_KEY)
+    this.userDetail = new User();
   }
 
   checkForAuthTokenExpirationAndRefreshAuthToken() {
@@ -100,7 +101,6 @@ export class AuthenticationService {
   isLoggedIn(): boolean {
     return localStorage.getItem(STORAGE_TOKEN_KEY) != null;
   }
-
 
   isLoggedOut(): boolean {
     return !this.isLoggedIn();

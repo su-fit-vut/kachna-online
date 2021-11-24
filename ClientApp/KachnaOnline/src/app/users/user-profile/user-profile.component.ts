@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {AuthenticationService} from "../../shared/services/authentication.service";
 import {NgForm} from "@angular/forms";
-import {AuthenticationService} from "../shared/services/authentication.service";
 
 @Component({
   selector: 'app-user',
@@ -13,6 +13,9 @@ export class UserProfileComponent implements OnInit {
   constructor(
     public authenticationService: AuthenticationService,
   ) { }
+
+  gamificationTooltipText:string = "Tohle je souhlas s gamifikací."
+  cardTooltipText:string = "Tohle je krásná karta."
 
   ngOnInit(): void {
     this.authenticationService.getInformationAboutUser();

@@ -24,10 +24,10 @@
             <span class="sr-only">Toggle Dropdown</span>
           </button>
           <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-            <button class="dropdown-item" href="#" ngbDropdownItem>Změnit aktuální stav</button>
-            <button class="dropdown-item" href="#" ngbDropdownItem>Naplánovat budoucí stav</button>
-            <button class="dropdown-item" href="#" ngbDropdownItem>Plán stavů</button>
-            <button style="color: rgb(245, 116, 116);" class="dropdown-item" href="#" ngbDropdownItem>Ukončit aktuální stav</button>
+            <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Změnit aktuální stav</button>
+            <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Naplánovat budoucí stav</button>
+            <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Plán stavů</button>
+            <button (click)="isMenuCollapsed = true" style="color: rgb(245, 116, 116);" class="dropdown-item" href="#" ngbDropdownItem>Ukončit aktuální stav</button>
           </div>
         </div>
       </li>
@@ -39,15 +39,15 @@
             <span class="sr-only">Toggle Dropdown</span>
           </button>
           <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-            <button class="dropdown-item" routerLink="events/current" routerLinkActive="active" ngbDropdownItem>Probíhající akce</button>
-            <button ngbDropdownItem>Plán akcí</button>
-            <button ngbDropdownItem>Přidat akci</button>
-            <button ngbDropdownItem>Nejbližší eventy</button>
-            <button ngbDropdownItem>Seznam eventů</button>
-            <button ngbDropdownItem routerLink="/events/25">Detail eventu</button>
-            <button ngbDropdownItem routerLink="/events/all">Seznam následujících eventů</button>
+            <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/current" routerLinkActive="active" ngbDropdownItem>Probíhající akce</button>
+            <button (click)="isMenuCollapsed = true" ngbDropdownItem>Plán akcí</button>
+            <button (click)="isMenuCollapsed = true" ngbDropdownItem>Přidat akci</button>
+            <button (click)="isMenuCollapsed = true" ngbDropdownItem>Nejbližší eventy</button>
+            <button (click)="isMenuCollapsed = true" ngbDropdownItem>Seznam eventů</button>
+            <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/25">Detail eventu</button>
+            <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/all">Seznam následujících eventů</button>
             <div class="dropdown-divider"></div>
-            <button class="dropdown-item" routerLink="events/plan" routerLinkActive="active" ngbDropdownItem>Naplánovat novou akci</button>
+            <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/plan" routerLinkActive="active" ngbDropdownItem>Naplánovat novou akci</button>
           </div>
         </div>
       </li>
@@ -59,24 +59,24 @@
             <span class="sr-only">Toggle Dropdown</span>
           </button>
           <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" ngbDropdownItem>Aktuální rezervace</button>
-            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" ngbDropdownItem>Historie rezervací</button>
-            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" ngbDropdownItem>Správa her</button>
-            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" ngbDropdownItem>Správa kategorií</button>
+            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Aktuální rezervace</button>
+            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Historie rezervací</button>
+            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Správa her</button>
+            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Správa kategorií</button>
           </div>
         </div>
       </li>
 
       <li class="nav-item mr-3" ngbDropdown>
         <div class="btn-group mr-3 btn-block">
-          <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" [routerLink]="'.'" (click)="isMenuCollapsed = true">Uživatelé</button>
-          <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" id="tmp" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+          <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" routerLink="users" (click)="isMenuCollapsed = true">Uživatelé</button>
+          <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
             <span class="sr-only">Toggle Dropdown</span>
           </button>
           <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-            <button class="dropdown-item" href="#" ngbDropdownItem>...</button>
+            <button class="dropdown-item" (click)="isMenuCollapsed = true" href="#" ngbDropdownItem>...</button>
             <div class="dropdown-divider"></div>
-            <button ngbDropdownItem>...</button>
+            <button ngbDropdownItem (click)="isMenuCollapsed = true">...</button>
           </div>
         </div>
       </li>
