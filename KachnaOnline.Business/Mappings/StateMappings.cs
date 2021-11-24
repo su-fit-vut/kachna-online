@@ -76,6 +76,8 @@ namespace KachnaOnline.Business.Mappings
 
             this.CreateMap<RepeatingStatePlanningDto, RepeatingState>();
 
+            this.CreateMap<RepeatingStateModificationDto, RepeatingStateModification>();
+
             this.CreateMap<State, StateDto>()
                 .ForMember(dto => dto.State, options =>
                     options.MapFrom(m => m.Type))
