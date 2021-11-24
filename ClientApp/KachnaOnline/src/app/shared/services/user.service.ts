@@ -1,16 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
 import { Injectable } from '@angular/core';
+import {User} from "../../models/user.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
   constructor(
     private authenticationService: AuthenticationService,
     private http: HttpClient,
   ) { }
+
+  userDetail: User;
 
   public authenticationToken: string;
 
@@ -40,5 +42,9 @@ export class UserService {
 
   getPrestigeAmount() {
     return 42;
+  }
+
+  getUserEmail() {
+    return "example@emaildomain.com"
   }
 }
