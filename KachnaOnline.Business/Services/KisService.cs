@@ -138,6 +138,7 @@ namespace KachnaOnline.Business.Services
                 {
                     _logger.LogDebug("Using cached value for tap {TapId}.", tapId);
                     tapInfos.Add(i);
+                    atLeastOneOk = true;
                     continue;
                 }
 
