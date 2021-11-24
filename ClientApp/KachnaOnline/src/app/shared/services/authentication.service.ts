@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { HttpParams, HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import {LocalTokenContent} from "../../models/local-token-content.model";
 
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
@@ -23,6 +24,8 @@ export class AuthenticationService {
     public jwtHelper: JwtHelperService,
     private route: ActivatedRoute,
   ) { }
+
+  localTokenContent: LocalTokenContent = new LocalTokenContent();
 
   getSessionIdFromKisEduId() {
     let params = new HttpParams().set('redirect', `${window.location.origin}/login`)
@@ -51,6 +54,8 @@ export class AuthenticationService {
       res  => { // TODO: Parse JSON with access tokens information.
         /*res as AccessTokens*/
         localStorage.setItem(STORAGE_TOKEN_KEY, res);
+        this.decodeToken(res);
+
         setInterval( () => {
             console.log("calling refresh token");
             this.http.get(`${AUTH_API}/refreshedAccessToken`, { responseType: 'text' }).subscribe(
@@ -97,11 +102,20 @@ export class AuthenticationService {
 
   refreshAuthToken() {
     this.http.get(`${AUTH_API}/refreshedAccessToken`, { responseType: 'text' }).subscribe(
-      res => localStorage.setItem(STORAGE_TOKEN_KEY, res),
+      res => {
+        localStorage.setItem(STORAGE_TOKEN_KEY, res);
+        this.decodeToken(res);
+      },
       err => {
         console.log(err);
         this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
         return;
       });
   }
+
+  private decodeToken(token: string) {
+    this.localTokenContent = this.jwtHelper.decodeToken(token) as LocalTokenContent;
+    console.log(this.localTokenContent);
+  }
+
 }
