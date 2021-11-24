@@ -113,9 +113,7 @@ namespace KachnaOnline.App.Controllers
             if (type == StateType.Private)
             {
                 if (!this.User.IsInRole(RoleConstants.StatesManager))
-                {
                     return this.Forbid();
-                }
             }
 
             var dto = await _facade.GetNext(type);
@@ -301,9 +299,7 @@ namespace KachnaOnline.App.Controllers
             {
                 var result = id.HasValue ? await _facade.Modify(id.Value, data) : await _facade.ModifyCurrent(data);
                 if (result.SuccessResultDto != null)
-                {
                     return this.Ok(result.SuccessResultDto);
-                }
 
                 return this.Conflict(result.ConflictResultDto);
             }

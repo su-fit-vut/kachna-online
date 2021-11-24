@@ -71,9 +71,7 @@ namespace KachnaOnline.App.Controllers
         public async Task<ActionResult<List<RepeatingStateDto>>> Get(DateTime? from, DateTime? to)
         {
             if (from > to)
-            {
                 return this.BadRequest();
-            }
 
             return await _facade.Get(from, to);
         }
@@ -92,9 +90,7 @@ namespace KachnaOnline.App.Controllers
         {
             var response = await _facade.GetLinkedStates(id, futureOnly);
             if (response is null)
-            {
                 return this.NotFound();
-            }
 
             return response;
         }
@@ -227,9 +223,7 @@ namespace KachnaOnline.App.Controllers
                 var result = await _facade.Delete(id);
 
                 if (result == null)
-                {
                     return this.NoContent();
-                }
 
                 return this.Ok(result);
             }

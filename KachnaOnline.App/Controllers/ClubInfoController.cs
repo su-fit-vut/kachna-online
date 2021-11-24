@@ -33,9 +33,7 @@ namespace KachnaOnline.App.Controllers
         {
             var offer = await _facade.GetCurrentOffer();
             if (offer is null)
-            {
                 return this.Problem("Cannot fetch current offer from KIS.", statusCode: 500);
-            }
 
             return offer;
         }
@@ -50,9 +48,7 @@ namespace KachnaOnline.App.Controllers
         {
             var leaderboard = await _facade.GetTodayLeaderboard();
             if (leaderboard is null)
-            {
                 return this.Problem("Cannot fetch current leaderboard from KIS.", statusCode: 500);
-            }
 
             return leaderboard;
         }
@@ -71,9 +67,7 @@ namespace KachnaOnline.App.Controllers
         {
             var leaderboard = await _facade.GetSemesterLeaderboard();
             if (leaderboard is null)
-            {
                 return this.Problem("Cannot fetch current leaderboard from KIS.", statusCode: 500);
-            }
 
             return leaderboard;
         }

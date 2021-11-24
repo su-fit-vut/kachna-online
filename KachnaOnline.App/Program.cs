@@ -48,12 +48,14 @@ namespace KachnaOnline.App
         /// </summary>
         /// <param name="args">Command line arguments.</param>
         /// <returns>An <see cref="IHostBuilder"/> instance configured using the <see cref="Startup"/> class.</returns>
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
                 .UseSerilog((context, services, config) => config
                     .ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(services)
                     .Enrich.FromLogContext())
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        }
     }
 }

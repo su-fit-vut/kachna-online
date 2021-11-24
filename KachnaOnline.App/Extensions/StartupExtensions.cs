@@ -36,9 +36,7 @@ namespace KachnaOnline.App.Extensions
                         var host = httpContext.Request.Host.Host;
                         var referer = refererValues.Count > 0 ? refererValues[0] : null;
                         if (host != null && referer != null && !referer.Contains(host))
-                        {
                             diag.Set("RequestReferer", referer);
-                        }
                     }
 
                     // Log remote IP
@@ -51,7 +49,7 @@ namespace KachnaOnline.App.Extensions
                     {
                         // If the request takes more than 5 seconds to handle, there's something wrong
                         // and it is worth logging
-                        <400 => (elapsed > 5000 ? LogEventLevel.Warning : LogEventLevel.Debug),
+                        <400 => elapsed > 5000 ? LogEventLevel.Warning : LogEventLevel.Debug,
                         404 => LogEventLevel.Debug,
                         <500 => LogEventLevel.Information,
                         _ => LogEventLevel.Warning

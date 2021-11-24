@@ -46,14 +46,11 @@ namespace KachnaOnline.App.Controllers
             string session)
         {
             var token = await _userService.LoginSession(session);
+
             if (token.HasError)
-            {
                 return this.Problem(statusCode: 500, detail: "An unexpected error occured.");
-            }
             else if (!token.UserFound)
-            {
                 return this.Problem(statusCode: 404, detail: "User is not registered in KIS.");
-            }
 
             return this.Ok(token.AccessToken);
         }
