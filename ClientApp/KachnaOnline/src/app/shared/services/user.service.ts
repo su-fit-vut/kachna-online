@@ -12,30 +12,7 @@ export class UserService {
     private http: HttpClient,
   ) { }
 
-  private _loggedIn: boolean = false;
-
   public authenticationToken: string;
-
-  private setUserAccountPopoverContent: () => void;
-
-  onAccountPopupInitialized(fn: () => void) {
-    this.setUserAccountPopoverContent = fn;
-  }
-
-  get loggedIn(): boolean {
-    return this._loggedIn;
-  }
-
-  set loggedIn(value: boolean) {
-      if (value !== this._loggedIn) {
-          this._loggedIn= value;
-          this.onLoggedInChanged();
-      }
-  }
-
-  onLoggedInChanged() {
-    this.setUserAccountPopoverContent();
-  }
 
   logIn() {
     this.authenticationService.getSessionIdFromKisEduId();
