@@ -94,7 +94,15 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications
 
                 var delay = TimeSpan.FromMinutes(_optionsMonitor.CurrentValue.NotificationServiceIntervalMinutes);
                 _logger.LogDebug("Notification service waiting for {delay} before checking again.", delay);
-                await Task.Delay(delay, stoppingToken);
+
+                try
+                {
+                    await Task.Delay(delay, stoppingToken);
+                }
+                catch (TaskCanceledException)
+                {
+                    break;
+                }
             }
         }
     }
