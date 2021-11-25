@@ -144,7 +144,7 @@ namespace KachnaOnline.App.Extensions
                 // Filter out references to the ProblemDetails scheme
                 c.SchemaFilter<NullableFilter>();
                 // Add authorization info to endpoints
-                c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+                c.OperationFilter<AuthorizationFilter>();
                 // Set 'nullable' to false in properties of certain schemes.
                 c.OperationFilter<ProblemDetailsFilter>();
                 // Load endpoint documentation from the XML generated during build from embedded xmldocs
