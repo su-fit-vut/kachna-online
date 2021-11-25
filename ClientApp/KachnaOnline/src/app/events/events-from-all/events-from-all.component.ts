@@ -35,15 +35,15 @@ export class EventsFromAllComponent implements OnInit {
   }
 
   onDeleteButtonClicked(selectedEventDetail: Event) {
-    if (confirm("Do you want to delete event" + selectedEventDetail.name + "?")) {
+    if (confirm("Opravdu chcete odstranit akci " + selectedEventDetail.name + "?")) {
       this.eventsService.removeEvent(selectedEventDetail.id).subscribe(
         res => {
           this.eventsService.refreshEventsList();
-          this.toastrService.success('Event úspěšně zrušen.', 'Zrušení eventu'); //? TODO: Use error toastr to show deletion?
+          this.toastrService.success('Akce úspěšně zrušena.', 'Zrušení akce'); //? TODO: Use error toastr to show deletion?
         },
         err => {
           console.log(err)
-          this.toastrService.error('Event se nepovedlo zrušit.', 'Zrušení eventu');
+          this.toastrService.error('Akci se nepovedlo zrušit.', 'Zrušení akce');
         }
 
       );

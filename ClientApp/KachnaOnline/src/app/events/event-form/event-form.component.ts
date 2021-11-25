@@ -20,11 +20,11 @@ export class EventFormComponent implements OnInit {
     ) { }
 
   @Input() editMode: boolean = false;
-  jumbotronText: string = "Naplánovat event";
+  jumbotronText: string = "Naplánovat akci";
 
   ngOnInit(): void {
     if (this.editMode) {
-      this.jumbotronText = "Upravit event";
+      this.jumbotronText = "Upravit akci";
     } else {
       this.eventsService.eventDetail = new Event();
     }
@@ -42,11 +42,11 @@ export class EventFormComponent implements OnInit {
       res => {
         this.clearForm(form);
         this.eventsService.refreshEventsList();
-        this.toastrService.success('Event úspěšně naplánován.', 'Naplánovat event');
+        this.toastrService.success('Akce úspěšně naplánována.', 'Naplánovat akci');
       },
       err => {
         console.log(err);
-        this.toastrService.error('Naplánování eventu selhalo.', 'Naplánovat event');
+        this.toastrService.error('Naplánování akce selhalo.', 'Naplánovat akci');
       }
     );
   }
@@ -56,11 +56,11 @@ export class EventFormComponent implements OnInit {
       res => {
         this.clearForm(form);
         this.eventsService.refreshEventsList();
-        this.toastrService.success('Event úspěšně upraven.', 'Upravit event');
+        this.toastrService.success('Akce úspěšně upravena.', 'Upravit akci');
       },
       err => {
         console.log(err);
-        this.toastrService.error('Úprava eventu selhala.', 'Upravit event');
+        this.toastrService.error('Úprava akce selhala.', 'Upravit akci');
       }
     );
   }
