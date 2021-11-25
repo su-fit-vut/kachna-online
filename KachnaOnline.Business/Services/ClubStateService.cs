@@ -574,15 +574,21 @@ namespace KachnaOnline.Business.Services
                     nameof(newState));
             }
 
+            bool startsNow;
             if (newState.Start.HasValue)
             {
+                var nowRounded = DateTime.Now.RoundToMinutes();
                 newState.Start = newState.Start.Value.RoundToMinutes();
-                if (newState.Start < DateTime.Now.RoundToMinutes())
+
+                if (newState.Start < nowRounded)
                     throw new ArgumentException("Cannot plan a state in the past.", nameof(newState));
+
+                startsNow = newState.Start.Value == nowRounded;
             }
             else
             {
                 newState.Start = DateTime.Now.RoundToMinutes();
+                startsNow = true;
             }
 
             // Ensure the user exists
@@ -601,6 +607,22 @@ namespace KachnaOnline.Business.Services
                 var result = await this.CheckAndCreatePlannedState(newState);
                 await _unitOfWork.CommitTransaction();
                 await _statePlannerService.NotifyPlanChanged();
+
+                if (!result.HasOverlappingStates && startsNow)
+                {
+                    TaskUtils.FireAndForget(_serviceProvider, _logger, async (services, _) =>
+                    {
+                        var transitionService = services.GetRequiredService<IStateTransitionService>();
+                        if (result.ModifiedPreviousStateId.HasValue)
+                        {
+                            await transitionService.TriggerStateEnd(result.ModifiedPreviousStateId.Value,
+                                result.TargetStateId);
+                        }
+
+                        await transitionService.TriggerStateStart(result.TargetStateId, result.ModifiedPreviousStateId);
+                    });
+                }
+
                 return result;
             }
             catch (Exception)
