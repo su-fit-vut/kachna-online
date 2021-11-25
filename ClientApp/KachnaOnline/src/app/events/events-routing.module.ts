@@ -10,8 +10,6 @@ import {EventDetailComponent} from "./event-detail/event-detail.component";
 import { EventsService } from '../shared/services/events.service';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from '../app-routing.module';
-import { AppComponent } from '../app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccountPopupComponent } from '../navigation-bar/account-popup/account-popup.component';
 import { NavigationBarComponent } from '../navigation-bar/navigation-bar.component';
@@ -35,6 +33,10 @@ const routes: Routes = [
         path: '', children: [ {
           path: 'current',
           component: CurrentEventsComponent,
+          data: {
+            title: `${environment.siteName} | Aktuální akce`,
+            description: 'Přehled aktuálních akcí',
+          }
         },
           {
             path: 'all',
@@ -44,10 +46,18 @@ const routes: Routes = [
             path: 'plan',
             component: PlanEventsComponent,
             canActivate: [EventsManagerGuard],
+            data: {
+              title: `${environment.siteName} | Plánování akce`,
+              description: 'Plánování nové akce',
+            }
           },
           {
             path: ':eventId',
             component: EventDetailComponent,
+            data: {
+              title: `${environment.siteName} | Detail akce`,
+              description: 'Detailní popis akce',
+            }
           },
         ]
       }
