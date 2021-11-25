@@ -5,7 +5,6 @@ import { environment } from '../environments/environment';
 import { EventsService } from './shared/services/events.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -14,7 +13,7 @@ import { NavigationBarComponent } from './navigation-bar/navigation-bar.componen
 import { CurrentEventsComponent } from './events/current-events/current-events.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { EventDetailComponent } from './events/event-detail/event-detail.component';
-import {HttpClientModule, HttpRequest} from '@angular/common/http';
+import { HttpClientModule, HttpRequest } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventFormComponent } from './events/event-form/event-form.component';
 import { HomeComponent } from './home/home.component';
@@ -26,10 +25,10 @@ import { LoggedInContentComponent } from './navigation-bar/account-popup/logged-
 import { LoggedOutContentComponent } from './navigation-bar/account-popup/logged-out-content/logged-out-content.component';
 import { PlanEventsComponent } from './events/plan-events/plan-events.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
-import {UsersModule} from "./users/users.module";
-import { EventsModule} from "./events/events.module";
-import {StatesModule} from "./states/states.module";
-import {BoardGamesModule} from "./board-games/board-games.module";
+import { UsersModule } from "./users/users.module";
+import { EventsModule } from "./events/events.module";
+import { StatesModule } from "./states/states.module";
+import { BoardGamesModule } from "./board-games/board-games.module";
 
 export function tokenGetter(request?: HttpRequest<any>) {
   if (request != null) {

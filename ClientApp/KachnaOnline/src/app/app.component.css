@@ -9,6 +9,11 @@
     color: #125699;
   }
 
+  .content {
+    display: flex;
+    flex-direction: column;
+  }
+
   footer {
     display: flex;
     padding: 0 16px;
