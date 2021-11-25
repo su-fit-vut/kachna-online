@@ -79,6 +79,7 @@ namespace KachnaOnline.Business.Extensions
             services.AddScoped<BoardGamesFacade>();
             services.AddScoped<EventsFacade>();
             services.AddScoped<UserFacade>();
+            services.AddScoped<ImagesFacade>();
         }
     }
 }

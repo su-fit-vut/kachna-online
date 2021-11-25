@@ -123,6 +123,9 @@ namespace KachnaOnline.App
             // Serve client app.
             app.UseStaticFiles();
 
+            // Serve uploaded images.
+            app.UseUploadedImagesStaticFiles(env);
+
             // Handle 400+ HTTP status codes.
             app.UseStatusCodePagesWithReExecute("/error/{0}");
 
