@@ -1,7 +1,7 @@
 // environment.prod.ts
 // Author: David Chocholatý
 
-import {IEnvironment, IEnvironmentParams} from "./ienvironment";
+import { IEnvironment, IEnvironmentParams } from "./ienvironment";
 
 /**
  * Environment parameters modifiable by the current environment.

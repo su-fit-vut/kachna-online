@@ -4,11 +4,11 @@
 import { environment } from '../../environments/environment';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {CurrentEventsComponent} from "./current-events/current-events.component";
-import {EventsFromAllComponent} from "./events-from-all/events-from-all.component";
-import {PlanEventsComponent} from "./plan-events/plan-events.component";
-import {EventsManagerGuard} from "./events-manager.guard";
-import {EventDetailComponent} from "./event-detail/event-detail.component";
+import { CurrentEventsComponent } from "./current-events/current-events.component";
+import { EventsFromAllComponent } from "./events-from-all/events-from-all.component";
+import { PlanEventsComponent } from "./plan-events/plan-events.component";
+import { EventsManagerGuard } from "./events-manager.guard";
+import { EventDetailComponent } from "./event-detail/event-detail.component";
 
 import { EventsService } from '../shared/services/events.service';
 import { BrowserModule } from '@angular/platform-browser';
