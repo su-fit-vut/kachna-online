@@ -3,7 +3,7 @@
     {{authenticationService.getUserName()}}
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">Prestiž: {{authenticationService.getPrestigeAmount()}}</li>
+    <li class="list-group-item">Prestiž: {{authenticationService.user.prestige}}</li>
     <li class="list-group-item">
       <button class="btn btn-secondary btn-block" routerLink="/user_profile" routerLinkActive="true">Můj profil</button>
     </li>

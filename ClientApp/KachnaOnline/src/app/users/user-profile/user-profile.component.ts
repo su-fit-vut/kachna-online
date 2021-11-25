@@ -14,11 +14,10 @@ export class UserProfileComponent implements OnInit {
     public authenticationService: AuthenticationService,
   ) { }
 
-  gamificationTooltipText:string = "Tohle je souhlas s gamifikací."
-  cardTooltipText:string = "Tohle je krásná karta."
+  gamificationConsentTooltipText:string = "Tohle je souhlas s gamifikací."
+  cardNumberTooltipText:string = "Tohle je krásná karta."
 
   ngOnInit(): void {
-    this.authenticationService.getInformationAboutUser();
   }
 
   onSaveChanges(form: NgForm) {

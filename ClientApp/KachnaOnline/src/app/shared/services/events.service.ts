@@ -23,7 +23,7 @@ export class EventsService {
     return this.http.get<Event[]>(`${this.EventsUrl}/next`);
   }
 
-  getFromToEvents(from: string = "", to: string = ""):Observable<Event[]> {
+  getFromToEvents(from: string = "", to: string = ""): Observable<Event[]> {
     let params = new HttpParams()
       .set('from', from)
       .set('to', to);
@@ -49,14 +49,13 @@ export class EventsService {
   }
 
   refreshEventsList() {
-    this.getFromToEvents().subscribe(
-      res => {
+    this.getFromToEvents().toPromise()
+      .then((res) => {
         this.eventsList = res as Event[];
-      },
-      err => {
-        console.log(err);
-        this.toastrService.error("Nepodařilo se získat eventy.", "Načtení eventů");
-      }
-    );
+      }).catch((error: any) => {
+      console.log(error);
+      this.toastrService.error("Nepodařilo se získat eventy.", "Načtení eventů");
+      return;
+    });
   }
 }
