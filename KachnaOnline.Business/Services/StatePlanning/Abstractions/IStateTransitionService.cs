@@ -15,14 +15,16 @@ namespace KachnaOnline.Business.Services.StatePlanning.Abstractions
         /// Performs the state start actions.
         /// </summary>
         /// <param name="stateId">The ID of the state that has started.</param>
+        /// <param name="previousStateId">The ID of the previous state. Null if no state directly precedes this one.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task TriggerStateStart(int stateId);
+        Task TriggerStateStart(int stateId, int? previousStateId);
 
         /// <summary>
         /// Performs the state end actions.
         /// </summary>
         /// <param name="stateId">The ID of the state that has ended.</param>
+        /// <param name="nextStateId">The ID of the following state. Null if no state comes right after this one.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task TriggerStateEnd(int stateId);
+        Task TriggerStateEnd(int stateId, int? nextStateId);
     }
 }

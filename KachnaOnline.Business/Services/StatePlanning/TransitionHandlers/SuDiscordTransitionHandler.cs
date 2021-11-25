@@ -23,16 +23,14 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             _stateService = stateService;
         }
 
-        public Task PerformStartAction(int stateId)
+        public Task PerformStartAction(int stateId, int? previousStateId)
         {
-            _logger.LogInformation("Discord TH start action for {Id}", stateId);
-            return Task.CompletedTask;
+            throw new System.NotImplementedException();
         }
 
-        public Task PerformEndAction(int stateId)
+        public Task PerformEndAction(int stateId, int? nextStateId)
         {
-            _logger.LogInformation("Discord TH end action for {Id}", stateId);
-            return Task.CompletedTask;
+            throw new System.NotImplementedException();
         }
     }
 }

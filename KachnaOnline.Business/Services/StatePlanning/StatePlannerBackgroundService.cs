@@ -137,7 +137,7 @@ namespace KachnaOnline.Business.Services.StatePlanning
                     // Process the triggers
                     if (nextTransition.IsStateEnd)
                     {
-                        await transitionService.TriggerStateEnd(nextTransition.StateId);
+                        await transitionService.TriggerStateEnd(nextTransition.StateId, nextTransition.NextStateId);
 
                         if (nextTransition.NextStateId.HasValue)
                         {
@@ -145,12 +145,13 @@ namespace KachnaOnline.Business.Services.StatePlanning
                                 "Invoking transition triggers for state {NextStateId} (end transition: {IsEndTransition}).",
                                 nextTransition.NextStateId.Value, false);
 
-                            await transitionService.TriggerStateStart(nextTransition.NextStateId.Value);
+                            await transitionService.TriggerStateStart(nextTransition.NextStateId.Value,
+                                nextTransition.StateId);
                         }
                     }
                     else
                     {
-                        await transitionService.TriggerStateStart(nextTransition.StateId);
+                        await transitionService.TriggerStateStart(nextTransition.StateId, null);
                     }
                 });
             }
