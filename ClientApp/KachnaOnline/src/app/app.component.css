@@ -9,11 +9,6 @@
     color: #125699;
   }
 
-  .content {
-    display: flex;
-    flex-direction: column;
-  }
-
   footer {
     display: flex;
     padding: 0 16px;
@@ -62,10 +57,6 @@
   }
 
   .content {
-    margin: 82px;
+    margin-top: 82px;
     align-items: center;
-
-    /* prevents body content from overflowing into navbar */
-    height: 100%;
-    overflow: hidden;
   }
