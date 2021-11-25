@@ -14,6 +14,7 @@ export class IEnvironment implements IEnvironmentParams {
   public siteName: string = 'Kachna Online';
   public accessTokenStorageName: string = 'accessToken';
   public kisAccessTokenStorageName: string = 'kisAccessToken';
+  public kisRefreshTokenStorageName: string = 'kisRefreshToken';
   public kisApiUrl: string = 'https://su-int.fit.vutbr.cz/kis/api';
   public kisApiUrlDomain: string = 'su-int.fit.vutbr.cz';
 

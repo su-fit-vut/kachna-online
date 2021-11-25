@@ -6,7 +6,7 @@ import {KisEduIdResponse} from '../../models/kis-eduid-response.model';
 import {ToastrService} from 'ngx-toastr';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams, HTTP_INTERCEPTORS, HttpInterceptor} from '@angular/common/http';
 import {Location} from '@angular/common';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {LocalTokenContent} from "../../models/local-token-content.model";
@@ -15,6 +15,8 @@ import {User} from "../../models/user.model";
 import {AccessTokens} from "../../models/access-tokens.model";
 import {KisTokenContent} from "../../models/kis-token-content.model";
 import {KisLoggedInUserInformation} from "../../models/kis-logged-in-user-information.model";
+import {KisRefreshTokenResponse} from "../../models/kis-refresh-token-response.model";
+import {throwError} from "rxjs";
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
 
@@ -34,6 +36,7 @@ export class AuthenticationService {
   localTokenContent: LocalTokenContent = new LocalTokenContent();
   kisTokenContent: KisTokenContent = new KisTokenContent();
   kisLoggedInUserInformation: KisLoggedInUserInformation = new KisLoggedInUserInformation();
+  refreshLocalTokenIntervalHanle: number;
 
   user: User = new User();
 
@@ -115,6 +118,18 @@ export class AuthenticationService {
       console.log(error);
       this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
       return;
+
+  refreshKisToken() {
+    let params = new HttpParams().set('refresh_token', sessionStorage.getItem(environment.kisRefreshTokenStorageName) ?? this.localTokenContent.krt);
+    this.http.get<KisRefreshTokenResponse>(`${environment.kisApiUrl}/auth/fresh_token`, { params }).toPromise()
+      .then((res) => {
+        sessionStorage.setItem(environment.kisAccessTokenStorageName, res.auth_token);
+        sessionStorage.setItem(environment.kisRefreshTokenStorageName, res.refresh_token);
+        this.decodeKisToken(res.auth_token);
+        this.getInformationAboutUser();
+      }).catch((error: any) => {
+        this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
+        return throwError(error);
     });
   }
 
@@ -133,7 +148,6 @@ export class AuthenticationService {
   hasRole(role_type: RoleTypes): boolean {
     return this.localTokenContent.role.indexOf(role_type) !== -1;
   }
-
 
   getInformationAboutUser() {
     this.http.get<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me`).toPromise()
