@@ -5,7 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Services.Abstractions;
+using KachnaOnline.Dto.Auth;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KachnaOnline.App.Controllers
@@ -38,10 +40,10 @@ namespace KachnaOnline.App.Controllers
         /// <response code="404">User is not registered in KIS.</response>
         [HttpGet("accessTokenFromSession")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(string), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<string>> LoginSession(
+        [ProducesResponseType(typeof(AuthenticationResultDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<AuthenticationResultDto>> LoginSession(
             [Required(ErrorMessage = "A KIS session ID must be provided.")] [FromQuery]
             string session)
         {
@@ -52,7 +54,8 @@ namespace KachnaOnline.App.Controllers
             else if (!token.UserFound)
                 return this.Problem(statusCode: 404, detail: "User is not registered in KIS.");
 
-            return this.Ok(token.AccessToken);
+            return new AuthenticationResultDto()
+                { AccessToken = token.AccessToken, KisAccessToken = token.KisAccessToken };
         }
 
         /// <summary>
@@ -69,11 +72,12 @@ namespace KachnaOnline.App.Controllers
         /// <response code="403">Invalid refresh token (either it has expired or the user is not an SU member anymore).</response>
         [HttpGet("accessTokenFromRefreshToken")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(string), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(403)]
-        public async Task<ActionResult<string>> LoginToken(
-            [Required(ErrorMessage = "A KIS refresh token must be provided.")] [FromQuery] string kisRefreshToken)
+        [ProducesResponseType(typeof(AuthenticationResultDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<ActionResult<AuthenticationResultDto>> LoginToken(
+            [Required(ErrorMessage = "A KIS refresh token must be provided.")] [FromQuery]
+            string kisRefreshToken)
         {
             var token = await _userService.LoginToken(kisRefreshToken);
             if (token.HasError)
@@ -87,7 +91,8 @@ namespace KachnaOnline.App.Controllers
                     "Invalid KIS refresh token (either it has expired or the user is not an SU member anymore).");
             }
 
-            return this.Ok(token.AccessToken);
+            return new AuthenticationResultDto()
+                { AccessToken = token.AccessToken, KisAccessToken = token.KisAccessToken };
         }
 
         /// <summary>
@@ -103,9 +108,9 @@ namespace KachnaOnline.App.Controllers
         /// <response code="403">Invalid refresh token (either it has expired or the user is not an SU member anymore).</response>
         [HttpGet("refreshedAccessToken")]
         [Authorize]
-        [ProducesResponseType(typeof(string), 200)]
-        [ProducesResponseType(403)]
-        public async Task<ActionResult<string>> Refresh()
+        [ProducesResponseType(typeof(AuthenticationResultDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<ActionResult<AuthenticationResultDto>> Refresh()
         {
             var token = await _userService.Refresh(this.User);
             if (token.HasError)
@@ -119,7 +124,8 @@ namespace KachnaOnline.App.Controllers
                     "Invalid KIS refresh token (either it has expired or the user is not an SU member anymore).");
             }
 
-            return this.Ok(token.AccessToken);
+            return new AuthenticationResultDto()
+                { AccessToken = token.AccessToken, KisAccessToken = token.KisAccessToken };
         }
     }
 }

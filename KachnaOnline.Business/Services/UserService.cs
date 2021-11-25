@@ -140,7 +140,7 @@ namespace KachnaOnline.Business.Services
                     .Where(r => r != null)
                     .ToArray());
 
-            return new LoginResult() { UserFound = true, AccessToken = token };
+            return new LoginResult() { UserFound = true, AccessToken = token, KisAccessToken = kisIdentity.AuthToken };
         }
 
         /// <summary>
