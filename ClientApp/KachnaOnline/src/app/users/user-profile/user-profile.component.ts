@@ -18,7 +18,7 @@ export class UserProfileComponent implements OnInit {
   ) { }
 
   gamificationConsentTooltipText:string = "Tohle je souhlas s gamifikací."
-  cardNumberTooltipText:string = "Tohle je krásná karta."
+  cardCodeTooltipText:string = "Tohle je krásná karta."
 
   ngOnInit(): void {
   }

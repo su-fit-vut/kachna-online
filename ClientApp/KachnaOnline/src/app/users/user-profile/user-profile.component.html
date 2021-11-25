@@ -64,13 +64,13 @@ Author: David Chocholatý
         <div class="form-group row">
           <label for="card" class="col-sm-3 col-form-label">Kód karty</label>
           <div class="col-sm-8">
-            <input #card="ngModel" [(ngModel)]="authenticationService.user.cardNumber" [class.invalid]="card.invalid" class="form-control" id="card" name="card" placeholder="Kód karty"
-                   type="text" maxlength="5" > <!--  FIXME: Are there any other requirements for the card number except for maxlength? -->
+            <input #card="ngModel" [(ngModel)]="authenticationService.user.cardCode" [class.invalid]="card.invalid" class="form-control" id="card" name="card" placeholder="Kód karty"
+                   type="text" maxlength="5" pattern="[A-Z]{5}"> <!--  FIXME: Are there any other requirements for the card number except for maxlength? -->
           </div>
           <div class="col-sm-1">
             <button
               type="button" class="btn"
-              triggers="click hover focus" [autoClose]="true" [closeDelay]="500" [ngbTooltip]="cardNumberTooltipText"
+              triggers="click hover focus" [autoClose]="true" [closeDelay]="500" [ngbTooltip]="cardCodeTooltipText"
               #tooltip="ngbTooltip"
             > <!-- FIXME: Add actual tooltip message. -->
               <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">

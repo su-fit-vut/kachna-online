@@ -71,7 +71,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: [environment.baseApiUrlDomain, environment.kisApiUrlDomain/*, 'localhost:5001'*/],
+        allowedDomains: [environment.baseApiUrlDomain, environment.kisApiUrlDomain],
         //disallowedRoutes: [],
       },
     }),

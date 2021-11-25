@@ -6,6 +6,6 @@ export class User {
   email: string = "";
   nickname: string = "";
   gamificationConsent: boolean = false;
-  cardNumber: string = "";
+  cardCode: string = "";
   prestige: number = -1;
 }

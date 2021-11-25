@@ -25,14 +25,14 @@ Author: David Chocholatý
         <li class="nav-item mr-3" ngbDropdown>
           <div class="btn-group btn-block mr-3">
             <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" [routerLink]="'.'" (click)="isMenuCollapsed = true">Stav klubu</button>
-            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" id="tmp" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+            <button type="button" *ngIf="authenticationService.isStatesManager()" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" id="tmp" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Změnit aktuální stav</button>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Naplánovat budoucí stav</button>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Plán stavů</button>
-              <button (click)="isMenuCollapsed = true" style="color: rgb(245, 116, 116);" class="dropdown-item" href="#" ngbDropdownItem>Ukončit aktuální stav</button>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" *ngIf="authenticationService.isStatesManager()" ngbDropdownItem>Změnit aktuální stav</button>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" *ngIf="authenticationService.isStatesManager()" ngbDropdownItem>Naplánovat budoucí stav</button>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" *ngIf="authenticationService.isStatesManager()" ngbDropdownItem>Plán stavů</button>
+              <button (click)="isMenuCollapsed = true" style="color: rgb(245, 116, 116);" class="dropdown-item" href="#" *ngIf="authenticationService.isStatesManager()" ngbDropdownItem>Ukončit aktuální stav</button>
             </div>
           </div>
         </li>
@@ -46,13 +46,13 @@ Author: David Chocholatý
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
               <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/current" routerLinkActive="active" ngbDropdownItem>Probíhající akce</button>
               <button (click)="isMenuCollapsed = true" ngbDropdownItem>Plán akcí</button>
-              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Přidat akci</button>
-              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Nejbližší eventy</button>
-              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Seznam eventů</button>
-              <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/25">Detail eventu</button>
-              <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/all">Seznam následujících eventů</button>
-              <div class="dropdown-divider"></div>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/plan" routerLinkActive="active" ngbDropdownItem>Naplánovat novou akci</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Nejbližší akce</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Seznam akcí</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/25">Detail akce</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/all">Seznam následujících akcí</button>
+              <div *ngIf="authenticationService.isEventsManager()" class="dropdown-divider"></div>
+              <button (click)="isMenuCollapsed = true" *ngIf="authenticationService.isEventsManager()" ngbDropdownItem>Přidat akci</button>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/plan" routerLinkActive="active" *ngIf="authenticationService.isEventsManager()" ngbDropdownItem>Naplánovat novou akci</button>
             </div>
           </div>
         </li>
@@ -60,28 +60,30 @@ Author: David Chocholatý
         <li class="nav-item mr-3" ngbDropdown>
           <div class="btn-group mr-3 btn-block">
             <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" [routerLink]="'.'" (click)="isMenuCollapsed = true">Deskovky</button>
-            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+            <button *ngIf="authenticationService.isLoggedIn()" type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Aktuální rezervace</button>
-              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Historie rezervací</button>
-              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Správa her</button>
-              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Správa kategorií</button>
+              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" *ngIf="authenticationService.isLoggedIn()" ngbDropdownItem>Moje rezervace</button>
+              <div *ngIf="authenticationService.isBoardGamesManager()" class="dropdown-divider"></div>
+              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Aktuální rezervace</button>
+              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Historie rezervací</button>
+              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Správa her</button>
+              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Správa kategorií</button>
             </div>
           </div>
         </li>
 
-        <li class="nav-item mr-3" ngbDropdown>
+        <li class="nav-item mr-3" ngbDropdown *ngIf="authenticationService.isAdmin()">
           <div class="btn-group mr-3 btn-block">
-            <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" routerLink="users" (click)="isMenuCollapsed = true">Uživatelé</button>
+            <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" routerLink="users" *ngIf="authenticationService.isAdmin()" (click)="isMenuCollapsed = true">Uživatelé</button>
             <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-              <button class="dropdown-item" (click)="isMenuCollapsed = true" href="#" ngbDropdownItem>...</button>
+              <button class="dropdown-item" (click)="isMenuCollapsed = true" href="#" *ngIf="authenticationService.isAdmin()" ngbDropdownItem>...</button>
               <div class="dropdown-divider"></div>
-              <button ngbDropdownItem (click)="isMenuCollapsed = true">...</button>
+              <button ngbDropdownItem (click)="isMenuCollapsed = true" *ngIf="authenticationService.isAdmin()">...</button>
             </div>
           </div>
         </li>
