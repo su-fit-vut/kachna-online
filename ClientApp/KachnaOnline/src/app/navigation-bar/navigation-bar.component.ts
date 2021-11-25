@@ -2,6 +2,7 @@
 // Author: David Chocholatý
 
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from "../shared/services/authentication.service";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -10,7 +11,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavigationBarComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public authenticationService: AuthenticationService,
+  ) { }
 
   ngOnInit(): void {
   }

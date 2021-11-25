@@ -150,6 +150,22 @@ export class AuthenticationService {
     return this.localTokenContent.role.indexOf(role_type) !== -1;
   }
 
+  isStatesManager(): boolean {
+    return this.hasRole(RoleTypes.StatesManager) || this.hasRole(RoleTypes.Admin);
+  }
+
+  isEventsManager(): boolean {
+    return this.hasRole(RoleTypes.EventsManager) || this.hasRole(RoleTypes.Admin);
+  }
+
+  isBoardGamesManager(): boolean {
+    return this.hasRole(RoleTypes.BoardGamesManager) || this.hasRole(RoleTypes.Admin);
+  }
+
+  isAdmin(): boolean {
+    return this.hasRole(RoleTypes.Admin);
+  }
+
   getInformationAboutUser() {
     this.http.get<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me`).toPromise()
       .then((res) => {
@@ -174,7 +190,7 @@ export class AuthenticationService {
     this.user.nickname = this.kisLoggedInUserInformation.nickname;
     this.user.name = this.kisLoggedInUserInformation.name;
     this.user.email = this.kisLoggedInUserInformation.email;
-    this.user.cardNumber = this.kisLoggedInUserInformation.pin;
+    this.user.cardCode = this.kisLoggedInUserInformation.pin;
     this.user.gamificationConsent = this.kisLoggedInUserInformation.gamification_consent;
     this.user.prestige = this.kisLoggedInUserInformation.prestige;
   }
