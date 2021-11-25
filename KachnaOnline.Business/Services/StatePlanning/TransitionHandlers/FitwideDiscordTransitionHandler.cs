@@ -1,19 +1,22 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using KachnaOnline.Business.Configuration;
+using KachnaOnline.Business.Services.Discord;
 using KachnaOnline.Business.Services.StatePlanning.Abstractions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
 {
-    public class DiscordTransitionHandler : IStateTransitionHandler
+    public class FitwideDiscordTransitionHandler : DiscordWebhookClient, IStateTransitionHandler
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<DiscordTransitionHandler> _logger;
+        private readonly ILogger<FitwideDiscordTransitionHandler> _logger;
 
-        public DiscordTransitionHandler(IHttpClientFactory httpClientFactory,
-            ILogger<DiscordTransitionHandler> logger)
+        public FitwideDiscordTransitionHandler(IOptionsMonitor<ClubStateOptions> options,
+            IHttpClientFactory httpClientFactory,
+            ILogger<FitwideDiscordTransitionHandler> logger)
+            : base(options.CurrentValue.FitwideDiscordWebhookUrl, httpClientFactory, logger)
         {
-            _httpClientFactory = httpClientFactory;
             _logger = logger;
         }
 

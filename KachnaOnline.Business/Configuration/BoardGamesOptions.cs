@@ -29,6 +29,6 @@ namespace KachnaOnline.Business.Configuration
         /// <summary>
         /// Webhook URL to Student Union Discord for board games related information.
         /// </summary>
-        public string SuWebhookUrl { get; set; }
+        public string SuDiscordWebhookUrl { get; set; }
     }
 }

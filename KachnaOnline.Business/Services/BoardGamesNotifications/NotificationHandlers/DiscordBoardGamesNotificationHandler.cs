@@ -1,28 +1,23 @@
 // DiscordBoardGamesNotificationHandler.cs
 // Author: František Nečas
 
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Configuration;
 using KachnaOnline.Business.Exceptions.BoardGames;
-using KachnaOnline.Business.Models.Discord;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Business.Services.BoardGamesNotifications.Abstractions;
+using KachnaOnline.Business.Services.Discord;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHandlers
 {
     /// <summary>
     /// Implements a handler sending messages to Discord via a webhook.
     /// </summary>
-    public class DiscordBoardGamesNotificationHandler : IBoardGamesNotificationHandler
+    public class DiscordBoardGamesNotificationHandler : DiscordWebhookClient, IBoardGamesNotificationHandler
     {
-        private readonly IOptionsMonitor<BoardGamesOptions> _boardGamesOptionsMonitor;
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<DiscordBoardGamesNotificationHandler> _logger;
         private readonly IBoardGamesService _boardGamesService;
         private readonly IUserService _userService;
@@ -30,57 +25,11 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
         public DiscordBoardGamesNotificationHandler(IOptionsMonitor<BoardGamesOptions> boardGamesOptionsMonitor,
             IHttpClientFactory httpClientFactory, ILogger<DiscordBoardGamesNotificationHandler> logger,
             IBoardGamesService boardGamesService, IUserService userService)
+            : base(boardGamesOptionsMonitor.CurrentValue.SuDiscordWebhookUrl, httpClientFactory, logger)
         {
-            _boardGamesOptionsMonitor = boardGamesOptionsMonitor;
-            _httpClientFactory = httpClientFactory;
             _logger = logger;
             _boardGamesService = boardGamesService;
             _userService = userService;
-        }
-
-        /// <summary>
-        /// Sends a webhook message to SU Discord.
-        /// </summary>
-        /// <param name="message">Message to send.</param>
-        /// <param name="wait">Whether to wait for server message confirmation. False by default.</param>
-        /// <returns>Message model if <paramref name="wait"/> was true and the request succeeded, null otherwise.</returns>
-        private async Task<DiscordMessage> SendWebhookMessage(string message, bool wait = false)
-        {
-            if (string.IsNullOrEmpty(_boardGamesOptionsMonitor.CurrentValue.SuWebhookUrl) || message == null)
-            {
-                _logger.LogError("Webhook URL not available");
-                return null;
-            }
-
-            using var client = _httpClientFactory.CreateClient();
-            var content = $"{{ \"content\": \"{message}\" }}";
-            var url = _boardGamesOptionsMonitor.CurrentValue.SuWebhookUrl;
-            var waitString = wait.ToString().ToLower();
-            var response = await client.PostAsync($"{url}?wait={waitString}",
-                new StringContent(content, Encoding.UTF8, "application/json"));
-            if (response.StatusCode != HttpStatusCode.OK)
-                return null;
-
-            var responseData = await response.Content.ReadAsStringAsync();
-            _logger.LogDebug("Webhook response payload: {data}", responseData);
-            return JsonConvert.DeserializeObject<DiscordMessage>(responseData);
-        }
-
-        /// <summary>
-        /// Deletes a webhook message
-        /// </summary>
-        /// <param name="messageId">ID of the message to delete.</param>
-        private async Task DeleteWebhookMessage(ulong messageId)
-        {
-            if (string.IsNullOrEmpty(_boardGamesOptionsMonitor.CurrentValue.SuWebhookUrl))
-            {
-                _logger.LogError("Webhook URL not available");
-                return;
-            }
-
-            var baseUrl = _boardGamesOptionsMonitor.CurrentValue.SuWebhookUrl;
-            using var client = _httpClientFactory.CreateClient();
-            await client.DeleteAsync($"{baseUrl}/messages/{messageId}");
         }
 
         /// <inheritdoc />
