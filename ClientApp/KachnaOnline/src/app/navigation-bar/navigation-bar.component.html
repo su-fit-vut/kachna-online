@@ -4,88 +4,90 @@ Author: David Chocholatý
 -->
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3 fixed-top">
-  <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed" data-toggle="collapse"
-  aria-controls="navbarsExample04" data-target="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
-  &#9776;
-  </button>
+  <div class="container">
+    <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed" data-toggle="collapse"
+            aria-controls="navbarsExample04" data-target="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+      &#9776;
+    </button>
 
-  <div class="group" >
-    <a class="navbar-brand" routerLink="" (click)="isMenuCollapsed = true">
-      <img class="image" style="cursor: pointer;" width="40" routerLink="" (click)="isMenuCollapsed = true" alt="Angular Logo"
-      src="assets/kachna_bez_peny.png"/>
-      Kachna Online
-    </a>
+    <div class="group" >
+      <a class="navbar-brand" routerLink="" (click)="isMenuCollapsed = true">
+        <img class="image" style="cursor: pointer;" width="40" routerLink="" (click)="isMenuCollapsed = true" alt="Angular Logo"
+             src="assets/kachna_bez_peny.png"/>
+        Kachna Online
+      </a>
+    </div>
+
+    <app-account-popup class="d-lg-none d-xl-none"></app-account-popup>
+
+    <div id="navbarsExample04" [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item mr-3" ngbDropdown>
+          <div class="btn-group btn-block mr-3">
+            <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" [routerLink]="'.'" (click)="isMenuCollapsed = true">Stav klubu</button>
+            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" id="tmp" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Změnit aktuální stav</button>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Naplánovat budoucí stav</button>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Plán stavů</button>
+              <button (click)="isMenuCollapsed = true" style="color: rgb(245, 116, 116);" class="dropdown-item" href="#" ngbDropdownItem>Ukončit aktuální stav</button>
+            </div>
+          </div>
+        </li>
+
+        <li class="nav-item mr-3" ngbDropdown>
+          <div class="btn-group mr-3 btn-block">
+            <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" routerLink="events/current" routerLinkActive="active" (click)="isMenuCollapsed = true">Akce</button>
+            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/current" routerLinkActive="active" ngbDropdownItem>Probíhající akce</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Plán akcí</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Přidat akci</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Nejbližší eventy</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Seznam eventů</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/25">Detail eventu</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/all">Seznam následujících eventů</button>
+              <div class="dropdown-divider"></div>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/plan" routerLinkActive="active" ngbDropdownItem>Naplánovat novou akci</button>
+            </div>
+          </div>
+        </li>
+
+        <li class="nav-item mr-3" ngbDropdown>
+          <div class="btn-group mr-3 btn-block">
+            <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" [routerLink]="'.'" (click)="isMenuCollapsed = true">Deskovky</button>
+            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
+              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Aktuální rezervace</button>
+              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Historie rezervací</button>
+              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Správa her</button>
+              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Správa kategorií</button>
+            </div>
+          </div>
+        </li>
+
+        <li class="nav-item mr-3" ngbDropdown>
+          <div class="btn-group mr-3 btn-block">
+            <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" routerLink="users" (click)="isMenuCollapsed = true">Uživatelé</button>
+            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
+              <button class="dropdown-item" (click)="isMenuCollapsed = true" href="#" ngbDropdownItem>...</button>
+              <div class="dropdown-divider"></div>
+              <button ngbDropdownItem (click)="isMenuCollapsed = true">...</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <app-account-popup class="d-none d-lg-block d-xl-block"></app-account-popup>
   </div>
-
-  <app-account-popup class="d-lg-none d-xl-none"></app-account-popup>
-
-  <div id="navbarsExample04" [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item mr-3" ngbDropdown>
-        <div class="btn-group btn-block mr-3">
-          <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" [routerLink]="'.'" (click)="isMenuCollapsed = true">Stav klubu</button>
-          <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" id="tmp" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-            <span class="sr-only">Toggle Dropdown</span>
-          </button>
-          <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-            <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Změnit aktuální stav</button>
-            <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Naplánovat budoucí stav</button>
-            <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Plán stavů</button>
-            <button (click)="isMenuCollapsed = true" style="color: rgb(245, 116, 116);" class="dropdown-item" href="#" ngbDropdownItem>Ukončit aktuální stav</button>
-          </div>
-        </div>
-      </li>
-
-      <li class="nav-item mr-3" ngbDropdown>
-        <div class="btn-group mr-3 btn-block">
-          <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" routerLink="events/current" routerLinkActive="active" (click)="isMenuCollapsed = true">Akce</button>
-          <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-            <span class="sr-only">Toggle Dropdown</span>
-          </button>
-          <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-            <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/current" routerLinkActive="active" ngbDropdownItem>Probíhající akce</button>
-            <button (click)="isMenuCollapsed = true" ngbDropdownItem>Plán akcí</button>
-            <button (click)="isMenuCollapsed = true" ngbDropdownItem>Přidat akci</button>
-            <button (click)="isMenuCollapsed = true" ngbDropdownItem>Nejbližší eventy</button>
-            <button (click)="isMenuCollapsed = true" ngbDropdownItem>Seznam eventů</button>
-            <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/25">Detail eventu</button>
-            <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/all">Seznam následujících eventů</button>
-            <div class="dropdown-divider"></div>
-            <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/plan" routerLinkActive="active" ngbDropdownItem>Naplánovat novou akci</button>
-          </div>
-        </div>
-      </li>
-
-      <li class="nav-item mr-3" ngbDropdown>
-        <div class="btn-group mr-3 btn-block">
-          <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" [routerLink]="'.'" (click)="isMenuCollapsed = true">Deskovky</button>
-          <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-            <span class="sr-only">Toggle Dropdown</span>
-          </button>
-          <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Aktuální rezervace</button>
-            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Historie rezervací</button>
-            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Správa her</button>
-            <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" ngbDropdownItem>Správa kategorií</button>
-          </div>
-        </div>
-      </li>
-
-      <li class="nav-item mr-3" ngbDropdown>
-        <div class="btn-group mr-3 btn-block">
-          <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" routerLink="users" (click)="isMenuCollapsed = true">Uživatelé</button>
-          <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-            <span class="sr-only">Toggle Dropdown</span>
-          </button>
-          <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-            <button class="dropdown-item" (click)="isMenuCollapsed = true" href="#" ngbDropdownItem>...</button>
-            <div class="dropdown-divider"></div>
-            <button ngbDropdownItem (click)="isMenuCollapsed = true">...</button>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <app-account-popup class="d-none d-lg-block d-xl-block"></app-account-popup>
 </nav>
