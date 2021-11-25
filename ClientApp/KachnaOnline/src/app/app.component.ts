@@ -1,3 +1,6 @@
+// app.component.ts
+// Author: David Chocholatý
+
 import { Component } from '@angular/core';
 
 @Component({

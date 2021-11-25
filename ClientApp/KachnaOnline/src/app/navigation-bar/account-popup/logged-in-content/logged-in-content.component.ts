@@ -1,3 +1,6 @@
+// logged-in-content.component.ts
+// Author: David Chocholatý
+
 import { Component, OnInit } from '@angular/core';
 import {AuthenticationService} from "../../../shared/services/authentication.service";
 

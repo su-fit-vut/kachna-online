@@ -1,3 +1,6 @@
+// event-form.component.ts
+// Author: David Chocholatý
+
 import { Event } from '../../models/event.model';
 import { EventsService } from '../../shared/services/events.service';
 import { Component, Input, OnInit } from '@angular/core';
