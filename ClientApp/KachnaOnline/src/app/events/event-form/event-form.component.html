@@ -1,3 +1,8 @@
+<!--
+event-form.component.html
+Author: David Chocholatý
+-->
+
 <form novalidate autocomplete="off" #form="ngForm" (submit)="onSubmit(form)">
   <input type="hidden" name="id" [value]="eventsService.eventDetail.id" />
 

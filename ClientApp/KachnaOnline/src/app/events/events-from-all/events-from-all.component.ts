@@ -1,3 +1,6 @@
+// event-from-all.component.ts
+// Author: David Chocholatý
+
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EventsService } from '../../shared/services/events.service';

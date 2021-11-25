@@ -1,3 +1,6 @@
+// current-events.component.ts
+// Author: David Chocholatý
+
 import { EventsService } from '../../shared/services/events.service';
 import { Component, OnInit } from '@angular/core';
 

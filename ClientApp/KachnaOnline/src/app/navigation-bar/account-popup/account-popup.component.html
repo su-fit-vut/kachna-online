@@ -1,3 +1,8 @@
+<!--
+account-popup.component.html
+Author: David Chocholatý
+-->
+
 <ng-template #popContent>
   <app-logged-in-content *ngIf="authenticationService.isLoggedIn()"></app-logged-in-content>
   <app-logged-out-content *ngIf="authenticationService.isLoggedOut()"></app-logged-out-content>

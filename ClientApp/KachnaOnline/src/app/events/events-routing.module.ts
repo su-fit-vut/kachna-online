@@ -1,3 +1,6 @@
+// events-routing.module.ts
+// Author: David Chocholatý
+
 import { environment } from '../../environments/environment';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';

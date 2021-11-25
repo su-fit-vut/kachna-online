@@ -1,3 +1,6 @@
+// events.module.ts
+// Author: David Chocholatý
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 

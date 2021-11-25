@@ -1,3 +1,6 @@
+// event-detail.component.ts
+// Author: David Chocholatý
+
 import { ToastrService } from 'ngx-toastr';
 import { EventsService } from '../../shared/services/events.service';
 import { Component, OnInit } from '@angular/core';

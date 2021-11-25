@@ -1,3 +1,6 @@
+// login.component.ts
+// Author: David Chocholatý
+
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ToastrService } from 'ngx-toastr';
