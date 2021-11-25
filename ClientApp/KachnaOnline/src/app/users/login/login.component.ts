@@ -6,7 +6,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',

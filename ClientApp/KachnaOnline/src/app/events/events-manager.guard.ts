@@ -1,11 +1,11 @@
 // events-manager.guard.ts
 // Author: David Chocholatý
 
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
-import {Observable} from 'rxjs';
-import {AuthenticationService} from "../shared/services/authentication.service";
-import {RoleTypes} from "../models/role-types.model";
+import { Injectable} from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthenticationService } from "../shared/services/authentication.service";
+import { RoleTypes } from "../models/role-types.model";
 
 @Injectable({
   providedIn: 'root'

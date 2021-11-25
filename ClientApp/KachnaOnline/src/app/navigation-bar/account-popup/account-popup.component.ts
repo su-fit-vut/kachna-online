@@ -2,7 +2,7 @@
 // Author: David Chocholatý
 
 import { Component, OnInit } from '@angular/core';
-import {AuthenticationService} from "../../shared/services/authentication.service";
+import { AuthenticationService } from "../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-account-popup',
