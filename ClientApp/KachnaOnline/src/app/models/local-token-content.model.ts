@@ -1,5 +1,11 @@
+// local-token-content.model.ts
+// Author: David Chocholatý
+
+/**
+ * Token content of Kachna Online API access token.
+ */
 export class LocalTokenContent {
-  sub: string = ""; // FIXME: Change to number later.
+  sub: string = "";
   email: string = "";
   given_name: string = "";
   krt: string = "";

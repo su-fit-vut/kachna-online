@@ -1,5 +1,8 @@
+// authentication.service.ts
+// Author: David Chocholatý
+
 import {environment} from '../../../environments/environment';
-import {KisResponse} from '../../models/kis-response.model';
+import {KisEduIdResponse} from '../../models/kis-eduid-response.model';
 import {ToastrService} from 'ngx-toastr';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Injectable} from '@angular/core';
@@ -9,10 +12,11 @@ import {JwtHelperService} from '@auth0/angular-jwt';
 import {LocalTokenContent} from "../../models/local-token-content.model";
 import {RoleTypes} from "../../models/role-types.model";
 import {User} from "../../models/user.model";
-
+import {AccessTokens} from "../../models/access-tokens.model";
+import {KisTokenContent} from "../../models/kis-token-content.model";
+import {KisLoggedInUserInformation} from "../../models/kis-logged-in-user-information.model";
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
-const STORAGE_TOKEN_KEY = 'authenticationToken';
 
 @Injectable({
   providedIn: 'root'
@@ -28,17 +32,17 @@ export class AuthenticationService {
   ) { }
 
   localTokenContent: LocalTokenContent = new LocalTokenContent();
+  kisTokenContent: KisTokenContent = new KisTokenContent();
+  kisLoggedInUserInformation: KisLoggedInUserInformation = new KisLoggedInUserInformation();
 
-  userDetail: User = new User();
-  public authenticationToken: string;
+  user: User = new User();
 
   getSessionIdFromKisEduId() {
     let params = new HttpParams().set('redirect', `${window.location.origin}/login`)
-    this.http.get<KisResponse>('https://su-int.fit.vutbr.cz/kis/api/auth/eduid', { params: params }).toPromise()
-      .then(function(res: KisResponse) {
+    this.http.get<KisEduIdResponse>(`${environment.kisApiUrl}/auth/eduid`, { params: params }).toPromise()
+      .then(function(res: KisEduIdResponse) {
         let kisResponse = res;
         console.log(kisResponse.wayf_url)
-        console.log("Navigating");
         window.open(kisResponse.wayf_url, '_self');
       }).catch((error: any) => {
         console.log(error);
@@ -55,41 +59,38 @@ export class AuthenticationService {
     });
 
     let params = new HttpParams().set('session', sessionId);
-    this.http.get(`${environment.baseApiUrl}/auth/accessTokenFromSession`, { params: params, responseType: 'text'}).subscribe(
-      res  => { // TODO: Parse JSON with access tokens information.
-        /*res as AccessTokens*/
-        localStorage.setItem(STORAGE_TOKEN_KEY, res);
-        this.decodeToken(res);
-        this.getInformationAboutUser();
+    this.http.get<AccessTokens>(`${AUTH_API}/accessTokenFromSession`, { params: params }).toPromise()
+        .then((res) => {
+          this.handleAccessTokens(res);
 
-        setInterval( () => {
-            console.log("calling refresh token");
-            this.http.get(`${AUTH_API}/refreshedAccessToken`, { responseType: 'text' }).subscribe(
-              res => {
-                localStorage.setItem(STORAGE_TOKEN_KEY, res);
-                console.log(localStorage.getItem(STORAGE_TOKEN_KEY));
-              },
-              err => {
-                console.log(err);
-                this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
-                return;
-              }
-            )
-          },
-          2500 * 1000);
-      },
-      err => {
-        console.log(err);
-        this.toastr.error("Načtení přístupových údajů selhalo.", "Autentizace");
-        return;
-      }
-    );
+          setInterval( () => {
+              this.refreshAuthToken();
+            },
+            2500 * 1000);
+        }).catch((error: any) => {
+          console.log(error);
+          this.toastr.error("Načtení přístupových údajů selhalo.", "Autentizace");
+          return;
+    });
+  }
 
+  private handleAccessTokens(res: AccessTokens) {
+    localStorage.setItem('accessToken', res.accessToken);
+    localStorage.setItem('kisAccessToken', res.kisAccessToken);
+    this.decodeLocalToken(res.accessToken);
+    this.decodeKisToken(res.kisAccessToken);
+    this.getInformationAboutUser();
   }
 
   logOut() {
-    localStorage.removeItem(STORAGE_TOKEN_KEY)
-    this.userDetail = new User();
+    localStorage.removeItem(environment.accessTokenStorageName);
+    localStorage.removeItem(environment.kisAccessTokenStorageName);
+    this.localTokenContent = new LocalTokenContent();
+    this.kisTokenContent = new KisTokenContent();
+
+    this.user = new User();
+
+    this.router.navigate(['']).then();
   }
 
   checkForAuthTokenExpirationAndRefreshAuthToken() {
@@ -99,7 +100,7 @@ export class AuthenticationService {
   }
 
   isLoggedIn(): boolean {
-    return localStorage.getItem(STORAGE_TOKEN_KEY) != null;
+    return localStorage.getItem(environment.accessTokenStorageName) != null;
   }
 
   isLoggedOut(): boolean {
@@ -107,20 +108,22 @@ export class AuthenticationService {
   }
 
   refreshAuthToken() {
-    this.http.get(`${AUTH_API}/refreshedAccessToken`, { responseType: 'text' }).subscribe(
-      res => {
-        localStorage.setItem(STORAGE_TOKEN_KEY, res);
-        this.decodeToken(res);
-      },
-      err => {
-        console.log(err);
-        this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
-        return;
-      });
+    this.http.get<AccessTokens>(`${AUTH_API}/refreshedAccessToken`).toPromise()
+      .then((res) => {
+        this.handleAccessTokens(res);
+      }).catch((error: any) => {
+      console.log(error);
+      this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
+      return;
+    });
   }
 
-  private decodeToken(token: string) {
+  private decodeLocalToken(token: string) {
     this.localTokenContent = this.jwtHelper.decodeToken(token) as LocalTokenContent;
+  }
+
+  private decodeKisToken(token: string) {
+    this.kisTokenContent = this.jwtHelper.decodeToken(token) as KisTokenContent;
   }
 
   getUserRoles() {
@@ -133,29 +136,32 @@ export class AuthenticationService {
 
 
   getInformationAboutUser() {
-    this.http.get<any>('https://su-int.fit.vutbr.cz/kis/api/users/me').subscribe( // TODO: Change return value into a model.
-      res => {
+    this.http.get<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me`).toPromise()
+      .then((res) => {
+        this.kisLoggedInUserInformation = res;
         console.log(res);
-      }
-    );
+        this.assignDataFromKisUserInformation();
+      }).catch((error: any) => {
+        console.log(error);
+        this.toastr.error("Stažení informací o uživateli z KIS se nezdařilo.", "Autentizace");
+    });
 
     this.assignDataFromLocalTokenContent();
   }
 
   getUserName() {
-    return this.userDetail.name;
-  }
-
-  getPrestigeAmount() {
-    return 42;
-  }
-
-  getUserEmail() {
-    return this.userDetail.email;
+    return this.user.name;
   }
 
   private assignDataFromLocalTokenContent() {
-    this.userDetail.name = this.localTokenContent.given_name;
-    this.userDetail.email = this.localTokenContent.email;
+  }
+
+  private assignDataFromKisUserInformation() {
+    this.user.nickname = this.kisLoggedInUserInformation.nickname;
+    this.user.name = this.kisLoggedInUserInformation.name;
+    this.user.email = this.kisLoggedInUserInformation.email;
+    this.user.cardNumber = this.kisLoggedInUserInformation.pin;
+    this.user.gamificationConsent = this.kisLoggedInUserInformation.gamification_consent;
+    this.user.prestige = this.kisLoggedInUserInformation.prestige;
   }
 }

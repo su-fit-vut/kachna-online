@@ -11,7 +11,7 @@ import { NavigationBarComponent } from './navigation-bar/navigation-bar.componen
 import { CurrentEventsComponent } from './events/current-events/current-events.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { EventDetailComponent } from './events/event-detail/event-detail.component';
-import { HttpClientModule } from '@angular/common/http';
+import {HttpClientModule, HttpRequest} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventFormComponent } from './events/event-form/event-form.component';
 import { HomeComponent } from './home/home.component';
@@ -28,8 +28,14 @@ import { EventsModule} from "./events/events.module";
 import {StatesModule} from "./states/states.module";
 import {BoardGamesModule} from "./board-games/board-games.module";
 
-export function tokenGetter() {
-  return localStorage.getItem('authenticationToken');
+export function tokenGetter(request?: HttpRequest<any>) {
+  if (request != null) {
+    if (request.url.includes(environment.kisApiUrl)) {
+      return localStorage.getItem(environment.kisAccessTokenStorageName)
+    }
+  }
+
+  return localStorage.getItem(environment.accessTokenStorageName);
 }
 
 @NgModule({
@@ -63,7 +69,7 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: [environment.baseApiUrlDomain /*, 'localhost:5000', 'localhost:5001'*/],
+        allowedDomains: [environment.baseApiUrlDomain, environment.kisApiUrlDomain/*, 'localhost:5001'*/],
         //disallowedRoutes: [],
       },
     }),
