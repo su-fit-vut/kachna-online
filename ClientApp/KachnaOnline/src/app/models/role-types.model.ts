@@ -2,5 +2,8 @@
 // Author: David Chocholatý
 
 export enum RoleTypes {
-  EventsManager = "EventsManager", BoardGamesManager = "BoardGamesManager", StatesManager = "StatesManager", Admin = "Admin",
+  EventsManager = "EventsManager",
+  BoardGamesManager = "BoardGamesManager",
+  StatesManager = "StatesManager",
+  Admin = "Admin",
 }

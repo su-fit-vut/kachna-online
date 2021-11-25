@@ -36,7 +36,7 @@ export class AuthenticationService {
   localTokenContent: LocalTokenContent = new LocalTokenContent();
   kisTokenContent: KisTokenContent = new KisTokenContent();
   kisLoggedInUserInformation: KisLoggedInUserInformation = new KisLoggedInUserInformation();
-  refreshLocalTokenIntervalHanle: number;
+  refreshLocalTokenIntervalHandle: number;
 
   user: User = new User();
 
@@ -48,9 +48,8 @@ export class AuthenticationService {
         console.log(kisResponse.wayf_url)
         window.open(kisResponse.wayf_url, '_self');
       }).catch((error: any) => {
-        console.log(error);
         this.toastr.error("Přihlášení se ke KIS selhalo.", "Autentizace");
-        return;
+        return throwError(error);
     });
   }
 
@@ -66,20 +65,19 @@ export class AuthenticationService {
         .then((res) => {
           this.handleAccessTokens(res);
 
-          setInterval( () => {
+          this.refreshLocalTokenIntervalHandle = setInterval( () => {
               this.refreshAuthToken();
             },
-            2500 * 1000);
+            2500 * 1000); // FIXME: Refresh according to expire value returned from KO API.
         }).catch((error: any) => {
-          console.log(error);
           this.toastr.error("Načtení přístupových údajů selhalo.", "Autentizace");
-          return;
+          return throwError(error);
     });
   }
 
   private handleAccessTokens(res: AccessTokens) {
-    localStorage.setItem('accessToken', res.accessToken);
-    localStorage.setItem('kisAccessToken', res.kisAccessToken);
+    localStorage.setItem(environment.accessTokenStorageName, res.accessToken);
+    localStorage.setItem(environment.kisAccessTokenStorageName, res.kisAccessToken);
     this.decodeLocalToken(res.accessToken);
     this.decodeKisToken(res.kisAccessToken);
     this.getInformationAboutUser();
@@ -92,6 +90,8 @@ export class AuthenticationService {
     this.kisTokenContent = new KisTokenContent();
 
     this.user = new User();
+
+    clearInterval(this.refreshLocalTokenIntervalHandle);
 
     this.router.navigate(['']).then();
   }
@@ -115,9 +115,10 @@ export class AuthenticationService {
       .then((res) => {
         this.handleAccessTokens(res);
       }).catch((error: any) => {
-      console.log(error);
-      this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
-      return;
+        this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
+        return throwError(error);
+    });
+  }
 
   refreshKisToken() {
     let params = new HttpParams().set('refresh_token', sessionStorage.getItem(environment.kisRefreshTokenStorageName) ?? this.localTokenContent.krt);
@@ -153,10 +154,9 @@ export class AuthenticationService {
     this.http.get<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me`).toPromise()
       .then((res) => {
         this.kisLoggedInUserInformation = res;
-        console.log(res);
         this.assignDataFromKisUserInformation();
       }).catch((error: any) => {
-        console.log(error);
+        throwError(error);
         this.toastr.error("Stažení informací o uživateli z KIS se nezdařilo.", "Autentizace");
     });
 
