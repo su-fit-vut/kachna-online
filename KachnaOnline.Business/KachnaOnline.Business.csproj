@@ -5,20 +5,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="10.1.1"/>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\KachnaOnline.Business.Data\KachnaOnline.Business.Data.csproj"/>
-        <ProjectReference Include="..\KachnaOnline.Data\KachnaOnline.Data.csproj"/>
-        <ProjectReference Include="..\KachnaOnline.Dto\KachnaOnline.Dto.csproj"/>
+        <ProjectReference Include="..\KachnaOnline.Business.Data\KachnaOnline.Business.Data.csproj" />
+        <ProjectReference Include="..\KachnaOnline.Data\KachnaOnline.Data.csproj" />
+        <ProjectReference Include="..\KachnaOnline.Dto\KachnaOnline.Dto.csproj" />
     </ItemGroup>
 
 </Project>

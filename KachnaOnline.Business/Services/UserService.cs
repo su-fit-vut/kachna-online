@@ -13,6 +13,7 @@ using AutoMapper;
 using KachnaOnline.Business.Configuration;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
+using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.Roles;
 using KachnaOnline.Business.Models.Kis;
 using KachnaOnline.Business.Models.Users;
@@ -21,10 +22,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Role = KachnaOnline.Business.Models.Users.Role;
 using User = KachnaOnline.Business.Models.Users.User;
 using UserEntity = KachnaOnline.Data.Entities.Users.User;
-using UserRole = KachnaOnline.Business.Models.Users.UserRole;
 using UserRoleEntity = KachnaOnline.Data.Entities.Users.UserRole;
 
 namespace KachnaOnline.Business.Services
@@ -40,7 +39,6 @@ namespace KachnaOnline.Business.Services
 
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly IUserRoleRepository _userRoleRepository;
 
         public UserService(IKisService kisService, IUnitOfWork unitOfWork, ILogger<UserService> logger,
             IMapper mapper, IOptionsMonitor<KisOptions> kisOptions, IOptionsMonitor<JwtOptions> jwtOptions)
@@ -54,7 +52,6 @@ namespace KachnaOnline.Business.Services
 
             _userRepository = unitOfWork.Users;
             _roleRepository = unitOfWork.Roles;
-            _userRoleRepository = unitOfWork.UserRoles;
         }
 
         /// <inheritdoc />
@@ -98,9 +95,12 @@ namespace KachnaOnline.Business.Services
                 return null;
 
             return entity.Roles
-                .Where(r => !r.ForceDisable)
                 .Select(r => new RoleAssignment()
-                    { Role = r.Role.Name, AssignedBy = _mapper.Map<User>(r.AssignedByUser) });
+                {
+                    Role = r.Role.Name,
+                    AssignedBy = _mapper.Map<User>(r.AssignedByUser),
+                    ManuallyDisabled = r.ForceDisable
+                });
         }
 
         /// <inheritdoc />
@@ -110,7 +110,7 @@ namespace KachnaOnline.Business.Services
             if (entity is null)
                 return null;
 
-            return entity.Roles.Any(r => r.Role.Name == role);
+            return entity.Roles.Any(r => r.Role.Name == role && !r.ForceDisable);
         }
 
         /// <summary>
@@ -133,7 +133,12 @@ namespace KachnaOnline.Business.Services
                 return new LoginResult() { HasError = true };
 
             var token = this.MakeJwt(kisIdentity,
-                userEntity.Roles.Select(r => r.Role?.Name).Distinct().Where(r => r != null).ToArray());
+                userEntity.Roles
+                    .Where(r => !r.ForceDisable)
+                    .Select(r => r.Role?.Name)
+                    .Distinct()
+                    .Where(r => r != null)
+                    .ToArray());
 
             return new LoginResult() { UserFound = true, AccessToken = token };
         }
@@ -213,8 +218,8 @@ namespace KachnaOnline.Business.Services
 
             var claims = new List<Claim>
             {
-                new(IdentityConstants.IdClaim, identity.UserData.Id.ToString()),
-                new(IdentityConstants.EmailClaim, identity.UserData.Email),
+                new(IdentityConstants.IdClaim, identity.UserData.Id.ToString(), ClaimValueTypes.Integer),
+                new(IdentityConstants.EmailClaim, identity.UserData.Email, ClaimValueTypes.Email),
                 new(IdentityConstants.NameClaim, identity.UserData.Nickname ?? identity.UserData.Name),
                 new(IdentityConstants.KisRefreshTokenClaim, identity.RefreshToken)
             };
@@ -295,22 +300,10 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<Role>> GetRoles()
+        public async Task<IEnumerable<string>> GetRoles()
         {
-            var roles = await _roleRepository.All().ToListAsync();
-            return _mapper.Map<IEnumerable<Role>>(roles);
-        }
-
-        /// <inheritdoc />
-        public async Task<Role> GetRole(int id)
-        {
-            var role = await _roleRepository.Get(id);
-            if (role is null)
-            {
-                throw new RoleNotFoundException(id);
-            }
-
-            return _mapper.Map<Role>(role);
+            return await _roleRepository.All()
+                .Select(r => r.Name).ToListAsync();
         }
 
         /// <inheritdoc />
@@ -321,16 +314,41 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
-        public async Task AssignRole(UserRole assignment)
+        public async Task AssignRole(int userId, string role, int assignedByUserId)
         {
-            var existingAssignment = await _userRoleRepository.Get(assignment.UserId, assignment.RoleId);
-            if (existingAssignment is null)
+            var userEntity = await _userRepository.GetWithRoles(userId);
+            var roleEntity = await _roleRepository.GetByName(role);
+
+            if (userEntity is null)
+                throw new UserNotFoundException(userId);
+            if (await _userRepository.Get(assignedByUserId) == null)
+                throw new UserNotFoundException(assignedByUserId);
+            if (roleEntity is null)
+                throw new RoleNotFoundException();
+
+            var assignment = userEntity.Roles.FirstOrDefault(r => r.Role.Id == roleEntity.Id);
+
+            if (assignment is null)
             {
-                await _userRoleRepository.Add(_mapper.Map<UserRoleEntity>(assignment));
+                _logger.LogInformation("User {AssignedById} created a manual assignment of {Role} to {UserId}.",
+                    assignedByUserId, role, userId);
+
+                userEntity.Roles.Add(new UserRoleEntity()
+                {
+                    Role = roleEntity,
+                    User = userEntity,
+                    AssignedByUserId = assignedByUserId,
+                    ForceDisable = false
+                });
             }
             else
             {
-                existingAssignment.AssignedByUserId = assignment.AssignedByUserId;
+                _logger.LogInformation(
+                    "User {AssignedById} modified a manual assignment of {Role} to {UserId} (previously assigned: {Prev}, now assigned: {Now}).",
+                    assignedByUserId, role, userId, !assignment.ForceDisable, true);
+
+                assignment.AssignedByUserId = assignedByUserId;
+                assignment.ForceDisable = false;
             }
 
             try
@@ -346,15 +364,43 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
-        public async Task RevokeRole(int userId, int roleId)
+        public async Task RevokeRole(int userId, string role, int revokedByUserId)
         {
-            var entity = await _userRoleRepository.Get(userId, roleId);
-            if (entity is null)
-            {
+            var userEntity = await _userRepository.GetWithRoles(userId);
+            var roleEntity = await _roleRepository.GetByName(role);
+
+            if (userEntity is null)
+                throw new UserNotFoundException(userId);
+            if (await _userRepository.Get(revokedByUserId) == null)
+                throw new UserNotFoundException(revokedByUserId);
+            if (roleEntity is null)
                 throw new RoleNotFoundException();
+
+            var assignment = userEntity.Roles.FirstOrDefault(r => r.Role.Id == roleEntity.Id);
+
+            if (assignment is null)
+            {
+                _logger.LogInformation("User {AssignedById} created a manual revocation of {Role} to {UserId}.",
+                    revokedByUserId, role, userId);
+
+                userEntity.Roles.Add(new UserRoleEntity()
+                {
+                    Role = roleEntity,
+                    User = userEntity,
+                    AssignedByUserId = revokedByUserId,
+                    ForceDisable = true
+                });
+            }
+            else
+            {
+                _logger.LogInformation(
+                    "User {AssignedById} modified a manual assignment of {Role} to {UserId} (previously assigned: {Prev}, now assigned: {Now}).",
+                    revokedByUserId, role, userId, !assignment.ForceDisable, false);
+
+                assignment.AssignedByUserId = revokedByUserId;
+                assignment.ForceDisable = true;
             }
 
-            await _userRoleRepository.Delete(entity);
             try
             {
                 await _unitOfWork.SaveChanges();
@@ -362,6 +408,38 @@ namespace KachnaOnline.Business.Services
             catch (Exception e)
             {
                 _logger.LogError(e, "Role revocation failed.");
+                await _unitOfWork.ClearTrackedChanges();
+                throw new RoleManipulationFailedException();
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task ResetRole(int userId, string role, int resetByUserId)
+        {
+            var userEntity = await _userRepository.GetWithRoles(userId);
+            if (userEntity is null)
+                throw new UserNotFoundException(userId);
+
+            if (await _userRepository.Get(resetByUserId) == null)
+                throw new UserNotFoundException(resetByUserId);
+
+            var assignment = userEntity.Roles.FirstOrDefault(r => r.Role.Name == role);
+            if (assignment is null)
+                return;
+
+            _logger.LogInformation(
+                "User {AssignedById} reset the manual assignment of {Role} to {UserId} (previously assigned: {Prev}).",
+                resetByUserId, role, userId, !assignment.ForceDisable);
+
+            userEntity.Roles.Remove(assignment);
+
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Role reset failed.");
                 await _unitOfWork.ClearTrackedChanges();
                 throw new RoleManipulationFailedException();
             }

@@ -1,15 +1,15 @@
-// RoleAssignment.cs
+// UserRoleAssignmentDetailsDto.cs
 // Author: Ondřej Ondryáš
 
-namespace KachnaOnline.Business.Models.Users
+namespace KachnaOnline.Dto.Users
 {
-    public class RoleAssignment
+    public class UserRoleAssignmentDetailsDto
     {
         /// <summary>
-        /// A <see cref="User"/> object with information about the administrator that has
-        /// created this role assignment. May be null if this assignment was mapped from a KIS role.
+        /// Details of the administrator that has created this role assignment.
+        /// May be null if this assignment was mapped from a KIS role.
         /// </summary>
-        public User AssignedBy { get; set; }
+        public UserDto AssignedBy { get; set; }
 
         /// <summary>
         /// The role name.

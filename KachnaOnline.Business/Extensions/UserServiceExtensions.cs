@@ -1,4 +1,4 @@
-// IUserServiceExtensions.cs
+// UserServiceExtensions.cs
 // Author: Ondřej Ondryáš
 
 using System.Collections.Generic;

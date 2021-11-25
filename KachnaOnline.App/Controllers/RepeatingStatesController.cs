@@ -1,4 +1,7 @@
-﻿using System;
+﻿// RepeatingStatesController.cs
+// Author: Ondřej Ondryáš
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -141,7 +144,7 @@ namespace KachnaOnline.App.Controllers
         /// be changed to a date in the past. The planning behaviour is the same as in `POST /states/repeating`
         ///
         /// Repeating states of which the `effectiveTo` date has already passed (or is today) cannot be modified at all.
-        /// 
+        ///
         /// Administrators (only) can also change `madeById`.
         ///
         /// `state` must not be `Closed`.

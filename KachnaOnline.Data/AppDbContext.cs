@@ -50,6 +50,10 @@ namespace KachnaOnline.Data
             builder.Entity<UserRole>()
                 .HasKey(e => new { e.UserId, e.RoleId });
 
+            builder.Entity<Role>()
+                .HasIndex(e => e.Name)
+                .IsUnique();
+
             // Club states
             builder.Entity<RepeatingState>()
                 .HasMany(e => e.LinkedPlannedStates)

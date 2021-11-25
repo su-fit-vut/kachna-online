@@ -32,7 +32,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<LoginResult> LoginToken(string kisRefreshToken);
 
         /// <summary>
-        /// Returns the user corresponding to the specified <paramref name="userId"/>.
+        /// Returns a user with the given <paramref name="userId"/>.
         /// </summary>
         /// <param name="userId">The user ID to search for.</param>
         /// <returns>A <see cref="User"/> object containing the user matching the specified <paramref name="userId"/>
@@ -40,7 +40,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<User> GetUser(int userId);
 
         /// <summary>
-        /// Returns the names of roles assigned to the user corresponding to the specified <paramref name="userId"/>.
+        /// Returns the names of roles assigned to a user with the given <paramref name="userId"/>.
         /// </summary>
         /// <param name="userId">The user ID to search for.</param>
         /// <returns>An enumerable of names of roles assigned to the user matching the specified <paramref name="userId"/>
@@ -48,8 +48,8 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<IEnumerable<string>> GetUserRoles(int userId);
 
         /// <summary>
-        /// Returns <see cref="RoleAssignment"/> objects describing the role assignments for the user corresponding
-        /// to the specified <paramref name="userId"/>.
+        /// Returns <see cref="RoleAssignment"/> objects describing the role assignments for a user with the given
+        /// <paramref name="userId"/>. Role assignments describing disabled roles are also returned.
         /// </summary>
         /// <param name="userId">The user ID to search for.</param>
         /// <returns>An enumerable of <see cref="RoleAssignment"/> objects describing the role assignments for the user
@@ -57,8 +57,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<IEnumerable<RoleAssignment>> GetUserRoleDetails(int userId);
 
         /// <summary>
-        /// Checks whether the user corresponding to the specified <paramref name="userId"/> has the role specified
-        /// by <paramref name="role"/>.
+        /// Checks if a user with the given <paramref name="userId"/> has a role specified by <paramref name="role"/>.
         /// </summary>
         /// <param name="userId">The user ID to check the role for.</param>
         /// <param name="role">The name of the role to check.</param>
@@ -69,15 +68,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// Returns all roles present in the system.
         /// </summary>
         /// <returns>An enumerable of all roles.</returns>
-        Task<IEnumerable<Role>> GetRoles();
-
-        /// <summary>
-        /// Returns a role with the given ID.
-        /// </summary>
-        /// <param name="id">ID of the role to return.</param>
-        /// <returns>A <see cref="Role"/> with ID <paramref name="id"/>.</returns>
-        /// <exception cref="RoleNotFoundException">No such role exists.</exception>
-        Task<Role> GetRole(int id);
+        Task<IEnumerable<string>> GetRoles();
 
         /// <summary>
         /// Returns all users.
@@ -86,19 +77,49 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<IEnumerable<User>> GetUsers();
 
         /// <summary>
-        /// Assigns a role to a user.
+        /// Assigns a role to a user manually.
         /// </summary>
-        /// <param name="assignment">The role assignment to add.</param>
-        /// <exception cref="RoleManipulationFailedException">When the assignment failed.</exception>
-        Task AssignRole(UserRole assignment);
+        /// <remarks>
+        /// After performing this operation, the user will always obtain the role when logging in, even if they
+        /// should not have it based on a KIS mapping.
+        /// This forceful assignment can be reversed by calling <see cref="ResetRole"/>.
+        /// </remarks>
+        /// <param name="userId">The ID of the user to assign the role to.</param>
+        /// <param name="role">The name of the role to assign.</param>
+        /// <param name="assignedByUserId">The ID of a user that performed the operation.</param>
+        /// <exception cref="RoleNotFoundException">The role does not exist.</exception>
+        /// <exception cref="RoleManipulationFailedException">The assignment failed.</exception>
+        /// <exception cref="UserNotFoundException">The user does not exist.</exception>
+        Task AssignRole(int userId, string role, int assignedByUserId);
 
         /// <summary>
-        /// Revokes a role from a user.
+        /// Revokes a role from a user manually.
         /// </summary>
-        /// <param name="userId">ID of the user to revoke the role from.</param>
-        /// <param name="roleId">ID of the role to revoke from the user.</param>
-        /// <exception cref="RoleNotFoundException">When the assignment to revoke was not found.</exception>
-        /// <exception cref="RoleManipulationFailedException">When the revocation failed.</exception>
-        Task RevokeRole(int userId, int roleId);
+        /// <remarks>
+        /// After performing this operation, the user will never obtain the role when logging in, even if they
+        /// should have it based on a KIS mapping.
+        /// This forceful revocation can be reversed by calling <see cref="ResetRole"/>.
+        /// </remarks>
+        /// <param name="userId">The ID of the user to revoke the role from.</param>
+        /// <param name="role">The name of the role to revoke from the user.</param>
+        /// <param name="revokedByUserId">The ID of a user that performed the operation.</param>
+        /// <exception cref="RoleNotFoundException">The role does not exist.</exception>
+        /// <exception cref="RoleManipulationFailedException">The revocation failed.</exception>
+        /// <exception cref="UserNotFoundException">The user does not exist.</exception>
+        Task RevokeRole(int userId, string role, int revokedByUserId);
+
+        /// <summary>
+        /// Resets a manual role assignment.
+        /// </summary>
+        /// <remarks>
+        /// If the user does not have an existing role assignment to the specified role (or the role does not exist
+        /// at all), this method does nothing.
+        /// </remarks>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="role">The name of the role.</param>
+        /// <param name="resetByUserId">The ID of a user that performed the operation.</param>
+        /// <exception cref="RoleManipulationFailedException">The operation failed.</exception>
+        /// <exception cref="UserNotFoundException">The user does not exist.</exception>
+        Task ResetRole(int userId, string role, int resetByUserId);
     }
 }

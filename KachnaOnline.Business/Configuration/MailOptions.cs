@@ -1,5 +1,5 @@
 // MailOptions.cs
-// Author: František Nečas
+// Author: František Nečas, Ondřej Ondryáš
 
 namespace KachnaOnline.Business.Configuration
 {

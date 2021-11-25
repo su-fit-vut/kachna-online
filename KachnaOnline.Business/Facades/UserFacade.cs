@@ -1,5 +1,5 @@
 // UserFacade.cs
-// Author: František Nečas
+// Author: František Nečas, Ondřej Ondryáš
 
 using System.Collections.Generic;
 using System.Linq;
@@ -24,18 +24,33 @@ namespace KachnaOnline.Business.Facades
             _userService = userService;
         }
 
+        private async Task<UserDto> MapUser(User user)
+        {
+            var userDto = _mapper.Map<UserDetailsDto>(user);
+
+            var roleDetails = (await _userService.GetUserRoleDetails(user.Id)).ToList();
+
+            userDto.ManuallyAssignedRoles =
+                _mapper.Map<UserRoleAssignmentDetailsDto[]>(roleDetails.Where(r => r.AssignedManually));
+
+            userDto.ActiveRoles = roleDetails
+                .Where(r => !r.ManuallyDisabled)
+                .Select(r => r.Role)
+                .ToArray();
+
+            return userDto;
+        }
+
         /// <summary>
-        /// Returns an enumerable of all users.
+        /// Returns a list of all users with their roles.
         /// </summary>
         /// <returns>An enumerable of all <see cref="UserDto"/>.</returns>
-        public async Task<IEnumerable<UserDto>> GetUsers()
+        public async Task<List<UserDto>> GetUsers()
         {
             var users = new List<UserDto>();
             foreach (var user in await _userService.GetUsers())
             {
-                var userDto = _mapper.Map<UserDto>(user);
-                userDto.Roles = (await _userService.GetUserRoles(userDto.Id)).ToArray();
-                users.Add(userDto);
+                users.Add(await this.MapUser(user));
             }
 
             return users;
@@ -55,44 +70,50 @@ namespace KachnaOnline.Business.Facades
                 throw new UserNotFoundException(id);
             }
 
-            var userDto = _mapper.Map<UserDto>(user);
-            userDto.Roles = (await _userService.GetUserRoles(id)).ToArray();
-            return userDto;
+            return await this.MapUser(user);
+        }
+
+        public async Task<List<string>> GetRoles()
+        {
+            return (await _userService.GetRoles()).ToList();
         }
 
         /// <summary>
         /// Assigns a role to a user.
         /// </summary>
-        /// <param name="assignedBy">ID of the user making the assignment.</param>
-        /// <param name="userId">ID of the user to assign the role to.</param>
-        /// <param name="roleId">ID of the role to assign.</param>
+        /// <param name="userId">The ID of the user to assign the role to.</param>
+        /// <param name="role">The name of the role to assign.</param>
+        /// <param name="assignedByUserId">The ID of the user making the assignment.</param>
         /// <exception cref="UserNotFoundException">When the user does not exist.</exception>
         /// <exception cref="RoleNotFoundException">When the role does not exist.</exception>
         /// <exception cref="RoleManipulationFailedException">When the assignment failed.</exception>
-        public async Task AssignRole(int assignedBy, int userId, int roleId)
+        public async Task AssignRole(int userId, string role, int assignedByUserId)
         {
-            if (await _userService.GetUser(userId) is null)
-            {
-                throw new UserNotFoundException(userId);
-            }
-
-            // This will throw if the role does not exist
-            await _userService.GetRole(roleId);
-            var assignment = new UserRole()
-                { AssignedByUserId = assignedBy, ForceDisable = false, RoleId = roleId, UserId = userId };
-            await _userService.AssignRole(assignment);
+            await _userService.AssignRole(userId, role, assignedByUserId);
         }
 
         /// <summary>
         /// Revokes a role from a user.
         /// </summary>
-        /// <param name="userId">ID of the user to revoke the role from.</param>
-        /// <param name="roleId">ID of the role to revoke.</param>
+        /// <param name="userId">The ID of the user to revoke the role from.</param>
+        /// <param name="role">The ID of the role to revoke.</param>
+        /// <param name="revokedByUserId">The ID of the user revoking the role.</param>
         /// <exception cref="RoleNotFoundException">When the assignment does not exist.</exception>
         /// <exception cref="RoleManipulationFailedException">When the revocation failed.</exception>
-        public async Task RevokeRole(int userId, int roleId)
+        public async Task RevokeRole(int userId, string role, int revokedByUserId)
         {
-            await _userService.RevokeRole(userId, roleId);
+            await _userService.RevokeRole(userId, role, revokedByUserId);
+        }
+
+        /// <summary>
+        /// Resets a role assignment to the default state (KIS-mapped).
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="role"></param>
+        /// <param name="resetByUserId"></param>
+        public async Task ResetRole(int userId, string role, int resetByUserId)
+        {
+            await _userService.ResetRole(userId, role, resetByUserId);
         }
     }
 }
