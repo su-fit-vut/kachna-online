@@ -16,7 +16,7 @@ namespace KachnaOnline.App.Controllers
 {
     [ApiController]
     [Route("boardGames")]
-    [Authorize(Roles = RoleConstants.BoardGamesManager)]
+    [Authorize(Roles = AuthConstants.BoardGamesManager)]
     public class BoardGamesController : ControllerBase
     {
         private readonly BoardGamesFacade _facade;

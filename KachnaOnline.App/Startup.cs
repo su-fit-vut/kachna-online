@@ -6,6 +6,7 @@ using System.Linq;
 using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Configuration;
+using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Data.Extensions;
 using KachnaOnline.Data;
 using Microsoft.AspNetCore.Builder;
@@ -71,8 +72,16 @@ namespace KachnaOnline.App
                     inputFormatter.SupportedMediaTypes.Add("text/json");
                 });
 
-            // Add JWT authorization.
-            services.AddCustomJwtAuthorization(this.Configuration);
+            // Add JWT authentication.
+            services.AddCustomJwtAuthentication(this.Configuration);
+
+            // Add custom authorization policies.
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(AuthConstants.AnyManagerPolicy, policy =>
+                    policy.RequireRole(AuthConstants.Admin, AuthConstants.EventsManager, AuthConstants.StatesManager,
+                        AuthConstants.BoardGamesManager));
+            });
 
             // Add OpenAPI document service.
             services.AddCustomSwaggerGen();

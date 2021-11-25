@@ -57,7 +57,7 @@ namespace KachnaOnline.Business.Facades
         private bool IsUserEventsManager()
         {
             var user = _httpContextAccessor.HttpContext?.User;
-            return user != null && user.IsInRole(RoleConstants.EventsManager);
+            return user != null && user.IsInRole(AuthConstants.EventsManager);
         }
 
         /// <summary>

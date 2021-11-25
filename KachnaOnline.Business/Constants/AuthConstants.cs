@@ -1,9 +1,9 @@
-// RoleConstants.cs
+// AuthConstants.cs
 // Author: František Nečas
 
 namespace KachnaOnline.Business.Constants
 {
-    public static class RoleConstants
+    public static class AuthConstants
     {
         // Name of role for managers of states.
         public const string StatesManager = "StatesManager";
@@ -16,5 +16,8 @@ namespace KachnaOnline.Business.Constants
 
         // Name of role for admins of the whole system.
         public const string Admin = "Admin";
+
+        // Name of policy that allows access to any kind of manager or administrator.
+        public const string AnyManagerPolicy = "AnyManager";
     }
 }

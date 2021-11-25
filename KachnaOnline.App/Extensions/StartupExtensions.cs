@@ -2,6 +2,7 @@
 // Author: Ondřej Ondryáš
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using KachnaOnline.App.Swagger;
@@ -9,8 +10,14 @@ using KachnaOnline.Business.Configuration;
 using KachnaOnline.Business.Constants;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog.AspNetCore;
@@ -64,7 +71,7 @@ namespace KachnaOnline.App.Extensions
         /// </summary>
         /// <param name="services">An <see cref="IServiceCollection"/> to add services to.</param>
         /// <param name="configuration">A <see cref="IConfiguration"/> to load the JWT configuration from.</param>
-        public static void AddCustomJwtAuthorization(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCustomJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtKey = configuration.GetSection("Jwt").Get<JwtOptions>().Secret;
             var jwtKeyBytes = Encoding.ASCII.GetBytes(jwtKey);

@@ -17,7 +17,7 @@ namespace KachnaOnline.App.Controllers
 {
     [ApiController]
     [Route("events")]
-    [Authorize(Roles = RoleConstants.EventsManager)]
+    [Authorize(Roles = AuthConstants.EventsManager)]
     public class EventsController : ControllerBase
     {
         private readonly EventsFacade _eventsFacade;

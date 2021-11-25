@@ -785,7 +785,7 @@ namespace KachnaOnline.Business.Services
 
             // Only Cancelled request from a regular user is needed to be checked now. A board games manager
             // can also request cancellation.
-            if (!user.IsInRole(RoleConstants.BoardGamesManager) && userId != reservation.MadeById)
+            if (!user.IsInRole(AuthConstants.BoardGamesManager) && userId != reservation.MadeById)
                 throw new ReservationAccessDeniedException();
 
             var itemModel = _mapper.Map<ReservationItem>(item);

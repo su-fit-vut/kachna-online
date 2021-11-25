@@ -34,7 +34,7 @@ namespace KachnaOnline.App.Controllers
         /// <response code="200">The list of users.</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = AuthConstants.Admin)]
         public async Task<ActionResult<List<UserDto>>> GetUsers()
         {
             return await _facade.GetUsers();
@@ -49,7 +49,7 @@ namespace KachnaOnline.App.Controllers
         [HttpGet("id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = AuthConstants.Admin)]
         public async Task<ActionResult<UserDto>> GetUser(int id)
         {
             try
@@ -94,7 +94,7 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = AuthConstants.Admin)]
         public async Task<IActionResult> AssignRole(int id, string roleName, [Required] [FromQuery] bool state)
         {
             try
@@ -143,7 +143,7 @@ namespace KachnaOnline.App.Controllers
         [HttpDelete("{id}/roles/{roleName}/assignment")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = AuthConstants.Admin)]
         public async Task<IActionResult> ResetRole(int id, string roleName)
         {
             try

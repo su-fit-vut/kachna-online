@@ -498,9 +498,9 @@ namespace KachnaOnline.Business.Services
 
                 if (modification.MadeById.HasValue)
                 {
-                    if (!changeMadeByUserRoles.Any(r => r == RoleConstants.Admin))
+                    if (!changeMadeByUserRoles.Any(r => r == AuthConstants.Admin))
                     {
-                        throw new UserUnprivilegedException(changeMadeByUserId, RoleConstants.Admin,
+                        throw new UserUnprivilegedException(changeMadeByUserId, AuthConstants.Admin,
                             $"change the {nameof(RepeatingState.MadeById)} attribute of states");
                     }
 
@@ -868,9 +868,9 @@ namespace KachnaOnline.Business.Services
 
                 if (modification.MadeById.HasValue)
                 {
-                    if (!changeMadeByUserRoles.Any(r => r == RoleConstants.Admin))
+                    if (!changeMadeByUserRoles.Any(r => r == AuthConstants.Admin))
                     {
-                        throw new UserUnprivilegedException(changeMadeByUserId, RoleConstants.Admin,
+                        throw new UserUnprivilegedException(changeMadeByUserId, AuthConstants.Admin,
                             $"change the {nameof(RepeatingState.MadeById)} attribute of states");
                     }
 

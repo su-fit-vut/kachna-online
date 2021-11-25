@@ -18,7 +18,7 @@ namespace KachnaOnline.App.Controllers
 {
     [ApiController]
     [Route("states")]
-    [Authorize(Roles = RoleConstants.StatesManager)]
+    [Authorize(Roles = AuthConstants.StatesManager)]
     public class ClubStateController : ControllerBase
     {
         private readonly ClubStateFacade _facade;
@@ -112,7 +112,7 @@ namespace KachnaOnline.App.Controllers
         {
             if (type == StateType.Private)
             {
-                if (!this.User.IsInRole(RoleConstants.StatesManager))
+                if (!this.User.IsInRole(AuthConstants.StatesManager))
                     return this.Forbid();
             }
 

@@ -18,7 +18,7 @@ namespace KachnaOnline.App.Controllers
 {
     [ApiController]
     [Route("states/repeating")]
-    [Authorize(Roles = RoleConstants.StatesManager)]
+    [Authorize(Roles = AuthConstants.StatesManager)]
     public class RepeatingStatesController : ControllerBase
     {
         private readonly RepeatingStatesFacade _facade;

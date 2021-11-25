@@ -47,7 +47,7 @@ namespace KachnaOnline.App.Controllers
         /// <param name="state">If present, only reservations of this overall state will be returned.</param>
         /// <returns>A list of all <see cref="ManagerReservationDto"/>, filtered by state if requested.</returns>
         /// <response code="200">The list of all reservations.</response>
-        [Authorize(Roles = RoleConstants.BoardGamesManager)]
+        [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("all")]
         public async Task<ActionResult<List<ManagerReservationDto>>> GetAllReservations(ReservationState? state)
@@ -64,7 +64,7 @@ namespace KachnaOnline.App.Controllers
         /// filtered by state if requested.</returns>
         /// <response code="200">The list of all reservations assigned to the user with ID
         /// <paramref name="userId"/>.</response>
-        [Authorize(Roles = RoleConstants.BoardGamesManager)]
+        [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("all/assignedTo/{userId}")]
         public async Task<ActionResult<List<ManagerReservationDto>>> GetAssignedReservations(int userId,
@@ -80,7 +80,7 @@ namespace KachnaOnline.App.Controllers
         /// <returns>A list of all <see cref="ManagerReservationDto"/> assigned to the authenticated user,
         /// filtered by state if requested.</returns>
         /// <response code="200">The list of all reservations assigned to the authenticated user.</response>
-        [Authorize(Roles = RoleConstants.BoardGamesManager)]
+        [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("all/assignedTo/me")]
         public async Task<ActionResult<List<ManagerReservationDto>>> GetAssignedReservations(
@@ -195,7 +195,7 @@ namespace KachnaOnline.App.Controllers
         /// <param name="noteDto">A model containing the new internal note.</param>
         /// <response code="204">The reservation was updated.</response>
         /// <response code="404">No such reservation exists.</response>
-        [Authorize(Roles = RoleConstants.BoardGamesManager)]
+        [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}/noteInternal")]
@@ -226,7 +226,7 @@ namespace KachnaOnline.App.Controllers
         /// <response code="404">When a requested game or user to create for does not exist.</response>
         /// <response code="409">All of the given board games could not be reserved (e.g. are not available).
         /// Returns the list of conflicting board game IDs.</response>
-        [Authorize(Roles = RoleConstants.BoardGamesManager)]
+        [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(typeof(ManagerReservationDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -267,7 +267,7 @@ namespace KachnaOnline.App.Controllers
         /// <response code="404">No such reservation exists or a requested game does not exist.</response>
         /// <response code="409">All of the given board games could not be reserved (e.g. are not available).
         /// Returns the list of conflicting board game IDs.</response>
-        [Authorize(Roles = RoleConstants.BoardGamesManager)]
+        [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -307,7 +307,7 @@ namespace KachnaOnline.App.Controllers
         /// chronologically.</returns>
         /// <response code="200">The item history.</response>
         /// <response code="404">No such item or reservation exists.</response>
-        [Authorize(Roles = RoleConstants.BoardGamesManager)]
+        [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}/{itemId}/events")]

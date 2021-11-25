@@ -46,7 +46,7 @@ namespace KachnaOnline.Business.Facades
                       throw new InvalidOperationException("No valid user found in the current request."));
 
         private bool IsUserManager
-            => _httpContextAccessor.HttpContext?.User?.IsInRole(RoleConstants.StatesManager) ?? false;
+            => _httpContextAccessor.HttpContext?.User?.IsInRole(AuthConstants.StatesManager) ?? false;
 
         private void EnsureUserStateVisibility(State inputState)
         {

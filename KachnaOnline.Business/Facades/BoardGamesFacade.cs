@@ -108,11 +108,11 @@ namespace KachnaOnline.Business.Facades
             bool? visible)
         {
             // Regular users can only see visible games
-            if (!user.IsInRole(RoleConstants.BoardGamesManager))
+            if (!user.IsInRole(AuthConstants.BoardGamesManager))
                 visible = true;
 
             var games = await _boardGamesService.GetBoardGames(categoryId, players, available, visible);
-            if (user.IsInRole(RoleConstants.BoardGamesManager))
+            if (user.IsInRole(AuthConstants.BoardGamesManager))
                 return _mapper.Map<List<ManagerBoardGameDto>>(games);
 
             return _mapper.Map<List<BoardGameDto>>(games);
@@ -141,11 +141,11 @@ namespace KachnaOnline.Business.Facades
                 if (!(user.Identity?.IsAuthenticated ?? false))
                     throw new NotAuthenticatedException();
 
-                if (!user.IsInRole(RoleConstants.BoardGamesManager))
+                if (!user.IsInRole(AuthConstants.BoardGamesManager))
                     throw new NotABoardGamesManagerException();
             }
 
-            if (user.IsInRole(RoleConstants.BoardGamesManager))
+            if (user.IsInRole(AuthConstants.BoardGamesManager))
                 return _mapper.Map<ManagerBoardGameDto>(game);
 
             return _mapper.Map<BoardGameDto>(game);
@@ -255,7 +255,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<ReservationDto> GetReservation(ClaimsPrincipal user, int reservationId)
         {
             var reservation = await _boardGamesService.GetReservation(reservationId);
-            if (user.IsInRole(RoleConstants.BoardGamesManager))
+            if (user.IsInRole(AuthConstants.BoardGamesManager))
             {
                 var managerDto = _mapper.Map<ManagerReservationDto>(reservation);
                 managerDto.Items =
@@ -400,7 +400,7 @@ namespace KachnaOnline.Business.Facades
 
             if (eventType is ReservationEventType.Assigned or ReservationEventType.HandedOver or
                 ReservationEventType.ExtensionGranted or ReservationEventType.ExtensionRefused or
-                ReservationEventType.Returned && !user.IsInRole(RoleConstants.BoardGamesManager))
+                ReservationEventType.Returned && !user.IsInRole(AuthConstants.BoardGamesManager))
                 throw new NotABoardGamesManagerException();
 
             var stateModel = _mapper.Map<ReservationEventModelType>(eventType);
