@@ -3,6 +3,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Dto.Auth;
@@ -50,9 +51,9 @@ namespace KachnaOnline.App.Controllers
             var token = await _userService.LoginSession(session);
 
             if (token.HasError)
-                return this.Problem(statusCode: 500, detail: "An unexpected error occured.");
+                return this.GeneralProblem();
             else if (!token.UserFound)
-                return this.Problem(statusCode: 404, detail: "User is not registered in KIS.");
+                return this.NotFoundProblem("User is not registered in KIS.");
 
             return new AuthenticationResultDto()
                 { AccessToken = token.AccessToken, KisAccessToken = token.KisAccessToken };
@@ -82,12 +83,11 @@ namespace KachnaOnline.App.Controllers
             var token = await _userService.LoginToken(kisRefreshToken);
             if (token.HasError)
             {
-                return this.Problem(statusCode: 500, detail: "An unexpected error occured.");
+                return this.GeneralProblem();
             }
             else if (!token.UserFound)
             {
-                return this.Problem(statusCode: 403,
-                    detail:
+                return this.ForbiddenProblem(
                     "Invalid KIS refresh token (either it has expired or the user is not an SU member anymore).");
             }
 
@@ -115,12 +115,11 @@ namespace KachnaOnline.App.Controllers
             var token = await _userService.Refresh(this.User);
             if (token.HasError)
             {
-                return this.Problem(statusCode: 500, detail: "An unexpected error occured.");
+                return this.GeneralProblem();
             }
             else if (!token.UserFound)
             {
-                return this.Problem(statusCode: 403,
-                    detail:
+                return this.ForbiddenProblem(
                     "Invalid KIS refresh token (either it has expired or the user is not an SU member anymore).");
             }
 

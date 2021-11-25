@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
@@ -79,15 +80,19 @@ namespace KachnaOnline.App.Controllers
             }
             catch (BoardGameNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified board game does not exist.");
             }
             catch (NotAuthenticatedException)
             {
-                return this.Unauthorized();
+                return this.UnauthorizedProblem(
+                    "The board game exists but it is not visible to unauthenticated users.",
+                    "Board game not visible");
             }
             catch (NotABoardGamesManagerException)
             {
-                return this.Forbid();
+                return this.ForbiddenProblem(
+                    "The board game exists but it is not visible to the currently authenticated user.",
+                    "Board game not visible");
             }
         }
 
@@ -110,15 +115,11 @@ namespace KachnaOnline.App.Controllers
             }
             catch (CategoryNotFoundException)
             {
-                return this.UnprocessableEntity();
+                return this.UnprocessableEntityProblem("The specified category does not exist.");
             }
             catch (UserNotFoundException)
             {
-                return this.UnprocessableEntity();
-            }
-            catch (BoardGameManipulationFailedException)
-            {
-                return this.Problem();
+                return this.UnprocessableEntityProblem("The specified user does not exist.");
             }
         }
 
@@ -143,19 +144,15 @@ namespace KachnaOnline.App.Controllers
             }
             catch (BoardGameNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified board game does not exist.");
             }
             catch (CategoryNotFoundException)
             {
-                return this.UnprocessableEntity();
+                return this.UnprocessableEntityProblem("The specified category does not exist.");
             }
             catch (UserNotFoundException)
             {
-                return this.UnprocessableEntity();
-            }
-            catch (BoardGameManipulationFailedException)
-            {
-                return this.Problem();
+                return this.UnprocessableEntityProblem("The specified user does not exist.");
             }
         }
 
@@ -178,11 +175,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (BoardGameNotFoundException)
             {
-                return this.NotFound();
-            }
-            catch (BoardGameManipulationFailedException)
-            {
-                return this.Problem();
+                return this.NotFoundProblem("The specified board game does not exist.");
             }
         }
 
@@ -218,7 +211,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (CategoryNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified category does not exist.");
             }
         }
 
@@ -232,15 +225,8 @@ namespace KachnaOnline.App.Controllers
         [HttpPost("categories")]
         public async Task<ActionResult<CategoryDto>> CreateCategory(CreateCategoryDto category)
         {
-            try
-            {
-                var createdCategory = await _facade.CreateCategory(category);
-                return this.CreatedAtAction(nameof(this.GetCategory), new { id = createdCategory.Id }, createdCategory);
-            }
-            catch (CategoryManipulationFailedException)
-            {
-                return this.Problem();
-            }
+            var createdCategory = await _facade.CreateCategory(category);
+            return this.CreatedAtAction(nameof(this.GetCategory), new { id = createdCategory.Id }, createdCategory);
         }
 
         /// <summary>
@@ -262,11 +248,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (CategoryNotFoundException)
             {
-                return this.NotFound();
-            }
-            catch (CategoryManipulationFailedException)
-            {
-                return this.Problem();
+                return this.NotFoundProblem("The specified board game does not exist.");
             }
         }
 
@@ -280,7 +262,7 @@ namespace KachnaOnline.App.Controllers
         /// of IDs of conflicting board games.</response>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(int[]), StatusCodes.Status409Conflict)]
         [HttpDelete("categories/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
@@ -291,15 +273,12 @@ namespace KachnaOnline.App.Controllers
             }
             catch (NotABoardGamesManagerException)
             {
-                return this.Forbid();
+                // Shouldn't happen
+                return this.ForbiddenProblem();
             }
             catch (CategoryNotFoundException)
             {
-                return this.NotFound();
-            }
-            catch (CategoryManipulationFailedException)
-            {
-                return this.Problem();
+                return this.NotFoundProblem("The specified category does not exist.");
             }
             catch (CategoryHasBoardGamesException e)
             {

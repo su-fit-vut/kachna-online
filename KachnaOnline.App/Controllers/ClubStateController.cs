@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.ClubStates;
@@ -63,7 +64,7 @@ namespace KachnaOnline.App.Controllers
         {
             var dto = await _facade.Get(id);
             if (dto is null)
-                return this.NotFound();
+                return this.NotFoundProblem("The specified state plan record does not exist.");
 
             return dto;
         }
@@ -91,7 +92,7 @@ namespace KachnaOnline.App.Controllers
         {
             var res = await _facade.GetNearOrBetween(from, to);
             if (res is null)
-                return this.BadRequest();
+                return this.BadRequestProblem("The specified time range is not valid.");
 
             return res;
         }
@@ -113,12 +114,12 @@ namespace KachnaOnline.App.Controllers
             if (type == StateType.Private)
             {
                 if (!this.User.IsInRole(AuthConstants.StatesManager))
-                    return this.Forbid();
+                    return this.ForbiddenProblem("You cannot access private state plan records.");
             }
 
             var dto = await _facade.GetNext(type);
             if (dto is null)
-                return this.NotFound();
+                return this.NotFoundProblem("No state of the given type is planned.", "No such state");
 
             return dto;
         }
@@ -163,11 +164,14 @@ namespace KachnaOnline.App.Controllers
             }
             catch (StateNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem(
+                    "No planned end date was specified and there is no state planned in the future.",
+                    "Following state not found");
             }
             catch (ArgumentException e)
             {
-                return this.BadRequest(e.Message);
+                // TODO: Don't use the message from the exception?
+                return this.BadRequestProblem(e.Message);
             }
         }
 
@@ -248,7 +252,7 @@ namespace KachnaOnline.App.Controllers
         /// </remarks>
         /// <param name="id">The ID of the state to delete.</param>
         /// <response code="204">The state was deleted.</response>
-        /// <response code="404">The state does not exist..</response>
+        /// <response code="404">The state does not exist.</response>
         /// <response code="409">The state has already started.</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -263,11 +267,12 @@ namespace KachnaOnline.App.Controllers
             }
             catch (StateReadOnlyException)
             {
-                return this.Conflict();
+                return this.ConflictProblem("The state has already started or ended and cannot be modified.",
+                    "Cannot modify past state");
             }
             catch (StateNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified state plan record does not exist.");
             }
         }
 
@@ -289,7 +294,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (StateNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified state plan record does not exist.");
             }
         }
 
@@ -305,21 +310,22 @@ namespace KachnaOnline.App.Controllers
             }
             catch (StateNotFoundException)
             {
-                return this.NotFound(id.HasValue
-                    ? "The specified state does not exist."
+                return this.NotFoundProblem(id.HasValue
+                    ? "The specified state plan record does not exist."
                     : "No state is active at the moment.");
             }
             catch (InvalidOperationException e)
             {
-                return this.BadRequest(e.Message);
+                // TODO: Don't use the message from the exception?
+                return this.BadRequestProblem(e.Message);
             }
             catch (UserNotFoundException)
             {
-                return this.UnprocessableEntity();
+                return this.UnprocessableEntityProblem("The specified user does not exist.");
             }
             catch (UserUnprivilegedException)
             {
-                return this.Forbid();
+                return this.ForbiddenProblem("Only administrators may change a state's made by ID.");
             }
         }
     }

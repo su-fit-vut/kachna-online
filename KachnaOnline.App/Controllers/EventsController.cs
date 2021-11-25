@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.Events;
@@ -59,7 +60,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (EventNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified event does not exist.");
             }
         }
 
@@ -111,7 +112,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (ArgumentException)
             {
-                return this.BadRequest();
+                return this.BadRequestProblem("The specified time range is not valid.");
             }
         }
 
@@ -135,18 +136,11 @@ namespace KachnaOnline.App.Controllers
             }
             catch (UserNotFoundException)
             {
-                return this.UnprocessableEntity();
+                return this.UnprocessableEntityProblem("The specified user does not exist.");
             }
             catch (ArgumentException)
             {
-                return this.Conflict();
-            }
-            catch (EventManipulationFailedException)
-            {
-                return this.Problem(
-                    title: "Creation failed",
-                    detail: "Creation of a new event has failed.",
-                    statusCode: 500);
+                return this.BadRequestProblem("Invalid event parameters.");
             }
         }
 
@@ -171,22 +165,16 @@ namespace KachnaOnline.App.Controllers
             }
             catch (NotAnEventsManagerException)
             {
-                return this.Forbid();
+                // Shouldn't happen
+                return this.ForbiddenProblem();
             }
             catch (EventNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified event does not exist.");
             }
             catch (EventReadOnlyException)
             {
-                return this.Conflict();
-            }
-            catch (EventManipulationFailedException)
-            {
-                return this.Problem(
-                    title: "Modification failed",
-                    detail: "Modification of the event failed.",
-                    statusCode: 500);
+                return this.ConflictProblem("The specified event has already passed and cannot be modified.");
             }
         }
 
@@ -210,22 +198,16 @@ namespace KachnaOnline.App.Controllers
             }
             catch (NotAnEventsManagerException)
             {
-                return this.Forbid();
+                // Shouldn't happen
+                return this.ForbiddenProblem();
             }
             catch (EventReadOnlyException)
             {
-                return this.Conflict();
+                return this.ConflictProblem("The specified event has already passed and cannot be deleted.");
             }
             catch (EventNotFoundException)
             {
-                return this.NotFound();
-            }
-            catch (EventManipulationFailedException)
-            {
-                return this.Problem(
-                    title: "Removal failed",
-                    detail: "Removal of an event failed.",
-                    statusCode: 500);
+                return this.NotFoundProblem("The specified event does not exist.");
             }
         }
     }

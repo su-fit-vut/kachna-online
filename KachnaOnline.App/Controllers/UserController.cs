@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.Roles;
@@ -54,11 +55,11 @@ namespace KachnaOnline.App.Controllers
         {
             try
             {
-                return new ActionResult<UserDto>(await _facade.GetUser(id));
+                return await _facade.GetUser(id);
             }
             catch (UserNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified user does not exist.");
             }
         }
 
@@ -71,7 +72,7 @@ namespace KachnaOnline.App.Controllers
         public async Task<ActionResult<UserDto>> GetUser()
         {
             var id = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
-            return new ActionResult<UserDto>(await _facade.GetUser(id));
+            return await _facade.GetUser(id);
         }
 
 
@@ -114,15 +115,11 @@ namespace KachnaOnline.App.Controllers
             }
             catch (UserNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified user does not exist.");
             }
             catch (RoleNotFoundException)
             {
-                return this.UnprocessableEntity();
-            }
-            catch (RoleManipulationFailedException)
-            {
-                return this.Problem();
+                return this.UnprocessableEntityProblem("The specified role does not exist.");
             }
         }
 
@@ -154,7 +151,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (UserNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified user does not exist.");
             }
         }
 

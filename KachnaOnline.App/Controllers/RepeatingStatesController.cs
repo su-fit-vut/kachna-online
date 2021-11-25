@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.ClubStates;
@@ -74,7 +75,7 @@ namespace KachnaOnline.App.Controllers
         public async Task<ActionResult<List<RepeatingStateDto>>> Get(DateTime? from, DateTime? to)
         {
             if (from > to)
-                return this.BadRequest();
+                return this.BadRequestProblem("The specified time range is not valid.");
 
             return await _facade.Get(from, to);
         }
@@ -93,7 +94,7 @@ namespace KachnaOnline.App.Controllers
         {
             var response = await _facade.GetLinkedStates(id, futureOnly);
             if (response is null)
-                return this.NotFound();
+                return this.NotFoundProblem("The specified repeating state does not exist.");
 
             return response;
         }
@@ -130,9 +131,10 @@ namespace KachnaOnline.App.Controllers
                     ? this.StatusCode(StatusCodes.Status500InternalServerError, result)
                     : this.Ok(result);
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
-                return this.BadRequest();
+                // TODO: Don't use the message from the exception?
+                return this.BadRequestProblem(e.Message);
             }
         }
 
@@ -172,25 +174,26 @@ namespace KachnaOnline.App.Controllers
             {
                 result = await _facade.Modify(id, data);
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
-                return this.BadRequest();
+                // TODO: Don't use the message from the exception?
+                return this.BadRequestProblem(e.Message);
             }
             catch (RepeatingStateNotFoundException)
             {
-                return this.NotFound("The specified repeating state does not exist.");
+                return this.NotFoundProblem("The specified repeating state does not exist.");
             }
             catch (RepeatingStateReadOnlyException)
             {
-                return this.Conflict("The specified repeating state has already ended.");
+                return this.ConflictProblem("The specified repeating state has already ended and cannot be modified.");
             }
             catch (UserNotFoundException)
             {
-                return this.UnprocessableEntity("The specified user does not exist.");
+                return this.UnprocessableEntityProblem("The specified user does not exist.");
             }
             catch (UserUnprivilegedException)
             {
-                return this.Forbid();
+                return this.ForbiddenProblem("Only administrators may change a state's made by ID.");
             }
 
             return result.TargetRepeatingState is null
@@ -232,11 +235,11 @@ namespace KachnaOnline.App.Controllers
             }
             catch (RepeatingStateNotFoundException)
             {
-                return this.NotFound("The specified repeating state does not exist.");
+                return this.NotFoundProblem("The specified repeating state does not exist.");
             }
             catch (RepeatingStateReadOnlyException)
             {
-                return this.Conflict("The specified repeating state has already ended.");
+                return this.ConflictProblem("The specified repeating state has already ended and cannot be modified.");
             }
         }
     }

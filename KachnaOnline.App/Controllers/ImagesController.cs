@@ -6,6 +6,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Facades;
 using KachnaOnline.Dto.Images;
@@ -46,7 +47,7 @@ namespace KachnaOnline.App.Controllers
                 return this.Url.Content($"~{ImageConstants.ImageUrlPath}/{md5Hash}.jpg");
             }
 
-            return this.NotFound();
+            return this.NotFoundProblem();
         }
 
         /// <summary>
@@ -62,8 +63,8 @@ namespace KachnaOnline.App.Controllers
         /// <response code="409">An image with the same hash already exists or the value of `md5Hash` does not correspond with the uploaded image.</response>
         /// <response code="415">The provided file is not a JPEG image or its content type is not set to image/jpeg.</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ImageDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ImageDto), StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<ActionResult<ImageDto>> UploadImage(IFormFile file, string md5Hash)
         {

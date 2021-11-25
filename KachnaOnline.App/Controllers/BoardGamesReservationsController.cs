@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
@@ -97,7 +98,7 @@ namespace KachnaOnline.App.Controllers
         /// <returns><see cref="ReservationDto"/> corresponding to ID <paramref name="id"/>. If the user is an
         /// authorized, returns <see cref="ManagerReservationDto"/> instead.</returns>
         /// <response code="200">The reservation.</response>
-        /// <response code="403">The user is not a board games manager and it belong to another user.</response>
+        /// <response code="403">The user is not a board games manager and the reservation belongs to another user.</response>
         /// <response code="404">No such reservation exists.</response>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -111,11 +112,11 @@ namespace KachnaOnline.App.Controllers
             }
             catch (NotABoardGamesManagerException)
             {
-                return this.Forbid();
+                return this.ForbiddenProblem("The reservation belongs to another user.");
             }
             catch (ReservationNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified reservation does not exist.");
             }
         }
 
@@ -142,15 +143,11 @@ namespace KachnaOnline.App.Controllers
             }
             catch (BoardGameNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified board game does not exist.");
             }
             catch (GameUnavailableException e)
             {
                 return this.Conflict(e.UnavailableBoardGameId);
-            }
-            catch (ReservationManipulationFailedException)
-            {
-                return this.Problem();
             }
         }
 
@@ -176,15 +173,11 @@ namespace KachnaOnline.App.Controllers
             }
             catch (ReservationAccessDeniedException)
             {
-                return this.Forbid();
+                return this.ForbiddenProblem("The reservation belongs to another user.");
             }
             catch (ReservationNotFoundException)
             {
-                return this.NotFound();
-            }
-            catch (ReservationManipulationFailedException)
-            {
-                return this.Problem();
+                return this.NotFoundProblem("The specified reservation does not exist.");
             }
         }
 
@@ -208,11 +201,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (ReservationNotFoundException)
             {
-                return this.NotFound();
-            }
-            catch (ReservationManipulationFailedException)
-            {
-                return this.Problem();
+                return this.NotFoundProblem("The specified reservation does not exist.");
             }
         }
 
@@ -229,7 +218,7 @@ namespace KachnaOnline.App.Controllers
         [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(typeof(ManagerReservationDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status409Conflict)]
         [HttpPost("madeFor/{userId}")]
         public async Task<ActionResult<ManagerReservationDto>> ManagerCreateReservation(int userId,
             ManagerCreateReservationDto creationDto)
@@ -242,19 +231,15 @@ namespace KachnaOnline.App.Controllers
             }
             catch (BoardGameNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified board game does not exist.");
             }
             catch (UserNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified user does not exist.");
             }
             catch (GameUnavailableException e)
             {
                 return this.Conflict(e.UnavailableBoardGameId);
-            }
-            catch (ReservationManipulationFailedException)
-            {
-                return this.Problem();
             }
         }
 
@@ -270,7 +255,7 @@ namespace KachnaOnline.App.Controllers
         [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status409Conflict)]
         [HttpPut("{id}/items")]
         public async Task<IActionResult> UpdateReservationItems(int id, UpdateReservationItemsDto newItems)
         {
@@ -282,19 +267,15 @@ namespace KachnaOnline.App.Controllers
             }
             catch (BoardGameNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified board game does not exist.");
             }
             catch (ReservationNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified reservation does not exist.");
             }
             catch (GameUnavailableException e)
             {
                 return this.Conflict(e.UnavailableBoardGameId);
-            }
-            catch (ReservationManipulationFailedException)
-            {
-                return this.Problem();
             }
         }
 
@@ -319,7 +300,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (ReservationNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified reservation does not exist.");
             }
         }
 
@@ -348,23 +329,21 @@ namespace KachnaOnline.App.Controllers
             }
             catch (ReservationAccessDeniedException)
             {
-                return this.Forbid();
+                return this.ForbiddenProblem("The reservation belongs to another user.");
             }
             catch (NotABoardGamesManagerException)
             {
-                return this.Forbid();
+                // Shouldn't happen
+                return this.ForbiddenProblem();
             }
             catch (ReservationNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFoundProblem("The specified reservation does not exist.");
             }
             catch (InvalidTransitionException)
             {
-                return this.Conflict();
-            }
-            catch (ReservationManipulationFailedException)
-            {
-                return this.Problem();
+                return this.ConflictProblem("The requested reservation change is not possible in its current state.",
+                    "Invalid transition");
             }
         }
     }
