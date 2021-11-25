@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { LoginComponent } from './login/login.component';
 import { UserProfileComponent } from "./user-profile/user-profile.component";
-import { UserLoggedInGuard } from "./user-profile/user-logged-in.guard";
+import { UserLoggedInGuard } from "./user-logged-in.guard";
 import { UsersListComponent } from "./users-list/users-list.component";
 import { AdminGuard } from "./admin.guard";
 

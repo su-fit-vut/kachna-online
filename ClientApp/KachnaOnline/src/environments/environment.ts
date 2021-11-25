@@ -12,7 +12,7 @@ import { IEnvironment, IEnvironmentParams } from "./ienvironment";
  */
 const params: IEnvironmentParams = {
   production: false,
-  baseApiUrl: 'http://localhost:5000',
+  baseApiUrl: 'http://localhost:5000/kachna/api',
   baseApiUrlDomain: 'localhost:5000',
 };
 
