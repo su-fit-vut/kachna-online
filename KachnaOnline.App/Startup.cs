@@ -98,6 +98,8 @@ namespace KachnaOnline.App
         /// <param name="dbContext">An <see cref="AppDbContext"/> database context instance.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext dbContext)
         {
+            app.UsePathBase("/kachna/api");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -133,7 +135,7 @@ namespace KachnaOnline.App
             app.UseSwagger();
 
             // Add SwaggerUI.
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kachna Online API"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "Kachna Online API"));
 
             // Add routing middleware.
             app.UseRouting();

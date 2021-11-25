@@ -110,7 +110,13 @@ namespace KachnaOnline.App.Extensions
             services.AddSwaggerGen(c =>
             {
                 c.UseOneOfForPolymorphism();
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "KachnaOnline", Version = "v1" });
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "Kachna Online",
+                        Version = "v1.0.0",
+                        Contact = new OpenApiContact() { Email = "xondry02@su.fit.vutbr.cz", Name = "Ondřej Ondryáš" },
+                    });
                 c.AddSecurityDefinition("JWTBearer", new OpenApiSecurityScheme()
                 {
                     Name = "Authorization",
@@ -149,6 +155,34 @@ namespace KachnaOnline.App.Extensions
             });
 
             services.AddSwaggerGenNewtonsoftSupport();
+        }
+
+        public static void UseUploadedImagesStaticFiles(this IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            var imageDirectory = Path.Combine(env.ContentRootPath, ImageConstants.ImageDirectory);
+            if (!Directory.Exists(imageDirectory))
+            {
+                Directory.CreateDirectory(imageDirectory);
+            }
+
+            // Serve uploaded images.
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(imageDirectory),
+                RequestPath = ImageConstants.ImageUrlPath,
+                HttpsCompression = HttpsCompressionMode.Compress,
+                ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>()
+                {
+                    { ".jpg", "image/jpeg" }
+                }),
+                ServeUnknownFileTypes = false,
+                OnPrepareResponse = ctx =>
+                {
+                    // using Microsoft.AspNetCore.Http;
+                    ctx.Context.Response.Headers.Append(
+                        "Cache-Control", $"public, max-age={ImageConstants.CacheMaxAge}");
+                }
+            });
         }
     }
 }
