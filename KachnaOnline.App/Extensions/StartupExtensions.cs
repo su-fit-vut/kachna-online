@@ -22,7 +22,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog.AspNetCore;
 using Serilog.Events;
-using Swashbuckle.AspNetCore.Filters;
 
 namespace KachnaOnline.App.Extensions
 {

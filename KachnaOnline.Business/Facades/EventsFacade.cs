@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -13,7 +12,6 @@ using KachnaOnline.Business.Models.Events;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Dto.Events;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace KachnaOnline.Business.Facades
 {

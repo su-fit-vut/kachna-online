@@ -2,7 +2,6 @@
 // Author: Ondřej Ondryáš
 
 using System;
-using KachnaOnline.Dto.Swagger;
 using Newtonsoft.Json;
 
 namespace KachnaOnline.Dto.ClubStates

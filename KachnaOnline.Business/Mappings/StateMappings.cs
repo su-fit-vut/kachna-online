@@ -1,7 +1,6 @@
 // StateMappings.cs
 // Author: Ondřej Ondryáš
 
-using System;
 using AutoMapper;
 using KachnaOnline.Business.Models.ClubStates;
 using KachnaOnline.Data.Entities.ClubStates;

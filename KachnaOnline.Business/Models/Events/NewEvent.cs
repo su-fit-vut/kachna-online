@@ -1,8 +1,6 @@
 // NewEvent.cs
 // Author: David Chocholatý
 
-using System;
-
 namespace KachnaOnline.Business.Models.Events
 {
     /// <summary>

@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using KachnaOnline.Data.Entities.Events;
 
 namespace KachnaOnline.Business.Data.Repositories.Abstractions

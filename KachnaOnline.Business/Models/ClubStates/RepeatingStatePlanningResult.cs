@@ -1,7 +1,6 @@
 // RepeatingStatePlanningResult.cs
 // Author: Ondřej Ondryáš
 
-using System;
 using System.Collections.Generic;
 
 namespace KachnaOnline.Business.Models.ClubStates

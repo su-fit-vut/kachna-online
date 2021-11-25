@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Configuration;
-using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions.BoardGames;
 using KachnaOnline.Business.Models.Users;
 using KachnaOnline.Business.Services.Abstractions;

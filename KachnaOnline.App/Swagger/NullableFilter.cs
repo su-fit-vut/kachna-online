@@ -1,8 +1,6 @@
 // NullableFilter.cs
 // Author: Ondřej Ondryáš
 
-using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using KachnaOnline.Dto.Swagger;
 using Microsoft.OpenApi.Models;

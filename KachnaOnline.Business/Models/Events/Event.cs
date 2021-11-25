@@ -1,9 +1,6 @@
 // Event.cs
 // Author: David Chocholatý
 
-using System;
-using System.Collections.Generic;
-
 namespace KachnaOnline.Business.Models.Events
 {
     /// <summary>
