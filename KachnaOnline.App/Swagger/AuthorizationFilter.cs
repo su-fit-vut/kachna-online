@@ -103,23 +103,20 @@ namespace KachnaOnline.App.Swagger
                 policiesMessage += ".";
             }
 
-            if (hasRoles || hasPolicies)
+            if (!operation.Responses.ContainsKey("401"))
             {
-                if (!operation.Responses.ContainsKey("401"))
+                operation.Responses.Add("401", new OpenApiResponse()
                 {
-                    operation.Responses.Add("401", new OpenApiResponse()
-                    {
-                        Description = $"The user must be authenticated. {rolesMessage}{policiesMessage}"
-                    });
-                }
+                    Description = $"The user must be authenticated. {rolesMessage}{policiesMessage}"
+                });
+            }
 
-                if (!operation.Responses.ContainsKey("403"))
+            if (!operation.Responses.ContainsKey("403") && (hasPolicies || hasRoles))
+            {
+                operation.Responses.Add("403", new OpenApiResponse()
                 {
-                    operation.Responses.Add("403", new OpenApiResponse()
-                    {
-                        Description = $"This user cannot perform this operation. {rolesMessage}{policiesMessage}"
-                    });
-                }
+                    Description = $"This user cannot perform this operation. {rolesMessage}{policiesMessage}"
+                });
             }
         }
     }
