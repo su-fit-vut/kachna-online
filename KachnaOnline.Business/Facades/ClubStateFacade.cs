@@ -13,6 +13,7 @@ using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Models.ClubStates;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Dto.ClubStates;
+using KachnaOnline.Dto.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -64,7 +65,7 @@ namespace KachnaOnline.Business.Facades
             }
         }
 
-        private async Task<StateMadeByDto> MakeMadeByDto(int? userId)
+        private async Task<MadeByUserDto> MakeMadeByDto(int? userId)
         {
             return await _userService.GetUserMadeByDto(userId, this.IsUserManager);
         }
@@ -90,7 +91,7 @@ namespace KachnaOnline.Business.Facades
                 var pastStateDto = _mapper.Map<PastStateDto>(state);
                 if (state.ClosedById.HasValue)
                 {
-                    pastStateDto.ClosedBy = await this.MakeMadeByDto(state.ClosedById);
+                    pastStateDto.ClosedByUser = await this.MakeMadeByDto(state.ClosedById);
                 }
 
                 dto = pastStateDto;
@@ -100,10 +101,10 @@ namespace KachnaOnline.Business.Facades
                 dto = _mapper.Map<StateDto>(state);
             }
 
-            dto.MadeBy = await this.MakeMadeByDto(state.MadeById);
+            dto.MadeByUser = await this.MakeMadeByDto(state.MadeById);
             if (state.FollowingState?.MadeById != null)
             {
-                ((StateDto) dto.FollowingState).MadeBy = await this.MakeMadeByDto(state.FollowingState.MadeById);
+                ((StateDto) dto.FollowingState).MadeByUser = await this.MakeMadeByDto(state.FollowingState.MadeById);
             }
 
             return dto;

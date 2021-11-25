@@ -37,5 +37,15 @@ namespace KachnaOnline.Business.Data.Repositories
             Set.Add(entity);
             return Task.CompletedTask;
         }
+
+        public async Task<int?> GetAssignee(int itemId)
+        {
+            var entity = await Set
+                .Where(e => e.ReservationItemId == itemId)
+                .Where(e => e.Type == ReservationEventType.Assigned)
+                .OrderBy(e => e.MadeOn)
+                .FirstOrDefaultAsync();
+            return entity?.MadeById;
+        }
     }
 }

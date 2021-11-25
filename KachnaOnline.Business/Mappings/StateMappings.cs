@@ -62,7 +62,7 @@ namespace KachnaOnline.Business.Mappings
 
             this.CreateMap<RepeatingState, RepeatingStateManagerDto>()
                 .IncludeBase<RepeatingState, RepeatingStateDto>()
-                .ForMember(dto => dto.MadeBy, options =>
+                .ForMember(dto => dto.MadeByUser, options =>
                     options.Ignore());
 
             this.CreateMap<RepeatingStatePlanningDto, RepeatingState>();
@@ -72,7 +72,7 @@ namespace KachnaOnline.Business.Mappings
             this.CreateMap<State, StateDto>()
                 .ForMember(dto => dto.State, options =>
                     options.MapFrom(m => m.Type))
-                .ForMember(dto => dto.MadeBy, options =>
+                .ForMember(dto => dto.MadeByUser, options =>
                     options.Ignore())
                 .ForMember(dto => dto.Note, options =>
                     options.MapFrom(m => m.NotePublic))
@@ -83,7 +83,7 @@ namespace KachnaOnline.Business.Mappings
                 .IncludeBase<State, StateDto>()
                 .ForMember(dto => dto.ActualEnd, options =>
                     options.MapFrom(m => m.Ended))
-                .ForMember(dto => dto.ClosedBy, options =>
+                .ForMember(dto => dto.ClosedByUser, options =>
                     options.Ignore());
 
             this.CreateMap<StatePlanningDto, NewState>()

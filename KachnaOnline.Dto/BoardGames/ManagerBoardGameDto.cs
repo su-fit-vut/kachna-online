@@ -2,6 +2,7 @@
 // Author: František Nečas
 
 using System.ComponentModel.DataAnnotations;
+using KachnaOnline.Dto.Users;
 
 namespace KachnaOnline.Dto.BoardGames
 {
@@ -18,10 +19,9 @@ namespace KachnaOnline.Dto.BoardGames
         public string NoteInternal { get; set; }
 
         /// <summary>
-        /// ID of the owner. May be null if it is not provided (e.g. owned by Student Union).
+        /// Details about the owner. May be null if it is not provided (e.g. owned by Student Union).
         /// </summary>
-        /// <example>100</example>
-        public int? OwnerId { get; set; }
+        public MadeByUserDto Owner { get; set; }
 
         /// <summary>
         /// The total number of pieces of the game available in the system.

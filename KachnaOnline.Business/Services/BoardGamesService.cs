@@ -372,6 +372,12 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
+        public async Task<int?> GetReservationItemAssignee(int itemId)
+        {
+            return await _reservationItemEventRepository.GetAssignee(itemId);
+        }
+
+        /// <inheritdoc />
         public async Task<Reservation> GetReservation(int reservationId)
         {
             var reservation = await _reservationRepository.Get(reservationId);

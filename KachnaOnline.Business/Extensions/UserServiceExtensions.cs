@@ -8,6 +8,7 @@ using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Models.Users;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Dto.ClubStates;
+using KachnaOnline.Dto.Users;
 
 namespace KachnaOnline.Business.Extensions
 {
@@ -78,7 +79,7 @@ namespace KachnaOnline.Business.Extensions
             return userService.LoginToken(refreshToken);
         }
 
-        public static async Task<StateMadeByDto> GetUserMadeByDto(this IUserService userService, int? userId,
+        public static async Task<MadeByUserDto> GetUserMadeByDto(this IUserService userService, int? userId,
             bool showId)
         {
             if (!userId.HasValue)
@@ -88,7 +89,7 @@ namespace KachnaOnline.Business.Extensions
             if (user is null)
                 return null;
 
-            var dto = new StateMadeByDto()
+            var dto = new MadeByUserDto()
             {
                 Name = user.Nickname ?? user.Name,
                 DiscordId = user.DiscordId?.ToString()

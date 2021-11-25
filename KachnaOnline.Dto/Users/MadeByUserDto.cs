@@ -1,15 +1,15 @@
-// StateMadeByDto.cs
+// MadeByUserDto.cs
 // Author: Ondřej Ondryáš
 
 using KachnaOnline.Dto.Swagger;
 using Newtonsoft.Json;
 
-namespace KachnaOnline.Dto.ClubStates
+namespace KachnaOnline.Dto.Users
 {
     /// <summary>
-    /// A set of identifiers of a state manager.
+    /// A set of identifiers of a user who performed an action.
     /// </summary>
-    public class StateMadeByDto
+    public class MadeByUserDto
     {
         /// <summary>
         /// The full name or nickname of a user.

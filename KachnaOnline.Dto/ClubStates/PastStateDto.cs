@@ -2,6 +2,7 @@
 // Author: Ondřej Ondryáš
 
 using System;
+using KachnaOnline.Dto.Users;
 using Newtonsoft.Json;
 
 namespace KachnaOnline.Dto.ClubStates
@@ -22,6 +23,6 @@ namespace KachnaOnline.Dto.ClubStates
         /// This is included in the response only when the request is authorized to a state manager or an admin.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public StateMadeByDto ClosedBy { get; set; }
+        public MadeByUserDto ClosedByUser { get; set; }
     }
 }

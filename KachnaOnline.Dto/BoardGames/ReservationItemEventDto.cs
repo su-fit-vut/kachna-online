@@ -2,6 +2,8 @@
 // Author: František Nečas
 
 using System;
+using KachnaOnline.Dto.Swagger;
+using KachnaOnline.Dto.Users;
 
 namespace KachnaOnline.Dto.BoardGames
 {
@@ -11,9 +13,10 @@ namespace KachnaOnline.Dto.BoardGames
     public class ReservationItemEventDto
     {
         /// <summary>
-        /// The creator of the change in state.
+        /// Details about the user who made this change.
         /// </summary>
-        public int MadeById { get; set; }
+        [SwaggerNotNull]
+        public MadeByUserDto MadeBy { get; set; }
 
         /// <summary>
         /// When the change was done.

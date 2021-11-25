@@ -12,5 +12,6 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
         Task<ICollection<ReservationItemEvent>> GetByItemIdChronologically(int itemId);
         Task<ReservationItemEvent> GetLatestEvent(int itemId);
         Task Add(ReservationItemEvent entity);
+        Task<int?> GetAssignee(int itemId);
     }
 }

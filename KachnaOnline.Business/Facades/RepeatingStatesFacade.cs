@@ -11,6 +11,7 @@ using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Models.ClubStates;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Dto.ClubStates;
+using KachnaOnline.Dto.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -41,7 +42,7 @@ namespace KachnaOnline.Business.Facades
         private bool IsUserManager
             => _httpContextAccessor.HttpContext?.User?.IsInRole(AuthConstants.StatesManager) ?? false;
 
-        private async Task<StateMadeByDto> MakeMadeByDto(int? userId)
+        private async Task<MadeByUserDto> MakeMadeByDto(int? userId)
         {
             return await _userService.GetUserMadeByDto(userId, this.IsUserManager);
         }
@@ -57,7 +58,7 @@ namespace KachnaOnline.Business.Facades
                     var pastStateDto = _mapper.Map<PastStateDto>(state);
                     if (state.ClosedById.HasValue)
                     {
-                        pastStateDto.ClosedBy = await this.MakeMadeByDto(state.ClosedById);
+                        pastStateDto.ClosedByUser = await this.MakeMadeByDto(state.ClosedById);
                     }
 
                     dto = pastStateDto;
@@ -67,7 +68,7 @@ namespace KachnaOnline.Business.Facades
                     dto = _mapper.Map<StateDto>(state);
                 }
 
-                dto.MadeBy = await this.MakeMadeByDto(state.MadeById);
+                dto.MadeByUser = await this.MakeMadeByDto(state.MadeById);
                 dtos.Add(dto);
             }
 
@@ -85,7 +86,7 @@ namespace KachnaOnline.Business.Facades
             foreach (var state in states)
             {
                 var dto = _mapper.Map<RepeatingStateManagerDto>(state);
-                dto.MadeBy = await this.MakeMadeByDto(state.MadeById);
+                dto.MadeByUser = await this.MakeMadeByDto(state.MadeById);
                 dtos.Add(dto);
             }
 
@@ -107,7 +108,7 @@ namespace KachnaOnline.Business.Facades
             foreach (var state in states)
             {
                 var dto = _mapper.Map<RepeatingStateManagerDto>(state);
-                dto.MadeBy = await this.MakeMadeByDto(state.MadeById);
+                dto.MadeByUser = await this.MakeMadeByDto(state.MadeById);
                 dtos.Add(dto);
             }
 
@@ -153,7 +154,7 @@ namespace KachnaOnline.Business.Facades
             else
             {
                 dto.TargetRepeatingState = _mapper.Map<RepeatingStateManagerDto>(newState);
-                dto.TargetRepeatingState.MadeBy = await this.MakeMadeByDto(newState.MadeById);
+                dto.TargetRepeatingState.MadeByUser = await this.MakeMadeByDto(newState.MadeById);
             }
 
             return dto;
@@ -179,7 +180,7 @@ namespace KachnaOnline.Business.Facades
             else
             {
                 dto.TargetRepeatingState = _mapper.Map<RepeatingStateManagerDto>(modifiedState);
-                dto.TargetRepeatingState.MadeBy = await this.MakeMadeByDto(modifiedState.MadeById);
+                dto.TargetRepeatingState.MadeByUser = await this.MakeMadeByDto(modifiedState.MadeById);
             }
 
             return dto;
@@ -192,7 +193,7 @@ namespace KachnaOnline.Business.Facades
             var stateDto = _mapper.Map<RepeatingStateManagerDto>(state);
             if (stateDto != null)
             {
-                stateDto.MadeBy = await this.MakeMadeByDto(state.MadeById);
+                stateDto.MadeByUser = await this.MakeMadeByDto(state.MadeById);
             }
 
             return stateDto;
