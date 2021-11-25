@@ -7,7 +7,7 @@
 export class IEnvironment implements IEnvironmentParams {
   // Modifiable by the current environment.
   public production: boolean = false;
-  public baseApiUrl: string = 'http://localhost:5000';
+  public baseApiUrl: string = 'http://localhost:5000/kachna/api';
   public baseApiUrlDomain: string = 'localhost:5000';
 
   // Global constants.

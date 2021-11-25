@@ -8,7 +8,7 @@ import { IEnvironment, IEnvironmentParams } from "./ienvironment";
  */
 const params: IEnvironmentParams = {
   production: true,
-  baseApiUrl: '/api', // FIXME: Add real URL.
+  baseApiUrl: 'kachna/api', // FIXME: Add real URL.
   baseApiUrlDomain: 'localhost:5000', // FIXME: Add real URL.
 };
 
