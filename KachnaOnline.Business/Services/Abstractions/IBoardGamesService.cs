@@ -155,6 +155,13 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<ReservationItem> GetReservationItem(int itemId);
 
         /// <summary>
+        /// Return an ID of a user who is assigned to the given reservation item.
+        /// </summary>
+        /// <param name="itemId">A reservation item to get the assignee of.</param>
+        /// <returns>The ID of the user who is assigned to the item. Null if the item has not been assigned yet.</returns>
+        Task<int?> GetReservationItemAssignee(int itemId);
+
+        /// <summary>
         /// Returns a reservation with the given ID.
         /// </summary>
         /// <param name="reservationId">ID of a reservation to return.</param>
@@ -247,7 +254,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// regardless of reservation. Hence in this case, it acts as a sanity check.</remarks>
         /// <param name="newEvent">Type of the event to create.</param>
         /// <exception cref="ReservationNotFoundException">When no such item exists.</exception>
-        /// <exception cref="InvalidTransitionException">When the requested transition does not make sense in the 
+        /// <exception cref="InvalidTransitionException">When the requested transition does not make sense in the
         /// current context.</exception>
         /// <exception cref="ReservationAccessDeniedException">When the reservation belongs to another user.</exception>
         /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>

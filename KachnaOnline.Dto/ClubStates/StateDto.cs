@@ -2,6 +2,7 @@
 // Author: Ondřej Ondryáš
 
 using System;
+using KachnaOnline.Dto.Users;
 using Newtonsoft.Json;
 
 namespace KachnaOnline.Dto.ClubStates
@@ -19,7 +20,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// <summary>
         /// Information about the manager that created this state.
         /// </summary>
-        public StateMadeByDto MadeBy { get; set; }
+        public MadeByUserDto MadeByUser { get; set; }
 
         /// <summary>
         /// The beginning and time of the state.

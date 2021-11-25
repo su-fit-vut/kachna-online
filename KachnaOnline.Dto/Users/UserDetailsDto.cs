@@ -1,4 +1,4 @@
-// UserDetailsDto.cs
+// MadeByUserDto.cs
 // Author: Ondřej Ondryáš
 
 namespace KachnaOnline.Dto.Users

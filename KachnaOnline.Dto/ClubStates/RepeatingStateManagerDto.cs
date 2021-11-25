@@ -1,4 +1,6 @@
-﻿namespace KachnaOnline.Dto.ClubStates
+﻿using KachnaOnline.Dto.Users;
+
+namespace KachnaOnline.Dto.ClubStates
 {
     /// <summary>
     /// A repeating state that includes attributes that are only visible to state managers.
@@ -13,7 +15,7 @@
         /// <summary>
         /// Information about the manager that created this repeating state.
         /// </summary>
-        public StateMadeByDto MadeBy { get; set; }
+        public MadeByUserDto MadeByUser { get; set; }
 
         /// <summary>
         /// An internal note.

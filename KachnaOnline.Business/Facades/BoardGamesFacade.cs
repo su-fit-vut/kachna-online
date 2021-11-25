@@ -11,6 +11,9 @@ using KachnaOnline.Dto.BoardGames;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.BoardGames;
+using KachnaOnline.Business.Extensions;
+using KachnaOnline.Dto.Users;
+using Microsoft.AspNetCore.Http;
 using ReservationState = KachnaOnline.Dto.BoardGames.ReservationState;
 using ReservationEventType = KachnaOnline.Dto.BoardGames.ReservationEventType;
 using ReservationEventModelType = KachnaOnline.Business.Models.BoardGames.ReservationEventType;
@@ -21,11 +24,43 @@ namespace KachnaOnline.Business.Facades
     {
         private readonly IMapper _mapper;
         private readonly IBoardGamesService _boardGamesService;
+        private readonly IUserService _userService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BoardGamesFacade(IBoardGamesService boardGamesService, IMapper mapper)
+        public BoardGamesFacade(IBoardGamesService boardGamesService, IMapper mapper, IUserService userService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _boardGamesService = boardGamesService;
             _mapper = mapper;
+            _userService = userService;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        private bool IsUserManager
+            => _httpContextAccessor.HttpContext?.User?.IsInRole(AuthConstants.BoardGamesManager) ?? false;
+
+        private async Task<MadeByUserDto> MakeMadeByDto(int? userId)
+        {
+            return await _userService.GetUserMadeByDto(userId, this.IsUserManager);
+        }
+
+        /// <summary>
+        /// Returns an array of reservation items with filled in assignees if available.
+        /// </summary>
+        /// <param name="reservationId">ID of the reservation to get the items of.</param>
+        /// <returns>An array of items in a reservation with ID <paramref name="reservationId"/>.</returns>
+        private async Task<ReservationItemDto[]> GetReservationItems(int reservationId)
+        {
+            var items = new List<ReservationItemDto>();
+            foreach (var item in await _boardGamesService.GetReservationItems(reservationId))
+            {
+                var itemDto = _mapper.Map<ReservationItemDto>(item);
+                itemDto.AssignedTo =
+                    await this.MakeMadeByDto(await _boardGamesService.GetReservationItemAssignee(itemDto.Id));
+                items.Add(itemDto);
+            }
+
+            return items.ToArray();
         }
 
         /// <summary>
@@ -111,11 +146,22 @@ namespace KachnaOnline.Business.Facades
             if (!user.IsInRole(AuthConstants.BoardGamesManager))
                 visible = true;
 
-            var games = await _boardGamesService.GetBoardGames(categoryId, players, available, visible);
-            if (user.IsInRole(AuthConstants.BoardGamesManager))
-                return _mapper.Map<List<ManagerBoardGameDto>>(games);
+            var games = new List<BoardGameDto>();
+            foreach (var game in await _boardGamesService.GetBoardGames(categoryId, players, available, visible))
+            {
+                if (user.IsInRole(AuthConstants.BoardGamesManager))
+                {
+                    var managerDto = _mapper.Map<ManagerBoardGameDto>(game);
+                    managerDto.Owner = await this.MakeMadeByDto(game.OwnerId);
+                    games.Add(managerDto);
+                }
+                else
+                {
+                    games.Add(_mapper.Map<BoardGameDto>(game));
+                }
+            }
 
-            return _mapper.Map<List<BoardGameDto>>(games);
+            return games;
         }
 
         /// <summary>
@@ -146,7 +192,11 @@ namespace KachnaOnline.Business.Facades
             }
 
             if (user.IsInRole(AuthConstants.BoardGamesManager))
-                return _mapper.Map<ManagerBoardGameDto>(game);
+            {
+                var managerDto = _mapper.Map<ManagerBoardGameDto>(game);
+                managerDto.Owner = await this.MakeMadeByDto(game.OwnerId);
+                return managerDto;
+            }
 
             return _mapper.Map<BoardGameDto>(game);
         }
@@ -165,7 +215,9 @@ namespace KachnaOnline.Business.Facades
         public async Task<BoardGameDto> CreateBoardGame(CreateBoardGameDto game)
         {
             var createdGame = await _boardGamesService.CreateBoardGame(_mapper.Map<BoardGame>(game));
-            return _mapper.Map<ManagerBoardGameDto>(createdGame);
+            var createdDto = _mapper.Map<ManagerBoardGameDto>(createdGame);
+            createdDto.Owner = await this.MakeMadeByDto(createdGame.OwnerId);
+            return createdDto;
         }
 
         /// <summary>
@@ -212,7 +264,7 @@ namespace KachnaOnline.Business.Facades
             foreach (var reservation in await _boardGamesService.GetUserReservations(user, stateModel))
             {
                 var dto = _mapper.Map<ReservationDto>(reservation);
-                dto.Items = _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(dto.Id));
+                dto.Items = await this.GetReservationItems(dto.Id);
                 dtos.Add(dto);
             }
 
@@ -233,7 +285,7 @@ namespace KachnaOnline.Business.Facades
             foreach (var reservation in await _boardGamesService.GetAllReservations(stateModel, assignedTo))
             {
                 var dto = _mapper.Map<ManagerReservationDto>(reservation);
-                dto.Items = _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(dto.Id));
+                dto.Items = await this.GetReservationItems(dto.Id);
                 dtos.Add(dto);
             }
 
@@ -258,8 +310,7 @@ namespace KachnaOnline.Business.Facades
             if (user.IsInRole(AuthConstants.BoardGamesManager))
             {
                 var managerDto = _mapper.Map<ManagerReservationDto>(reservation);
-                managerDto.Items =
-                    _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(managerDto.Id));
+                managerDto.Items = await this.GetReservationItems(managerDto.Id);
                 return managerDto;
             }
 
@@ -267,7 +318,7 @@ namespace KachnaOnline.Business.Facades
                 throw new NotABoardGamesManagerException();
 
             var userDto = _mapper.Map<ReservationDto>(reservation);
-            userDto.Items = _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(userDto.Id));
+            userDto.Items = await this.GetReservationItems(userDto.Id);
             return userDto;
         }
 
@@ -307,7 +358,15 @@ namespace KachnaOnline.Business.Facades
         public async Task<List<ReservationItemEventDto>> GetItemHistory(int reservationId, int itemId)
         {
             var events = await _boardGamesService.GetItemHistory(reservationId, itemId);
-            return _mapper.Map<List<ReservationItemEventDto>>(events);
+            var eventsDto = new List<ReservationItemEventDto>();
+            foreach (var eventModel in events)
+            {
+                var eventDto = _mapper.Map<ReservationItemEventDto>(eventModel);
+                eventDto.MadeBy = await this.MakeMadeByDto(eventModel.MadeById);
+                eventsDto.Add(eventDto);
+            }
+
+            return eventsDto;
         }
 
         /// <summary>
@@ -329,8 +388,7 @@ namespace KachnaOnline.Business.Facades
             var created =
                 await _boardGamesService.CreateReservation(reservationModel, userId, reservation.BoardGameIds);
             var createdDto = _mapper.Map<ReservationDto>(created);
-            createdDto.Items =
-                _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(createdDto.Id));
+            createdDto.Items = await this.GetReservationItems(createdDto.Id);
             return createdDto;
         }
 
@@ -354,8 +412,7 @@ namespace KachnaOnline.Business.Facades
             var created =
                 await _boardGamesService.CreateReservation(reservationModel, madeBy, reservation.BoardGameIds);
             var createdDto = _mapper.Map<ManagerReservationDto>(created);
-            createdDto.Items =
-                _mapper.Map<ReservationItemDto[]>(await _boardGamesService.GetReservationItems(createdDto.Id));
+            createdDto.Items = await this.GetReservationItems(createdDto.Id);
             return createdDto;
         }
 
@@ -385,7 +442,7 @@ namespace KachnaOnline.Business.Facades
         /// <param name="itemId">ID of an item to add a new event to.</param>
         /// <param name="eventType">Type of the event to create.</param>
         /// <exception cref="ReservationNotFoundException">When no such item exists.</exception>
-        /// <exception cref="InvalidTransitionException">When the requested transition does not make sense in the 
+        /// <exception cref="InvalidTransitionException">When the requested transition does not make sense in the
         /// current context.</exception>
         /// <exception cref="NotABoardGamesManagerException">When the <paramref name="eventType"/> event can only be
         /// performed by a board games manager.</exception>
