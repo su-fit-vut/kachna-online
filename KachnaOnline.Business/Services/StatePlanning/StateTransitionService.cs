@@ -23,7 +23,7 @@ namespace KachnaOnline.Business.Services.StatePlanning
         }
 
         /// <inheritdoc />
-        public async Task TriggerStateStart(int stateId)
+        public async Task TriggerStateStart(int stateId, int? previousStateId)
         {
             _logger.LogDebug("Processing trigger actions for the start of state {StateId}.", stateId);
 
@@ -31,7 +31,7 @@ namespace KachnaOnline.Business.Services.StatePlanning
             {
                 try
                 {
-                    await transitionHandler.PerformStartAction(stateId);
+                    await transitionHandler.PerformStartAction(stateId, previousStateId);
                 }
                 catch (Exception e)
                 {
@@ -42,7 +42,7 @@ namespace KachnaOnline.Business.Services.StatePlanning
         }
 
         /// <inheritdoc />
-        public async Task TriggerStateEnd(int stateId)
+        public async Task TriggerStateEnd(int stateId, int? nextStateId)
         {
             _logger.LogDebug("Processing trigger actions for the end of state {StateId}.", stateId);
 
@@ -50,7 +50,7 @@ namespace KachnaOnline.Business.Services.StatePlanning
             {
                 try
                 {
-                    await transitionHandler.PerformEndAction(stateId);
+                    await transitionHandler.PerformEndAction(stateId, nextStateId);
                 }
                 catch (Exception e)
                 {

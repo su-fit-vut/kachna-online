@@ -21,12 +21,12 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             _unitOfWork = unitOfWork;
         }
 
-        public Task PerformStartAction(int stateId)
+        public Task PerformStartAction(int stateId, int? previousStateId)
         {
             return Task.CompletedTask;
         }
 
-        public async Task PerformEndAction(int stateId)
+        public async Task PerformEndAction(int stateId, int? nextStateId)
         {
             var state = await _unitOfWork.PlannedStates.Get(stateId);
             if (!state.Ended.HasValue)

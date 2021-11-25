@@ -941,6 +941,8 @@ namespace KachnaOnline.Business.Services
 
                 currentStateEntity.Ended = DateTime.Now;
                 currentStateEntity.ClosedById = closedByUserId;
+                currentStateEntity.NextPlannedStateId = null;
+
                 currentStateId = currentStateEntity.Id;
                 await _unitOfWork.SaveChanges();
             }
@@ -961,7 +963,7 @@ namespace KachnaOnline.Business.Services
             TaskUtils.FireAndForget(_serviceProvider, _logger, async (services, _) =>
             {
                 var transitionService = services.GetRequiredService<IStateTransitionService>();
-                await transitionService.TriggerStateEnd(currentStateId);
+                await transitionService.TriggerStateEnd(currentStateId, null);
             });
         }
 
