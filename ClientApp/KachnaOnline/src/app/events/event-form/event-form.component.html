@@ -11,7 +11,7 @@ Author: David Chocholatý
       <label class="mr-1">Název</label>
       <div style="color: grey;">(povinné)</div>
     </div>
-    <input class="form-control form-control-lg" placeholder="Název eventu" name="name"
+    <input class="form-control form-control-lg" placeholder="Název akce" name="name"
     #name="ngModel" [(ngModel)]="eventsService.eventDetail.name"
     required maxlength="128" [class.invalid]="name.invalid && name.touched">
   </div>
@@ -19,14 +19,14 @@ Author: David Chocholatý
   <div class="form-row">
     <div class="form-group col-md-6">
       <label>Místo konání</label>
-      <input class="form-control form-control-lg" placeholder="Místo konání eventu" name="place"
+      <input class="form-control form-control-lg" placeholder="Místo konání akce" name="place"
       #place="ngModel" [(ngModel)]="eventsService.eventDetail.place"
       maxlength="256">
     </div>
 
     <div class="form-group col-md-6">
       <label>URL místa konání</label>
-      <input class="form-control form-control-lg" placeholder="URL místa konání eventu" name="placeUrl"
+      <input class="form-control form-control-lg" placeholder="URL místa konání akce" name="placeUrl"
       #placeUrl="ngModel" [(ngModel)]="eventsService.eventDetail.placeUrl"
       maxlength="512">
     </div>
@@ -34,7 +34,7 @@ Author: David Chocholatý
 
   <div class="form-group">
     <label>URL obrázku</label>
-    <input class="form-control form-control-lg" placeholder="URL obrázku eventu" name="imageUrl"
+    <input class="form-control form-control-lg" placeholder="URL obrázku akce" name="imageUrl"
     #imageUrl="ngModel" [(ngModel)]="eventsService.eventDetail.imageUrl"
     maxlength="512">
   </div>
@@ -44,20 +44,20 @@ Author: David Chocholatý
       <label class="mr-1">Krátký popis</label>
       <div style="color: grey;">(povinné)</div>
     </div>
-    <textarea class="form-control form-control-lg" placeholder="Krátký popis eventu" name="shortDescription"
+    <textarea class="form-control form-control-lg" placeholder="Krátký popis akce" name="shortDescription"
     #shortDescription="ngModel" [(ngModel)]="eventsService.eventDetail.shortDescription"
     required maxlength="512" [class.invalid]="shortDescription.invalid && shortDescription.touched"></textarea>
   </div>
 
   <div class="form-group">
     <label>Podrobný popis</label>
-    <textarea class="form-control form-control-lg" placeholder="Podrobný popis eventu" name="fullDescription"
+    <textarea class="form-control form-control-lg" placeholder="Podrobný popis akce" name="fullDescription"
     #fullDescription="ngModel" [(ngModel)]="eventsService.eventDetail.fullDescription"></textarea>
   </div>
 
   <div class="form-group">
     <label>URL</label>
-    <input class="form-control form-control-lg" placeholder="URL eventu" name="url"
+    <input class="form-control form-control-lg" placeholder="URL akce" name="url"
     #url="ngModel" [(ngModel)]="eventsService.eventDetail.url"
     maxlength="512">
   </div>
@@ -68,7 +68,7 @@ Author: David Chocholatý
         <label class="mr-1">Trvání od</label>
         <div style="color: grey;">(povinné)</div>
       </div>
-      <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání eventu od" name="from"
+      <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání akce od" name="from"
       #from="ngModel" [(ngModel)]="eventsService.eventDetail.from"
       required [class.invalid]="from.invalid && from.touched">
     </div>
@@ -78,7 +78,7 @@ Author: David Chocholatý
         <label class="mr-1">Trvání do</label>
         <div style="color: grey;">(povinné)</div>
       </div>
-      <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání eventu do" name="to"
+      <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání akce do" name="to"
       #to="ngModel" [(ngModel)]="eventsService.eventDetail.to"
       required [class.invalid]="to.invalid && to.touched">
     </div>
@@ -95,5 +95,4 @@ Author: David Chocholatý
       <button class="btn btn-info btn-lg btn-block" type="button" (click)="clearForm(form)">Zrušit</button> <!-- TODO: Stop planning new event. Where to return to?-->
     </div>
   </div>
-
 </form>
