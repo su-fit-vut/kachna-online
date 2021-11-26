@@ -2,6 +2,7 @@
 // Author: František Nečas
 
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace KachnaOnline.Dto.BoardGames
 {
@@ -44,10 +45,17 @@ namespace KachnaOnline.Dto.BoardGames
         public int? PlayersMax { get; set; }
 
         /// <summary>
-        /// The number of pieces of the game which are available for borrowing. This is the only
-        /// number of games returned to a user who is not a board game manager.
+        /// The number of pieces of the game which are available for borrowing.
         /// </summary>
         /// <example>1</example>
         public int Available { get; set; }
+
+        /// <summary>
+        /// The total number of pieces of the game available in the club.
+        /// </summary>
+        /// <example>2</example>
+        [Required]
+        [JsonRequired]
+        public int InStock { get; set; }
     }
 }

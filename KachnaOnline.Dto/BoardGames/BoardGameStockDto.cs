@@ -12,7 +12,7 @@ namespace KachnaOnline.Dto.BoardGames
     public class BoardGameStockDto
     {
         /// <summary>
-        /// The total number of pieces of the game available in the system.
+        /// The total number of pieces of the game available in the club.
         /// </summary>
         /// <example>2</example>
         [Required]

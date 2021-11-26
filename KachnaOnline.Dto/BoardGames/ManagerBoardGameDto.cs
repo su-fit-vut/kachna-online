@@ -24,13 +24,6 @@ namespace KachnaOnline.Dto.BoardGames
         public MadeByUserDto Owner { get; set; }
 
         /// <summary>
-        /// The total number of pieces of the game available in the system.
-        /// </summary>
-        /// <example>2</example>
-        [Required]
-        public int InStock { get; set; }
-
-        /// <summary>
         /// The number of pieces of the game which are marked as unavailable by a board game manager.
         /// This may be done for example to prepare for an upcoming tournament in the game.
         /// </summary>
