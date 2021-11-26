@@ -59,7 +59,7 @@ Author: David Chocholatý
 
         <li class="nav-item mr-3" ngbDropdown>
           <div class="btn-group mr-3 btn-block">
-            <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" [routerLink]="'.'" (click)="isMenuCollapsed = true">Deskovky</button>
+            <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" routerLink="boardGames" (click)="isMenuCollapsed = true">Deskovky</button>
             <button *ngIf="authenticationService.isLoggedIn()" type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
               <span class="sr-only">Toggle Dropdown</span>
             </button>

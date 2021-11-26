@@ -1,0 +1,13 @@
+<!--
+board-games-page.component.html
+Author: František Nečas
+-->
+<h1>Deskové hry</h1>
+
+<!--<input id="search" type="text" class="form-control" [ngbTypeahead]="search"/>-->
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
+  <div class="col mb-3" *ngFor="let boardGame of boardGames">
+    <app-board-game [boardGame]="boardGame" (onReservationUpdate)="onReservationUpdate($event)"></app-board-game>
+  </div>
+</div>
+<button *ngIf="currentReservationLength > 0" type="button" class="btn btn-success btn-lg" id="reserve-btn">Dokončit rezervaci</button>
