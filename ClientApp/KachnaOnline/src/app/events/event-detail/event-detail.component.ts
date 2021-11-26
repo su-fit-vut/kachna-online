@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EventsService } from '../../shared/services/events.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Event } from '../../models/event.model';
+import { Event } from '../../models/events/event.model';
 
 @Component({
   selector: 'app-event-detail',

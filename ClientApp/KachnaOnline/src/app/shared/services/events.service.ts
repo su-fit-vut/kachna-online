@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Event } from "../../models/event.model";
+import { Event } from "../../models/events/event.model";
 
 @Injectable({
   providedIn: 'root'
