@@ -50,10 +50,5 @@ namespace KachnaOnline.Business.Data.Repositories
                 .Where(e => e.From >= from && e.From <= to)
                 .AsAsyncEnumerable();
         }
-
-        public async Task<Event> GetWithLinkedStates(int eventId)
-        {
-            return await Set.Include(e => e.LinkedPlannedStates).FirstOrDefaultAsync(e => e.Id == eventId);
-        }
     }
 }
