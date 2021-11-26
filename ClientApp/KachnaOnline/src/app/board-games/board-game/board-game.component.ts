@@ -12,25 +12,26 @@ import { AuthenticationService } from "../../shared/services/authentication.serv
 })
 export class BoardGameComponent implements OnInit {
   @Input() boardGame: BoardGame
-  @Output() onReservationUpdate: EventEmitter<BoardGame> = new EventEmitter()
+  @Output() reservationUpdate: EventEmitter<BoardGame> = new EventEmitter()
 
-  constructor(public authenticationService: AuthenticationService) { }
+  constructor(public authenticationService: AuthenticationService) {
+  }
 
   ngOnInit(): void {
   }
 
   reservedInitial(): void {
     this.boardGame.toReserve = 1;
-    this.onReservationUpdate.emit(this.boardGame);
+    this.reservationUpdate.emit(this.boardGame);
   }
 
   reservedIncrement(): void {
     this.boardGame.toReserve++;
-    this.onReservationUpdate.emit(this.boardGame);
+    this.reservationUpdate.emit(this.boardGame);
   }
 
   reservedDecrement(): void {
     this.boardGame.toReserve--;
-    this.onReservationUpdate.emit(this.boardGame);
+    this.reservationUpdate.emit(this.boardGame);
   }
 }

@@ -3,7 +3,8 @@ board-game.component.html
 Author: František Nečas
 -->
 <div class="card">
-  <img src="{{boardGame.imageUrl ? boardGame.imageUrl : 'assets/image_not_found.jpg'}}" class="card-img-top" alt="Fotka deskové hry"/>
+  <img src="{{boardGame.imageUrl ? boardGame.imageUrl : 'assets/image_not_found.jpg'}}" class="card-img-top"
+       alt="Fotka deskové hry"/>
   <div class="card-body">
     <h5 class="card-title">{{boardGame.name}}</h5>
     <div class="card-subtitle">
@@ -19,12 +20,19 @@ Author: František Nečas
         <button type="button" class="btn btn-secondary" disabled>Aktuálně nedostupné</button>
       </ng-template>
       <ng-template #elseBlock>
-        <button *ngIf="!boardGame.toReserve" type="button" class="btn btn-success" (click)="reservedInitial()">Rezervovat</button>
+        <button *ngIf="!boardGame.toReserve" type="button" class="btn btn-success" (click)="reservedInitial()">
+          Rezervovat
+        </button>
         <div *ngIf="boardGame.toReserve" class="btn-group" role="group">
-          <button type="button" class="btn btn-outline-success" disabled>Zarezervováno {{boardGame.toReserve}}ks</button>
+          <button type="button" class="btn btn-outline-success" disabled>Zarezervováno {{boardGame.toReserve}}ks
+          </button>
           <div class="btn-group-vertical" role="group">
-            <button *ngIf="boardGame.toReserve < boardGame.available" type="button" class="btn btn-success btn-xs" (click)="reservedIncrement()">+</button>
-            <button *ngIf="boardGame.toReserve >= boardGame.available" type="button" class="btn btn-success btn-xs" disabled>+</button>
+            <button *ngIf="boardGame.toReserve < boardGame.available" type="button" class="btn btn-success btn-xs"
+                    (click)="reservedIncrement()">+
+            </button>
+            <button *ngIf="boardGame.toReserve >= boardGame.available" type="button" class="btn btn-success btn-xs"
+                    disabled>+
+            </button>
             <button type="button" class="btn btn-danger btn-xs" (click)="reservedDecrement()">-</button>
           </div>
         </div>

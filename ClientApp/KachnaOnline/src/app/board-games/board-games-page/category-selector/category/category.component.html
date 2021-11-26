@@ -1,0 +1,5 @@
+<div class="form-check">
+  <input (change)="onCheckboxChange($event)" class="form-check-input" type="checkbox" id="categoryCheck">
+  <label class="form-check-label" for="categoryCheck"
+         [ngStyle]="{'color': '#' + category.colourHex}">{{category.name}}</label>
+</div>
