@@ -31,15 +31,6 @@ namespace KachnaOnline.Business.Services
         private readonly IPlannedStatesRepository _plannedStatesRepository;
         private readonly IOptionsMonitor<EventsOptions> _eventsOptionsMonitor;
 
-        private static readonly SemaphoreSlim EventPlanningSemaphore = new(1);
-
-        private static async Task EnsureLock()
-        {
-            var hasLock = await EventPlanningSemaphore.WaitAsync(EventsConstants.EventPlanningEnterTimeout);
-            if (!hasLock)
-                throw new EventManipulationFailedException("Cannot acquire the event planning lock.");
-        }
-
         public EventsService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<EventsService> logger,
             IOptionsMonitor<EventsOptions> eventsOptionsMonitor)
         {
@@ -168,8 +159,6 @@ namespace KachnaOnline.Business.Services
 
             var newEventEntity = _mapper.Map<EventEntity>(newEvent);
 
-            await EnsureLock();
-
             await _eventsRepository.Add(newEventEntity);
 
             try
@@ -181,10 +170,6 @@ namespace KachnaOnline.Business.Services
                 _logger.LogError(exception, "Cannot save a new event.");
                 await _unitOfWork.ClearTrackedChanges();
                 throw new EventManipulationFailedException();
-            }
-            finally
-            {
-                EventPlanningSemaphore.Release();
             }
 
             return _mapper.Map<Event>(newEventEntity);
@@ -245,9 +230,6 @@ namespace KachnaOnline.Business.Services
             if (eventEntity.To < DateTime.Now.RoundToMinutes())
                 throw new EventReadOnlyException();
 
-            await EnsureLock();
-
-
             _mapper.Map(modifiedEvent, eventEntity);
             try
             {
@@ -259,10 +241,6 @@ namespace KachnaOnline.Business.Services
                 _logger.LogError(exception, $"Cannot modify the event with ID {eventId}.");
                 await _unitOfWork.ClearTrackedChanges();
                 throw new EventManipulationFailedException();
-            }
-            finally
-            {
-                EventPlanningSemaphore.Release();
             }
         }
 
@@ -374,8 +352,6 @@ namespace KachnaOnline.Business.Services
             if (eventEntity.To < DateTime.Now.RoundToMinutes())
                 throw new EventReadOnlyException();
 
-            await EnsureLock();
-
             // Get linked states.
             var statesList = eventEntity.LinkedPlannedStates.Select(
                 plannedState => _mapper.Map<State>(plannedState)).ToList();
@@ -391,10 +367,6 @@ namespace KachnaOnline.Business.Services
                 _logger.LogError(exception, $"Cannot remove the event with ID {eventId}.");
                 await _unitOfWork.ClearTrackedChanges();
                 throw new EventManipulationFailedException();
-            }
-            finally
-            {
-                EventPlanningSemaphore.Release();
             }
 
             // Return linked planned states with its reference to now nonexistent event.
