@@ -1,0 +1,12 @@
+/*
+board-games-page.component.css
+Author: František Nečas
+ */
+
+#reserve-btn {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 20px;
+  right: 20px;
+  float: right;
+}
