@@ -70,7 +70,7 @@ namespace KachnaOnline.Business.Services
         /// <inheritDoc />
         public async Task<EventWithLinkedStates> GetEventWithLinkedStates(int eventId)
         {
-            var eventEntity = await _eventsRepository.GetWithLinkedStates(eventId);
+            var eventEntity = await _eventsRepository.Get(eventId);
             if (eventEntity is null)
                 throw new EventNotFoundException();
 
@@ -223,7 +223,7 @@ namespace KachnaOnline.Business.Services
             if (modifiedEvent is null)
                 throw new ArgumentNullException(nameof(modifiedEvent));
 
-            var eventEntity = await _eventsRepository.GetWithLinkedStates(eventId);
+            var eventEntity = await _eventsRepository.Get(eventId);
             if (eventEntity is null)
                 throw new EventNotFoundException();
 
@@ -328,7 +328,7 @@ namespace KachnaOnline.Business.Services
         /// <inheritdoc />
         public async Task<ICollection<State>> GetLinkedStates(int eventId)
         {
-            var eventEntity = await _eventsRepository.GetWithLinkedStates(eventId);
+            var eventEntity = await _eventsRepository.Get(eventId);
             if (eventEntity is null)
                 throw new EventNotFoundException();
 
@@ -345,7 +345,7 @@ namespace KachnaOnline.Business.Services
         /// <inheritdoc />
         public async Task<ICollection<State>> RemoveEvent(int eventId)
         {
-            var eventEntity = await _eventsRepository.GetWithLinkedStates(eventId);
+            var eventEntity = await _eventsRepository.Get(eventId);
             if (eventEntity is null)
                 throw new EventNotFoundException();
 
