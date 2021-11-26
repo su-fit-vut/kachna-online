@@ -1,0 +1,15 @@
+<!--
+category-selector.component.html
+Author: František Nečas
+-->
+
+<button type="button" class="btn btn-secondary dropdown-toggle" id="categoryDropdown"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kategorie
+</button>
+<div class="dropdown-menu" aria-labelledby="categoryDropdown">
+  <form class="ml-3 mr-3">
+    <app-category *ngFor="let category of categories" [category]="category"
+                  (categoryDisabled)="onCategoryDisabled($event)"
+                  (categoryEnabled)="onCategoryEnabled($event)"></app-category>
+  </form>
+</div>
