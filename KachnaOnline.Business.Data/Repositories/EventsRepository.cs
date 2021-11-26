@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
 using KachnaOnline.Data;
 using KachnaOnline.Data.Entities.Events;
@@ -15,6 +16,11 @@ namespace KachnaOnline.Business.Data.Repositories
     {
         public EventsRepository(AppDbContext dbContext) : base(dbContext)
         {
+        }
+
+        public override async Task<Event> Get(int key)
+        {
+            return await Set.Include(e => e.LinkedPlannedStates).FirstOrDefaultAsync(e => e.Id == key);
         }
 
         public IAsyncEnumerable<Event> GetCurrent(DateTime? atTime = null)
@@ -43,6 +49,11 @@ namespace KachnaOnline.Business.Data.Repositories
             return Set
                 .Where(e => e.From >= from && e.From <= to)
                 .AsAsyncEnumerable();
+        }
+
+        public async Task<Event> GetWithLinkedStates(int eventId)
+        {
+            return await Set.Include(e => e.LinkedPlannedStates).FirstOrDefaultAsync(e => e.Id == eventId);
         }
     }
 }

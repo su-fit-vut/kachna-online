@@ -16,10 +16,9 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
         Task<PlannedState> GetLastEnded();
         Task<PlannedState> GetPreviousFor(int stateId);
         IAsyncEnumerable<PlannedState> GetStartingBetween(DateTime from, DateTime to, bool includeNextStates = false);
-
+        IAsyncEnumerable<PlannedState> GetConflictingStatesForEvent(DateTime from, DateTime to);
         IAsyncEnumerable<PlannedState> GetForRepeatingState(int repeatingStateId, DateTime? onlyAfter = null,
             bool includeNextStates = false);
-
         IAsyncEnumerable<PlannedState> GetPastNotEnded();
     }
 }

@@ -97,6 +97,11 @@ namespace KachnaOnline.Business.Data.Repositories
             return query.AsAsyncEnumerable();
         }
 
+        public IAsyncEnumerable<PlannedState> GetConflictingStatesForEvent(DateTime from, DateTime to)
+        {
+            return Set.Where(s => s.Start >= from && s.PlannedEnd <= to).AsAsyncEnumerable();
+        }
+
         public IAsyncEnumerable<PlannedState> GetForRepeatingState(int repeatingStateId, DateTime? onlyAfter,
             bool includeNextStates)
         {

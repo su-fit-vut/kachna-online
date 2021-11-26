@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using KachnaOnline.Data.Entities.Events;
 
 namespace KachnaOnline.Business.Data.Repositories.Abstractions
@@ -12,5 +13,6 @@ namespace KachnaOnline.Business.Data.Repositories.Abstractions
         IAsyncEnumerable<Event> GetCurrent(DateTime? at = null);
         IAsyncEnumerable<Event> GetNearest(DateTime? after = null);
         IAsyncEnumerable<Event> GetStartingBetween(DateTime from, DateTime to);
+        Task<Event> GetWithLinkedStates(int eventId);
     }
 }

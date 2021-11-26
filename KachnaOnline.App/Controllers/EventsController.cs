@@ -9,6 +9,7 @@ using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions;
 using KachnaOnline.Business.Exceptions.Events;
 using KachnaOnline.Business.Facades;
+using KachnaOnline.Dto.ClubStates;
 using KachnaOnline.Dto.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -32,7 +33,7 @@ namespace KachnaOnline.App.Controllers
         /// Returns a list of events being held at the given date and time.
         /// </summary>
         /// <param name="at">The date and time.</param>
-        /// <returns>An enumerable of <see cref="EventDto"/> corresponding to the <paramref name="at"/> date and time.</returns>
+        /// <returns>A list of <see cref="EventDto"/> corresponding to the <paramref name="at"/> date and time.</returns>
         /// <response code="200">The list of events.</response>
         [AllowAnonymous]
         [HttpGet("at/{at}")]
@@ -46,17 +47,19 @@ namespace KachnaOnline.App.Controllers
         /// Returns an event with the given ID.
         /// </summary>
         /// <param name="eventId">ID of the event to return.</param>
+        /// <param name="withLinkedStates">Whether to return linked states as well.</param>
+        /// <returns>An <see cref="EventDto"/>.</returns>
         /// <response code="200">The event.</response>
         /// <response code="404">No such event exists.</response>
         [AllowAnonymous]
         [HttpGet("{eventId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EventDto>> GetEvent(int eventId)
+        public async Task<ActionResult<EventDto>> GetEvent(int eventId, bool withLinkedStates = false)
         {
             try
             {
-                return await _eventsFacade.GetEvent(eventId);
+                return await _eventsFacade.GetEvent(eventId, withLinkedStates);
             }
             catch (EventNotFoundException)
             {
@@ -67,6 +70,7 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Returns a list of events that are happening at the moment.
         /// </summary>
+        /// <returns>A list of <see cref="EventDto"/>.</returns>
         /// <response code="200">The list of current events.</response>
         [AllowAnonymous]
         [HttpGet("current")]
@@ -80,6 +84,7 @@ namespace KachnaOnline.App.Controllers
         /// Returns a list of the next planned events.
         /// </summary>
         /// <remarks>
+        /// <returns>A list of <see cref="EventDto"/>.</returns>
         /// Several events may start at the same time. Thus, a list is returned instead of a single event.
         /// </remarks>
         /// <response code="200">The list of the next planned events.</response>
@@ -94,6 +99,7 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Returns a list of events planned in the specified time range.
         /// </summary>
+        /// <returns>A list of <see cref="EventDto"/>.</returns>
         /// <response code="200">The list of events.</response>
         /// <response code="400">The specified time range is too long or `<paramref name="to"/>` comes before
         /// `<paramref name="from"/>`.</response>
@@ -145,6 +151,197 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
+        /// Returns a list of <see cref="StateDto"/> of conflicting planned states for event with the given ID.
+        /// </summary>
+        /// <param name="eventId">ID of the event to get the conflicting planned states for.</param>
+        /// <returns>A list of <see cref="EventDto"/>.</returns>
+        /// <response code="200">The list of conflicting states.</response>
+        /// <response code="404">No such event exists.</response>
+        [HttpGet("{eventId}/conflicting_states")]
+        [ProducesResponseType(typeof(IEnumerable<StateDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetConflictingPlannedStatesForEvent(int eventId)
+        {
+            try
+            {
+                return this.Ok(await _eventsFacade.GetConflictingStatesForEvent(eventId));
+            }
+            catch (EventNotFoundException)
+            {
+                return this.NotFoundProblem("The specified event does not exist.");
+            }
+        }
+
+        /// <summary>
+        /// Get states linked to the event specified by <paramref name="eventId"/>.
+        /// </summary>
+        /// <param name="eventId">An ID of the event to link planned states to.</param>
+        /// <returns>An <see cref="EventDto"/> with list of <see cref="StateDto"/> as linked planned states.</returns>
+        /// <response code="200">The planned states were linked to the event.</response>
+        /// <response code="404">The event with the given ID <paramref name="eventId"/> does not exist.</response>
+        /// <response code="409">The event from the past cannot be modified.</response>
+        [AllowAnonymous]
+        [HttpGet("{eventId}/linked_states")]
+        [ProducesResponseType(typeof(IEnumerable<EventDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> GetLinkedStatesForEvent(int eventId)
+        {
+            try
+            {
+                return this.Ok(await _eventsFacade.GetLinkedStatesForEvent(eventId));
+            }
+            catch (EventNotFoundException)
+            {
+                return this.NotFoundProblem("The specified event does not exist.");
+            }
+            catch (NotAnEventsManagerException)
+            {
+                // Shouldn't happen.
+                return this.ForbiddenProblem();
+            }
+            catch (EventReadOnlyException)
+            {
+                return this.ConflictProblem("The specified event has already passed and cannot be updated.");
+            }
+        }
+
+        /// <summary>
+        /// Link planned states to the event specified by <paramref name="eventId"/>.
+        /// </summary>
+        /// <param name="eventId">An ID of the event to link planned states to.</param>
+        /// <param name="plannedStatesToLinkDto">A list of planned state IDs to link to the event specified by <paramref name="eventId"/>.</param>
+        /// <returns>An <see cref="EventDto"/> with list of <see cref="StateDto"/> as linked planned states.</returns>
+        /// <response code="200">The planned states were linked to the event.</response>
+        /// <response code="404">The event with the given ID <paramref name="eventId"/> does not exist.</response>
+        /// <response code="409">The event from the past cannot be modified.</response>
+        [HttpPost("{eventId}/linked_states")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult> LinkPlannedStatesToEvent(int eventId, PlannedStatesToLinkDto plannedStatesToLinkDto)
+        {
+            try
+            {
+                await _eventsFacade.LinkPlannedStatesToEvent(eventId, plannedStatesToLinkDto);
+                return this.NoContent();
+            }
+            catch (EventNotFoundException)
+            {
+                return this.NotFoundProblem("The specified event does not exist.");
+            }
+            catch (NotAnEventsManagerException)
+            {
+                // Shouldn't happen.
+                return this.ForbiddenProblem();
+            }
+            catch (EventReadOnlyException)
+            {
+                return this.ConflictProblem("The specified event has already passed and cannot be updated.");
+            }
+        }
+
+        /// <summary>
+        /// Sets (overrides) the current linked states to the event specified by <paramref name="eventId"/> with <paramref name="plannedStatesToLink"/>.
+        /// </summary>
+        /// <param name="eventId">Event to set linked planned states for.</param>
+        /// <param name="plannedStatesToLink">A list of planned state IDs to link to the event specified by <paramref name="eventId"/>.</param>
+        /// <response code="204">The planned states were linked to the event.</response>
+        /// <response code="404">The event with the given ID <paramref name="eventId"/> does not exist.</response>
+        /// <response code="409">The event from the past cannot be modified.</response>
+        [HttpPut("{eventId}/linked_states")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult> SetLinkedPlannedStatesForEvent(int eventId, PlannedStatesToLinkDto plannedStatesToLink)
+        {
+            try
+            {
+                await _eventsFacade.SetLinkedPlannedStatesForEvent(eventId, plannedStatesToLink);
+                return this.NoContent();
+            }
+            catch (EventNotFoundException)
+            {
+                return this.NotFoundProblem("The specified event does not exist.");
+            }
+            catch (NotAnEventsManagerException)
+            {
+                // Shouldn't happen.
+                return this.ForbiddenProblem();
+            }
+            catch (EventReadOnlyException)
+            {
+                return this.ConflictProblem("The specified event has already passed and cannot be updated.");
+            }
+        }
+
+        /// <summary>
+        /// Clears (unlinks) the current linked states from the event specified by <paramref name="eventId"/>.
+        /// </summary>
+        /// <param name="eventId">Event to unlink linked planned states from.</param>
+        /// <response code="204">The planned states were linked to the event.</response>
+        /// <response code="404">The event with the given ID <paramref name="eventId"/> does not exist.</response>
+        /// <response code="409">The event from the past cannot be modified.</response>
+        [HttpDelete("{eventId}/linked_states")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult> ClearLinkedPlannedStatesForEvent(int eventId)
+        {
+            try
+            {
+                await _eventsFacade.ClearLinkedPlannedStatesForEvent(eventId);
+                return this.NoContent();
+            }
+            catch (EventNotFoundException)
+            {
+                return this.NotFoundProblem("The specified event does not exist.");
+            }
+            catch (NotAnEventsManagerException)
+            {
+                // Shouldn't happen.
+                return this.ForbiddenProblem();
+            }
+            catch (EventReadOnlyException)
+            {
+                return this.ConflictProblem("The specified event has already passed and cannot be updated.");
+            }
+        }
+
+        /// <summary>
+        /// Unlinks the specified linked state from any event.
+        /// </summary>
+        /// <param name="stateId">ID of the planned state to be unlinked from any event.</param>
+        /// <response code="204">The planned states were linked to the event.</response>
+        /// <response code="404">The event with the given ID <paramref name="eventId"/> does not exist.</response>
+        /// <response code="409">The event from the past cannot be modified.</response>
+        [HttpDelete("states/{stateId}/linked_event")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<ActionResult> UnlinkStateFromEvent(int stateId)
+        {
+            try
+            {
+                await _eventsFacade.UnlinkStateFromEvent(stateId);
+                return this.NoContent();
+            }
+            catch (EventNotFoundException)
+            {
+                return this.NotFoundProblem("The specified event does not exist.");
+            }
+            catch (NotAnEventsManagerException)
+            {
+                // Shouldn't happen.
+                return this.ForbiddenProblem();
+            }
+        }
+
+        /// <summary>
         /// Replaces details of an event with the given ID.
         /// </summary>
         /// <param name="eventId">ID of the event to update.</param>
@@ -155,6 +352,7 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpPut("{eventId}")]
         public async Task<ActionResult> ModifyEvent(int eventId, BaseEventDto baseEvent)
         {
@@ -165,7 +363,7 @@ namespace KachnaOnline.App.Controllers
             }
             catch (NotAnEventsManagerException)
             {
-                // Shouldn't happen
+                // Shouldn't happen.
                 return this.ForbiddenProblem();
             }
             catch (EventNotFoundException)
@@ -182,23 +380,24 @@ namespace KachnaOnline.App.Controllers
         /// Deletes an event with the given ID.
         /// </summary>
         /// <param name="eventId">ID of the event to delete.</param>
-        /// <response code="204">The event was deleted.</response>
+        /// <returns>A list of <see cref="StateDto"/> of linked states at the time of deletion.</returns>
+        /// <response code="200">The event was deleted. The list of linked states at the time of deletion.</response>
         /// <response code="404">The event does not exist.</response>
         /// <response code="409">A past event cannot be removed.</response>
         [HttpDelete("{eventId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(IEnumerable<StateDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult> RemoveEvent(int eventId)
+        public async Task<IActionResult> RemoveEvent(int eventId)
         {
             try
             {
-                await _eventsFacade.RemoveEvent(eventId);
-                return this.NoContent();
+                return this.Ok(await _eventsFacade.RemoveEvent(eventId));
             }
             catch (NotAnEventsManagerException)
             {
-                // Shouldn't happen
+                // Shouldn't happen.
                 return this.ForbiddenProblem();
             }
             catch (EventReadOnlyException)
