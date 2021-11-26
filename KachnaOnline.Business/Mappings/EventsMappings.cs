@@ -18,7 +18,6 @@ namespace KachnaOnline.Business.Mappings
             this.CreateMap<EventEntity, Event>()
                 .ForMember(e => e.LinkedPlannedStateIds, options =>
                     options.MapFrom(e => e.LinkedPlannedStates.Select(state => state.Id).ToList()));
-            this.CreateMap<Event, EventEntity>();
 
             this.CreateMap<EventEntity, EventWithLinkedStates>()
                 .ForMember(e => e.LinkedStates, options =>
@@ -26,14 +25,11 @@ namespace KachnaOnline.Business.Mappings
                 .ForMember(e => e.LinkedPlannedStateIds, options =>
                     options.MapFrom(e => e.LinkedPlannedStates.Select(state => state.Id).ToList()));
 
-            this.CreateMap<EventEntity, NewEvent>().ReverseMap();
-            this.CreateMap<EventEntity, ModifiedEvent>()
-                .ForMember(e => e.LinkedPlannedStateIds, options =>
-                    options.MapFrom(e => e.LinkedPlannedStates.Select(state => state.Id).ToList()));
+            this.CreateMap<NewEvent, EventEntity>();
             this.CreateMap<ModifiedEvent, EventEntity>();
 
-            this.CreateMap<Event, EventDto>().ReverseMap();
-            this.CreateMap<Event, ManagerEventDto>().ReverseMap();
+            this.CreateMap<Event, EventDto>();
+            this.CreateMap<Event, ManagerEventDto>();
 
             this.CreateMap<EventWithLinkedStates, EventWithLinkedStatesDto>()
                 .ForMember(e => e.LinkedStatesDtos, options =>
@@ -42,8 +38,8 @@ namespace KachnaOnline.Business.Mappings
                 .ForMember(e => e.LinkedStatesDtos, options =>
                     options.MapFrom(e => e.LinkedStates));
 
-            this.CreateMap<NewEvent, BaseEventDto>().ReverseMap();
-            this.CreateMap<ModifiedEvent, BaseEventDto>().ReverseMap();
+            this.CreateMap<BaseEventDto, NewEvent>();
+            this.CreateMap<BaseEventDto, ModifiedEvent>();
         }
     }
 }
