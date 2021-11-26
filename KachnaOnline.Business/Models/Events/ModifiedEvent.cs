@@ -2,6 +2,7 @@
 // Author: David Chocholatý
 
 using System;
+using System.Collections.Generic;
 
 namespace KachnaOnline.Business.Models.Events
 {
@@ -59,6 +60,6 @@ namespace KachnaOnline.Business.Models.Events
         /// <summary>
         /// The linked planned states IDs.
         /// </summary>
-        public int[] LinkedPlannedStateIds { get; set; }
+        public List<int> LinkedPlannedStateIds { get; set; }
     }
 }

@@ -3,13 +3,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Exceptions.Events;
+using KachnaOnline.Business.Models.ClubStates;
 using KachnaOnline.Business.Models.Events;
 using KachnaOnline.Business.Services.Abstractions;
+using KachnaOnline.Dto.ClubStates;
 using KachnaOnline.Dto.Events;
 using Microsoft.AspNetCore.Http;
 
@@ -47,6 +50,20 @@ namespace KachnaOnline.Business.Facades
             return _mapper.Map<EventDto>(@event);
         }
 
+        private EventWithLinkedStatesDto MapEventWithLinkedStates(EventWithLinkedStates @event)
+        {
+            if (this.IsUserEventsManager())
+            {
+                return _mapper.Map<ManagerEventWithLinkedStatesDto>(@event);
+            }
+
+            return _mapper.Map<EventWithLinkedStatesDto>(@event);
+        }
+
+        private IEnumerable<StateDto> MapPlannedStates(ICollection<State> states)
+        {
+            return _mapper.Map<List<StateDto>>(states) ?? Enumerable.Empty<StateDto>();
+        }
 
         /// <summary>
         /// Checks whether the current user is an events manager.
@@ -105,13 +122,18 @@ namespace KachnaOnline.Business.Facades
         /// Returns an event with the given ID.
         /// </summary>
         /// <param name="eventId">ID of the <see cref="KachnaOnline.Dto.Events.EventDto"/> to return.</param>
+        /// <param name="withLinkedStates">Whether to return linked states as well.</param>
         /// <returns>An <see cref="KachnaOnline.Dto.Events.EventDto"/> with the given ID.</returns>
         /// <exception cref="EventNotFoundException"> thrown when an event with the given
         /// <paramref name="eventId"/> does not exist.</exception>
-        public async Task<EventDto> GetEvent(int eventId)
+        public async Task<EventDto> GetEvent(int eventId, bool withLinkedStates = false)
         {
-            var returnedEvent = await _eventsService.GetEvent(eventId);
-            return this.MapEvent(returnedEvent);
+            if (withLinkedStates)
+            {
+                return this.MapEventWithLinkedStates(await _eventsService.GetEventWithLinkedStates(eventId));
+            }
+
+            return this.MapEvent(await _eventsService.GetEventWithLinkedStates(eventId));
         }
 
         /// <summary>
@@ -141,6 +163,17 @@ namespace KachnaOnline.Business.Facades
         }
 
         /// <summary>
+        /// Get conflicting states for an event specified by <paramref name="eventId"/>.
+        /// </summary>
+        /// <param name="eventId">The event ID to get the conflicting states for.</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<StateDto>> GetConflictingStatesForEvent(int eventId)
+        {
+            var conflictingPlannedStates = await _eventsService.GetConflictingStatesForEvent(eventId);
+            return this.MapPlannedStates(conflictingPlannedStates);
+        }
+
+        /// <summary>
         /// Modifies an event with the given ID.
         /// </summary>
         /// <param name="eventId">ID of the event to update.</param>
@@ -157,12 +190,60 @@ namespace KachnaOnline.Business.Facades
         /// Remove an event with the given ID.
         /// </summary>
         /// <param name="eventId">ID of the event to remove.</param>
+        /// <returns>A collection of <see cref="StateDto"/> of states linked to the event at the time of deletion.</returns>
         /// <exception cref="EventNotFoundException">When the event with the given <paramref name="eventId"/> does not
         /// exist.</exception>
         /// <exception cref="EventManipulationFailedException">When the event cannot be deleted.</exception>
-        public async Task RemoveEvent(int eventId)
+        public async Task<IEnumerable<StateDto>> RemoveEvent(int eventId)
         {
-            await _eventsService.RemoveEvent(eventId);
+            return this.MapPlannedStates(await _eventsService.RemoveEvent(eventId));
+        }
+
+        /// <summary>
+        /// Sets (overrides) the current linked states to the event specified by <paramref name="eventId"/> with <paramref name="plannedStatesToLink"/>.
+        /// </summary>
+        /// <param name="eventId">Event to set linked planned states for.</param>
+        /// <param name="plannedStatesToLink">A <see cref="PlannedStatesToLinkDto"/> of states to link to the event.</param>
+        public async Task SetLinkedPlannedStatesForEvent(int eventId, PlannedStatesToLinkDto plannedStatesToLink)
+        {
+            await _eventsService.SetLinkedPlannedStatesForEvent(eventId, plannedStatesToLink.PlannedStateIds);
+        }
+
+        /// <summary>
+        /// Clears (unlinks) the current linked states from the event specified by <paramref name="eventId"/>.
+        /// </summary>
+        /// <param name="eventId">Event to unlink linked planned states from.</param>
+        public async Task ClearLinkedPlannedStatesForEvent(int eventId)
+        {
+            await _eventsService.ClearLinkedPlannedStatesForEvent(eventId);
+        }
+
+        /// <summary>
+        /// Link states to event specified by <paramref name="eventId"/>
+        /// </summary>
+        /// <param name="eventId">ID of the event to link states to.</param>
+        /// <param name="plannedStatesToLink">A list of planned state IDs to link to the event specified by <paramref name="eventId"/>.</param>
+        public async Task LinkPlannedStatesToEvent(int eventId, PlannedStatesToLinkDto plannedStatesToLink)
+        {
+            await _eventsService.LinkPlannedStatesToEvent(eventId, plannedStatesToLink.PlannedStateIds);
+        }
+
+        /// <summary>
+        /// Get states linked to the event.
+        /// </summary>
+        /// <param name="eventId">The event to get the linked states for.</param>
+        public async Task<IEnumerable<StateDto>> GetLinkedStatesForEvent(int eventId)
+        {
+            return this.MapPlannedStates(await _eventsService.GetLinkedStates(eventId));
+        }
+
+        /// <summary>
+        /// Unlinks the specified linked state from any event.
+        /// </summary>
+        /// <param name="stateId">ID of the planned state to be unlinked from any event.</param>
+        public async Task UnlinkStateFromEvent(int stateId)
+        {
+            await _eventsService.UnlinkStateFromEvent(stateId);
         }
     }
 }

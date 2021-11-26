@@ -3,15 +3,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using KachnaOnline.Business.Configuration;
-using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
 using KachnaOnline.Business.Exceptions;
+using KachnaOnline.Business.Exceptions.ClubStates;
 using KachnaOnline.Business.Exceptions.Events;
 using KachnaOnline.Business.Extensions;
+using KachnaOnline.Business.Models.ClubStates;
 using KachnaOnline.Business.Services.Abstractions;
 using KachnaOnline.Business.Models.Events;
 using Microsoft.Extensions.Logging;
@@ -27,6 +28,7 @@ namespace KachnaOnline.Business.Services
         private readonly ILogger<EventsService> _logger;
         private readonly IEventsRepository _eventsRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IPlannedStatesRepository _plannedStatesRepository;
         private readonly IOptionsMonitor<EventsOptions> _eventsOptionsMonitor;
 
         private static readonly SemaphoreSlim EventPlanningSemaphore = new(1);
@@ -46,6 +48,7 @@ namespace KachnaOnline.Business.Services
             _logger = logger;
             _eventsRepository = _unitOfWork.Events;
             _userRepository = _unitOfWork.Users;
+            _plannedStatesRepository = _unitOfWork.PlannedStates;
             _eventsOptionsMonitor = eventsOptionsMonitor;
         }
 
@@ -66,10 +69,21 @@ namespace KachnaOnline.Business.Services
         public async Task<Event> GetEvent(int eventId)
         {
             var eventEntity = await _eventsRepository.Get(eventId);
+
             if (eventEntity is null)
                 throw new EventNotFoundException();
 
             return _mapper.Map<Event>(eventEntity);
+        }
+
+        /// <inheritDoc />
+        public async Task<EventWithLinkedStates> GetEventWithLinkedStates(int eventId)
+        {
+            var eventEntity = await _eventsRepository.GetWithLinkedStates(eventId);
+            if (eventEntity is null)
+                throw new EventNotFoundException();
+
+            return _mapper.Map<EventWithLinkedStates>(eventEntity);
         }
 
         /// <inheritdoc />
@@ -173,8 +187,49 @@ namespace KachnaOnline.Business.Services
                 EventPlanningSemaphore.Release();
             }
 
-            // TODO Get new event entity and conflicting states.
             return _mapper.Map<Event>(newEventEntity);
+        }
+
+        public async Task<ICollection<State>> GetConflictingStatesForEvent(int eventId)
+        {
+            var eventEntity = await _eventsRepository.Get(eventId);
+            if (eventEntity is null)
+                throw new EventNotFoundException();
+
+            var conflictingPlannedStatesEntities =
+                _plannedStatesRepository.GetConflictingStatesForEvent(eventEntity.From, eventEntity.To);
+
+            var resultList = new List<State>();
+            await foreach (var plannedStateEntity in conflictingPlannedStatesEntities)
+            {
+                resultList.Add(_mapper.Map<State>(plannedStateEntity));
+            }
+
+            return resultList;
+        }
+
+        /// <inheritdoc />
+        public async Task UnlinkStateFromEvent(int stateId)
+        {
+            var state = await _plannedStatesRepository.Get(stateId);
+            if (state is null)
+                throw new StateNotFoundException(stateId);
+            if (state.Ended is not null || state.Start < DateTime.Now)
+                throw new StateReadOnlyException(stateId);
+            if (state.AssociatedEventId is null)
+                throw new StateNotAssociatedToEventException(stateId);
+
+            state.AssociatedEventId = null;
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, $"Cannot unlink associated event from state with ID {stateId}.");
+                await _unitOfWork.ClearTrackedChanges();
+                throw new EventManipulationFailedException();
+            }
         }
 
         /// <inheritdoc />
@@ -183,7 +238,7 @@ namespace KachnaOnline.Business.Services
             if (modifiedEvent is null)
                 throw new ArgumentNullException(nameof(modifiedEvent));
 
-            var eventEntity = await _eventsRepository.Get(eventId);
+            var eventEntity = await _eventsRepository.GetWithLinkedStates(eventId);
             if (eventEntity is null)
                 throw new EventNotFoundException();
 
@@ -192,10 +247,11 @@ namespace KachnaOnline.Business.Services
 
             await EnsureLock();
 
-            _mapper.Map(modifiedEvent, eventEntity);
 
+            _mapper.Map(modifiedEvent, eventEntity);
             try
             {
+                await this.SetLinkedPlannedStatesForEvent(eventId, modifiedEvent.LinkedPlannedStateIds);
                 await _unitOfWork.SaveChanges();
             }
             catch (Exception exception)
@@ -211,9 +267,107 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
-        public async Task RemoveEvent(int eventId)
+        public async Task SetLinkedPlannedStatesForEvent(int eventId, IEnumerable<int> plannedStatesToLinkIds)
         {
+            await this.ClearLinkedPlannedStatesForEvent(eventId);
+            await this.LinkPlannedStatesToEvent(eventId, plannedStatesToLinkIds);
+        }
+
+        /// <inheritdoc />
+        public async Task ClearLinkedPlannedStatesForEvent(int eventId)
+        {
+            var now = DateTime.Now.RoundToMinutes();
+
             var eventEntity = await _eventsRepository.Get(eventId);
+            if (eventEntity is null)
+                throw new EventNotFoundException();
+
+            if (eventEntity.To < now)
+                throw new EventReadOnlyException();
+
+            foreach (var stateEntity in eventEntity.LinkedPlannedStates)
+            {
+                if (stateEntity.Start < now || stateEntity.Ended is not null)
+                    throw new StateReadOnlyException(stateEntity.Id);
+
+                stateEntity.AssociatedEventId = null;
+            }
+
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, $"Cannot clear linked planned states linked to the event with ID {eventId}.");
+                await _unitOfWork.ClearTrackedChanges();
+                throw new EventManipulationFailedException();
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task LinkPlannedStatesToEvent(int eventId, IEnumerable<int> plannedStatesToLinkIds)
+        {
+            var now = DateTime.Now.RoundToMinutes();
+
+            var eventEntity = await _eventsRepository.Get(eventId);
+            if (eventEntity is null)
+                throw new EventNotFoundException();
+
+            if (eventEntity.To < now)
+                throw new EventReadOnlyException();
+
+            foreach (var stateId in plannedStatesToLinkIds)
+            {
+                var stateEntity = await _plannedStatesRepository.Get(stateId);
+                if (stateEntity is null)
+                    throw new StateNotFoundException();
+
+                if (stateEntity.Start < now || stateEntity.Ended is not null)
+                    throw new StateReadOnlyException(stateId);
+
+                if (stateEntity.Start < eventEntity.From || stateEntity.PlannedEnd > eventEntity.To)
+                    throw new LinkingStateToEventException("State is planned outside of the time span for the event.",
+                        eventId, stateId);
+
+                // Link the planned state to the event. Even if the planned state already has been linked to an event,
+                // the former event is overwritten by this event.
+                stateEntity.AssociatedEventId = eventId;
+            }
+
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, $"Cannot link planned states to the event with ID {eventId}.");
+                await _unitOfWork.ClearTrackedChanges();
+                throw new EventManipulationFailedException();
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<ICollection<State>> GetLinkedStates(int eventId)
+        {
+            var eventEntity = await _eventsRepository.GetWithLinkedStates(eventId);
+            if (eventEntity is null)
+                throw new EventNotFoundException();
+
+            var resultList = new List<State>();
+            foreach (var stateEntity in eventEntity.LinkedPlannedStates)
+            {
+                resultList.Add(_mapper.Map<State>(stateEntity));
+            }
+
+            return resultList;
+        }
+
+
+        /// <inheritdoc />
+        public async Task<ICollection<State>> RemoveEvent(int eventId)
+        {
+            var eventEntity = await _eventsRepository.GetWithLinkedStates(eventId);
             if (eventEntity is null)
                 throw new EventNotFoundException();
 
@@ -222,24 +376,30 @@ namespace KachnaOnline.Business.Services
 
             await EnsureLock();
 
-            await _eventsRepository.Delete(eventEntity);
+            // Get linked states.
+            var statesList = eventEntity.LinkedPlannedStates.Select(
+                plannedState => _mapper.Map<State>(plannedState)).ToList();
 
+            // Remove event, set all linked planned states references to this event to null.
+            await _eventsRepository.Delete(eventEntity);
             try
             {
                 await _unitOfWork.SaveChanges();
-                // TODO Notify linked states.
             }
             catch (Exception exception)
             {
                 _logger.LogError(exception, $"Cannot remove the event with ID {eventId}.");
                 await _unitOfWork.ClearTrackedChanges();
-                Console.WriteLine(exception.Message);
                 throw new EventManipulationFailedException();
             }
             finally
             {
                 EventPlanningSemaphore.Release();
             }
+
+            // Return linked planned states with its reference to now nonexistent event.
+            // Leave up to the manager to decide what to do with the remaining states.
+            return statesList;
         }
     }
 }

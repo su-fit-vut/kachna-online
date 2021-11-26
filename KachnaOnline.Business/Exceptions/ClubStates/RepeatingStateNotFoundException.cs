@@ -1,4 +1,4 @@
-// StateNotFoundException.cs
+// RepeatingStateNotFoundException.cs
 // Author: Ondřej Ondryáš
 
 using System;

@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 namespace KachnaOnline.Dto.Events
 {
     /// <summary>
-    /// Represents an event modification.
+    /// Represents a base event DTO.
     /// </summary>
     public class BaseEventDto
     {
@@ -80,7 +80,7 @@ namespace KachnaOnline.Dto.Events
         /// <summary>
         /// The linked planned states IDs.
         /// </summary>
-        /// <example>[4213423, 625345, 2143234]</example>
+        /// <example>[357, 358, 360]</example>
         public int[] LinkedPlannedStateIds { get; set; }
     }
 }
