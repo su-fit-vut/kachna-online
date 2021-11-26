@@ -2,20 +2,20 @@
 // Author: David Chocholatý
 
 import { environment } from '../../../environments/environment';
-import { KisEduIdResponse } from '../../models/kis-eduid-response.model';
+import { KisEduIdResponse } from '../../models/users/auth/kis/kis-eduid-response.model';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HTTP_INTERCEPTORS, HttpInterceptor } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { LocalTokenContent } from "../../models/local-token-content.model";
-import { RoleTypes } from "../../models/role-types.model";
-import { User } from "../../models/user.model";
-import { AccessTokens } from "../../models/access-tokens.model";
-import { KisTokenContent } from "../../models/kis-token-content.model";
-import { KisLoggedInUserInformation } from "../../models/kis-logged-in-user-information.model";
-import { KisRefreshTokenResponse } from "../../models/kis-refresh-token-response.model";
+import { LocalTokenContent } from "../../models/users/auth/local-token-content.model";
+import { RoleTypes } from "../../models/users/auth/role-types.model";
+import { User } from "../../models/users/user.model";
+import { AccessTokens } from "../../models/users/auth/access-tokens.model";
+import { KisTokenContent } from "../../models/users/auth/kis/kis-token-content.model";
+import { KisLoggedInUserInformation } from "../../models/users/kis-logged-in-user-information.model";
+import { KisRefreshTokenResponse } from "../../models/users/auth/kis/kis-refresh-token-response.model";
 import { throwError } from "rxjs";
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;

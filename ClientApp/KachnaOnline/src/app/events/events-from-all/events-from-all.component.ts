@@ -4,7 +4,7 @@
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EventsService } from '../../shared/services/events.service';
-import { Event } from '../../models/event.model';
+import { Event } from '../../models/events/event.model';
 import { Component, OnInit } from '@angular/core';
 
 @Component({

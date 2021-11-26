@@ -1,7 +1,7 @@
 // event-form.component.ts
 // Author: David Chocholatý
 
-import { Event } from '../../models/event.model';
+import { Event } from '../../models/events/event.model';
 import { EventsService } from '../../shared/services/events.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
