@@ -25,6 +25,8 @@ namespace KachnaOnline.Data.Entities.ClubStates
         public int? RepeatingStateId { get; set; }
         public int? AssociatedEventId { get; set; }
 
+        public ulong? DiscordNotificationId { get; set; }
+
         // Navigation properties
         public virtual PlannedState NextPlannedState { get; set; }
         public virtual RepeatingState RepeatingState { get; set; }

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// SuDiscordTransitionHandler.cs
+// Author: Ondřej Ondryáš
+
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Configuration;
@@ -35,7 +38,7 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             var previousState = previousStateId.HasValue ? await _stateService.GetState(previousStateId.Value) : null;
 
             var madeBy = state.MadeById.HasValue ? await _userService.GetUser(state.MadeById.Value) : null;
-            var madeByName = madeBy.GetDiscordMention();
+            var madeByName = madeBy.GetDiscordMention(true);
 
             string msg = null;
 
@@ -71,6 +74,16 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
                 else
                 {
                     msg = $"Otevřeno od {state.Start:HH:mm} do {state.PlannedEnd.Value:HH:mm}. Otevírá {madeByName}.";
+
+                    if (state.NoteInternal != null)
+                    {
+                        msg += "\\nInterní poznámka: " + state.NoteInternal;
+                    }
+
+                    if (state.NotePublic != null)
+                    {
+                        msg += "\\nVeřejná poznámka: " + state.NotePublic;
+                    }
                 }
             }
             else if (state.Type == StateType.OpenBar && previousState?.Type == StateType.OpenChillzone)
@@ -80,16 +93,6 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
 
             if (msg != null)
             {
-                if (state.NoteInternal != null)
-                {
-                    msg += "\\nInterní poznámka: " + state.NoteInternal;
-                }
-
-                if (state.NotePublic != null)
-                {
-                    msg += "\\nVeřejná poznámka: " + state.NotePublic;
-                }
-
                 _logger.LogDebug("Sending chillzone start message to SU Discord server.");
                 await this.SendWebhookMessage(msg);
             }
