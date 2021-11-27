@@ -24,6 +24,7 @@ namespace KachnaOnline.Business.Mappings
             this.CreateMap<BoardGame, KachnaOnline.Data.Entities.BoardGames.BoardGame>()
                 .ForMember(dst => dst.Id, opt => opt.Ignore());
             this.CreateMap<BoardGame, BoardGameDto>();
+            this.CreateMap<BoardGame, ReservedBoardGameDto>();
 
             // Board games - manager and creation
             this.CreateMap<BoardGame, ManagerBoardGameDto>()
