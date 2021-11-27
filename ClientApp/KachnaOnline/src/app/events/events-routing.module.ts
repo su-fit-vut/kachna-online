@@ -27,20 +27,22 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { LoggedInContentComponent } from '../navigation-bar/account-popup/logged-in-content/logged-in-content.component';
 import { LoggedOutContentComponent } from '../navigation-bar/account-popup/logged-out-content/logged-out-content.component';
 import { ForbiddenComponent } from '../forbidden/forbidden.component';
+import { EventsListComponent } from "./events-list/events-list.component";
 
 const routes: Routes = [
   {
     path: 'events',
     children: [
       {
-        path: '', children: [ {
-          path: 'current',
-          component: CurrentEventsComponent,
-          data: {
-            title: `${environment.siteName} | Aktuální akce`,
-            description: 'Přehled aktuálních akcí',
-          }
-        },
+        path: '', children: [
+          {
+            path: 'current',
+            component: CurrentEventsComponent,
+            data: {
+              title: `${environment.siteName} | Aktuální akce`,
+              description: 'Přehled aktuálních akcí',
+            }
+          },
           {
             path: 'all',
             component: EventsFromAllComponent,
@@ -52,6 +54,14 @@ const routes: Routes = [
             data: {
               title: `${environment.siteName} | Plánování akce`,
               description: 'Plánování nové akce',
+            }
+          },
+          {
+            path: 'list',
+            component: EventsListComponent,
+            data: {
+              title: `${environment.siteName} | Seznam akcí`,
+              description: 'Přehled akcí',
             }
           },
           {

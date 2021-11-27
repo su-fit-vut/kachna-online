@@ -11,7 +11,7 @@ import { NgForm } from "@angular/forms";
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  public isCardInfoCollapsed: boolean = false;
+  public isCardInfoCollapsed: boolean = true;
 
   constructor(
     public authenticationService: AuthenticationService,
@@ -21,6 +21,9 @@ export class UserProfileComponent implements OnInit {
   cardCodeTooltipText:string = "Tohle je krásná karta."
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
   }
 
   onSaveChanges(form: NgForm) {

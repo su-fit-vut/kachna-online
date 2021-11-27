@@ -54,7 +54,6 @@ export class EventFormComponent implements OnInit {
   modifyEventFromForm(form: NgForm) {
     this.eventsService.modifyEvent().subscribe(
       res => {
-        this.clearForm(form);
         this.eventsService.refreshEventsList();
         this.toastrService.success('Akce úspěšně upravena.', 'Upravit akci');
       },

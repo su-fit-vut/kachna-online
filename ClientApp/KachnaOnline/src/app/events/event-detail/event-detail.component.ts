@@ -6,6 +6,7 @@ import { EventsService } from '../../shared/services/events.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Event } from '../../models/events/event.model';
+import { AuthenticationService } from "../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-event-detail',
@@ -14,24 +15,32 @@ import { Event } from '../../models/events/event.model';
 })
 export class EventDetailComponent implements OnInit {
   event: Event = new Event();
+  activateEditEventModal: boolean = false;
 
   constructor(
     public eventsService: EventsService,
     private toastrService: ToastrService,
     private route: ActivatedRoute,
+    public authenticationService: AuthenticationService,
     ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       let eventId = Number(params.get('eventId'));
-      this.eventsService.getEvent(eventId).subscribe(
-        res => {
-            this.event = res as Event;
-        },
-        err => {
-          console.log(err);
-          this.toastrService.error(`Nepodařilo se získat event s ID ${eventId}.`, "Načtení eventů");
-        });
+      this.eventsService.getEventData(eventId);
     });
+  }
+
+
+  onModifyButtonClicked() {
+    this.activateEditEventModal = true;
+  }
+
+  onCloseModalClicked() {
+    this.activateEditEventModal = false;
+  }
+
+  onDeleteButtonClicked() {
+    this.eventsService.handleRemoveEventRequest();
   }
 }

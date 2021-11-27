@@ -35,8 +35,9 @@ export class EventsService {
     return this.http.get<Event[]>(this.EventsUrl, {params: params});
   }
 
-  getEvent(eventId: number): Observable<Event> {
-    return this.http.get<Event>(`${this.EventsUrl}/${eventId}`);
+  getEvent(eventId: number, withLinkedStates: boolean = false): Observable<Event> {
+    let params = new HttpParams().set('withLinkedStates', withLinkedStates);
+    return this.http.get<Event>(`${this.EventsUrl}/${eventId}`, { params });
   }
 
   planEvent() {
@@ -60,5 +61,40 @@ export class EventsService {
       this.toastrService.error("Nepodařilo se získat eventy.", "Načtení eventů");
       return;
     });
+  }
+
+  populateForm(selectedEventDetail: Event) {
+    this.eventDetail = Object.assign({}, selectedEventDetail);
+  }
+
+  handleRemoveEventRequest(eventDetail?: Event) {
+    if (eventDetail) {
+      this.eventDetail = Object.assign({}, eventDetail);
+    }
+
+    if (confirm("Opravdu chcete odstranit akci " + this.eventDetail.name + "?")) {
+      this.removeEvent(this.eventDetail.id).subscribe(
+        res => {
+          this.refreshEventsList();
+          this.toastrService.success('Akce úspěšně zrušena.', 'Zrušení akce');
+        },
+        err => {
+          console.log(err)
+          this.toastrService.error('Akci se nepovedlo zrušit.', 'Zrušení akce');
+        }
+      );
+    }
+  }
+
+  public getEventData(eventId: number) {
+    this.getEvent(eventId).subscribe(
+      res => {
+        this.eventDetail = res as Event;
+      },
+      err => {
+        console.log(err);
+        this.toastrService.error(`Nepodařilo se získat akci s ID ${eventId}.`, "Načtení akcí");
+      }
+    );
   }
 }
