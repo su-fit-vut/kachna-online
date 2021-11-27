@@ -29,6 +29,7 @@ import { UsersModule } from "./users/users.module";
 import { EventsModule } from "./events/events.module";
 import { StatesModule } from "./states/states.module";
 import { BoardGamesModule } from "./board-games/board-games.module";
+import { ComponentsModule } from "./shared/components/components.module";
 
 export function tokenGetter(request?: HttpRequest<any>) {
   if (request != null) {
@@ -57,6 +58,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     ForbiddenComponent,
   ],
   imports: [
+    ComponentsModule,
     StatesModule,
     BoardGamesModule,
     UsersModule,
@@ -77,7 +79,8 @@ export function tokenGetter(request?: HttpRequest<any>) {
     }),
     AppRoutingModule,
   ],
-  providers: [ EventsService, ],
+  providers: [EventsService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
