@@ -1,6 +1,10 @@
 // ienvironment.ts
 // Author: David Chocholatý
 
+import { LocalTokenContent } from "../app/models/users/auth/local-token-content.model";
+import { KisTokenContent } from "../app/models/users/auth/kis/kis-token-content.model";
+import { KisLoggedInUserInformation } from "../app/models/users/kis-logged-in-user-information.model";
+
 /**
  * Environment accessible from anywhere in the application.
  */
@@ -17,6 +21,9 @@ export class IEnvironment implements IEnvironmentParams {
   public kisRefreshTokenStorageName: string = 'kisRefreshToken';
   public userDataStorageName: string = 'userData';
   public returnAddressStorageName: string = 'returnAddress';
+  public localTokenContentStorageName: string = 'localTokenContent';
+  public kisTokenContentStorageName: string = 'kisTokenContent';
+  public kisLoggedInUserInformationStorageName: string = 'kisLoggedInUserInformationStorageName';
   public kisApiUrl: string = 'https://su-int.fit.vutbr.cz/kis/api';
   public kisApiUrlDomain: string = 'su-int.fit.vutbr.cz';
 

@@ -78,8 +78,8 @@ export class AuthenticationService {
   private handleAccessTokens(res: AccessTokens) {
     localStorage.setItem(environment.accessTokenStorageName, res.accessToken);
     localStorage.setItem(environment.kisAccessTokenStorageName, res.kisAccessToken);
-    this.decodeLocalToken(res.accessToken);
-    this.decodeKisToken(res.kisAccessToken);
+    this.decodeLocalToken();
+    this.decodeKisToken();
     this.getInformationAboutUser();
   }
 
@@ -88,7 +88,9 @@ export class AuthenticationService {
     localStorage.removeItem(environment.kisAccessTokenStorageName);
     localStorage.removeItem(environment.userDataStorageName);
     localStorage.removeItem(environment.kisRefreshTokenStorageName);
-    localStorage.removeItem(environment.returnAddressStorageName);
+    localStorage.removeItem(environment.localTokenContentStorageName);
+    localStorage.removeItem(environment.kisTokenContentStorageName);
+    localStorage.removeItem(environment.kisLoggedInUserInformationStorageName);
 
     this.localTokenContent = new LocalTokenContent();
     this.kisTokenContent = new KisTokenContent();
@@ -100,14 +102,17 @@ export class AuthenticationService {
     this.router.navigate(['']).then();
   }
 
-  checkForAuthTokenExpirationAndRefreshAuthToken() {
-    if (this.jwtHelper.isTokenExpired()) {
-      this.refreshAuthToken()
+  refreshAuthTokenIfExpired() {
+    let accessToken = this.getAccessToken();
+    if (accessToken) {
+      if (this.jwtHelper.isTokenExpired(accessToken)) {
+        this.refreshAuthToken()
+      }
     }
   }
 
   isLoggedIn(): boolean {
-    return localStorage.getItem(environment.accessTokenStorageName) != null;
+    return this.getAccessToken() != null;
   }
 
   isLoggedOut(): boolean {
@@ -130,7 +135,7 @@ export class AuthenticationService {
       .then((res) => {
         localStorage.setItem(environment.kisAccessTokenStorageName, res.auth_token);
         localStorage.setItem(environment.kisRefreshTokenStorageName, res.refresh_token);
-        this.decodeKisToken(res.auth_token);
+        this.decodeKisToken();
         this.getInformationAboutUser();
       }).catch((error: any) => {
         this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
@@ -138,12 +143,20 @@ export class AuthenticationService {
     });
   }
 
-  private decodeLocalToken(token: string) {
-    this.localTokenContent = this.jwtHelper.decodeToken(token) as LocalTokenContent;
+  private decodeLocalToken() {
+    let token = this.getAccessToken();
+    if (token != null) {
+      this.localTokenContent = this.jwtHelper.decodeToken(token) as LocalTokenContent;
+      localStorage.setItem(environment.localTokenContentStorageName, JSON.stringify(this.localTokenContent));
+    }
   }
 
-  private decodeKisToken(token: string) {
-    this.kisTokenContent = this.jwtHelper.decodeToken(token) as KisTokenContent;
+  private decodeKisToken() {
+    let token = this.getKisAccessToken();
+    if (token != null) {
+      this.kisTokenContent = this.jwtHelper.decodeToken(token) as KisTokenContent;
+      localStorage.setItem(environment.kisTokenContentStorageName, JSON.stringify(this.kisTokenContent));
+    }
   }
 
   getUserRoles() {
@@ -151,7 +164,12 @@ export class AuthenticationService {
   }
 
   hasRole(role_type: RoleTypes): boolean {
-    return this.localTokenContent.role.indexOf(role_type) !== -1;
+    if (this.isLoggedIn()) {
+      if (this.localTokenContent.role) {
+        return this.localTokenContent.role.indexOf(role_type) !== -1;
+      }
+    }
+    return false;
   }
 
   isStatesManager(): boolean {
@@ -174,8 +192,9 @@ export class AuthenticationService {
     this.http.get<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me`).toPromise()
       .then((res) => {
         this.kisLoggedInUserInformation = res;
-        this.assignDataFromKisUserInformation();
+        localStorage.setItem(environment.kisLoggedInUserInformationStorageName, JSON.stringify(this.kisLoggedInUserInformation));
 
+        this.assignDataFromKisUserInformation();
         this.assignDataFromLocalTokenContent();
         this.storeUserDataToStorage();
       }).catch((error: any) => {
@@ -210,8 +229,29 @@ export class AuthenticationService {
   updateUserDataIfLoggedIn(): void {
     if (this.isLoggedIn()) {
       let userDataFromStorage = localStorage.getItem(environment.userDataStorageName);
-      if (userDataFromStorage) {
-        this.user = JSON.parse(<string>localStorage.getItem(environment.userDataStorageName));
+      if (userDataFromStorage != null) {
+        this.user = JSON.parse(<string>userDataFromStorage);
+      } else {
+        this.getInformationAboutUser();
+      }
+
+      let localTokenContentFromStorage = localStorage.getItem(environment.localTokenContentStorageName);
+      if (localTokenContentFromStorage != null) {
+        this.localTokenContent = JSON.parse(localTokenContentFromStorage);
+      } else {
+        // TODO: Get local token content.
+      }
+
+      let kisTokenContentFromStorage = localStorage.getItem(environment.kisTokenContentStorageName);
+      if (kisTokenContentFromStorage != null) {
+        this.kisTokenContent = JSON.parse(kisTokenContentFromStorage);
+      } else {
+        // TODO: Get local token content.
+      }
+
+      let kisLoggedInUserInformationFromStorage = localStorage.getItem(environment.kisLoggedInUserInformationStorageName);
+      if (kisLoggedInUserInformationFromStorage != null) {
+        this.kisLoggedInUserInformation = JSON.parse(kisLoggedInUserInformationFromStorage);
       } else {
         this.getInformationAboutUser();
       }
