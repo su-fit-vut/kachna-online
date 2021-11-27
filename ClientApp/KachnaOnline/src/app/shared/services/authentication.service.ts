@@ -226,4 +226,16 @@ export class AuthenticationService {
       localStorage.setItem(environment.userDataStorageName, JSON.stringify(this.user));
     }
   }
+
+  getAccessToken() {
+    return localStorage.getItem(environment.accessTokenStorageName);
+  }
+
+  getKisAccessToken() {
+    return localStorage.getItem(environment.kisAccessTokenStorageName);
+  }
+
+  getKisRefreshToken() {
+    return localStorage.getItem(environment.kisRefreshTokenStorageName);
+  }
 }
