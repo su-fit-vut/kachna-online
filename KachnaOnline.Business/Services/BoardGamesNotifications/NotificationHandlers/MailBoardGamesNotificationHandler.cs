@@ -102,6 +102,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
                 IsBodyHtml = true
             };
 
+            _logger.LogDebug("Sending an e-mail to {ToAddress}.", toAddress.Address);
             await smtp.SendMailAsync(message);
         }
 

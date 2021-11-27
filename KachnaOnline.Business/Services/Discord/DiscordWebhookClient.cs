@@ -59,6 +59,7 @@ namespace KachnaOnline.Business.Services.Discord
 
             try
             {
+                _logger.LogDebug("Sending a Discord webhook message.");
                 var response = await client.PostAsync($"{webhookUrl}?wait={waitString}",
                     new StringContent(content, Encoding.UTF8, "application/json"));
                 response.EnsureSuccessStatusCode();
@@ -90,6 +91,7 @@ namespace KachnaOnline.Business.Services.Discord
                 return;
             }
 
+            _logger.LogDebug("Requesting removal of webhook message {Id}.", messageId);
             using var client = _httpClientFactory.CreateClient();
             await client.DeleteAsync($"{webhookUrl}/messages/{messageId}");
         }
