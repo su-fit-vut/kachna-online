@@ -1,0 +1,27 @@
+<!--
+reservation-button.component.html
+Author: František Nečas
+-->
+<div *ngIf="authenticationService.isLoggedIn()">
+  <div *ngIf="available <= 0; then thenBlock else elseBlock"></div>
+  <ng-template #thenBlock>
+    <button type="button" class="btn btn-secondary" disabled>Aktuálně nedostupné</button>
+  </ng-template>
+  <ng-template #elseBlock>
+    <button *ngIf="!currentValue" type="button" class="btn btn-success" (click)="reservedInitial()">
+      Rezervovat
+    </button>
+    <div *ngIf="currentValue" class="btn-group" role="group">
+      <button type="button" class="btn btn-outline-success" disabled>Zarezervováno {{currentValue}}ks
+      </button>
+      <div class="btn-group-vertical" role="group">
+        <button *ngIf="currentValue < available" type="button" class="btn btn-success btn-xs"
+                (click)="reservedIncrement()">+
+        </button>
+        <button *ngIf="currentValue >= available" type="button" class="btn btn-success btn-xs" disabled>+
+        </button>
+        <button type="button" class="btn btn-danger btn-xs" (click)="reservedDecrement()">-</button>
+      </div>
+    </div>
+  </ng-template>
+</div>

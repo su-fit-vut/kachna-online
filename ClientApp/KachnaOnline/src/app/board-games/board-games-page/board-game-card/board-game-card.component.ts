@@ -22,18 +22,8 @@ export class BoardGameCardComponent implements OnInit {
     this.boardGame.toReserve = this.initialReserved;
   }
 
-  reservedInitial(): void {
-    this.boardGame.toReserve = 1;
-    this.reservationUpdate.emit(this.boardGame);
-  }
-
-  reservedIncrement(): void {
-    this.boardGame.toReserve++;
-    this.reservationUpdate.emit(this.boardGame);
-  }
-
-  reservedDecrement(): void {
-    this.boardGame.toReserve--;
+  onCountChanged(newCount: number): void {
+    this.boardGame.toReserve = newCount;
     this.reservationUpdate.emit(this.boardGame);
   }
 }
