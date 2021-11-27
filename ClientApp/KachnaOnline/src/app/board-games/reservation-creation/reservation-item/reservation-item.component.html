@@ -1,0 +1,16 @@
+<!--
+reservation-item-component.html
+Author: František Nečas
+-->
+<td>{{boardGame.name}}</td>
+<td>
+  {{boardGame.toReserve}} ks
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-sm btn-success count-button" *ngIf="boardGame.toReserve < boardGame.available"
+            (click)="reservedIncrement()">+
+    </button>
+    <button type="button" class="btn btn-sm btn-success count-button" *ngIf="boardGame.toReserve >= boardGame.available"
+            disabled>+</button>
+    <button type="button" class="btn btn-sm btn-danger count-button" (click)="reservedDecrement()">-</button>
+  </div>
+</td>

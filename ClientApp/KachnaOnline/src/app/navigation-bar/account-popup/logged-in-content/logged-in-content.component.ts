@@ -18,10 +18,6 @@ export class LoggedInContentComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  clickMyReservationsButton() {
-
-  }
-
   clickChangeCard() {
 
   }

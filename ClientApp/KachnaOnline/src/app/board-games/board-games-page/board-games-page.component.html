@@ -32,10 +32,10 @@ Author: František Nečas
 <hr/>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
   <div class="col mb-3" *ngFor="let boardGame of shownGames">
-    <app-board-game [boardGame]="boardGame" [initialReserved]="currentReservation[boardGame.id] || 0"
+    <app-board-game [boardGame]="boardGame" [initialReserved]="currentReservation.get(boardGame.id) || 0"
                     (reservationUpdate)="onReservationUpdate($event)"></app-board-game>
   </div>
 </div>
-<button *ngIf="reservationInProgress" type="button" class="btn btn-success btn-lg" id="reserveBtn">Dokončit
+<button *ngIf="currentReservation.size > 0" type="button" class="btn btn-success btn-lg" id="reserveBtn" routerLink="reserve" >Dokončit
   rezervaci
 </button>

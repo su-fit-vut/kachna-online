@@ -1,6 +1,9 @@
 // categogry-model.ts
 // Author: František Nečas
 
+/**
+ * Model of a board game category.
+ */
 export class BoardGameCategory {
   id: number
   name: string = ""

@@ -2,8 +2,8 @@
 // Author: František Nečas
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BoardGame } from "../../models/board-games/board-game-model";
-import { AuthenticationService } from "../../shared/services/authentication.service";
+import { BoardGame } from "../../../models/board-games/board-game-model";
+import { AuthenticationService } from "../../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-board-game',
