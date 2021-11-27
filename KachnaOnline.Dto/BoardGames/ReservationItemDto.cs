@@ -18,10 +18,9 @@ namespace KachnaOnline.Dto.BoardGames
         public int Id { get; set; }
 
         /// <summary>
-        /// ID of the game which this item reserves.
+        /// Information about the reserved board game.
         /// </summary>
-        /// <example>55</example>
-        public int BoardGameId { get; set; }
+        public ReservedBoardGameDto BoardGame { get; set; }
 
         /// <summary>
         /// Expiration date of the reservation item.
