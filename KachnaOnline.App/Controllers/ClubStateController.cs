@@ -349,7 +349,8 @@ namespace KachnaOnline.App.Controllers
             }
             catch (StateReadOnlyException)
             {
-                return this.ConflictProblem("The specified state cannot be modified because it has already started or ended.");
+                return this.ConflictProblem(
+                    "The specified state cannot be modified because it has already started or ended.");
             }
             catch (StateNotAssociatedToEventException)
             {
@@ -359,6 +360,18 @@ namespace KachnaOnline.App.Controllers
             {
                 return this.NotFoundProblem("The specified state does not exist.");
             }
+        }
+
+        /// <summary>
+        /// Returns details of the current state in the legacy (IsKachnaOpen) format.
+        /// </summary>
+        [HttpGet("current/legacy")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [AllowAnonymous]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<ActionResult<LegacyStateDto>> GetCurrentLegacy()
+        {
+            return await _facade.GetCurrentLegacy();
         }
     }
 }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -25,17 +26,19 @@ namespace KachnaOnline.Business.Facades
     {
         private readonly IClubStateService _clubStateService;
         private readonly IUserService _userService;
+        private readonly IKisService _kisService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         private readonly IOptionsMonitor<ClubStateOptions> _optionsMonitor;
         private readonly ILogger<ClubStateFacade> _logger;
 
         public ClubStateFacade(IClubStateService clubStateService, IUserService userService,
-            IHttpContextAccessor httpContextAccessor, IMapper mapper,
+            IKisService kisService, IHttpContextAccessor httpContextAccessor, IMapper mapper,
             IOptionsMonitor<ClubStateOptions> optionsMonitor, ILogger<ClubStateFacade> logger)
         {
             _clubStateService = clubStateService;
             _userService = userService;
+            _kisService = kisService;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _optionsMonitor = optionsMonitor;
@@ -104,7 +107,7 @@ namespace KachnaOnline.Business.Facades
             dto.MadeByUser = await this.MakeMadeByDto(state.MadeById);
             if (state.FollowingState?.MadeById != null)
             {
-                ((StateDto) dto.FollowingState).MadeByUser = await this.MakeMadeByDto(state.FollowingState.MadeById);
+                ((StateDto)dto.FollowingState).MadeByUser = await this.MakeMadeByDto(state.FollowingState.MadeById);
             }
 
             return dto;
@@ -306,6 +309,46 @@ namespace KachnaOnline.Business.Facades
         public async Task UnlinkStateFromEvent(int stateId)
         {
             await _clubStateService.UnlinkStateFromEvent(stateId);
+        }
+
+        public async Task<LegacyStateDto> GetCurrentLegacy()
+        {
+            var currentState = await _clubStateService.GetCurrentState();
+            var nextState = await _clubStateService.GetNextPlannedState(null, false);
+            var nextBarState = await _clubStateService.GetNextPlannedState(Models.ClubStates.StateType.OpenBar);
+            var tapInfo = await _kisService.GetTapInfo();
+
+            string[] beers = null;
+            if (tapInfo is { Count: >0 })
+            {
+                beers = tapInfo.Select(t =>
+                {
+                    var article = t.OfferedArticles?.FirstOrDefault();
+                    if (article is null)
+                        return null;
+
+                    return $"{article.Name} ({article.Price} Kč)";
+                }).Where(t => t != null).ToArray();
+
+                if (beers.Length == 0)
+                {
+                    beers = null;
+                }
+            }
+
+            var dto = new LegacyStateDto
+            {
+                State = _mapper.Map<StateType>(currentState.Type),
+                LastChange = currentState.Start,
+                ExpectedEnd = currentState.PlannedEnd,
+                NextPlannedState = _mapper.Map<StateType?>(nextState?.Type) ?? StateType.Closed,
+                NextStateDateTime = nextState?.Start,
+                NextOpeningDateTime = nextBarState?.Start,
+                Note = currentState.NotePublic,
+                BeersOnTap = beers
+            };
+
+            return dto;
         }
     }
 }
