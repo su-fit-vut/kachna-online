@@ -21,7 +21,6 @@ export class UserProfileComponent implements OnInit {
   cardCodeTooltipText:string = "Tohle je krásná karta."
 
   ngOnInit(): void {
-    this.authenticationService.updateUserDataIfLoggedIn();
   }
 
   onSaveChanges(form: NgForm) {

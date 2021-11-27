@@ -125,11 +125,11 @@ export class AuthenticationService {
   }
 
   refreshKisToken() {
-    let params = new HttpParams().set('refresh_token', sessionStorage.getItem(environment.kisRefreshTokenStorageName) ?? this.localTokenContent.krt);
+    let params = new HttpParams().set('refresh_token', localStorage.getItem(environment.kisRefreshTokenStorageName) ?? this.localTokenContent.krt);
     this.http.get<KisRefreshTokenResponse>(`${environment.kisApiUrl}/auth/fresh_token`, { params }).toPromise()
       .then((res) => {
-        sessionStorage.setItem(environment.kisAccessTokenStorageName, res.auth_token);
-        sessionStorage.setItem(environment.kisRefreshTokenStorageName, res.refresh_token);
+        localStorage.setItem(environment.kisAccessTokenStorageName, res.auth_token);
+        localStorage.setItem(environment.kisRefreshTokenStorageName, res.refresh_token);
         this.decodeKisToken(res.auth_token);
         this.getInformationAboutUser();
       }).catch((error: any) => {
