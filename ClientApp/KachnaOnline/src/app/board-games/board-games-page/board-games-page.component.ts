@@ -58,17 +58,24 @@ export class BoardGamesPageComponent implements OnInit {
       this.categoryIds, this.currentReservation);
   }
 
-  addCategoryToFiltered(category: number) {
+  onCategoryAdded(category: number): void {
     if (this.categoryIds.length == 0) {
       // Prepare for category-based filtering.
       this.filteredGames = this.boardGames.filter(g => g.category.id == category);
     } else {
-      this.filteredGames = this.filteredGames.concat(this.boardGames.filter(g => g.category.id == category));
+      let addToFiltered = this.boardGames.filter(g => g.category.id == category);
+      // The games have not been fetched yet.
+      if (addToFiltered.length == 0) {
+        this.boardGamesService.getBoardGames([category], this.players, this.availableOnly).subscribe(
+          games => {
+            this.filteredGames = this.filteredGames.concat(games[0]);
+            this.shownGames = this.filteredGames;
+          }
+        )
+      } else {
+        this.filteredGames = this.filteredGames.concat(addToFiltered);
+      }
     }
-  }
-
-  onCategoryAdded(category: number): void {
-    this.addCategoryToFiltered(category);
     this.shownGames = this.filteredGames;
     this.categoryIds.push(category)
   }
@@ -100,7 +107,7 @@ export class BoardGamesPageComponent implements OnInit {
         }
         // Use cached filters on init
         if (init && this.categoryIds.length > 0) {
-          this.filteredGames = this.boardGames.filter(g => this.categoryIds.includes(g.category.id ));
+          this.filteredGames = this.boardGames.filter(g => this.categoryIds.includes(g.category.id));
         } else {
           this.filteredGames = this.boardGames;
         }
