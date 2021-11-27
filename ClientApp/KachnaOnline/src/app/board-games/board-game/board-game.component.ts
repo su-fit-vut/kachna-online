@@ -12,12 +12,14 @@ import { AuthenticationService } from "../../shared/services/authentication.serv
 })
 export class BoardGameComponent implements OnInit {
   @Input() boardGame: BoardGame
+  @Input() initialReserved: number = 0;
   @Output() reservationUpdate: EventEmitter<BoardGame> = new EventEmitter()
 
   constructor(public authenticationService: AuthenticationService) {
   }
 
   ngOnInit(): void {
+    this.boardGame.toReserve = this.initialReserved;
   }
 
   reservedInitial(): void {

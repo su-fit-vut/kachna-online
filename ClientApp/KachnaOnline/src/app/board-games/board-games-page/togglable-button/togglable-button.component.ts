@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./togglable-button.component.css']
 })
 export class TogglableButtonComponent implements OnInit {
-  @Input() text: string
+  @Input() text: string = "";
   @Input() startingValue: boolean = false
   @Output() valueChanged: EventEmitter<boolean> = new EventEmitter()
 

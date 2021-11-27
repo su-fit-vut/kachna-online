@@ -10,6 +10,7 @@ Author: František Nečas
   <form class="ml-3 mr-3">
     <app-category *ngFor="let category of categories" [category]="category"
                   (categoryDisabled)="onCategoryDisabled($event)"
-                  (categoryEnabled)="onCategoryEnabled($event)"></app-category>
+                  (categoryEnabled)="onCategoryEnabled($event)"
+                  [startingValue]="initiallyEnabled.indexOf(category.id) > -1"></app-category>
   </form>
 </div>
