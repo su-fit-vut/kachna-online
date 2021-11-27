@@ -328,5 +328,37 @@ namespace KachnaOnline.App.Controllers
                 return this.ForbiddenProblem("Only administrators may change a state's made by ID.");
             }
         }
+
+        /// <summary>
+        /// Unlinks the specified linked state from any event.
+        /// </summary>
+        /// <param name="stateId">ID of the planned state to be unlinked from any event.</param>
+        /// <response code="204">The planned states was unlinked from the event.</response>
+        /// <response code="404">The state with the given ID <paramref name="stateId"/> does not exist.</response>
+        /// <response code="409">The state that has already started or ended cannot be modified.</response>
+        [HttpDelete("{stateId}/linkedEvent")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> UnlinkStateFromEvent(int stateId)
+        {
+            try
+            {
+                await _facade.UnlinkStateFromEvent(stateId);
+                return this.NoContent();
+            }
+            catch (StateReadOnlyException)
+            {
+                return this.ConflictProblem("The specified state cannot be modified because it has already started or ended.");
+            }
+            catch (StateNotAssociatedToEventException)
+            {
+                return this.ConflictProblem("The specified state is not linked to any event.");
+            }
+            catch (StateNotFoundException)
+            {
+                return this.NotFoundProblem("The specified state does not exist.");
+            }
+        }
     }
 }

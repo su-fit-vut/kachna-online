@@ -295,5 +295,17 @@ namespace KachnaOnline.Business.Facades
         {
             await _clubStateService.CloseNow(this.CurrentUserId);
         }
+
+        /// <summary>
+        /// Unlinks the specified linked state from any event.
+        /// </summary>
+        /// <param name="stateId">ID of the planned state to be unlinked from any event.</param>
+        /// <exception cref="StateReadOnlyException">Thrown when planned state to be unlinked from the event has already started or ended.</exception>
+        /// <exception cref="StateNotFoundException">Thrown when planned state to be unlinked from the event has not been found.</exception>
+        /// <exception cref="StateNotAssociatedToEventException">Thrown when planned states is not associated to any event.</exception>
+        public async Task UnlinkStateFromEvent(int stateId)
+        {
+            await _clubStateService.UnlinkStateFromEvent(stateId);
+        }
     }
 }

@@ -209,5 +209,15 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <exception cref="StateNotFoundException">No state is currently active.</exception>
         /// <returns></returns>
         Task CloseNow(int closedByUserId);
+
+        /// <summary>
+        /// Sets state <see cref="State.EventId"/> to null (unlinks that state from any event) to state specified by <paramref name="stateId"/>.
+        /// </summary>
+        /// <param name="stateId">State ID to set its <see cref="State.EventId"/> to null.</param>
+        /// <exception cref="StateReadOnlyException">Thrown when planned state to be unlinked from the event has already started or ended.</exception>
+        /// <exception cref="StateNotFoundException">Thrown when planned state to be unlinked from the event has not been found.</exception>
+        /// <exception cref="StateNotAssociatedToEventException">Thrown when planned states is not associated to any event.</exception>
+        Task UnlinkStateFromEvent(int stateId);
+
     }
 }

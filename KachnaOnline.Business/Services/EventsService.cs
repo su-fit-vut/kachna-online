@@ -194,30 +194,6 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
-        public async Task UnlinkStateFromEvent(int stateId)
-        {
-            var state = await _plannedStatesRepository.Get(stateId);
-            if (state is null)
-                throw new StateNotFoundException(stateId);
-            if (state.Ended is not null || state.Start < DateTime.Now)
-                throw new StateReadOnlyException(stateId);
-            if (state.AssociatedEventId is null)
-                throw new StateNotAssociatedToEventException(stateId);
-
-            state.AssociatedEventId = null;
-            try
-            {
-                await _unitOfWork.SaveChanges();
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, $"Cannot unlink associated event from state with ID {stateId}.");
-                await _unitOfWork.ClearTrackedChanges();
-                throw new EventManipulationFailedException();
-            }
-        }
-
-        /// <inheritdoc />
         public async Task ModifyEvent(int eventId, ModifiedEvent modifiedEvent)
         {
             if (modifiedEvent is null)
@@ -231,8 +207,7 @@ namespace KachnaOnline.Business.Services
                 throw new EventReadOnlyException();
 
             _mapper.Map(modifiedEvent, eventEntity);
-            try
-            {
+            try {
                 await this.SetLinkedPlannedStatesForEvent(eventId, modifiedEvent.LinkedPlannedStateIds);
                 await _unitOfWork.SaveChanges();
             }
