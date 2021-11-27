@@ -1,4 +1,4 @@
-// board-game.component.ts
+// board-game-card-card.component.ts
 // Author: František Nečas
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
@@ -7,10 +7,10 @@ import { AuthenticationService } from "../../../shared/services/authentication.s
 
 @Component({
   selector: 'app-board-game',
-  templateUrl: './board-game.component.html',
-  styleUrls: ['./board-game.component.css']
+  templateUrl: './board-game-card.component.html',
+  styleUrls: ['./board-game-card.component.css']
 })
-export class BoardGameComponent implements OnInit {
+export class BoardGameCardComponent implements OnInit {
   @Input() boardGame: BoardGame
   @Input() initialReserved: number = 0;
   @Output() reservationUpdate: EventEmitter<BoardGame> = new EventEmitter()

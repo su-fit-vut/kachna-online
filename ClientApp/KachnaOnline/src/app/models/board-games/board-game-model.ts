@@ -1,4 +1,4 @@
-// board-game-model.ts
+// board-game-card-model.ts
 // Author: František Nečas
 
 import { BoardGameCategory } from "./category-model";
