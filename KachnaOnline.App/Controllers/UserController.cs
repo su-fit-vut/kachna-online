@@ -48,7 +48,7 @@ namespace KachnaOnline.App.Controllers
         /// <param name="id">The ID of the user to return.</param>
         /// <response code="200">The user.</response>
         /// <response code="404">No such user exists.</response>
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = AuthConstants.Admin)]
