@@ -29,10 +29,9 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns the list of the authenticated user's reservations.
+        /// Returns a list of the authenticated user's reservations.
         /// </summary>
         /// <param name="state">If present, only reservations of this overall state will be returned.</param>
-        /// <returns>A list of <see cref="ReservationDto"/>, filtered by state if requested.</returns>
         /// <response code="200">The list of reservations.</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
@@ -43,10 +42,9 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns the list of all reservations in the system.
+        /// Returns a list of all reservations in the system.
         /// </summary>
         /// <param name="state">If present, only reservations of this overall state will be returned.</param>
-        /// <returns>A list of all <see cref="ManagerReservationDto"/>, filtered by state if requested.</returns>
         /// <response code="200">The list of all reservations.</response>
         [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -57,14 +55,11 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns the list of all reservations in the system assigned to the specified user.
+        /// Returns a list of all reservations in the system assigned to the specified user.
         /// </summary>
         /// <param name="userId">ID of the user to search in reservation assignments.</param>
         /// <param name="state">If present, only reservations of this overall state will be returned.</param>
-        /// <returns>A list of all <see cref="ManagerReservationDto"/> assigned to user with <paramref name="userId"/>,
-        /// filtered by state if requested.</returns>
-        /// <response code="200">The list of all reservations assigned to the user with ID
-        /// <paramref name="userId"/>.</response>
+        /// <response code="200">The list of all reservations assigned to the user.</response>
         [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("all/assignedTo/{userId}")]
@@ -75,11 +70,9 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns the list of all reservations in the system assigned to the authenticated user.
+        /// Returns a list of all reservations in the system assigned to the authenticated user.
         /// </summary>
         /// <param name="state">If present, only reservations of this overall state will be returned.</param>
-        /// <returns>A list of all <see cref="ManagerReservationDto"/> assigned to the authenticated user,
-        /// filtered by state if requested.</returns>
         /// <response code="200">The list of all reservations assigned to the authenticated user.</response>
         [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -94,9 +87,10 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Returns a reservation with the given ID.
         /// </summary>
+        /// <remarks>
+        /// A `ManagerReservationDto` is returned if the user is an authorized board games manager.
+        /// </remarks>
         /// <param name="id">ID of the reservation to return.</param>
-        /// <returns><see cref="ReservationDto"/> corresponding to ID <paramref name="id"/>. If the user is an
-        /// authorized, returns <see cref="ManagerReservationDto"/> instead.</returns>
         /// <response code="200">The reservation.</response>
         /// <response code="403">The user is not a board games manager and the reservation belongs to another user.</response>
         /// <response code="404">No such reservation exists.</response>
@@ -124,7 +118,6 @@ namespace KachnaOnline.App.Controllers
         /// Creates a new reservation.
         /// </summary>
         /// <param name="creationDto">A model describing the new reservation.</param>
-        /// <returns>The created <see cref="ReservationDto"/> if the creation succeeded.</returns>
         /// <response code="201">The created reservation.</response>
         /// <response code="404">When a requested game does not exist.</response>
         /// <response code="409">All of the given board games could not be reserved (e.g. are not available).
@@ -152,7 +145,7 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Updates a user note in a reservation with the given ID.
+        /// Updates the public note of a reservation with the given ID.
         /// </summary>
         /// <param name="id">ID of the reservation to update.</param>
         /// <param name="noteDto">A model containing the new user note.</param>
@@ -182,7 +175,7 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Updates an internal note in a reservation with the given ID.
+        /// Updates the internal note of a reservation with the given ID.
         /// </summary>
         /// <param name="id">ID of the reservation to update.</param>
         /// <param name="noteDto">A model containing the new internal note.</param>
@@ -284,9 +277,7 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <param name="id">ID of the reservation.</param>
         /// <param name="itemId">ID of the item in the reservation.</param>
-        /// <returns>A list of <see cref="ReservationItemEventDto"/> representing the whole history, sorted
-        /// chronologically.</returns>
-        /// <response code="200">The item history.</response>
+        /// <response code="200">The item history, sorted chronologically.</response>
         /// <response code="404">No such item or reservation exists.</response>
         [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status200OK)]

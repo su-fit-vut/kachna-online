@@ -35,8 +35,7 @@ namespace KachnaOnline.App.Controllers
         /// parameter set. This endpoint will then provide the user with an access token to this service's API.
         /// </remarks>
         /// <param name="session">A KIS eduID session ID.</param>
-        /// <returns>A JWT Bearer token representing the user's identity.</returns>
-        /// <response code="200">A JWT Bearer token representing the user's identity.</response>
+        /// <response code="200">A JWT Bearer token representing the user's identity and the KIS JWT Bearer token used to get it.</response>
         /// <response code="400">No session ID was provided.</response>
         /// <response code="404">User is not registered in KIS.</response>
         [HttpGet("accessTokenFromSession")]
@@ -67,8 +66,7 @@ namespace KachnaOnline.App.Controllers
         /// such as from the administration or the operator app.
         /// </remarks>
         /// <param name="kisRefreshToken">A KIS refresh token.</param>
-        /// <returns>A JWT Bearer token representing the user's identity.</returns>
-        /// <response code="200">A JWT Bearer token representing the user's identity.</response>
+        /// <response code="200">A JWT Bearer token representing the user's identity and the KIS JWT Bearer token used to get it.</response>
         /// <response code="400">No refresh token was provided.</response>
         /// <response code="403">Invalid refresh token (either it has expired or the user is not an SU member anymore).</response>
         [HttpGet("accessTokenFromRefreshToken")]
@@ -103,7 +101,6 @@ namespace KachnaOnline.App.Controllers
         /// A JWT access token issued by this API contains a KIS refresh token for the target user.
         /// This token is then used as if it was provided to the accessTokenFromRefreshToken endpoint.
         /// </remarks>
-        /// <returns>A JWT Bearer token representing the user's identity.</returns>
         /// <response code="200">A JWT Bearer token representing the user's identity.</response>
         /// <response code="403">Invalid refresh token (either it has expired or the user is not an SU member anymore).</response>
         [HttpGet("refreshedAccessToken")]

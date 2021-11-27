@@ -34,7 +34,6 @@ namespace KachnaOnline.App.Controllers
         /// Returns a list of events being held at the given date and time.
         /// </summary>
         /// <param name="at">The date and time.</param>
-        /// <returns>A list of <see cref="EventDto"/> corresponding to the <paramref name="at"/> date and time.</returns>
         /// <response code="200">The list of events.</response>
         [AllowAnonymous]
         [HttpGet("at/{at}")]
@@ -47,20 +46,19 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Returns an event with the given ID.
         /// </summary>
-        /// <param name="eventId">ID of the event to return.</param>
+        /// <param name="id">ID of the event to return.</param>
         /// <param name="withLinkedStates">Whether to return linked states as well.</param>
-        /// <returns>An <see cref="EventDto"/>.</returns>
         /// <response code="200">The event.</response>
         /// <response code="404">No such event exists.</response>
         [AllowAnonymous]
-        [HttpGet("{eventId}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EventDto>> GetEvent(int eventId, bool withLinkedStates = false)
+        public async Task<ActionResult<EventDto>> GetEvent(int id, bool withLinkedStates = false)
         {
             try
             {
-                return await _eventsFacade.GetEvent(eventId, withLinkedStates);
+                return await _eventsFacade.GetEvent(id, withLinkedStates);
             }
             catch (EventNotFoundException)
             {
@@ -71,7 +69,6 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Returns a list of events that are happening at the moment.
         /// </summary>
-        /// <returns>A list of <see cref="EventDto"/>.</returns>
         /// <response code="200">The list of current events.</response>
         [AllowAnonymous]
         [HttpGet("current")]
@@ -85,7 +82,6 @@ namespace KachnaOnline.App.Controllers
         /// Returns a list of the next planned events.
         /// </summary>
         /// <remarks>
-        /// <returns>A list of <see cref="EventDto"/>.</returns>
         /// Several events may start at the same time. Thus, a list is returned instead of a single event.
         /// </remarks>
         /// <response code="200">The list of the next planned events.</response>
@@ -100,7 +96,6 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Returns a list of events planned in the specified time range.
         /// </summary>
-        /// <returns>A list of <see cref="EventDto"/>.</returns>
         /// <response code="200">The list of events.</response>
         /// <response code="400">The specified time range is too long or `<paramref name="to"/>` comes before
         /// `<paramref name="from"/>`.</response>
@@ -127,19 +122,19 @@ namespace KachnaOnline.App.Controllers
         /// Plans a new event.
         /// </summary>
         /// <param name="newEvent">An event to create.</param>
-        /// <returns>A planned <see cref="KachnaOnline.Dto.Events.EventDto"/> if the creation succeeded.</returns>
         /// <response code="201">The new event.</response>
         /// <response code="400">Invalid event parameters.</response>
         /// <response code="422">The user does not exist.</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ManagerEventDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<ManagerEventDto>> PlanEvent(BaseEventDto newEvent)
         {
             try
             {
-                return await _eventsFacade.PlanEvent(newEvent);
+                var createdEvent = await _eventsFacade.PlanEvent(newEvent);
+                return this.CreatedAtAction("GetEvent", new { id = createdEvent.Id }, createdEvent);
             }
             catch (UserNotFoundException)
             {
@@ -154,18 +149,17 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Returns a list of <see cref="StateDto"/> of conflicting planned states for event with the given ID.
         /// </summary>
-        /// <param name="eventId">ID of the event to get the conflicting planned states for.</param>
-        /// <returns>A list of <see cref="EventDto"/>.</returns>
+        /// <param name="id">ID of the event to get the conflicting planned states for.</param>
         /// <response code="200">The list of conflicting states.</response>
         /// <response code="404">No such event exists.</response>
-        [HttpGet("{eventId}/conflictingStates")]
+        [HttpGet("{id}/conflictingStates")]
         [ProducesResponseType(typeof(IEnumerable<StateDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetConflictingPlannedStatesForEvent(int eventId)
+        public async Task<IActionResult> GetConflictingPlannedStatesForEvent(int id)
         {
             try
             {
-                return this.Ok(await _eventsFacade.GetConflictingStatesForEvent(eventId));
+                return this.Ok(await _eventsFacade.GetConflictingStatesForEvent(id));
             }
             catch (EventNotFoundException)
             {
@@ -174,21 +168,20 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Get states linked to the event specified by <paramref name="eventId"/>.
+        /// Get states linked to the event specified by <paramref name="id"/>.
         /// </summary>
-        /// <param name="eventId">An ID of the event to link planned states to.</param>
-        /// <returns>An <see cref="EventDto"/> with list of <see cref="StateDto"/> as linked planned states.</returns>
+        /// <param name="id">An ID of the event to link planned states to.</param>
         /// <response code="200">The planned states were linked to the event.</response>
-        /// <response code="404">The event with the given ID <paramref name="eventId"/> does not exist.</response>
+        /// <response code="404">No such event exists.</response>
         [AllowAnonymous]
-        [HttpGet("{eventId}/linkedStates")]
+        [HttpGet("{id}/linkedStates")]
         [ProducesResponseType(typeof(IEnumerable<EventDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetLinkedStatesForEvent(int eventId)
+        public async Task<IActionResult> GetLinkedStatesForEvent(int id)
         {
             try
             {
-                return this.Ok(await _eventsFacade.GetLinkedStatesForEvent(eventId));
+                return this.Ok(await _eventsFacade.GetLinkedStatesForEvent(id));
             }
             catch (EventNotFoundException)
             {
@@ -197,23 +190,22 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Link planned states to the event specified by <paramref name="eventId"/>.
+        /// Link planned states to the event specified by <paramref name="id"/>.
         /// </summary>
-        /// <param name="eventId">An ID of the event to link planned states to.</param>
-        /// <param name="plannedStatesToLinkDto">A list of planned state IDs to link to the event specified by <paramref name="eventId"/>.</param>
-        /// <returns>An <see cref="EventDto"/> with list of <see cref="StateDto"/> as linked planned states.</returns>
+        /// <param name="id">An ID of the event to link planned states to.</param>
+        /// <param name="plannedStatesToLinkDto">A list of planned state IDs to link to the event specified by <paramref name="id"/>.</param>
         /// <response code="204">The planned states were linked to the event.</response>
-        /// <response code="404">The event with the given ID <paramref name="eventId"/> does not exist.</response>
-        /// <response code="409">The event from the past cannot be modified.</response>
-        [HttpPost("{eventId}/linkedStates")]
+        /// <response code="404">No such event exists.</response>
+        /// <response code="409">The event has already ended and cannot be modified.</response>
+        [HttpPost("{id}/linkedStates")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> LinkPlannedStatesToEvent(int eventId, PlannedStatesToLinkDto plannedStatesToLinkDto)
+        public async Task<IActionResult> LinkPlannedStatesToEvent(int id, PlannedStatesToLinkDto plannedStatesToLinkDto)
         {
             try
             {
-                await _eventsFacade.LinkPlannedStatesToEvent(eventId, plannedStatesToLinkDto);
+                await _eventsFacade.LinkPlannedStatesToEvent(id, plannedStatesToLinkDto);
                 return this.NoContent();
             }
             catch (EventNotFoundException)
@@ -244,22 +236,23 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Sets (overrides) the current linked states to the event specified by <paramref name="eventId"/> with <paramref name="plannedStatesToLink"/>.
+        /// Sets (overrides) the current linked states to the event specified by <paramref name="id"/> with <paramref name="plannedStatesToLink"/>.
         /// </summary>
-        /// <param name="eventId">Event to set linked planned states for.</param>
-        /// <param name="plannedStatesToLink">A list of planned state IDs to link to the event specified by <paramref name="eventId"/>.</param>
+        /// <param name="id">Event to set linked planned states for.</param>
+        /// <param name="plannedStatesToLink">A list of planned state IDs to link to the event specified by <paramref name="id"/>.</param>
         /// <response code="204">The planned states were linked to the event.</response>
-        /// <response code="404">The event with the given ID <paramref name="eventId"/> does not exist.</response>
-        /// <response code="409">The event from the past cannot be modified.</response>
-        [HttpPut("{eventId}/linkedStates")]
+        /// <response code="404">No such event exists.</response>
+        /// <response code="409">The event has already ended and cannot be modified.</response>
+        [HttpPut("{id}/linkedStates")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> SetLinkedPlannedStatesForEvent(int eventId, PlannedStatesToLinkDto plannedStatesToLink)
+        public async Task<IActionResult> SetLinkedPlannedStatesForEvent(int id,
+            PlannedStatesToLinkDto plannedStatesToLink)
         {
             try
             {
-                await _eventsFacade.SetLinkedPlannedStatesForEvent(eventId, plannedStatesToLink);
+                await _eventsFacade.SetLinkedPlannedStatesForEvent(id, plannedStatesToLink);
                 return this.NoContent();
             }
             catch (EventNotFoundException)
@@ -290,21 +283,21 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Clears (unlinks) the current linked states from the event specified by <paramref name="eventId"/>.
+        /// Clears (unlinks) the current linked states from the event specified by <paramref name="id"/>.
         /// </summary>
-        /// <param name="eventId">Event to unlink linked planned states from.</param>
+        /// <param name="id">Event to unlink linked planned states from.</param>
         /// <response code="204">The planned states were linked to the event.</response>
-        /// <response code="404">The event with the given ID <paramref name="eventId"/> does not exist.</response>
-        /// <response code="409">The event from the past cannot be modified.</response>
-        [HttpDelete("{eventId}/linkedStates")]
+        /// <response code="404">No such event exists.</response>
+        /// <response code="409">The event has already ended and cannot be modified.</response>
+        [HttpDelete("{id}/linkedStates")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> ClearLinkedPlannedStatesForEvent(int eventId)
+        public async Task<IActionResult> ClearLinkedPlannedStatesForEvent(int id)
         {
             try
             {
-                await _eventsFacade.ClearLinkedPlannedStatesForEvent(eventId);
+                await _eventsFacade.ClearLinkedPlannedStatesForEvent(id);
                 return this.NoContent();
             }
             catch (EventNotFoundException)
@@ -329,22 +322,20 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Replaces details of an event with the given ID.
         /// </summary>
-        /// <param name="eventId">ID of the event to update.</param>
+        /// <param name="id">ID of the event to update.</param>
         /// <param name="modifiedEvent">An event model with the new event details.</param>
         /// <response code="204">The event was updated.</response>
-        /// <response code="404">The event with the given ID does not exist.</response>
-        /// <response code="409">The event from the past cannot be modified.</response>
-        /// <response code="400">The passed modified event is invalid.</response>
+        /// <response code="404">No such event exists.</response>
+        /// <response code="409">The event has already ended and cannot be modified.</response>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpPut("{eventId}")]
-        public async Task<IActionResult> ModifyEvent(int eventId, BaseEventDto modifiedEvent)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ModifyEvent(int id, BaseEventDto modifiedEvent)
         {
             try
             {
-                await _eventsFacade.ModifyEvent(eventId, modifiedEvent);
+                await _eventsFacade.ModifyEvent(id, modifiedEvent);
                 return this.NoContent();
             }
             catch (NotAnEventsManagerException)
@@ -354,7 +345,8 @@ namespace KachnaOnline.App.Controllers
             }
             catch (ArgumentNullException)
             {
-                return this.BadRequestProblem("The modified event is empty.");
+                // Shouldn't happen.
+                return this.BadRequest();
             }
             catch (EventNotFoundException)
             {
@@ -369,20 +361,19 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Deletes an event with the given ID.
         /// </summary>
-        /// <param name="eventId">ID of the event to delete.</param>
-        /// <returns>A list of <see cref="StateDto"/> of linked states at the time of deletion.</returns>
+        /// <param name="id">ID of the event to delete.</param>
         /// <response code="200">The event was deleted. The list of linked states at the time of deletion.</response>
-        /// <response code="404">The event does not exist.</response>
-        /// <response code="409">A past event cannot be removed.</response>
-        [HttpDelete("{eventId}")]
+        /// <response code="404">No such event exists.</response>
+        /// <response code="409">The event has already ended and cannot be modified.</response>
+        [HttpDelete("{id}")]
         [ProducesResponseType(typeof(IEnumerable<StateDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> RemoveEvent(int eventId)
+        public async Task<IActionResult> RemoveEvent(int id)
         {
             try
             {
-                return this.Ok(await _eventsFacade.RemoveEvent(eventId));
+                return this.Ok(await _eventsFacade.RemoveEvent(id));
             }
             catch (NotAnEventsManagerException)
             {

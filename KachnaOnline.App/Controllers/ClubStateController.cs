@@ -39,7 +39,6 @@ namespace KachnaOnline.App.Controllers
         /// Its `start` property points to the end of the last state, its `plannedEnd`
         /// property points to the beginning of the next planned state. If no state is planned, it is null.
         /// </remarks>
-        /// <returns>A <see cref="StateDto"/> describing the current state.</returns>
         /// <response code="200">The current state.</response>
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -53,7 +52,6 @@ namespace KachnaOnline.App.Controllers
         /// Returns details of a state with the given ID.
         /// </summary>
         /// <param name="id">The ID of the state to return.</param>
-        /// <returns>A <see cref="StateDto"/> describing the specified state or a <see cref="NotFoundResult"/>.</returns>
         /// <response code="200">The state.</response>
         /// <response code="404">No such state exists or it is not visible to the current user.</response>
         [HttpGet("{id}")]
@@ -330,13 +328,13 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Unlinks the specified linked state from any event.
+        /// Unlinks the specified linked state from all events.
         /// </summary>
-        /// <param name="stateId">ID of the planned state to be unlinked from any event.</param>
-        /// <response code="204">The planned states was unlinked from the event.</response>
-        /// <response code="404">The state with the given ID <paramref name="stateId"/> does not exist.</response>
-        /// <response code="409">The state that has already started or ended cannot be modified.</response>
-        [HttpDelete("{stateId}/linkedEvent")]
+        /// <param name="stateId">The ID of the state.</param>
+        /// <response code="204">The state was unlinked from events.</response>
+        /// <response code="404">No such state exists.</response>
+        /// <response code="409">The state has already started and cannot be modified.</response>
+        [HttpDelete("{id}/linkedEvent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -350,11 +348,11 @@ namespace KachnaOnline.App.Controllers
             catch (StateReadOnlyException)
             {
                 return this.ConflictProblem(
-                    "The specified state cannot be modified because it has already started or ended.");
+                    "The specified state cannot be modified because it has already started.");
             }
             catch (StateNotAssociatedToEventException)
             {
-                return this.ConflictProblem("The specified state is not linked to any event.");
+                return this.NoContent();
             }
             catch (StateNotFoundException)
             {

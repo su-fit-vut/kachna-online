@@ -58,9 +58,10 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Returns a board game with the given ID.
         /// </summary>
-        /// <param name="id">ID of the board game to return.</param>
-        /// <returns>A <see cref="BoardGameDto"/> of a game corresponding to ID <paramref name="id"/>.
-        /// A <see cref="ManagerBoardGameDto"/> if the user is an authorized board games manager.</returns>
+        /// <remarks>
+        /// A `ManagerBoardGameDto` is returned if the user is an authorized board games manager.
+        /// </remarks>
+        /// <param name="id">The ID of the board game to return.</param>
         /// <response code="200">The board game.</response>
         /// <response code="401">The board game exists but is not visible and the user is not authenticated.</response>
         /// <response code="403">The board game exists but is not visible and the user is not
@@ -99,8 +100,7 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Creates a new board game.
         /// </summary>
-        /// <param name="game"><see cref="CreateBoardGameDto"/> to create.</param>
-        /// <returns>The created <see cref="ManagerBoardGameDto"/> if the creation succeeded.</returns>
+        /// <param name="game">A model of the game to create.</param>
         /// <response code="201">The created game.</response>
         /// <response code="422">A category or user with the given ID does not exist.</response>
         [ProducesResponseType(typeof(ManagerBoardGameDto), StatusCodes.Status201Created)]
@@ -126,8 +126,8 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Updates a board game with the given ID.
         /// </summary>
-        /// <param name="id">ID of the board game to update.</param>
-        /// <param name="game"><see cref="CreateBoardGameDto"/> representing the new state.</param>
+        /// <param name="id">The ID of the board game to update.</param>
+        /// <param name="game">A model representing the new state.</param>
         /// <response code="204">Board game was updated.</response>
         /// <response code="404">Board game with the given ID does not exist.</response>
         /// <response code="422">A category or user with the given ID does not exist.</response>
@@ -157,10 +157,10 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Updates stock of a board game with the given ID.
+        /// Updates the stock status of a board game with the given ID.
         /// </summary>
-        /// <param name="id">ID of the board game to update.</param>
-        /// <param name="stock"><see cref="BoardGameStockDto"/> representing the new stock state.</param>
+        /// <param name="id">The ID of the board game to update.</param>
+        /// <param name="stock">A model representing the new stock state.</param>
         /// <response code="204">Board game stock was updated.</response>
         /// <response code="404">Board game with the given ID does not exist.</response>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -180,9 +180,8 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns the list of all board game categories.
+        /// Returns a list of all board game categories.
         /// </summary>
-        /// <returns>A list of <see cref="CategoryDto"/>.</returns>
         /// <response code="200">The list of board game categories.</response>
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -195,8 +194,7 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Returns a board game category with the given ID.
         /// </summary>
-        /// <param name="id">ID of the category to return.</param>
-        /// <returns>A <see cref="CategoryDto"/> of a category corresponding to ID <paramref name="id"/>.</returns>
+        /// <param name="id">The ID of the category to return.</param>
         /// <response code="200">The category.</response>
         /// <response code="404">No such category exists.</response>
         [AllowAnonymous]
@@ -218,8 +216,7 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Creates a new board game category.
         /// </summary>
-        /// <param name="category"><see cref="CreateCategoryDto"/> to create.</param>
-        /// <returns>The created <see cref="CategoryDto"/> if the creation succeeded.</returns>
+        /// <param name="category">A model of the category to create.</param>
         /// <response code="201">The created category.</response>
         [ProducesResponseType(typeof(CategoryDto), StatusCodes.Status201Created)]
         [HttpPost("categories")]
@@ -232,8 +229,8 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Updates a category with the given ID.
         /// </summary>
-        /// <param name="id">ID of the category to update.</param>
-        /// <param name="category"><see cref="CreateCategoryDto"/> representing the new state.</param>
+        /// <param name="id">The ID of the category to update.</param>
+        /// <param name="category">A model representing the new state.</param>
         /// <response code="204">Category was updated.</response>
         /// <response code="404">Category with the given ID does not exist.</response>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -255,7 +252,7 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Deletes a category with the given ID.
         /// </summary>
-        /// <param name="id">ID of the category to delete.</param>
+        /// <param name="id">The ID of the category to delete.</param>
         /// <response code="204">Category was deleted.</response>
         /// <response code="404">Category with the given ID does not exist.</response>
         /// <response code="409">Board games from this category must first be transferred. Returns the list
