@@ -45,7 +45,6 @@ export class AuthenticationService {
     this.http.get<KisEduIdResponse>(`${environment.kisApiUrl}/auth/eduid`, { params: params }).toPromise()
       .then((res: KisEduIdResponse) => {
         let kisResponse = res;
-        console.log(kisResponse.wayf_url)
         localStorage.setItem(environment.returnAddressStorageName, this.router.url);
         window.open(kisResponse.wayf_url, '_self');
       }).catch((error: any) => {
@@ -87,6 +86,10 @@ export class AuthenticationService {
   logOut() {
     localStorage.removeItem(environment.accessTokenStorageName);
     localStorage.removeItem(environment.kisAccessTokenStorageName);
+    localStorage.removeItem(environment.userDataStorageName);
+    localStorage.removeItem(environment.kisRefreshTokenStorageName);
+    localStorage.removeItem(environment.returnAddressStorageName);
+
     this.localTokenContent = new LocalTokenContent();
     this.kisTokenContent = new KisTokenContent();
 
@@ -172,12 +175,13 @@ export class AuthenticationService {
       .then((res) => {
         this.kisLoggedInUserInformation = res;
         this.assignDataFromKisUserInformation();
+
+        this.assignDataFromLocalTokenContent();
+        this.storeUserDataToStorage();
       }).catch((error: any) => {
         throwError(error);
         this.toastr.error("Stažení informací o uživateli z KIS se nezdařilo.", "Autentizace");
     });
-
-    this.assignDataFromLocalTokenContent();
   }
 
   getUserName() {
@@ -194,5 +198,32 @@ export class AuthenticationService {
     this.user.cardCode = this.kisLoggedInUserInformation.pin;
     this.user.gamificationConsent = this.kisLoggedInUserInformation.gamification_consent;
     this.user.prestige = this.kisLoggedInUserInformation.prestige;
+  }
+
+  /**
+   * Updates user data after refresh of website, whenever the user is logged in.
+   *
+   * @remarks
+   * If the data are stored in storage, takes the data from there,
+   * otherwise requests new user data from its respective endpoints.
+   */
+  updateUserDataIfLoggedIn(): void {
+    if (this.isLoggedIn()) {
+      let userDataFromStorage = localStorage.getItem(environment.userDataStorageName);
+      if (userDataFromStorage) {
+        this.user = JSON.parse(<string>localStorage.getItem(environment.userDataStorageName));
+      } else {
+        this.getInformationAboutUser();
+      }
+    }
+  }
+
+  /**
+   * Stores user data to the storage.
+   */
+  private storeUserDataToStorage() {
+    if (this.isLoggedIn()) {
+      localStorage.setItem(environment.userDataStorageName, JSON.stringify(this.user));
+    }
   }
 }
