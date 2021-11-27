@@ -265,6 +265,7 @@ namespace KachnaOnline.Business.Facades
             {
                 var dto = _mapper.Map<ReservationDto>(reservation);
                 dto.Items = await this.GetReservationItems(dto.Id);
+                dto.MadeBy = await this.MakeMadeByDto(reservation.MadeById);
                 dtos.Add(dto);
             }
 
@@ -286,6 +287,7 @@ namespace KachnaOnline.Business.Facades
             {
                 var dto = _mapper.Map<ManagerReservationDto>(reservation);
                 dto.Items = await this.GetReservationItems(dto.Id);
+                dto.MadeBy = await this.MakeMadeByDto(reservation.MadeById);
                 dtos.Add(dto);
             }
 
@@ -311,6 +313,7 @@ namespace KachnaOnline.Business.Facades
             {
                 var managerDto = _mapper.Map<ManagerReservationDto>(reservation);
                 managerDto.Items = await this.GetReservationItems(managerDto.Id);
+                managerDto.MadeBy = await this.MakeMadeByDto(reservation.MadeById);
                 return managerDto;
             }
 
@@ -319,6 +322,7 @@ namespace KachnaOnline.Business.Facades
 
             var userDto = _mapper.Map<ReservationDto>(reservation);
             userDto.Items = await this.GetReservationItems(userDto.Id);
+            userDto.MadeBy = await this.MakeMadeByDto(reservation.MadeById);
             return userDto;
         }
 
@@ -389,6 +393,7 @@ namespace KachnaOnline.Business.Facades
                 await _boardGamesService.CreateReservation(reservationModel, userId, reservation.BoardGameIds);
             var createdDto = _mapper.Map<ReservationDto>(created);
             createdDto.Items = await this.GetReservationItems(createdDto.Id);
+            createdDto.MadeBy = await this.MakeMadeByDto(created.MadeById);
             return createdDto;
         }
 
@@ -413,6 +418,7 @@ namespace KachnaOnline.Business.Facades
                 await _boardGamesService.CreateReservation(reservationModel, madeBy, reservation.BoardGameIds);
             var createdDto = _mapper.Map<ManagerReservationDto>(created);
             createdDto.Items = await this.GetReservationItems(createdDto.Id);
+            createdDto.MadeBy = await this.MakeMadeByDto(created.MadeById);
             return createdDto;
         }
 
