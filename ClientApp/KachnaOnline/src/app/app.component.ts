@@ -18,6 +18,6 @@ export class AppComponent implements OnInit {
   title = 'Kachna Online';
 
   ngOnInit() {
-    this.authenticationService.updateUserDataIfLoggedIn();
+    this.authenticationService.initializeUserDataIfLoggedIn();
   }
 }
