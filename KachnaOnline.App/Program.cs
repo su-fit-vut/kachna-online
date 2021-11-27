@@ -1,7 +1,11 @@
 // Program.cs
 // Author: Ondřej Ondryáš
 
+using System;
+using KachnaOnline.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
@@ -18,7 +22,36 @@ namespace KachnaOnline.App
             try
             {
                 InitSerilog();
-                Log.Information("Starting web host");
+
+                var migrateDb = Environment.CommandLine.Contains("--migrate-db");
+                var bootstrapDb = Environment.CommandLine.Contains("--bootstrap-db");
+
+                if (migrateDb || bootstrapDb)
+                {
+                    Log.Information("Database initialization mode.");
+
+                    var builder = CreateHostBuilder(args).Build();
+                    using var scope = builder.Services.CreateScope();
+                    using var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                    if (migrateDb)
+                    {
+                        Log.Information("Applying database migrations.");
+                        dbContext.Database.Migrate();
+                    }
+
+                    if (bootstrapDb)
+                    {
+                        Log.Information("Bootstrapping the database.");
+                        var dbBootstrapper = new DataBootstrapper(dbContext);
+                        dbBootstrapper.BootstrapDatabase();
+                    }
+
+                    Log.Information("The requested operations were completed, shutting down.");
+                    return;
+                }
+
+                Log.Information("Starting web host.");
                 CreateHostBuilder(args).Build().Run();
             }
             finally

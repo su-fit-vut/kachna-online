@@ -103,8 +103,7 @@ namespace KachnaOnline.App
         /// An <see cref="IWebHostEnvironment" /> instance that contains information about the current
         /// environment.
         /// </param>
-        /// <param name="dbContext">An <see cref="AppDbContext"/> database context instance.</param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UsePathBase("/kachna/api");
 
@@ -155,19 +154,6 @@ namespace KachnaOnline.App
 
             // Map controller endpoints using the default mapping strategy.
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
-            // Run migrations (optionally).
-            if (Environment.CommandLine.Contains("--migrate-db"))
-            {
-                dbContext.Database.Migrate();
-            }
-
-            // Add initial data (optionally).
-            if (Environment.CommandLine.Contains("--bootstrap-db"))
-            {
-                var dbBootstrapper = new DataBootstrapper(dbContext);
-                dbBootstrapper.BootstrapDatabase();
-            }
         }
     }
 }
