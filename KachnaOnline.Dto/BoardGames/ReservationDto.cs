@@ -3,6 +3,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using KachnaOnline.Dto.Users;
 
 namespace KachnaOnline.Dto.BoardGames
 {
@@ -18,9 +19,9 @@ namespace KachnaOnline.Dto.BoardGames
         public int Id { get; set; }
 
         /// <summary>
-        /// ID of the user whom the reservation belongs to.
+        /// Details about the user whom the reservation belongs to.
         /// </summary>
-        public int MadeById { get; set; }
+        public MadeByUserDto MadeBy { get; set; }
 
         /// <summary>
         /// Date which the reservation was made on.
