@@ -1,18 +1,18 @@
-// events-from-all.component.ts
+// events-list.component.ts
 // Author: David Chocholatý
 
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { EventsService } from '../../shared/services/events.service';
-import { Event } from '../../models/events/event.model';
 import { Component, OnInit } from '@angular/core';
+import { Event } from "../../models/events/event.model";
+import { EventsService } from "../../shared/services/events.service";
+import { ToastrService } from "ngx-toastr";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-events-from-all',
-  templateUrl: './events-from-all.component.html',
-  styleUrls: ['./events-from-all.component.css']
+  selector: 'app-events-list',
+  templateUrl: './events-list.component.html',
+  styleUrls: ['./events-list.component.css']
 })
-export class EventsFromAllComponent implements OnInit {
+export class EventsListComponent implements OnInit {
 
   constructor(
     public eventsService: EventsService,
@@ -25,7 +25,6 @@ export class EventsFromAllComponent implements OnInit {
   ngOnInit(): void {
     this.eventsService.refreshEventsList();
   }
-
 
   openEventDetail(eventDetail: Event) {
     this.router.navigate([`/events/${eventDetail.id}`]).then(() => null); // FIXME: Open in modal view.

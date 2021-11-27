@@ -1,6 +1,8 @@
 // event.model.ts
 // Author: David Chocholatý
 
+import { ClubState } from "../states/club-state.model";
+
 export class Event {
   id: number = -1;
   name: string = "";
@@ -14,4 +16,5 @@ export class Event {
   to: Date;
   linkedPlannedStateIds: number[] | null;
   madeById: string = "";
+  linkedStatesDtos: ClubState[];
 }
