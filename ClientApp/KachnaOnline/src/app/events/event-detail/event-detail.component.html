@@ -3,18 +3,84 @@ event-detail.component.html
 Author: David Chocholatý
 -->
 
-<h2>Detail akce</h2>
-<div>
-  <h3>{{ event.name }}</h3>
-  <p>{{event.shortDescription}}</p>
-  <h5>Podrobdný popis</h5>
-  <p>{{event.fullDescription}}</p>
-  <div class="row">
-    <h6>Od</h6>
-    <p>{{event.from}} </p>
-    <h6>Do</h6>
-    <p>{{event.to}} </p>
-  </div>
-  <button routerLink="">Na domovskou stránku</button>
+<div class="jumbotron py-1">
+  <h1 class="display-5 text-center">Detail akce</h1>
+</div>
+<div class="container" *ngIf="eventsService.eventDetail.name">
+  <h3>{{eventsService.eventDetail.name}}</h3>
+  <div class="list-group">
+      <p class=" list-group-item mb-1">{{eventsService.eventDetail.shortDescription}}</p>
+      <div class="list-group-item">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">Termín konání</h5>
+        </div>
+        <div class="container row">
+          <p>Od {{eventsService.eventDetail.from}} do {{eventsService.eventDetail.to}}</p>
+        </div>
+      </div>
+      <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.place">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">Místo</h5>
+        </div>
+        <p *ngIf="!eventsService.eventDetail.placeUrl" href="." class="mb-1">{{eventsService.eventDetail.place}}</p>
+        <a [href]="eventsService.eventDetail.placeUrl" *ngIf="eventsService.eventDetail.placeUrl" href="." class="mb-1">{{eventsService.eventDetail.place}}</a>
+      </div>
+    <div class="list-group-item" *ngIf="eventsService.eventDetail.fullDescription">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">Podrobný popis</h5>
+      </div>
+      <p class="mb-1">{{eventsService.eventDetail.fullDescription}}</p>
+    </div>
+    <div class="list-group-item">
+      <div class="accordion" id="accordionExample">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+              <button class="btn btn-block btn-outline-secondary text-left" type="button" data-toggle="collapse" data-target="#collapseLinkedStates" aria-expanded="true" aria-controls="collapseLinkedStates">
+                Zobrazit dění v klubu
+              </button>
+            </h2>
+          </div>
 
+          <div id="collapseLinkedStates" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+              <app-linked-states></app-linked-states>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="authenticationService.isEventsManager()" class="list-group-item">
+        <ul class="list-group list-group-horizontal">
+          <li class="list-group-item border-0">
+            <button class="btn btn-secondary" (click)="onModifyButtonClicked()"
+                    data-toggle="modal" data-target="#exampleModal"
+                    data-backdrop="static" data-keyboard="false">
+              Upravit akci
+            </button>
+
+          </li>
+          <li class="list-group-item border-0">
+            <button  class="btn btn-danger" (click)="onDeleteButtonClicked()">Zrušit akci</button>
+          </li>
+        </ul>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" *ngIf="activateEditEventModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Upravit akci</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Zavřít" (click)="onCloseModalClicked()"><span>&times;</span></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="jumbotron py-1">
+          <h1 class="display-5 text-center">Upravit akci</h1>
+        </div>
+
+        <app-event-form [editMode]="true" *ngIf="activateEditEventModal"></app-event-form>
+      </div>
+    </div>
+  </div>
 </div>

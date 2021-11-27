@@ -1,3 +1,7 @@
 * {
     text-align: left;
 }
+
+p {
+  white-space: pre-line;
+}
