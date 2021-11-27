@@ -16,6 +16,7 @@ import { BoardGame } from "../../models/board-games/board-game-model";
 export class BoardGameDetailsComponent implements OnInit {
   private routeSub: Subscription
   boardGame: BoardGame
+  currentReservation: Map<number, number>
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               private route: ActivatedRoute) {
@@ -25,6 +26,7 @@ export class BoardGameDetailsComponent implements OnInit {
     this.routeSub = this.route.params.subscribe(params => {
       this.boardGamesService.getBoardGame(params['id']).subscribe(game => {
           this.boardGame = game;
+          this.currentReservation = this.boardGamesService.getBoardGamePageState()[3]
         },
         err => {
           console.log(err);
@@ -37,4 +39,11 @@ export class BoardGameDetailsComponent implements OnInit {
     this.routeSub.unsubscribe();
   }
 
+  onReservationUpdate(count: number): void {
+    if (count == 0) {
+      this.currentReservation.delete(this.boardGame.id);
+    } else {
+      this.currentReservation.set(this.boardGame.id, count);
+    }
+  }
 }

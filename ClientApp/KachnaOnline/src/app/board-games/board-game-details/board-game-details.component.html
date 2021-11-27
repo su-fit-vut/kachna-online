@@ -2,13 +2,36 @@
 board-game-details.component.html
 Author: František Nečas
 -->
-<div class="d-flex">
-  <a class="link" routerLink="..">
-    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-left mr-2"
-         viewBox="0 0 16 16">
-      <path fill-rule="evenodd"
-            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-    </svg>
-  </a>
-  <h2>{{boardGame.name}}</h2>
+<div class="row">
+  <div class="col">
+    <div class="d-flex col">
+      <app-back-arrow targetRoute=".."></app-back-arrow>
+      <h2>{{boardGame.name}}</h2>
+    </div>
+    <div class="col">
+      <h4 [ngStyle]="{'color': '#' + boardGame.category.colourHex}">{{boardGame.category.name}}</h4>
+    </div>
+    <div class="col" *ngIf="boardGame.playersMin || boardGame.playersMax">
+      <p>{{boardGame.playersMin}} - {{boardGame.playersMax}} hráčů</p>
+    </div>
+    <div class="col">
+      <p>Celkem v klubu: {{boardGame.inStock}} ks</p>
+    </div>
+    <div class="col">
+      <p>Aktuálně dostupné: {{boardGame.available}} ks</p>
+    </div>
+  </div>
+  <div class="col-sm-5">
+    <div class="col">
+      <img src="{{boardGame.imageUrl ? boardGame.imageUrl : 'assets/image_not_found.jpg'}}" class="img-fluid rounded"
+           alt="Fotka deskové hry"/>
+    </div>
+    <div class="col mt-3">
+      <app-reservation-button (countChanged)="onReservationUpdate($event)"
+                              [available]="boardGame.available"
+                              [currentValue]="currentReservation.get(boardGame.id) || 0"></app-reservation-button>
+    </div>
+  </div>
 </div>
+<hr/>
+<p>{{boardGame.description}}</p>
