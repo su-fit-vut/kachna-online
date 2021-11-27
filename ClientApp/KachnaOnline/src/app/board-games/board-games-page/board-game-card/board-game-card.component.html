@@ -3,10 +3,10 @@ board-game-card-card.component.html
 Author: František Nečas
 -->
 <div class="card">
-  <img src="{{boardGame.imageUrl ? boardGame.imageUrl : 'assets/image_not_found.jpg'}}" class="card-img-top"
+  <img src="{{boardGame.imageUrl ? boardGame.imageUrl : 'assets/image_not_found.jpg'}}" class="card-img-top rounded"
        alt="Fotka deskové hry"/>
   <div class="card-body">
-    <h5 class="card-title">{{boardGame.name}}</h5>
+    <h5 class="card-title"><a class="bg-link stretched-link" routerLink="{{boardGame.id}}">{{boardGame.name}}</a></h5>
     <div class="card-subtitle">
       <h6 [ngStyle]="{'color': '#' + boardGame.category.colourHex}">{{boardGame.category.name}}</h6>
     </div>
@@ -14,7 +14,7 @@ Author: František Nečas
       <p>{{boardGame.playersMin}} - {{boardGame.playersMax}} hráčů</p>
     </div>
     <app-reservation-button [available]="boardGame.available" [currentValue]="initialReserved"
+                            [styles]="{'position': 'relative', 'z-index': 2}"
                             (countChanged)="onCountChanged($event)"></app-reservation-button>
-
   </div>
 </div>

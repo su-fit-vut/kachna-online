@@ -9,6 +9,8 @@ Author: František Nečas
   bottom: 20px;
   right: 20px;
   float: right;
+  /* Must be above the card links and buttons */
+  z-index: 10;
 }
 
 #dropdownMenu {

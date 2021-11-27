@@ -10,9 +10,11 @@ import { AuthenticationService } from "../../../../shared/services/authenticatio
   styleUrls: ['./reservation-button.component.css']
 })
 export class ReservationButtonComponent implements OnInit {
+  // Allow setting z-index of the button
+  @Input() styles: any = {}
   @Input() available: number
-  @Input() currentValue: number = 0;
-  @Output() countChanged: EventEmitter<number> = new EventEmitter();
+  @Input() currentValue: number = 0
+  @Output() countChanged: EventEmitter<number> = new EventEmitter()
 
   constructor(public authenticationService: AuthenticationService) {
   }
