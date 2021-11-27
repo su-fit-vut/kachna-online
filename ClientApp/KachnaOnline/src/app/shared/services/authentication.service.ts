@@ -64,15 +64,22 @@ export class AuthenticationService {
     this.http.get<AccessTokens>(`${AUTH_API}/accessTokenFromSession`, { params: params }).toPromise()
         .then((res) => {
           this.handleAccessTokens(res);
-
-          this.refreshLocalTokenIntervalHandle = setInterval( () => {
-              this.refreshAuthToken();
-            },
-            2500 * 1000); // FIXME: Refresh according to expire value returned from KO API.
         }).catch((error: any) => {
           this.toastr.error("Načtení přístupových údajů selhalo.", "Autentizace");
           return throwError(error);
     });
+  }
+
+  private setRefreshIntervalForAuthToken() {
+    clearInterval(this.refreshLocalTokenIntervalHandle);
+    this.refreshLocalTokenIntervalHandle = setInterval(() => {
+        this.refreshAuthToken();
+      },
+      this.countLocalAccessTokenRefreshIntervalTime());
+  }
+
+  private countLocalAccessTokenRefreshIntervalTime() {
+    return Math.floor((this.localTokenContent.exp * 1000 - Date.now()) * 0.8);
   }
 
   private handleAccessTokens(res: AccessTokens) {
@@ -80,6 +87,7 @@ export class AuthenticationService {
     localStorage.setItem(environment.kisAccessTokenStorageName, res.kisAccessToken);
     this.decodeLocalToken();
     this.decodeKisToken();
+    this.setRefreshIntervalForAuthToken();
     this.getInformationAboutUser();
   }
 
@@ -111,6 +119,11 @@ export class AuthenticationService {
     }
   }
 
+  refreshAuthTokenIfLoggedIn() {
+    if (this.isLoggedIn()) {
+      this.refreshAuthToken();
+    }
+  }
   isLoggedIn(): boolean {
     return this.getAccessToken() != null;
   }
@@ -124,7 +137,8 @@ export class AuthenticationService {
       .then((res) => {
         this.handleAccessTokens(res);
       }).catch((error: any) => {
-        this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
+        this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Autentizace");
+        this.logOut();
         return throwError(error);
     });
   }
@@ -138,7 +152,8 @@ export class AuthenticationService {
         this.decodeKisToken();
         this.getInformationAboutUser();
       }).catch((error: any) => {
-        this.toastr.error("Obnovení JWT tokenu selhalo.", "Autentizace");
+        this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Autentizace");
+        this.logOut();
         return throwError(error);
     });
   }
@@ -239,14 +254,14 @@ export class AuthenticationService {
       if (localTokenContentFromStorage != null) {
         this.localTokenContent = JSON.parse(localTokenContentFromStorage);
       } else {
-        // TODO: Get local token content.
+        this.refreshAuthToken();
       }
 
       let kisTokenContentFromStorage = localStorage.getItem(environment.kisTokenContentStorageName);
       if (kisTokenContentFromStorage != null) {
         this.kisTokenContent = JSON.parse(kisTokenContentFromStorage);
       } else {
-        // TODO: Get local token content.
+        this.refreshKisToken();
       }
 
       let kisLoggedInUserInformationFromStorage = localStorage.getItem(environment.kisLoggedInUserInformationStorageName);
@@ -277,5 +292,10 @@ export class AuthenticationService {
 
   getKisRefreshToken() {
     return localStorage.getItem(environment.kisRefreshTokenStorageName);
+  }
+
+  initializeUserDataIfLoggedIn() {
+    this.refreshAuthTokenIfLoggedIn();
+    this.updateUserDataIfLoggedIn();
   }
 }
