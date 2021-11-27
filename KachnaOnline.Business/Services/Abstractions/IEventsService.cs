@@ -48,6 +48,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <param name="from">If not null, only returns events with their from date being after or equal to the specified value.</param>
         /// <param name="to">If not null, only returns events with their to date being before or equal to the specified value.</param>
         /// <returns>A Collection of <see cref="Event"/> or an empty list if no there is no event planned.</returns>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="from"/> or <paramref name="to"/> are invalid.</exception>
         Task<ICollection<Event>> GetEvents(DateTime? from = null, DateTime? to = null);
 
         /// <summary>
@@ -90,20 +91,11 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <remarks>
         /// All planned states that were linked to the event have their reference to the event set to null.
         /// </remarks>>
-        /// <exception cref="EventNotFoundException">When the event with the given <paramref name="eventId"/> does not
+        /// <exception cref="EventNotFoundException">Thrown when the event with the given <paramref name="eventId"/> does not
         /// exist.</exception>
-        /// <exception cref="EventManipulationFailedException">thrown when the event cannot be deleted.</exception>
+        /// <exception cref="EventManipulationFailedException">Thrown when the event cannot be deleted.</exception>
+        /// <exception cref="EventReadOnlyException">Thrown when event to be removed has already ended.</exception>
         Task<ICollection<State>> RemoveEvent(int eventId);
-
-        /// <summary>
-        /// Sets state <see cref="State.EventId"/> to null to states specified by <paramref name="stateId"/>;
-        /// </summary>
-        /// <param name="stateId">State ID to set its <see cref="State.EventId"/> to null.</param>
-        /// <exception cref="EventManipulationFailedException">Thrown when linked planned states cannot be unlinked from the event.</exception>
-        /// <exception cref="StateReadOnlyException">Thrown when planned state to be unlinked from the event has already started or ended.</exception>
-        /// <exception cref="StateNotFoundException">Thrown when planned state to be unlinked from the event has not been found.</exception>
-        /// <exception cref="StateNotAssociatedToEventException">Thrown when planned states is not associated to any event.</exception>
-        Task UnlinkStateFromEvent(int stateId);
 
         /// <summary>
         /// Changes details of an event specified by <paramref name="eventId"/>. Projects these changes into all planned states linked to this event. State records from the past are not changed.
@@ -162,6 +154,13 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// </summary>
         /// <param name="eventId">Event to set linked planned states for.</param>
         /// <param name="plannedStatesToLinkIds">IDs of states to link to the event.</param>
+        /// <exception cref="EventNotFoundException">Thrown when an event with the given <paramref name="eventId"/>
+        /// does not exist.</exception>
+        /// <exception cref="EventManipulationFailedException">Thrown when linked planned states cannot be unlinked from the event.</exception>
+        /// <exception cref="StateReadOnlyException">Thrown when planned state to be unlinked from the event has already started or ended.</exception>
+        /// <exception cref="EventReadOnlyException">Thrown when event to unlinked linked states from has already ended.</exception>
+        /// <exception cref="LinkingStateToEventException">Thrown when linking planned states to the event is not possible.</exception>
+        /// <exception cref="StateNotFoundException">Thrown when planned state to be linked to the event has not been found.</exception>
         Task SetLinkedPlannedStatesForEvent(int eventId, IEnumerable<int> plannedStatesToLinkIds);
 
         /// <summary>
