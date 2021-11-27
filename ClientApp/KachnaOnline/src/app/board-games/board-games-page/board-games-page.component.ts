@@ -25,7 +25,7 @@ export class BoardGamesPageComponent implements OnInit {
   categoryIds: number[] = [];
 
   currentReservation: { [id: number]: number } = {};
-  currentReservationLength: number = 0;
+  reservationInProgress: boolean = false;
 
   // In order for filtering to fully function, 3 arrays of games are required, all of them are subsets
   // of boardGames. filteredBoardGames contains games filtered by backend (players, categories, available),
@@ -39,8 +39,13 @@ export class BoardGamesPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchGames(this.categoryIds);
+    [this.players, this.availableOnly, this.categoryIds, this.currentReservation] =
+      this.boardGamesService.getBoardGamePageState();
+    this.reservationInProgress = Object.keys(this.currentReservation).length > 0;
+    // Fetch all games right away to reduce the number of requests.
+    this.fetchGames([], true);
 
+    this.playersForm.setValue(this.players);
     this.playersForm.valueChanges.subscribe(val => {
       this.players = val;
       this.boardGames = [];
@@ -48,24 +53,35 @@ export class BoardGamesPageComponent implements OnInit {
     })
   }
 
-  onCategoryAdded(category: BoardGameCategory): void {
-    if (this.categoryIds.length == 0) {
-      // Prepare for category-based filtering.
-      this.filteredGames = this.boardGames.filter(g => g.category.id == category.id);
-    } else {
-      this.filteredGames = this.filteredGames.concat(this.boardGames.filter(g => g.category.id == category.id));
-    }
-    this.shownGames = this.filteredGames;
-    this.categoryIds.push(category.id)
+  ngOnDestroy(): void {
+    this.boardGamesService.saveBoardGamePageState(this.players, this.availableOnly,
+      this.categoryIds, this.currentReservation);
   }
 
-  onCategoryRemoved(category: BoardGameCategory): void {
-    this.categoryIds = this.categoryIds.filter(c => c != category.id);
-    console.log(this.categoryIds);
+  addCategoryToFiltered(category: number) {
     if (this.categoryIds.length == 0) {
+      // Prepare for category-based filtering.
+      this.filteredGames = this.boardGames.filter(g => g.category.id == category);
+    } else {
+      this.filteredGames = this.filteredGames.concat(this.boardGames.filter(g => g.category.id == category));
+    }
+  }
+
+  onCategoryAdded(category: number): void {
+    this.addCategoryToFiltered(category);
+    this.shownGames = this.filteredGames;
+    this.categoryIds.push(category)
+  }
+
+  onCategoryRemoved(category: number): void {
+    this.categoryIds = this.categoryIds.filter(c => c != category);
+    if (this.categoryIds.length == 0) {
+      // We need to re-fetch. If other filters are applied this.boardGames may not have all games.
+      this.boardGames = [];
+      this.fetchGames([]);
       this.filteredGames = this.boardGames;
     } else {
-      this.filteredGames = this.filteredGames.filter(g => g.category.id != category.id);
+      this.filteredGames = this.filteredGames.filter(g => g.category.id != category);
     }
     this.shownGames = this.filteredGames;
   }
@@ -76,13 +92,18 @@ export class BoardGamesPageComponent implements OnInit {
     this.fetchGames(this.categoryIds);
   }
 
-  fetchGames(categoryIds: number[]): void {
+  fetchGames(categoryIds: number[], init: boolean = false): void {
     this.boardGamesService.getBoardGames(categoryIds, this.players, this.availableOnly).subscribe(
       games => {
         for (let gamesSet of games) {
           this.boardGames = this.boardGames.concat(gamesSet);
         }
-        this.filteredGames = this.boardGames;
+        // Use cached filters on init
+        if (init && this.categoryIds.length > 0) {
+          this.filteredGames = this.boardGames.filter(g => this.categoryIds.includes(g.category.id ));
+        } else {
+          this.filteredGames = this.boardGames;
+        }
         this.shownGames = this.filteredGames;
       },
       err => {
@@ -112,10 +133,9 @@ export class BoardGamesPageComponent implements OnInit {
   onReservationUpdate(game: BoardGame): void {
     if (!game.toReserve) {
       delete this.currentReservation[game.id];
-      this.currentReservationLength--;
     } else {
       this.currentReservation[game.id] = game.toReserve;
-      this.currentReservationLength++;
     }
+    this.reservationInProgress = Object.keys(this.currentReservation).length > 0;
   }
 }

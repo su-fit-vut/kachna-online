@@ -8,8 +8,9 @@ import { BoardGameCategory } from "../../../../models/board-games/category-model
 })
 export class CategoryComponent implements OnInit {
   @Input() category: BoardGameCategory
-  @Output() categoryEnabled: EventEmitter<BoardGameCategory> = new EventEmitter();
-  @Output() categoryDisabled: EventEmitter<BoardGameCategory> = new EventEmitter();
+  @Input() startingValue: boolean = false;
+  @Output() categoryEnabled: EventEmitter<number> = new EventEmitter();
+  @Output() categoryDisabled: EventEmitter<number> = new EventEmitter();
 
   constructor() {
   }
@@ -19,9 +20,9 @@ export class CategoryComponent implements OnInit {
 
   onCheckboxChange(e: any): void {
     if (e.target.checked) {
-      this.categoryEnabled.emit(this.category);
+      this.categoryEnabled.emit(this.category.id);
     } else {
-      this.categoryDisabled.emit(this.category);
+      this.categoryDisabled.emit(this.category.id);
     }
   }
 }

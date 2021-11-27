@@ -1,7 +1,7 @@
 // category-selector.component.ts
 // Author: František Nečas
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 import { BoardGameCategory } from "../../../models/board-games/category-model";
@@ -12,8 +12,9 @@ import { BoardGameCategory } from "../../../models/board-games/category-model";
   styleUrls: ['./category-selector.component.css']
 })
 export class CategorySelectorComponent implements OnInit {
-  @Output() categoryAdded: EventEmitter<BoardGameCategory> = new EventEmitter();
-  @Output() categoryRemoved: EventEmitter<BoardGameCategory> = new EventEmitter();
+  @Input() initiallyEnabled: number[] = [];
+  @Output() categoryAdded: EventEmitter<number> = new EventEmitter();
+  @Output() categoryRemoved: EventEmitter<number> = new EventEmitter();
 
   categories: BoardGameCategory[]
 
@@ -32,11 +33,11 @@ export class CategorySelectorComponent implements OnInit {
     )
   }
 
-  onCategoryEnabled(category: BoardGameCategory) {
+  onCategoryEnabled(category: number) {
     this.categoryAdded.emit(category);
   }
 
-  onCategoryDisabled(category: BoardGameCategory) {
+  onCategoryDisabled(category: number) {
     this.categoryRemoved.emit(category);
   }
 }

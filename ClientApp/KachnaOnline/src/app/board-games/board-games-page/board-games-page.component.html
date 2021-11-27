@@ -21,19 +21,21 @@ Author: František Nečas
 
   <div class="mr-4 mt-3">
     <app-category-selector (categoryAdded)="onCategoryAdded($event)"
-                           (categoryRemoved)="onCategoryRemoved($event)"></app-category-selector>
+                           (categoryRemoved)="onCategoryRemoved($event)"
+                           [initiallyEnabled]="categoryIds"></app-category-selector>
   </div>
   <div class="mt-3">
-    <app-togglable-button [startingValue]="false" [text]="'Pouze dostupné'"
+    <app-togglable-button [startingValue]="availableOnly !== undefined" [text]="'Pouze dostupné'"
                           (valueChanged)="onAvailabilityUpdate($event)"></app-togglable-button>
   </div>
 </div>
 <hr/>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
   <div class="col mb-3" *ngFor="let boardGame of shownGames">
-    <app-board-game [boardGame]="boardGame" (reservationUpdate)="onReservationUpdate($event)"></app-board-game>
+    <app-board-game [boardGame]="boardGame" [initialReserved]="currentReservation[boardGame.id] || 0"
+                    (reservationUpdate)="onReservationUpdate($event)"></app-board-game>
   </div>
 </div>
-<button *ngIf="currentReservationLength > 0" type="button" class="btn btn-success btn-lg" id="reserveBtn">Dokončit
+<button *ngIf="reservationInProgress" type="button" class="btn btn-success btn-lg" id="reserveBtn">Dokončit
   rezervaci
 </button>
