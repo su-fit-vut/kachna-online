@@ -43,9 +43,10 @@ export class AuthenticationService {
   getSessionIdFromKisEduId() {
     let params = new HttpParams().set('redirect', `${window.location.origin}/login`)
     this.http.get<KisEduIdResponse>(`${environment.kisApiUrl}/auth/eduid`, { params: params }).toPromise()
-      .then(function(res: KisEduIdResponse) {
+      .then((res: KisEduIdResponse) => {
         let kisResponse = res;
         console.log(kisResponse.wayf_url)
+        localStorage.setItem(environment.returnAddressStorageName, this.router.url);
         window.open(kisResponse.wayf_url, '_self');
       }).catch((error: any) => {
         this.toastr.error("Přihlášení se ke KIS selhalo.", "Autentizace");
