@@ -10,6 +10,7 @@ import { ToastrService } from "ngx-toastr";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { FormControl } from "@angular/forms";
 import { BoardGameCategory } from "../../models/board-games/category-model";
+import { AuthenticationService } from "../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-board-games-page',
@@ -34,7 +35,8 @@ export class BoardGamesPageComponent implements OnInit {
   filteredGames: BoardGame[] = [];
   shownGames: BoardGame[] = [];
 
-  constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService) {
+  constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
+              public authenticationService: AuthenticationService) {
   }
 
   ngOnInit(): void {

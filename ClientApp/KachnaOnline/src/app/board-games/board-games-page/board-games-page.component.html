@@ -2,9 +2,12 @@
 board-games-page.component.html
 Author: František Nečas
 -->
-<h1>Deskové hry</h1>
+<div class="d-flex justify-content-between">
+  <h1>Deskové hry</h1>
+  <button type="button" class="btn btn-primary d-none d-sm-block" routerLink="reservations">Moje rezervace</button>
+</div>
 
-<input class="form-control" type="text" [ngModel]="searchModel" [ngbTypeahead]="search"
+<input class="form-control mt-3" type="text" [ngModel]="searchModel" [ngbTypeahead]="search"
        (selectItem)="selectItem($event)" placeholder="Vyhledávání"/>
 <div class="d-flex flex-wrap">
   <div class="mr-4 mt-3">
