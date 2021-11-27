@@ -16,7 +16,7 @@ The order of routes is important because the Router uses a first-match wins stra
 */
   { path: 'login', component: LoginComponent },
   {
-    path: 'user_profile',
+    path: 'user-profile',
     component: UserProfileComponent,
     canActivate: [UserLoggedInGuard],
   },
