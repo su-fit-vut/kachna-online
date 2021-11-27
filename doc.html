@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0070)https://www.fit.vutbr.cz/study/courses/IIS/private/projekt/doc.html.cs -->
+<html lang="cs">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>Projekt IIS</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid black;
+            padding: 0.3em 0.5em;
+            text-align: left;
+        }
+
+        dt {
+            font-weight: bold;
+            margin-top: 0.5em;
+        }
+
+        .proj-name {
+            font-size: 1.05em;
+            font-weight: bold;
+        }
+
+        .code-name {
+            font-family: monospace;
+            font-size: 1.15em;
+            font-weight: bold;
+        }
+
+        .mono {
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Informační systém pro správu studentského klubu U Kachničky: <em>Kachna Online</em></h1>
+
+<dl>
+    <dt>Autoři</dt>
+    <dd>Ondřej Ondryáš
+        <a href="mailto:xondry02@stud.fit.vutbr.cz">xondry02@stud.fit.vutbr.cz</a> –
+        vedoucí týmu, správa repozitáře, návrh architektury backendu, implementace autentizace a autorizace,
+        správy uživatelů a správy stavů klubu
+    </dd>
+    <dd>František Nečas
+        <a href="mailto:xnecas27@stud.fit.vutbr.cz">xnecas27@stud.fit.vutbr.cz</a> –
+        implementace správy deskových her, rezervačního systému a notifikací
+    </dd>
+    <dd>David Chocholatý
+        <a href="mailto:xchoch08@stud.fit.vutbr.cz">xchoch08@stud.fit.vutbr.cz</a> -
+        kostra a architektura frontendu, implementace správy akcí
+    </dd>
+    <dt>URL aplikace</dt>
+    <dd><a href="https://www.su.fit.vutbr.cz/kachna">https://www.su.fit.vutbr.cz/kachna</a> (uživatelská aplikace)</dd>
+    <dd><a href="https://www.su.fit.vutbr.cz/kachna/api/swagger/index.html">
+        https://www.su.fit.vutbr.cz/kachna/api/swagger/index.html</a> (vizualizace API a přímá interakce s ním)
+    </dd>
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+<p>Pro přihlašování do systému je použit interní systém Studentské unie FIT VUT v&nbsp;Brně – „Kachní informační
+    systém“. V&nbsp;tomto systému jsou zaregistrovaní všichni členové klubu, kteří se registrací stávají sympatizujícími
+    členy SU. Registrace do systému je nyní možná <a href="https://su-int.fit.vutbr.cz/kis/admin_v2/">zde</a>. Chování
+    systému pro uživatele s jednotlivými rolemi bude demonstrováno při osobním předvedení.</p>
+
+<p>IS implementuje případy užití uvedené v zadání. Případům užití odpovídají jednotlivé
+    <a href="https://www.su.fit.vutbr.cz/kachna/api/swagger/index.html">API endpointy</a>.</p>
+
+<h2>Implementace</h2>
+<p>IS je rozdělen na backend (BE) a frontend (FE). BE je aplikace postavená na platformě <b>.NET 6</b>. Jako SŘBD byl
+    zvolen <b>PostgreSQL</b> (v aktuální verzi 14). FE je webová aplikace postavená na platformě <b>Angular 12</b>.
+    BE s FE komunikuje pomocí HTTP REST API.</p>
+
+<h3>Backend</h3>
+<p>
+    BE je rozdělen na pět projektů:
+</p>
+<ul>
+    <li><span class="proj-name">KachnaOnline.App</span>: Hlavní projekt, ve kterém probíhá inicializace aplikačního
+        serveru, konfigurace, ověřování JWT. Jsou zde implementovány kontroléry, které jsou prostředníkem mezi
+        uživatelem a business vrstvou.
+    </li>
+    <li><span class="proj-name">KachnaOnline.Dto</span>: Deklarace datových struktur, které jsou v&nbsp;serializované
+        podobě použity pro komunikaci s&nbsp;klientskou aplikací.
+    </li>
+    <li><span class="proj-name">KachnaOnline.Business</span>: Business vrstva, která implemetnuje aplikační logiku.</li>
+    <li><span class="proj-name">KachnaOnline.Business.Data</span>: Součást business vrstvy, která poskytuje repozitáře
+        pro přístup k&nbsp;datovým entitám (abstrakce nad použitým ORM).
+    </li>
+    <li><span class="proj-name">KachnaOnline.Data</span>: Data-access layer – entity datové vrstvy a definice
+        databázového kontextu ORM.
+    </li>
+</ul>
+<p>
+    Logika kontrolérů (KachnaOnline.App/Controllers) je implentována v&nbsp;business vrstvě v&nbsp;odpovídajících
+    <em>fasádách</em> (KachnaOnline.Business/Facades). <br/>V&nbsp;systému se nachází následující kontroléry:
+</p>
+<ul>
+    <li><span class="code-name">Auth</span>: API pro vytváření lokálních autorizačních tokenů typu JWT.</li>
+    <li><span class="code-name">BoardGames</span>: API pro správu deskových her a jejich kategorií.</li>
+    <li><span class="code-name">BoardGamesReservations</span>: API pro správu rezervací deskových her (uživatelskou
+        i administrátorskou).
+    </li>
+    <li><span class="code-name">ClubInfo</span>: zprostředkovává některé informace ze systému KIS (o&nbsp;aktuální
+        nabídce v&nbsp;klubu a o&nbsp;žebříčku podporovatelů klubu).
+    </li>
+    <li><span class="code-name">ClubState</span>: API pro správu stavů klubu (změny aktuálního stavu, plánování stavů
+        v&nbsp;budoucnosti, zjišťování historie stavů).
+    </li>
+    <li><span class="code-name">Error</span>: speciální kontrolér, pomocí kterého jsou generovány chybové odpovědi ve
+        <a href="https://datatracker.ietf.org/doc/html/rfc7807" title="RFC 7807">standardizovaném formátu</a> na
+        jinak neobsloužené chyby.
+    </li>
+    <li><span class="code-name">Events</span>: API pro správu plánu akcí SU (zjišťování probíhajících akcí, historie,
+        vytváření, mazání, provazování s plánovanými stavy klubu).
+    </li>
+    <li><span class="code-name">Images</span>: API pro nahrávání obrázků na server (například při přidávání deskových
+        her).
+    </li>
+    <li><span class="code-name">RepeatingStates</span>: API pro správu pravidelných otvíracích dob klubu.</li>
+    <li><span class="code-name">User</span>: API pro správu lokální databáze uživatelů.</li>
+</ul>
+<p>
+    TODO TODO
+</p>
+
+<h3>Databáze</h3>
+<p>
+    <img src="kachna_online.svg" alt="Schéma databáze" width="1000"/>
+</p>
+
+<h3>Frontend</h3>
+<p>
+    TODO TODO
+</p>
+
+<h2>Instalace</h2>
+
+<h3>Běhové prostředí</h3>
+<p>Aplikace vyžaduje ke spuštění .NET 6 s ASP.NET Core Runtime 6. Instrukce k&nbsp;instalaci běhového prostředí jsou
+    k dispozici <a href="https://dotnet.microsoft.com/download/dotnet/6.0">zde</a>.</p>
+<p>Aplikace byla testována na
+    systémech Windows 11 a Linux (distr. Manjaro s kernelem verze 5.15.2) na platformě x64, předpokládáme bezproblémový
+    běh i na jiných platformách, na kterých je dostupný ASP.NET Core Runtime.
+</p>
+<p>Aplikace vyžaduje běžící instanci SŘBD PostgreSQL. Informace k&nbsp;instalaci a konfiguraci tohoto systému jsou
+    dostupné <a href="https://www.postgresql.org/">zde</a>.
+</p>
+<p>
+    TODO: Frontend?
+</p>
+
+<h3>Konfigurace</h3>
+<p>
+    Aplikaci je možné konfigurovat v&nbsp;souboru <span class="mono">appsettings.json</span>.
+</p>
+
+<h3>Spouštění aplikace</h3>
+<p>
+    Aplikaci je možné spustit v běžném režimu (aplikačního serveru) pomocí příkazu
+</p>
+<pre>dotnet run</pre>
+<p>
+    spuštěného v adresáři <span class="code-name">KachnaOnline.App</span>.
+</p>
+<p>
+    Na produkčním serveru je aplikace spuštěna jako systémová služba a přístup k ní je řešen pomocí reverzní proxy
+    nginx. Různé další možnosti nasazení ASP.NET aplikací jsou popsány <a
+    href="https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/?view=aspnetcore-6.0">zde</a>.
+</p>
+
+
+
+<h2>Známé problémy</h2>
+<p>Zde popište, které body zadání nejsou implementovány a z jakého důvodu. Např. &#8222;Z časových důvodů nebyla
+    implementována správa uživatelů.&#8221; Pomůžete tím zrychlit hodnocení, když neimplementované funkce nebudeme muset
+    dlouze hledat.</p>
+
+
+</body>
+</html>
