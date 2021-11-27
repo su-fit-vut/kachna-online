@@ -76,6 +76,20 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
+        public async Task SaveUser(User user)
+        {
+            if (user is null)
+                throw new ArgumentNullException(nameof(user));
+
+            var entity = await _userRepository.Get(user.Id);
+
+            entity.DiscordId = user.DiscordId;
+            entity.Nickname = user.Nickname;
+
+            await _unitOfWork.SaveChanges();
+        }
+
+        /// <inheritdoc />
         public async Task<IEnumerable<string>> GetUserRoles(int userId)
         {
             var entity = await _userRepository.GetWithRoles(userId);

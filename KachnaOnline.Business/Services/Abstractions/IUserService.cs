@@ -40,6 +40,14 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<User> GetUser(int userId);
 
         /// <summary>
+        /// Modifies the mutable properties of a user.
+        /// </summary>
+        /// <param name="user">The user model.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.</returns>
+        /// <exception cref="UserNotFoundException">The user does not exist.</exception>
+        Task SaveUser(User user);
+
+        /// <summary>
         /// Returns the names of roles assigned to a user with the given <paramref name="userId"/>.
         /// </summary>
         /// <param name="userId">The user ID to search for.</param>

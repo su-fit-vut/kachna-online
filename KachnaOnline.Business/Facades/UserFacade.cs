@@ -115,5 +115,25 @@ namespace KachnaOnline.Business.Facades
         {
             await _userService.ResetRole(userId, role, resetByUserId);
         }
+
+        public async Task SetDiscordId(int userId, ulong? discordId)
+        {
+            var user = await _userService.GetUser(userId);
+            if (user is null)
+                throw new UserNotFoundException(userId);
+
+            user.DiscordId = discordId;
+            await _userService.SaveUser(user);
+        }
+
+        public async Task SetNickname(int userId, string nickname)
+        {
+            var user = await _userService.GetUser(userId);
+            if (user is null)
+                throw new UserNotFoundException(userId);
+
+            user.Nickname = nickname;
+            await _userService.SaveUser(user);
+        }
     }
 }

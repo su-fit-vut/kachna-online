@@ -14,6 +14,7 @@ using KachnaOnline.Dto.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace KachnaOnline.App.Controllers
 {
@@ -75,6 +76,34 @@ namespace KachnaOnline.App.Controllers
             return await _facade.GetUser(id);
         }
 
+        /// <summary>
+        /// Sets the currently authenticated user's Discord ID.
+        /// </summary>
+        /// <param name="discordId">The new Discord ID. May be null.</param>
+        /// <response code="204">The Discord ID has been set.</response>
+        [HttpPut("me/discordID")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> SetUserDiscordId([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] ulong? discordId)
+        {
+            var id = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
+            await _facade.SetDiscordId(id, discordId);
+            return this.NoContent();
+        }
+
+        /// <summary>
+        /// Sets the currently authenticated user's Discord ID.
+        /// </summary>
+        /// <param name="nickname">The new nickname. If set to null, the user's nickname will be synchronized with KIS
+        /// on the next login.</param>
+        /// <response code="204">The nickname has been set.</response>
+        [HttpPut("me/nickname")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> SetUserNickname([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] string nickname)
+        {
+            var id = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
+            await _facade.SetNickname(id, nickname);
+            return this.NoContent();
+        }
 
         /// <summary>
         /// Changes the manual role assignment state for the given user and role.
