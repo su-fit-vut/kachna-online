@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.authenticationService.logIn();
-    this.router.navigate(['.']).then();
+
+    let returnAddress = localStorage.getItem(environment.returnAddressStorageName);
+    this.router.navigate( (returnAddress != null) ? [returnAddress] : ['.']).then();
   }
 }
