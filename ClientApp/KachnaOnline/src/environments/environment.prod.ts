@@ -8,8 +8,8 @@ import { IEnvironment, IEnvironmentParams } from "./ienvironment";
  */
 const params: IEnvironmentParams = {
   production: true,
-  baseApiUrl: 'kachna/api', // FIXME: Add real URL.
-  baseApiUrlDomain: 'localhost:5000', // FIXME: Add real URL.
+  baseApiUrl: 'https://www.su.fit.vutbr.cz/kachna/api/',
+  baseApiUrlDomain: 'su.fit.vutbr.cz',
 };
 
 // Set environment for the application.
