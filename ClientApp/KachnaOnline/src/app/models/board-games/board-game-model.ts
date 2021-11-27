@@ -3,6 +3,9 @@
 
 import { BoardGameCategory } from "./category-model";
 
+/**
+ * Model of a board game as returned by the backend to a regular user.
+ */
 export class BoardGame {
   id: number
   name: string = ""

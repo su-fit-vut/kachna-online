@@ -24,8 +24,7 @@ export class BoardGamesPageComponent implements OnInit {
   availableOnly: boolean | undefined;
   categoryIds: number[] = [];
 
-  currentReservation: { [id: number]: number } = {};
-  reservationInProgress: boolean = false;
+  currentReservation: Map<number, number> = new Map();
 
   // In order for filtering to fully function, 3 arrays of games are required, all of them are subsets
   // of boardGames. filteredBoardGames contains games filtered by backend (players, categories, available),
@@ -41,7 +40,6 @@ export class BoardGamesPageComponent implements OnInit {
   ngOnInit(): void {
     [this.players, this.availableOnly, this.categoryIds, this.currentReservation] =
       this.boardGamesService.getBoardGamePageState();
-    this.reservationInProgress = Object.keys(this.currentReservation).length > 0;
     // Fetch all games right away to reduce the number of requests.
     this.fetchGames([], true);
 
@@ -139,10 +137,9 @@ export class BoardGamesPageComponent implements OnInit {
 
   onReservationUpdate(game: BoardGame): void {
     if (!game.toReserve) {
-      delete this.currentReservation[game.id];
+      this.currentReservation.delete(game.id);
     } else {
-      this.currentReservation[game.id] = game.toReserve;
+      this.currentReservation.set(game.id, game.toReserve);
     }
-    this.reservationInProgress = Object.keys(this.currentReservation).length > 0;
   }
 }

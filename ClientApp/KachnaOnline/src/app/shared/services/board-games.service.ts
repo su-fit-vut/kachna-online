@@ -7,9 +7,11 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { forkJoin, Observable } from "rxjs";
 import { BoardGame } from "../../models/board-games/board-game-model";
 import { BoardGameCategory } from "../../models/board-games/category-model";
+import { Reservation } from "../../models/board-games/reservation-model";
 
 enum ApiPaths {
-  Categories = '/categories'
+  Categories = '/categories',
+  Reservations = '/reservations'
 }
 
 /**
@@ -23,7 +25,7 @@ export class BoardGamesService {
   players: number | undefined;
   availableOnly: boolean | undefined;
   categoryIds: number[] = [];
-  currentReservation: { [id: number]: number } = {};
+  currentReservation: Map<number, number> = new Map();
 
   readonly BoardGamesUrl = environment.baseApiUrl + '/boardGames';
 
@@ -40,7 +42,7 @@ export class BoardGamesService {
    * @param currentReservation Current state of ongoing reservation.
    */
   saveBoardGamePageState(players: number | undefined, availableOnly: boolean | undefined, categoryIds: number[],
-                         currentReservation: { [id: number]: number }): void {
+                         currentReservation: Map<number, number>): void {
     this.players = players;
     this.availableOnly = availableOnly;
     this.categoryIds = categoryIds;
@@ -48,9 +50,16 @@ export class BoardGamesService {
   }
 
   /**
+   * Resets the currently saved reservation.
+   */
+  resetSavedReservation(): void {
+    this.currentReservation = new Map();
+  }
+
+  /**
    * Return the saved state of board game page.
    */
-  getBoardGamePageState(): [number | undefined, boolean | undefined, number[], { [id: number]: number}] {
+  getBoardGamePageState(): [number | undefined, boolean | undefined, number[], Map<number, number>] {
     return [this.players, this.availableOnly, this.categoryIds, this.currentReservation];
   }
 
@@ -77,16 +86,39 @@ export class BoardGamesService {
     let requests = [];
     for (let category of categories) {
       params = params.set("categoryId", category);
-      requests.push(this.http.get<BoardGame[]>(this.BoardGamesUrl, {params: params}))
+      requests.push(this.http.get<BoardGame[]>(this.BoardGamesUrl, {params: params}));
     }
     return forkJoin(requests);
+  }
+
+  /**
+   * Returns an observable of a board game with the given ID.
+   * @param id ID of the board game to get.
+   */
+  getBoardGame(id: number): Observable<BoardGame> {
+    return this.http.get<BoardGame>(`${this.BoardGamesUrl}/${id}`);
   }
 
   /**
    * Returns an observable array of categories.
    */
   getCategories(): Observable<BoardGameCategory[]> {
-    let url = `${this.BoardGamesUrl}${ApiPaths.Categories}`
+    let url = `${this.BoardGamesUrl}${ApiPaths.Categories}`;
     return this.http.get<BoardGameCategory[]>(url);
+  }
+
+  /**
+   * Creates a reservation.
+   * @param toReserve Map of game IDs to the count to reserve.
+   * @param note Note specified by the user.
+   * @returns Observable An observable of the created reservation.
+   */
+  reserve(toReserve: Map<number, number>, note: string): Observable<Reservation> {
+    let ids: number[] = [];
+    for (let [game, count] of toReserve) {
+      ids = ids.concat(Array(count).fill(game));
+    }
+    let newReservation = {noteUser: note, boardGameIds: ids};
+    return this.http.post<Reservation>(`${this.BoardGamesUrl}${ApiPaths.Reservations}`, newReservation)
   }
 }
