@@ -147,7 +147,7 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns a list of <see cref="StateDto"/> of conflicting planned states for event with the given ID.
+        /// Returns a list of conflicting planned states for an event with the given ID.
         /// </summary>
         /// <param name="id">ID of the event to get the conflicting planned states for.</param>
         /// <response code="200">The list of conflicting states.</response>
@@ -168,7 +168,7 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Get states linked to the event specified by <paramref name="id"/>.
+        /// Returns states linked to an event with the given ID.
         /// </summary>
         /// <param name="id">An ID of the event to link planned states to.</param>
         /// <response code="200">The planned states were linked to the event.</response>
@@ -190,7 +190,7 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Link planned states to the event specified by <paramref name="id"/>.
+        /// Links states to an event with the given ID.
         /// </summary>
         /// <param name="id">An ID of the event to link planned states to.</param>
         /// <param name="plannedStatesToLinkDto">A list of planned state IDs to link to the event specified by <paramref name="id"/>.</param>
@@ -236,10 +236,10 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Sets (overrides) the current linked states to the event specified by <paramref name="id"/> with <paramref name="plannedStatesToLink"/>.
+        /// Sets the linked states of an event with the given ID.
         /// </summary>
-        /// <param name="id">Event to set linked planned states for.</param>
-        /// <param name="plannedStatesToLink">A list of planned state IDs to link to the event specified by <paramref name="id"/>.</param>
+        /// <param name="id">The ID of the event to set the linked planned states for.</param>
+        /// <param name="plannedStatesToLink">A list of planned state IDs to link to the event <paramref name="id"/>.</param>
         /// <response code="204">The planned states were linked to the event.</response>
         /// <response code="404">No such event exists.</response>
         /// <response code="409">The event has already ended and cannot be modified.</response>
@@ -283,7 +283,7 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Clears (unlinks) the current linked states from the event specified by <paramref name="id"/>.
+        /// Unlinks all currently linked states from an event with the given ID.
         /// </summary>
         /// <param name="id">Event to unlink linked planned states from.</param>
         /// <response code="204">The planned states were linked to the event.</response>
