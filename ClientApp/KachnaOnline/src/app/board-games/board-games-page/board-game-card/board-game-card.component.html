@@ -13,30 +13,8 @@ Author: František Nečas
     <div class="card-text" *ngIf="boardGame.playersMax || boardGame.playersMin">
       <p>{{boardGame.playersMin}} - {{boardGame.playersMax}} hráčů</p>
     </div>
+    <app-reservation-button [available]="boardGame.available" [currentValue]="initialReserved"
+                            (countChanged)="onCountChanged($event)"></app-reservation-button>
 
-    <div *ngIf="authenticationService.isLoggedIn()">
-      <div *ngIf="boardGame.available <= 0; then thenBlock else elseBlock"></div>
-      <ng-template #thenBlock>
-        <button type="button" class="btn btn-secondary" disabled>Aktuálně nedostupné</button>
-      </ng-template>
-      <ng-template #elseBlock>
-        <button *ngIf="!boardGame.toReserve" type="button" class="btn btn-success" (click)="reservedInitial()">
-          Rezervovat
-        </button>
-        <div *ngIf="boardGame.toReserve" class="btn-group" role="group">
-          <button type="button" class="btn btn-outline-success" disabled>Zarezervováno {{boardGame.toReserve}}ks
-          </button>
-          <div class="btn-group-vertical" role="group">
-            <button *ngIf="boardGame.toReserve < boardGame.available" type="button" class="btn btn-success btn-xs"
-                    (click)="reservedIncrement()">+
-            </button>
-            <button *ngIf="boardGame.toReserve >= boardGame.available" type="button" class="btn btn-success btn-xs"
-                    disabled>+
-            </button>
-            <button type="button" class="btn btn-danger btn-xs" (click)="reservedDecrement()">-</button>
-          </div>
-        </div>
-      </ng-template>
-    </div>
   </div>
 </div>

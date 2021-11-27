@@ -8,6 +8,7 @@ import { environment } from "../../environments/environment";
 import { ReservationCreationComponent } from "./reservation-creation/reservation-creation.component";
 import { UserLoggedInGuard } from "../users/user-logged-in.guard";
 import { ReservationsComponent } from "./reservations/reservations.component";
+import { BoardGameDetailsComponent } from "./board-game-details/board-game-details.component";
 
 const routes: Routes = [
   {
@@ -19,7 +20,6 @@ const routes: Routes = [
         data: {
           title: `${environment.siteName} | Deskové hry`,
           description: "Přehled deskových her"
-
         }
       },
       {
@@ -38,6 +38,14 @@ const routes: Routes = [
         data: {
           title: `${environment.siteName} | Moje rezervace`,
           description: "Seznam mých rezervací"
+        }
+      },
+      {
+        path: ':id',
+        component: BoardGameDetailsComponent,
+        data: {
+          title: `${environment.siteName} | Desková hra`,
+          description: `Detail deskové hry`
         }
       }
     ]

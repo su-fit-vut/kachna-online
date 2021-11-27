@@ -15,6 +15,9 @@ import { TogglableButtonComponent } from './board-games-page/togglable-button/to
 import { ReservationCreationComponent } from './reservation-creation/reservation-creation.component';
 import { ReservationItemComponent } from './reservation-creation/reservation-item/reservation-item.component';
 import { ReservationsComponent } from './reservations/reservations.component';
+import { BoardGameDetailsComponent } from './board-game-details/board-game-details.component';
+import { ReservationButtonComponent } from './board-games-page/board-game-card/reservation-button/reservation-button.component';
+import { ComponentsModule } from "../shared/components/components.module";
 
 
 @NgModule({
@@ -27,13 +30,16 @@ import { ReservationsComponent } from './reservations/reservations.component';
     ReservationCreationComponent,
     ReservationItemComponent,
     ReservationsComponent,
+    BoardGameDetailsComponent,
+    ReservationButtonComponent,
   ],
   imports: [
     CommonModule,
     BoardGamesRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    ComponentsModule
   ]
 })
 export class BoardGamesModule {
