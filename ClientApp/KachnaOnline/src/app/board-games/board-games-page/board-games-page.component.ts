@@ -20,7 +20,6 @@ import { AuthenticationService } from "../../shared/services/authentication.serv
 export class BoardGamesPageComponent implements OnInit {
   // Filters
   public searchModel: any;
-  playersForm = new FormControl(undefined);
   players: number | undefined;
   availableOnly: boolean | undefined;
   categoryIds: number[] = [];
@@ -44,13 +43,6 @@ export class BoardGamesPageComponent implements OnInit {
       this.boardGamesService.getBoardGamePageState();
     // Fetch all games right away to reduce the number of requests.
     this.fetchGames([], true);
-
-    this.playersForm.setValue(this.players);
-    this.playersForm.valueChanges.subscribe(val => {
-      this.players = val;
-      this.boardGames = [];
-      this.fetchGames(this.categoryIds);
-    })
   }
 
   ngOnDestroy(): void {
@@ -119,9 +111,10 @@ export class BoardGamesPageComponent implements OnInit {
       });
   }
 
-  playersReset(): void {
-    this.players = undefined;
-    this.playersForm.reset();
+  onPlayersChange(value: number | undefined): void {
+    this.players = value;
+    this.boardGames = [];
+    this.fetchGames(this.categoryIds);
   }
 
   search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>

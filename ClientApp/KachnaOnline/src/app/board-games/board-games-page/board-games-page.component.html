@@ -15,9 +15,9 @@ Author: František Nečas
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Počet hráčů
     </button>
     <div class="dropdown-menu" aria-labelledby="playersDropdown" id="dropdownMenu">
-      <div class="d-flex px-2">
-        <input type="number" class="form-control mr-2" [formControl]="playersForm" placeholder="Počet hráčů"/>
-        <button type="button" class="btn btn-danger" (click)="playersReset()">Zrušit</button>
+      <div class="px-2">
+        <app-number-selection placeholder="Počet hráčů" [initialValue]="players" [minimum]="1"
+                              (valueChanged)="onPlayersChange($event)"></app-number-selection>
       </div>
     </div>
   </div>
@@ -33,12 +33,15 @@ Author: František Nečas
   </div>
 </div>
 <hr/>
+
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
-  <div class="col mb-3" *ngFor="let boardGame of shownGames">
+  <div class="col mb-3 d-flex align-items-stretch" *ngFor="let boardGame of shownGames">
     <app-board-game [boardGame]="boardGame" [initialReserved]="currentReservation.get(boardGame.id) || 0"
-                    (reservationUpdate)="onReservationUpdate($event)"></app-board-game>
+                    (reservationUpdate)="onReservationUpdate($event)"
+                    class="d-flex align-items-stretch"></app-board-game>
   </div>
 </div>
-<button *ngIf="currentReservation.size > 0" type="button" class="btn btn-success btn-lg" id="reserveBtn" routerLink="reserve" >Dokončit
+<button *ngIf="currentReservation.size > 0" type="button" class="btn btn-success btn-lg" id="reserveBtn"
+        routerLink="reserve">Dokončit
   rezervaci
 </button>
