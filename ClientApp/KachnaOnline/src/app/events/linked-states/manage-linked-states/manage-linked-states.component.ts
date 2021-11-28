@@ -5,7 +5,6 @@ import { Component, OnInit } from '@angular/core';
 import { EventsService } from "../../../shared/services/events.service";
 import { ToastrService } from "ngx-toastr";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Event } from "../../../models/events/event.model";
 import { ClubState } from "../../../models/states/club-state.model";
 
 @Component({
@@ -34,30 +33,27 @@ export class ManageLinkedStatesComponent implements OnInit {
 
   onUnlinkButtonClicked(linkedState: ClubState) {
     this.eventsService.unlinkLinkedState(linkedState.id);
-
   }
 
   onDeleteButtonClicked(linkedState: ClubState) {
-
+    //this.statesService.deleteState(linkedState.id); // TODO: Uncomment when implemented. Add a single confirmation inside.
   }
 
-
-  onPlanNewClubStateclicked() {
+  onPlanNewClubStateClicked() {
     this.router.navigate([`/states/plan`]).then(() => null);
   }
 
   onAddFromExistingClubStates() {
-
+    this.router.navigate([`/events/${this.eventsService.eventDetail.id}/conflicting-states`]).then(() => null);
   }
 
   onUnlinkAllButtonClicked() {
     this.eventsService.unlinkAllLinkedStates();
-
   }
 
   onDeleteAllButtonClicked() {
     for (let stateId of this.eventsService.eventDetail.linkedPlannedStateIds) {
-      //this.statesService.deleteState(stateId); // TODO: Uncomment when implemented.
+      //this.statesService.deleteState(stateId); // TODO: Uncomment when implemented. Add a single confirmation inside.
     }
   }
 }
