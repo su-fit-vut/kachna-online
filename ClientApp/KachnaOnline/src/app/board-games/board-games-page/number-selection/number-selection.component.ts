@@ -36,11 +36,27 @@ export class NumberSelectionComponent implements OnInit {
   }
 
   increment(): void {
-    this.countForm.setValue((this.countForm.value || this.minimum || 0) + 1);
+    let newValue: number;
+    if (this.countForm.value) {
+      newValue = this.countForm.value + 1;
+    } else if (this.minimum) {
+      newValue = this.minimum;
+    } else {
+      newValue = 0;
+    }
+    this.countForm.setValue(newValue);
   }
 
   decrement(): void {
-    this.countForm.setValue((this.countForm.value || this.maximum || 0) - 1);
+    let newValue: number;
+    if (this.countForm.value) {
+      newValue = this.countForm.value -1;
+    } else if (this.maximum) {
+      newValue = this.maximum;
+    } else {
+      newValue = 0;
+    }
+    this.countForm.setValue(newValue);
   }
 
   reset(): void {
