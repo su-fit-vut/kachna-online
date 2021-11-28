@@ -24,21 +24,18 @@ Author: David Chocholatý
 
   <app-bar-details *ngIf="state.state==ST.OpenBar" [state]="state"></app-bar-details>
   <app-chillzone-details *ngIf="state.state==ST.OpenChillzone" [state]="state"></app-chillzone-details>
-
-  <div class="text-center">
-    <h2>Pravidelná otevírací doba</h2>
-  </div>
-
-  <app-repeating-states></app-repeating-states>
-
-  <button type="button" class="btn btn-primary btn-block" *ngIf="authenticationService.isLoggedOut()">Stát se členem
-    klubu
-  </button>
 </ng-container>
 
 <div class="text-center" *ngIf="!state">
   <h4 class="text-muted">Zjišťuji stav Kachny...</h4>
 </div>
+
+<app-upcoming-openings *ngIf="state && state.state==ST.Closed"></app-upcoming-openings>
+<app-repeating-states></app-repeating-states>
+
+<button type="button" class="btn btn-primary btn-block" *ngIf="authenticationService.isLoggedOut()">Stát se členem
+  klubu
+</button>
 
 <ng-template #getting_there let-modal>
   <div class="modal-header">

@@ -1,0 +1,24 @@
+<div class="pb-2 mb-2 border-bottom">
+  <div class="row">
+    <div class="col-sm-6 text-center">
+      <h2>Nejbližší chillzóna</h2>
+
+      <h5 class="text-muted" *ngIf="nextChillzone == undefined">načítám...</h5>
+      <h5 *ngIf="hasChillzone == false">Žádná chillzóna není naplánovaná</h5>
+      <h5 *ngIf="nextChillzone">
+        {{nextChillzone.start.getDay() | dayLoc}} {{nextChillzone.start | date:'dd. MM.'}}
+        od {{nextChillzone.start | date:'HH:mm'}}
+        do {{nextChillzone.plannedEnd | date:'HH:mm'}}
+      </h5>
+    </div>
+    <div class="col-sm-6 text-center">
+      <h2>Nejbližší otvíračka</h2>
+      <h5 class="text-muted" *ngIf="nextBar == undefined">načítám...</h5>
+      <h5 *ngIf="hasBar == false">Žádná otvíračka s barem není naplánovaná</h5>
+      <h5 *ngIf="nextBar">{{nextBar.start.getDay() | dayLoc}} {{nextChillzone.start | date:'dd. MM.'}}
+        od {{nextBar.start | date:'HH:mm'}}
+        do {{nextBar.plannedEnd | date:'HH:mm'}}</h5>
+    </div>
+  </div>
+
+</div>
