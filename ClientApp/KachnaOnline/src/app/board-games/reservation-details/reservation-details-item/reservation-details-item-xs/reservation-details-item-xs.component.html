@@ -2,7 +2,7 @@
 reservation-details-item-xs.component.html
 Author: František Nečas
 -->
-<h5 class="mt-4">{{item.boardGame.name}}</h5>
+<h5 class="mt-4"><a [routerLink]="" class="text-primary" (click)="boardGameClicked()">{{item.boardGame.name}}</a></h5>
 <ul class="no-bullets pl-3">
   <li [ngClass]="{
     'text-danger': item.state === itemState.Expired,

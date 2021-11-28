@@ -17,4 +17,8 @@ export class ReservationDetailsItemXsComponent extends ReservationDetailsItemCom
     super(boardGamesService, toastrService);
   }
 
+  boardGameClicked(): void {
+    this.reservationItemClicked.emit(this.item);
+  }
+
 }

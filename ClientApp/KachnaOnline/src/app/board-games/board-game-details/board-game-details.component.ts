@@ -1,7 +1,7 @@
 // board-game-details.component.ts
 // Author: František Nečas
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ToastrService } from "ngx-toastr";
 import { BoardGamesService } from "../../shared/services/board-games.service";
 import { ActivatedRoute } from "@angular/router";
@@ -14,15 +14,17 @@ import { BoardGame } from "../../models/board-games/board-game.model";
   styleUrls: ['./board-game-details.component.css']
 })
 export class BoardGameDetailsComponent implements OnInit {
-  private routeSub: Subscription
-  boardGame: BoardGame
-  currentReservation: Map<number, number>
+  backRoute: string = "..";
+  private routeSub: Subscription;
+  boardGame: BoardGame;
+  currentReservation: Map<number, number>;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    this.backRoute = this.boardGamesService.getBackRoute();
     this.routeSub = this.route.params.subscribe(params => {
       this.boardGamesService.getBoardGame(params['id']).subscribe(game => {
           this.boardGame = game;
@@ -36,6 +38,7 @@ export class BoardGameDetailsComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.boardGamesService.resetBackRoute();
     this.routeSub.unsubscribe();
   }
 
