@@ -24,16 +24,23 @@ export class EventsService {
   eventDetail: Event = new Event();
   eventsList: Event[] = [];
   conflictingStatesList: ClubState[] = [];
+  shownConflictingStatesList: ClubState[] = [];
+  unlinkedOnly: boolean;
+
+  eventsBackRoute: string = "..";
 
   getNextPlannedEvents(): Observable<Event[]> {
     return this.http.get<Event[]>(`${this.EventsUrl}/next`);
   }
 
   getFromToEvents(from: string = "", to: string = ""): Observable<Event[]> {
-    let params = new HttpParams()
-      .set('from', from)
-      .set('to', to);
-    // TODO: Handle from or to being empty strings. Is it possible it is handled automatically? Probably.
+    let params = new HttpParams();
+    if (from != "") {
+      params = params.set("from", from);
+    }
+    if (to != "") {
+      params = params.set("to", to);
+    }
 
     return this.http.get<Event[]>(this.EventsUrl, {params: params});
   }
@@ -138,7 +145,7 @@ export class EventsService {
   }
 
   unlinkLinkedState(linkedStateId: number) {
-    this.http.delete(`${this.StatesUrl}/${linkedStateId}/linkedEvent`).toPromise()
+    this.unlinkLinkedStateRequest(linkedStateId).toPromise()
       .then(() => {
         this.refreshLinkedStatesList(this.eventDetail.id);
         this.toastr.success("Odebrání připojeného stavu proběhlo úspěšně.", "Odebrání připojených stavů");
@@ -146,6 +153,10 @@ export class EventsService {
         this.toastr.error("Odebrání připojeného stavu selhalo.", "Obebrání připojených stavů");
         return throwError(error);
       });
+  }
+
+  unlinkLinkedStateRequest(linkedStateId: number) {
+    return this.http.delete(`${this.StatesUrl}/${linkedStateId}/linkedEvent`);
   }
 
   unlinkAllLinkedStates() {
@@ -218,10 +229,13 @@ export class EventsService {
     this.getConflictingStatesForEventRequest(eventId).toPromise()
         .then((res: ClubState[]) => {
           for (let conflictingState of res) {
-            if (!this.eventDetail.linkedPlannedStateIds.includes(conflictingState.id)) {
+            if (!this.eventDetail.linkedPlannedStateIds.includes(conflictingState.id)
+                && new Date(conflictingState.plannedEnd).getTime() > Date.now()) {
               this.conflictingStatesList.push(conflictingState);
             }
           }
+          this.shownConflictingStatesList = this.conflictingStatesList;
+          this.filterConflictingStates(this.unlinkedOnly);
         }).catch((error: any) => {
           console.log(error);
           this.toastr.error(`Načtení všech možných existujících stavů pro event ${this.eventDetail.name} selhalo.`, "Načtení existujících stavů");
@@ -240,13 +254,86 @@ export class EventsService {
 
   private getConflictingStatesIdsForEvent() {
     let ids = [];
-    for (let conflictingState of this.conflictingStatesList) {
+    for (let conflictingState of this.shownConflictingStatesList) {
       ids.push(conflictingState.id);
     }
     return ids;
   }
 
+  saveBackRoute(route: string): void {
+    this.eventsBackRoute = route;
+  }
+
+  getBackRoute(): string {
+    return this.eventsBackRoute;
+  }
+
+  resetBackRoute(): void {
+    this.eventsBackRoute = "..";
+  }
 
 
+  /**
+   * Gets next events as a list of events.
+   */
+  getNextEvents(): Observable<Event[]> {
+    return this.http.get<Event[]>(`${this.EventsUrl}/next`);
+  }
 
+  refreshNextEvents() {
+    this.getNextEvents().toPromise()
+      .then((res) => {
+        this.eventsList = res as Event[];
+      }).catch((error: any) => {
+      console.log(error);
+      this.toastr.error("Nepodařilo se načíst nejbližší akce.", "Načtení akcí");
+      return;
+    });
+  }
+
+  /**
+   * Return the saved state of conflicting states page.
+   */
+  getConflictingStatesPageState(): [boolean] {
+    return [this.unlinkedOnly];
+  }
+
+  /**
+   * Saves the current conflicting states page state (filters) so that the component can be destroyed and restored later.
+   * @param unlinkedOnly Whether unlinked states only filtering is applied.
+   */
+  saveConflictingStatesPageState(unlinkedOnly: boolean): void {
+    this.unlinkedOnly = unlinkedOnly;
+  }
+
+  relinkClubStateToEvent(conflictingState: ClubState) {
+    this.unlinkLinkedStateRequest(conflictingState.id).toPromise()
+      .then(() => {
+        this.linkConflictingState(conflictingState.id);
+      }).catch((error: any) => {
+      this.toastr.error("Odebrání připojeného stavu selhalo.", "Obebrání připojených stavů");
+      return throwError(error);
+    });
+  }
+
+  relinkAllConflictingClubStateToEvent() {
+    for (let conflictingState of this.shownConflictingStatesList) {
+      this.unlinkLinkedStateRequest(conflictingState.id).toPromise()
+        .then(() => {
+          this.linkConflictingState(conflictingState.id);
+        }).catch((error: any) => {
+          console.log(error);
+          this.toastr.error("Odebrání připojených stavů selhalo.", "Odebrání připojených stavů");
+          return;
+        }
+      );
+    }
+  }
+
+  private filterConflictingStates(unlinkedOnly: boolean) {
+    this.shownConflictingStatesList = this.conflictingStatesList.filter(
+      conflictingState => {
+        return (unlinkedOnly) ? conflictingState.eventId == null : true;
+      });
+  }
 }
