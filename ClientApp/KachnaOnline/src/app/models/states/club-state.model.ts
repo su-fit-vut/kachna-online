@@ -2,10 +2,11 @@
 // Author: David Chocholatý
 
 import { MadeByUser } from "../users/made-by-user.model";
+import { ClubStateTypes } from "./club-state-types.model";
 
 export class ClubState {
   id: number;
-  state: string;
+  state: ClubStateTypes;
   madeByUser: MadeByUser;
   start: Date;
   plannedEnd: Date;
