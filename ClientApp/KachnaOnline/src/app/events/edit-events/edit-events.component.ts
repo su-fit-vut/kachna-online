@@ -17,11 +17,19 @@ export class EditEventsComponent implements OnInit {
     public eventsService: EventsService,
   ) { }
 
+  eventsBackRoute: string = "..";
+
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       let eventId = Number(params.get('eventId'));
       this.eventsService.getEventData(eventId, true);
     });
+
+    this.eventsBackRoute = this.eventsService.getBackRoute();
+  }
+
+  ngOnDestroy() {
+    this.eventsService.resetBackRoute();
   }
 
 }

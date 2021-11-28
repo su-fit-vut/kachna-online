@@ -13,6 +13,7 @@ import { EventsListComponent } from "./events-list/events-list.component";
 import { ManageLinkedStatesComponent } from "./linked-states/manage-linked-states/manage-linked-states.component";
 import { ConflictingStatesComponent } from "./linked-states/conflicting-states/conflicting-states.component";
 import { EditEventsComponent } from "./edit-events/edit-events.component";
+import { NextEventsComponent } from "./next-events/next-events.component";
 
 const routes: Routes = [
   {
@@ -27,6 +28,14 @@ const routes: Routes = [
             data: {
               title: `${environment.siteName} | Aktuální akce`,
               description: 'Přehled aktuálních akcí',
+            }
+          },
+          {
+            path: 'next',
+            component: NextEventsComponent,
+            data: {
+              title: `${environment.siteName} | Nejbližší akce`,
+              description: 'Přehled nejbližších akcí',
             }
           },
           {
