@@ -5,19 +5,23 @@ Author: František Nečas
 <td class="align-middle">{{formattedDate}}</td>
 <td class="d-none d-sm-table-cell my-auto align-middle">
   <p>{{formattedNote}}</p>
-  <button type="button" class="btn btn-outline-secondary mt-1 note-button" *ngIf="noteTooLong" [ngbPopover]="reservation.noteUser"
+  <button type="button" class="btn btn-outline-secondary mt-1 note-button" *ngIf="noteTooLong"
+          [ngbPopover]="reservation.noteUser"
           popoverTitle="Poznámka" placement="right" (click)="$event.stopPropagation()">
     Celá poznámka
   </button>
 </td>
-<td>
+<td class="align-middle">
   <ul class="list-group">
     <li *ngFor="let assigned of assignedUsers" class="list-group-item">{{assigned}}</li>
   </ul>
 </td>
 <td class="d-none d-sm-table-cell align-middle">
   <ul class="list-group">
-    <li *ngFor="let item of reservation.items" class="list-group-item">{{item.boardGame.name}}</li>
+    <li *ngFor="let item of reservation.items.slice(0, maxGames)" class="list-group-item">{{item.boardGame.name}}</li>
+    <li *ngIf="reservation.items.length > maxGames" class="list-group-item list-group-item-info">...
+      a {{reservation.items.length - maxGames}} další
+    </li>
   </ul>
 </td>
 <td class="d-table-cell d-sm-none align-middle">{{reservation.items.length}}</td>

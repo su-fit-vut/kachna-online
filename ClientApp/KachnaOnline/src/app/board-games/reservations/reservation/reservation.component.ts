@@ -4,7 +4,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Reservation } from "../../../models/board-games/reservation.model";
 import { formatDate } from "@angular/common";
-import { MadeByUser } from "../../../models/users/made-by-user-model";
 import { HostListener } from "@angular/core"
 
 @Component({
@@ -18,7 +17,8 @@ export class ReservationComponent implements OnInit {
   formattedDate: string = "";
   formattedNote: string = "";
   assignedUsers: Set<string> = new Set();
-  shownNoteChars: number = 128
+  shownNoteChars: number = 128;
+  maxGames: number = 3;
   noteTooLong: boolean = false;
 
   @HostListener("click") onclick() {
