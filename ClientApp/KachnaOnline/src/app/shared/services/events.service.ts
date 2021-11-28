@@ -57,6 +57,24 @@ export class EventsService {
     return this.http.get<Event>(`${this.EventsUrl}/${eventId}`, { params });
   }
 
+  /**
+   * Gets current events as a list of events.
+   */
+  getCurrentEvents(): Observable<Event[]> {
+    return this.http.get<Event[]>(`${this.EventsUrl}/current`);
+  }
+
+  refreshCurrentEvents() {
+    this.getCurrentEvents().toPromise()
+        .then((res) => {
+          this.eventsList = res as Event[];
+        }).catch((error: any) => {
+      console.log(error);
+      this.toastr.error("Nepodařilo se načíst aktuální akce.", "Načtení akcí");
+      return;
+    });
+  }
+
   planEvent() {
     return this.http.post(this.EventsUrl, this.eventDetail);
   }
