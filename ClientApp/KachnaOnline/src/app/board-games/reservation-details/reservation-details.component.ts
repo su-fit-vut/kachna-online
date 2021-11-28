@@ -6,10 +6,10 @@ import { BoardGamesService } from "../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpStatusCode } from "@angular/common/http";
-import { Reservation } from "../../models/board-games/reservation-model";
+import { Reservation } from "../../models/board-games/reservation.model";
 import { FormControl } from "@angular/forms";
 import { formatDate } from "@angular/common";
-import { ReservationItem, ReservationItemState } from "../../models/board-games/reservation-item-model";
+import { ReservationItem, ReservationItemState } from "../../models/board-games/reservation-item.model";
 
 @Component({
   selector: 'app-reservation-details',

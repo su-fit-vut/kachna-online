@@ -2,7 +2,7 @@
 // Author: František Nečas
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BoardGame } from "../../../models/board-games/board-game-model";
+import { BoardGame } from "../../../models/board-games/board-game.model";
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 

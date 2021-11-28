@@ -2,7 +2,7 @@
 // Author: František Nečas
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Reservation } from "../../../models/board-games/reservation-model";
+import { Reservation } from "../../../models/board-games/reservation.model";
 import { formatDate } from "@angular/common";
 import { MadeByUser } from "../../../models/users/made-by-user-model";
 import { HostListener } from "@angular/core"

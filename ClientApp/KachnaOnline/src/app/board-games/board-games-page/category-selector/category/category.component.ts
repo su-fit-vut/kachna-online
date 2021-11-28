@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BoardGameCategory } from "../../../../models/board-games/category-model";
+import { BoardGameCategory } from "../../../../models/board-games/board-game-category.model";
 
 @Component({
   selector: 'app-category',

@@ -6,7 +6,7 @@ import { ToastrService } from "ngx-toastr";
 import { BoardGamesService } from "../../shared/services/board-games.service";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
-import { BoardGame } from "../../models/board-games/board-game-model";
+import { BoardGame } from "../../models/board-games/board-game.model";
 
 @Component({
   selector: 'app-board-game-details',

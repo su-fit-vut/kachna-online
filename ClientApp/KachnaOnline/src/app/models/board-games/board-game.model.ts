@@ -1,7 +1,7 @@
-// board-game-card-model.ts
+// board-game.model.ts
 // Author: František Nečas
 
-import { BoardGameCategory } from "./category-model";
+import { BoardGameCategory } from "./board-game-category.model";
 
 /**
  * Model of a board game as returned by the backend to a regular user.

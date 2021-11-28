@@ -4,7 +4,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
-import { BoardGameCategory } from "../../../models/board-games/category-model";
+import { BoardGameCategory } from "../../../models/board-games/board-game-category.model";
 
 @Component({
   selector: 'app-category-selector',

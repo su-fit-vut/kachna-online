@@ -5,11 +5,11 @@ import { Injectable } from '@angular/core';
 import { environment } from "../../../environments/environment";
 import { HttpClient, HttpParams, HttpResponse } from "@angular/common/http";
 import { forkJoin, Observable } from "rxjs";
-import { BoardGame } from "../../models/board-games/board-game-model";
-import { BoardGameCategory } from "../../models/board-games/category-model";
-import { Reservation, ReservationState } from "../../models/board-games/reservation-model";
-import { ReservationItemState } from "../../models/board-games/reservation-item-model";
-import { ReservationEventType } from "../../models/board-games/reservation-item-event-model";
+import { BoardGame } from "../../models/board-games/board-game.model";
+import { BoardGameCategory } from "../../models/board-games/board-game-category.model";
+import { Reservation, ReservationState } from "../../models/board-games/reservation.model";
+import { ReservationItemState } from "../../models/board-games/reservation-item.model";
+import { ReservationEventType } from "../../models/board-games/reservation-item-event.model";
 
 enum ApiPaths {
   Categories = '/categories',
