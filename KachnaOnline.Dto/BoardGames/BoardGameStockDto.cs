@@ -17,6 +17,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// <example>2</example>
         [Required]
         [JsonRequired]
+        [Range(0, int.MaxValue)]
         public int InStock { get; set; }
 
         /// <summary>
@@ -26,6 +27,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// <example>1</example>
         [Required]
         [JsonRequired]
+        [Range(0, int.MaxValue)]
         public int Unavailable { get; set; }
 
         /// <summary>

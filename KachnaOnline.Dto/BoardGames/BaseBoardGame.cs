@@ -36,18 +36,21 @@ namespace KachnaOnline.Dto.BoardGames
         /// Minimal number of players that can play the game.
         /// </summary>
         /// <example>2</example>
+        [Range(1, int.MaxValue)]
         public int? PlayersMin { get; set; }
 
         /// <summary>
         /// Maximal number of players that can play the game.
         /// </summary>
         /// <example>5</example>
+        [Range(1, int.MaxValue)]
         public int? PlayersMax { get; set; }
 
         /// <summary>
         /// The number of pieces of the game which are available for borrowing.
         /// </summary>
         /// <example>1</example>
+        [Range(0, int.MaxValue)]
         public int Available { get; set; }
 
         /// <summary>
@@ -56,6 +59,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// <example>2</example>
         [Required]
         [JsonRequired]
+        [Range(0, int.MaxValue)]
         public int InStock { get; set; }
     }
 }

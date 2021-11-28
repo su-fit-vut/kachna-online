@@ -45,6 +45,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// which are highly sought after, last shorter.
         /// </summary>
         /// <example>30</example>
+        [Range(1, int.MaxValue)]
         public int? DefaultReservationDays { get; set; }
     }
 }
