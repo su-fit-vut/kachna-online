@@ -6,7 +6,7 @@ Author: František Nečas
   <img src="{{boardGame.imageUrl ? boardGame.imageUrl : 'assets/image_not_found.jpg'}}" class="card-img-top rounded"
        alt="Fotka deskové hry"/>
   <div class="card-body">
-    <h5 class="card-title"><a class="bg-link stretched-link" routerLink="{{boardGame.id}}">{{boardGame.name}}</a></h5>
+    <h5 class="card-title"><a class="link-no-style stretched-link" routerLink="{{boardGame.id}}">{{boardGame.name}}</a></h5>
     <div class="card-subtitle">
       <h6 [ngStyle]="{'color': '#' + boardGame.category.colourHex}">{{boardGame.category.name}}</h6>
     </div>

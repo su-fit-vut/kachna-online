@@ -53,7 +53,6 @@ export class ReservationCreationComponent implements OnInit {
   }
 
   reserve(): void {
-    console.log("here");
     if (this.currentReservation.size == 0) {
       this.toastrService.error("Rezervace nesmí být prázdná.")
       return;
@@ -62,6 +61,7 @@ export class ReservationCreationComponent implements OnInit {
       _ => {
         // Reset reservation and redirect
         this.boardGamesService.resetSavedReservation();
+        this.toastrService.success("Rezervace byla vytvořena.")
         this.router.navigate(["/board-games/reservations"]).then();
       },
       err => {
@@ -78,6 +78,8 @@ export class ReservationCreationComponent implements OnInit {
               this.toastrService.error(`Některá z her v rezervaci již byla zarezervována jiným uživatelem.`);
             }
           )
+        } else {
+          this.toastrService.error("Rezervace se nezdařila (možná příliš dlouhá poznámka?)");
         }
       }
     )

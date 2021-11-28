@@ -26,3 +26,7 @@ table tbody tr:hover {
 input.invalid {
   border-color: red;
 }
+
+.link-no-style {
+  color: inherit;
+}

@@ -8,6 +8,5 @@
  * creator of a state).
  */
 export class MadeByUser {
-  name: string
-  discordId: string
+  name: string = ""
 }

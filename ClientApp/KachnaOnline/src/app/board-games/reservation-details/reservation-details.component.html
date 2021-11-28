@@ -1,0 +1,39 @@
+<!--
+reservation-details.component.html
+Author: František Nečas
+-->
+<div class="d-flex">
+  <app-back-arrow targetRoute=".."></app-back-arrow>
+  <h2>Rezervace</h2>
+</div>
+<h4>Vytvořena {{formattedDate}}</h4>
+<div class="table-responsive-sm">
+
+</div>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Hra</th>
+      <th scope="col">Konec platnosti</th>
+      <th scope="col">Kontaktní osoba</th>
+      <th scope="col">Akce</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr app-reservation-details-item *ngFor="let item of items" [item]="item" [reservationId]="reservation.id"
+        [ngClass]="{
+          'table-danger': item.state === itemState.Expired,
+          'table-secondary': item.state == itemState.Cancelled || item.state == itemState.Done
+          }"></tr>
+    </tbody>
+  </table>
+</div>
+<form>
+  <div class="form-group">
+    <label for="userNote">Poznámka</label>
+    <textarea class="form-control" id="userNote" rows="2" [formControl]="noteForm"
+              placeholder="Můžeš například zmínit, kdy si chceš hry vyzvednout"></textarea>
+  </div>
+  <button type="button" class="btn btn-primary" (click)="updateNote()">Uložit poznámku</button>
+</form>

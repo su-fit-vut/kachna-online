@@ -6,15 +6,13 @@ Author: František Nečas
 <td class="d-none d-sm-table-cell my-auto align-middle">
   <p>{{formattedNote}}</p>
   <button type="button" class="btn btn-outline-secondary mt-1 note-button" *ngIf="noteTooLong" [ngbPopover]="reservation.noteUser"
-          popoverTitle="Poznámka" placement="right">
+          popoverTitle="Poznámka" placement="right" (click)="$event.stopPropagation()">
     Celá poznámka
   </button>
 </td>
 <td>
   <ul class="list-group">
-    <li *ngFor="let assigned of assignedUsers" class="list-group-item">
-      {{assigned.name}} {{assigned.discordId ? ("(" + assigned.discordId + ")") : ""}}
-    </li>
+    <li *ngFor="let assigned of assignedUsers" class="list-group-item">{{assigned.name}}</li>
   </ul>
 </td>
 <td class="d-none d-sm-table-cell align-middle">
