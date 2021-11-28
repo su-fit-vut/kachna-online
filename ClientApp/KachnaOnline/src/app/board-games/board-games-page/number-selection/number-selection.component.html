@@ -1,0 +1,24 @@
+<!--
+number-selection.component.html
+Author: František Nečas
+-->
+<div class="d-flex">
+  <div class="btn-group" (click)="$event.stopPropagation()">
+    <input type="number" class="form-control" [formControl]="countForm" placeholder="{{placeholder}}" min="{{minimum}}"
+           max="{{maximum}}"/>
+    <button type="button" class="btn btn-success" (click)="increment()"
+            *ngIf="maximum === undefined || countForm.value === undefined || countForm.value < maximum">+
+    </button>
+    <button type="button" class="btn btn-success"
+            *ngIf="maximum !== undefined && countForm.value !== undefined && countForm.value >= maximum" disabled>+
+    </button>
+    <button type="button" class="btn btn-danger" (click)="decrement()"
+            *ngIf="minimum === undefined || countForm.value === undefined || countForm.value > minimum">-
+    </button>
+    <button type="button" class="btn btn-danger" (click)="decrement()"
+            *ngIf="minimum !== undefined && countForm.value !== undefined && countForm.value <= minimum" disabled>-
+    </button>
+
+  </div>
+  <button type="button" class="btn btn-danger ml-2" (click)="reset()">Zrušit</button>
+</div>
