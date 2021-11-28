@@ -1,0 +1,1070 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="715.96045"
+   preserveAspectRatio="xMidYMin slice"
+   viewBox="0 0 715.96045 553.02637"
+   version="1.1"
+   id="svg4691"
+   sodipodi:docname="mapa.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20, custom)"
+   height="553.02637"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4695" />
+  <sodipodi:namedview
+     id="namedview4693"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:snap-to-guides="true"
+     inkscape:zoom="0.79699999"
+     inkscape:cx="496.86324"
+     inkscape:cy="77.164367"
+     inkscape:window-width="1920"
+     inkscape:window-height="1015"
+     inkscape:window-x="1280"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="a7543" />
+  <style
+     type="text/css"
+     id="style2369">
+text.Text {
+ font-size:28px;font-family:serif;fill:blue;stroke:none;cursor:default;
+}
+text.Text2 {
+ font-size:15px;font-family:sans-serif;fill:blue;stroke:none;cursor:default;
+}
+text.Text3 {
+ font-size:15px;font-family:sans-serif;fill:#808080;stroke:none;cursor:default;
+}
+text.Label {
+ font-size:8px;font-family:sans-serif;fill:#000000;stroke:none;cursor:default;
+}
+text.TextSub {
+ font-size:6px;font-family:sans-serif;fill:#000000;stroke:none;cursor:default;text-anchor:middle;
+}
+text.apLabelOn {
+ font-size:8px;font-family:sans-serif;text-anchor:middle;fill:red;stroke:none;cursor:default;pointer-events:none;
+}
+text.apLabelOff {
+ font-size:8px;font-family:sans-serif;text-anchor:middle;fill:black;stroke:none;cursor:default;pointer-events:none;
+}
+.RoomOffice {
+ fill:#ffff7f;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:1px;vector-effect:non-scaling-stroke;
+}
+.RoomLab {
+ fill:#7fffff;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:1px;vector-effect:non-scaling-stroke;
+}
+.RoomCorr {
+ fill:#808080;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:1px;vector-effect:non-scaling-stroke;
+}
+.RoomStair {
+ fill:#3f3f3f;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:1px;vector-effect:non-scaling-stroke;
+}
+.RoomStore {
+ fill:#ed913f;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:1px;vector-effect:non-scaling-stroke;
+}
+.RoomWash {
+ fill:#3fbf3f;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:1px;vector-effect:non-scaling-stroke;
+}
+.dotLine {
+ stroke:#A0A0A0;stroke-width:1px;vector-effect:non-scaling-stroke;stroke-dasharray:1,3;
+}
+.doorLine {
+ stroke:#FFC0FF;stroke-width:3px;vector-effect:non-scaling-stroke;pointer-events:none;
+}
+</style>
+  <g
+     id="layer2"
+     style="display:inline"
+     transform="translate(-3.0395508,-432.47364)">
+    <text
+       class="Text"
+       x="559.84479"
+       y="461.11572"
+       id="text-d">D</text>
+    <text
+       class="Text"
+       x="352"
+       y="786"
+       id="text-m">M</text>
+    <text
+       class="Text"
+       x="219"
+       y="786"
+       id="text-n">N</text>
+    <text
+       class="Text"
+       x="97"
+       y="786"
+       id="text-o">O</text>
+    <text
+       class="Text"
+       x="120"
+       y="904"
+       id="text-p">P</text>
+    <text
+       class="Text"
+       x="342"
+       y="906"
+       id="text-r">R</text>
+    <!-- A,B,C,E,F,G,I -->
+    <a
+       id="a7543">
+      <path
+         id="building-abcdefgi"
+         style="display:inline;fill:#b3b3b3;fill-rule:evenodd"
+         d="M 305.21878,432.65629 241.28519,432.47364 241,519 h 125 v 23 h -7 l -6,21 12,10 15,-13 -2,-4 H 495 V 501 H 436 L 420,484 H 305 Z"
+         sodipodi:nodetypes="cccccccccccccccc" />
+    </a>
+    <!-- D,A -->
+    <path
+       id="building-da"
+       style="display:inline;fill:#b3b3b3;fill-rule:evenodd"
+       d="m 513,501 v 55 h 184 l -3,8 13,11 12,-12 -4,-16 h -13 v -17 h 17 v -29 h -69 v -39 h 69 L 718.79033,433.60404 583.88672,433.50866 584,462 h 49 v 39 z"
+       sodipodi:nodetypes="cccccccccccccccccccc" />
+    <!-- C+vezicka -->
+    <!-- L,M,N,O,P -->
+    <polygon
+       style="display:inline;fill:#b3b3b3;fill-rule:evenodd;stroke:none"
+       id="building-lmnop"
+       points="364,690 364,678 342,678 342,985 5,985 5,910 220,910 220,895 326,895 326,872 279,872 279,746 218,746 218,844 203,844 203,872 155,872 155,746 95,746 95,844 78,844 78,872 31,872 31,716 78,716 78,730 155,730 155,716 203,716 203,730 279,730 279,716 326,716 326,678 30,678 30,607 572,607 572,680 561,680 561,690 " />
+    <!-- Q,R,S -->
+    <polygon
+       style="display:inline;fill:#b3b3b3;fill-rule:evenodd;stroke:none"
+       id="building-qrs"
+       points="582,691 637,723 637,895 438,895 342,860 342,877 410,901 410,910 342,910 342,985 700,985 719,910 654,910 654,845 719,845 719,656 637,656 610,640 " />
+    <!-- Bridge over the troubled waters -->
+    <polygon
+       style="display:inline;fill:#b3b3b3;fill-rule:evenodd;stroke:none"
+       id="building-bridge"
+       points="282,607 267,607 307,519 322,519 " />
+    <!-- H -->
+    <!-- J -->
+    <text
+       transform="rotate(-90,15,776)"
+       class="Text3"
+       x="15"
+       y="776"
+       id="text41544">Metodějova</text>
+    <text
+       class="Text3"
+       x="361"
+       y="592"
+       id="text41545">Božetěchova</text>
+    <text
+       class="Text3"
+       x="30"
+       y="900"
+       id="text41545b">entrance</text>
+  </g>
+  <g
+     id="layer3"
+     transform="translate(-3.0395508,-432.47364)">
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/L213/.en', '_self');"
+       id="g2763">
+      <title
+         id="title2760">L213 Corridor </title>
+      <rect
+         class="RoomCorr"
+         id="room-L213"
+         width="66"
+         height="15"
+         x="262"
+         y="635"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/M201/.en', '_self');"
+       id="g2815">
+      <title
+         id="title2812">M201 Footbridge </title>
+      <rect
+         class="RoomCorr"
+         id="room-M201"
+         width="16"
+         height="52"
+         x="326"
+         y="678"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/L215/.en', '_self');"
+       id="g2903">
+      <title
+         id="title2899">L215 Elevator </title>
+      <rect
+         class="RoomCorr"
+         id="room-L215"
+         width="19"
+         height="13"
+         x="297"
+         y="622"
+         ry="0" />
+      <text
+         class="Label"
+         x="299"
+         y="630"
+         id="text-L215">V</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/L214/.en', '_self');"
+       id="g2908">
+      <title
+         id="title2905">L214 staircase </title>
+      <polygon
+         class="RoomStair"
+         id="room-L214"
+         points="328,607 328,635 316,635 316,622 284,622 284,607 " />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/L216/.en', '_self');"
+       id="g2913">
+      <title
+         id="title2910">L216 Cleaning room </title>
+      <rect
+         class="RoomStore"
+         id="room-L216"
+         width="13"
+         height="13"
+         x="284"
+         y="622"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/L201/.en', '_self');"
+       id="g2976">
+      <title
+         id="title2973">L201 Corridor </title>
+      <polygon
+         class="RoomCorr"
+         id="room-L201"
+         points="360,630 360,607 406,607 406,650 364,650 364,678 328,678 328,630 " />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/L103.1/.en', '_self');"
+       id="g3083">
+      <title
+         id="title3080">L103.1 staircase </title>
+      <rect
+         class="RoomStair"
+         id="room-L103.1"
+         width="32"
+         height="23"
+         x="328"
+         y="607"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/L218/.en', '_self');"
+       id="g3099">
+      <title
+         id="title3095">L218 Corridor </title>
+      <rect
+         class="RoomCorr"
+         id="room-L218"
+         width="22"
+         height="28"
+         x="262"
+         y="607"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R211/.en', '_self');"
+       id="g3115">
+      <title
+         id="title3111">R211 Small Hall </title>
+      <polygon
+         class="RoomStore"
+         id="room-R211"
+         points="330,960 330,950 335,950 335,920 330,920 330,910 390,910 390,920 385,920 385,950 390,950 390,960 " />
+      <text
+         class="Label"
+         x="332"
+         y="918"
+         id="text-R211">R211</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R210/.en', '_self');"
+       id="g3120">
+      <title
+         id="title3117">R210 Small Hall </title>
+      <rect
+         class="RoomStair"
+         id="room-R210"
+         width="5"
+         height="30"
+         x="330"
+         y="920"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R209/.en', '_self');"
+       id="g3125">
+      <title
+         id="title3122">R209 Small Hall </title>
+      <rect
+         class="RoomStair"
+         id="room-R209"
+         width="5"
+         height="30"
+         x="385"
+         y="920"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R212/.en', '_self');"
+       id="g3131">
+      <title
+         id="title3127">R212 Student Club &quot;The Duck&quot; </title>
+      <rect
+         class="RoomStore"
+         id="room-R212"
+         width="70"
+         height="75"
+         x="260"
+         y="910"
+         ry="0" />
+      <text
+         class="Label"
+         x="262"
+         y="918"
+         id="text-R212">R212</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R208/.en', '_self');"
+       id="g3137">
+      <title
+         id="title3133">R208 Office  </title>
+      <rect
+         class="RoomOffice"
+         id="room-R208"
+         width="20"
+         height="30"
+         x="390"
+         y="910"
+         ry="0" />
+      <text
+         class="Label"
+         x="392"
+         y="918"
+         id="text-R208">208</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R201/.en', '_self');"
+       id="g3142">
+      <title
+         id="title3139">R201 corridor </title>
+      <rect
+         class="RoomCorr"
+         id="room-R201"
+         width="20"
+         height="20"
+         x="390"
+         y="940"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R202/.en', '_self');"
+       id="g3147">
+      <title
+         id="title3144">R202 staircase </title>
+      <rect
+         class="RoomStair"
+         id="room-R202"
+         width="20"
+         height="25"
+         x="390"
+         y="960"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R203/.en', '_self');"
+       id="g3152">
+      <title
+         id="title3149">R203 cloak room </title>
+      <rect
+         class="RoomStore"
+         id="room-R203"
+         width="15"
+         height="25"
+         x="375"
+         y="960"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R205/.en', '_self');"
+       id="g3157">
+      <title
+         id="title3154">R205 bathroom </title>
+      <rect
+         class="RoomWash"
+         id="room-R205"
+         width="10"
+         height="12"
+         x="365"
+         y="960"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R204/.en', '_self');"
+       id="g3162">
+      <title
+         id="title3159">R204 bathroom </title>
+      <rect
+         class="RoomWash"
+         id="room-R204"
+         width="10"
+         height="13"
+         x="365"
+         y="972"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R213/.en', '_self');"
+       id="g3168">
+      <title
+         id="title3164">R213 bar </title>
+      <rect
+         class="RoomStore"
+         id="room-R213"
+         width="15"
+         height="13"
+         x="330"
+         y="972"
+         ry="0" />
+      <text
+         class="Label"
+         x="332"
+         y="980"
+         id="text-R213">bar</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R207/.en', '_self');"
+       id="g3173">
+      <title
+         id="title3170">R207 cleaning room </title>
+      <rect
+         class="RoomStore"
+         id="room-R207"
+         width="15"
+         height="12"
+         x="330"
+         y="960"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/R206/.en', '_self');"
+       id="g3178">
+      <title
+         id="title3175">R206 bar </title>
+      <rect
+         class="RoomStore"
+         id="room-R206"
+         width="20"
+         height="25"
+         x="345"
+         y="960"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P205/.en', '_self');"
+       id="g3183">
+      <title
+         id="title3180">P205 staircase </title>
+      <polygon
+         class="RoomStair"
+         id="room-P205"
+         points="250,950 250,945 259,945 259,985 245,985 245,950 " />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P204/.en', '_self');"
+       id="g3189">
+      <title
+         id="title3185">P204 Lift </title>
+      <rect
+         class="RoomCorr"
+         id="room-P204"
+         width="9"
+         height="15"
+         x="250"
+         y="930"
+         ry="0" />
+      <text
+         class="Label"
+         x="252"
+         y="938"
+         id="text-P204">V</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P209/.en', '_self');"
+       id="g3195">
+      <title
+         id="title3191">P209 dining room </title>
+      <rect
+         class="RoomStore"
+         id="room-P209"
+         width="115"
+         height="75"
+         x="85"
+         y="910"
+         ry="0" />
+      <text
+         class="Label"
+         x="87"
+         y="918"
+         id="text-P209">Menza</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P201/.en', '_self');"
+       id="g3226">
+      <title
+         id="title3222">P201 Hall </title>
+      <polygon
+         class="RoomCorr"
+         id="room-P201"
+         points="250,910 250,950 200,950 200,935 220,935 220,910 " />
+      <text
+         class="Label"
+         x="222"
+         y="918"
+         id="text-P201">Hala</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P203/.en', '_self');"
+       id="g3231">
+      <title
+         id="title3228">P203 Technical Room </title>
+      <rect
+         class="RoomStore"
+         id="room-P203"
+         width="9"
+         height="10"
+         x="250"
+         y="920"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P202/.en', '_self');"
+       id="g3236">
+      <title
+         id="title3233">P202 Cleaning Room </title>
+      <rect
+         class="RoomStore"
+         id="room-P202"
+         width="9"
+         height="10"
+         x="250"
+         y="910"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P208.1/.en', '_self');"
+       id="g3241">
+      <title
+         id="title3238">P208.1 Bathroom </title>
+      <rect
+         class="RoomWash"
+         id="room-P208.1"
+         width="12"
+         height="15"
+         x="208"
+         y="920"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P208.3/.en', '_self');"
+       id="g3247">
+      <title
+         id="title3243">P208.3 Bathroom </title>
+      <rect
+         class="RoomWash"
+         id="room-P208.3"
+         width="20"
+         height="10"
+         x="200"
+         y="910"
+         ry="0" />
+      <text
+         class="Label"
+         x="202"
+         y="918"
+         id="text-P208.3">WC</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P208.2/.en', '_self');"
+       id="g3252">
+      <title
+         id="title3249">P208.2 Bathroom </title>
+      <rect
+         class="RoomWash"
+         id="room-P208.2"
+         width="8"
+         height="15"
+         x="200"
+         y="920"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P207.4/.en', '_self');"
+       id="g3257">
+      <title
+         id="title3254">P207.4 Bathroom </title>
+      <rect
+         class="RoomWash"
+         id="room-P207.4"
+         width="20"
+         height="10"
+         x="200"
+         y="975"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P207.3/.en', '_self');"
+       id="g3263">
+      <title
+         id="title3259">P207.3 Bathroom </title>
+      <rect
+         class="RoomWash"
+         id="room-P207.3"
+         width="20"
+         height="15"
+         x="200"
+         y="960"
+         ry="0" />
+      <text
+         class="Label"
+         x="202"
+         y="968"
+         id="text-P207.3">WC</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P207.1/.en', '_self');"
+       id="g3268">
+      <title
+         id="title3265">P207.1 Bathroom </title>
+      <rect
+         class="RoomWash"
+         id="room-P207.1"
+         width="12"
+         height="10"
+         x="200"
+         y="950"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P207.2/.en', '_self');"
+       id="g3273">
+      <title
+         id="title3270">P207.2 Bathroom </title>
+      <rect
+         class="RoomWash"
+         id="room-P207.2"
+         width="8"
+         height="10"
+         x="212"
+         y="950"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P206/.en', '_self');"
+       id="g3279">
+      <title
+         id="title3275">P206 Office  </title>
+      <rect
+         class="RoomOffice"
+         id="room-P206"
+         width="25"
+         height="25"
+         x="220"
+         y="950"
+         ry="0" />
+      <text
+         class="Label"
+         x="222"
+         y="958"
+         id="text-P206">206</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/P206.1/.en', '_self');"
+       id="g3284">
+      <title
+         id="title3281">P206.1 Store </title>
+      <rect
+         class="RoomStore"
+         id="room-P206.1"
+         width="25"
+         height="10"
+         x="220"
+         y="975"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/M202/.en', '_self');"
+       id="g3345">
+      <title
+         id="title3342">M202 Corridor </title>
+      <polygon
+         class="RoomCorr"
+         id="room-M202"
+         points="342,730 342,910 220,910 220,895 326,895 326,730 " />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/D202/.en', '_self');"
+       id="g3350">
+      <title
+         id="title3347">D202 corridor </title>
+      <rect
+         class="RoomCorr"
+         id="room-D202"
+         width="20"
+         height="39"
+         x="633"
+         y="462"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/A225/.en', '_self');"
+       id="g3392">
+      <title
+         id="title3389">A225  </title>
+      <rect
+         class="RoomCorr"
+         id="room-A225"
+         width="253"
+         height="14"
+         x="451"
+         y="501"
+         ry="0" />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/A209/.en', '_self');"
+       id="g3436">
+      <title
+         id="title3433">A209 Corridor </title>
+      <polygon
+         class="RoomCorr"
+         id="room-A209"
+         points="367,500 367,484 420,484 367,519 305,519 305,500 " />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/A202/.en', '_self');"
+       id="g3442">
+      <title
+         id="title3438">A202 Ramp </title>
+      <rect
+         class="RoomCorr"
+         id="room-A202"
+         width="91"
+         height="16"
+         x="276"
+         y="484"
+         ry="0" />
+      <text
+         class="Label"
+         x="278"
+         y="492"
+         id="text-A202">rampa</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/A213/.en', '_self');"
+       id="g3466">
+      <title
+         id="title3462">A213 Lift </title>
+      <rect
+         class="RoomCorr"
+         id="room-A213"
+         width="11"
+         height="13"
+         x="405"
+         y="515"
+         ry="0" />
+      <text
+         class="Label"
+         x="407"
+         y="523"
+         id="text-A213">V</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/A201/.en', '_self');"
+       id="g3471">
+      <title
+         id="title3468">A201 corridor </title>
+      <polygon
+         class="RoomCorr"
+         id="room-A201"
+         points="420,484 437,501 451,501 451,515 405,515 367,543 367,519 " />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/L218.1/.en', '_self');"
+       id="g3488">
+      <title
+         id="title3485">L218.1 Bridge from 2nd to 3rd Floor </title>
+      <polygon
+         class="RoomCorr"
+         id="room-L218.1"
+         points="267,607 307,519 322,519 282,607 " />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/Q231/.en', '_self');"
+       id="g3936">
+      <title
+         id="title3933">Q231 Corridor </title>
+      <polygon
+         class="RoomCorr"
+         id="room-Q231"
+         points="438,895 460,895 460,910 438,910 342,877 342,860 " />
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/A301.1/.en', '_self');"
+       id="g3981">
+      <title
+         id="title3978">A301.1 Staicase </title>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/A209.2/.en', '_self');"
+       id="g3987">
+      <title
+         id="title3983">A209.2 Wheelchair Elevator </title>
+      <rect
+         class="RoomCorr"
+         id="room-A209.2"
+         width="10"
+         height="7"
+         x="340"
+         y="507"
+         ry="0" />
+      <text
+         class="Label"
+         x="342"
+         y="515"
+         id="text-A209.2">V</text>
+    </g>
+    <g
+       onclick="window.open('https://www.fit.vut.cz/fit/room/A209.1/.en', '_self');"
+       id="g3992">
+      <title
+         id="title3989">A209.1 Staicase to the bridge on 3rd floor </title>
+      <rect
+         class="RoomStair"
+         id="room-A209.1"
+         width="10"
+         height="7"
+         x="340"
+         y="500"
+         ry="0" />
+    </g>
+    <line
+       class="doorLine"
+       x1="262"
+       y1="638.5"
+       x2="262"
+       y2="646.5"
+       id="line4054" />
+    <line
+       class="doorLine"
+       x1="313"
+       y1="635"
+       x2="305"
+       y2="635"
+       id="line4096" />
+    <line
+       class="doorLine"
+       x1="300"
+       y1="635"
+       x2="308"
+       y2="635"
+       id="line4098" />
+    <line
+       class="doorLine"
+       x1="318"
+       y1="635"
+       x2="326"
+       y2="635"
+       id="line4100" />
+    <line
+       class="doorLine"
+       x1="286.5"
+       y1="635"
+       x2="294.5"
+       y2="635"
+       id="line4102" />
+    <line
+       class="doorLine"
+       x1="245"
+       y1="950"
+       x2="250"
+       y2="950"
+       id="line4146" />
+    <line
+       class="doorLine"
+       x1="250"
+       y1="945"
+       x2="250"
+       y2="950"
+       id="line4148" />
+    <line
+       class="doorLine"
+       x1="259"
+       y1="933.5"
+       x2="259"
+       y2="941.5"
+       id="line4150" />
+    <line
+       class="doorLine"
+       x1="250"
+       y1="933.5"
+       x2="250"
+       y2="941.5"
+       id="line4152" />
+    <line
+       class="doorLine"
+       x1="231"
+       y1="910"
+       x2="239"
+       y2="910"
+       id="line4154" />
+    <line
+       class="doorLine"
+       x1="200"
+       y1="949"
+       x2="200"
+       y2="936"
+       id="line4156" />
+    <line
+       class="doorLine"
+       x1="250"
+       y1="921"
+       x2="250"
+       y2="929"
+       id="line4158" />
+    <line
+       class="doorLine"
+       x1="250"
+       y1="911"
+       x2="250"
+       y2="919"
+       id="line4160" />
+    <line
+       class="doorLine"
+       x1="228.5"
+       y1="950"
+       x2="236.5"
+       y2="950"
+       id="line4162" />
+    <line
+       class="doorLine"
+       x1="639"
+       y1="501"
+       x2="647"
+       y2="501"
+       id="line4166" />
+    <line
+       class="doorLine"
+       x1="406.5"
+       y1="515"
+       x2="414.5"
+       y2="515"
+       id="line4198" />
+    <line
+       class="doorLine"
+       x1="281"
+       y1="607"
+       x2="268"
+       y2="607"
+       id="line4204" />
+    <line
+       class="doorLine"
+       x1="350"
+       y1="507"
+       x2="350"
+       y2="514"
+       id="line4350" />
+    <line
+       class="doorLine"
+       x1="350"
+       y1="500"
+       x2="350"
+       y2="507"
+       id="line4352" />
+    <circle
+       style="fill:none;stroke:#ff0000;stroke-width:1;stroke-opacity:0.2"
+       cx="366"
+       cy="928"
+       r="6"
+       id="circle4602" />
+    <circle
+       style="fill:none;stroke:#ff0000;stroke-width:1;stroke-opacity:0.3"
+       cx="366"
+       cy="928"
+       r="9"
+       id="circle4604" />
+    <circle
+       style="fill:none;stroke:#ff0000;stroke-width:1;stroke-opacity:0.4"
+       cx="366"
+       cy="928"
+       r="12"
+       id="circle4606" />
+    <text
+       class="apLabelOn"
+       x="366"
+       y="931"
+       id="text4608">1</text>
+    <text
+       class="apLabelOn"
+       x="366"
+       y="921"
+       id="text4610">a</text>
+    <text
+       class="apLabelOn"
+       x="366"
+       y="939"
+       id="text4612">n</text>
+    <circle
+       style="fill:none;stroke:#ff0000;stroke-width:1;stroke-opacity:0.2"
+       cx="306"
+       cy="928"
+       r="6"
+       id="circle4614" />
+    <circle
+       style="fill:none;stroke:#ff0000;stroke-width:1;stroke-opacity:0.3"
+       cx="306"
+       cy="928"
+       r="9"
+       id="circle4616" />
+    <circle
+       style="fill:none;stroke:#ff0000;stroke-width:1;stroke-opacity:0.4"
+       cx="306"
+       cy="928"
+       r="12"
+       id="circle4618" />
+    <text
+       class="apLabelOn"
+       x="306"
+       y="931"
+       id="text4620">6</text>
+    <text
+       class="apLabelOn"
+       x="306"
+       y="921"
+       id="text4622">a</text>
+    <text
+       class="apLabelOn"
+       x="306"
+       y="939"
+       id="text4624">n</text>
+    <polygon
+       style="fill:#ff0000;stroke:none"
+       points="295,935 289,941 304,956 301,959 286,944 280,950 268,923 "
+       id="polygon4688" />
+  </g>
+</svg>

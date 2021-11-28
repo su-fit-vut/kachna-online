@@ -3,16 +3,44 @@ home.component.html
 Author: David Chocholatý
 -->
 
-<div class="jumbotron py-1">
-    <h1 class="display-5 text-center">{{jumbotronStateMainText}}</h1>
+<div class="text-center pt-2 pb-2 mb-2 border-bottom">
+  <h1 class="display-4 text-center">
+    <ng-container *ngIf="state.state==ST.OpenChillzone">
+      Kachna je otevřená v&nbsp;režimu chillzóna do&nbsp;{{state.plannedEnd | date:'HH:mm'}}.
+    </ng-container>
+    <ng-container *ngIf="state.state==ST.OpenBar">
+      V Kachně právě probíhá otvíračka s&nbsp;barem!
+    </ng-container>
+    <ng-container *ngIf="state.state==ST.Private">
+      V Kachně právě probíhá soukromá akce.
+    </ng-container>
+    <ng-container *ngIf="state.state==ST.Closed">
+      Kachna je zavřená.
+    </ng-container>
+  </h1>
+  <a href="#" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k nám?</a>
 </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <p>Info o Kachne part 1</p> <!-- TODO: Create home page. -->
-    </div>
-    <div class="col-md-6">
-        <p>Info o Kachne part 2</p> <!-- TODO: Create home page. -->
-        <button type="button" class="btn btn-primary btn-block" *ngIf="authenticationService.isLoggedOut()">Stát se členem klubu</button>
-    </div>
-</div>
+<app-chillzone-details *ngIf="state.state==ST.OpenChillzone" [state]="state"></app-chillzone-details>
+
+<button type="button" class="btn btn-primary btn-block" *ngIf="authenticationService.isLoggedOut()">Stát se členem
+  klubu
+</button>
+
+<ng-template #getting_there let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Kudy k nám?</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p class="text-justify">
+      Studentský klub U Kachničky se nachází v místnosti <a href="https://www.fit.vut.cz/fit/room/R212/.cs">R212</a>
+      přímo na naší fakultě. Půjdeš stejně jako do menzy, ale před ní pokračuj dveřmi na schodiště, klub pak najdeš
+      o&nbsp;půl patra výš. Přijít můžeš také vchodem z&nbsp;ulice Metodějova (projdeš <a
+      href="https://goo.gl/maps/dYEUwkHqcLhxPebU9">brankou</a> a po chvíli uvidíš dveře na ISIC s&nbsp;logem Kachny).
+    </p>
+    <img src="assets/mapa.svg" alt="Mapa areálu" style="width: 100%"/>
+  </div>
+</ng-template>

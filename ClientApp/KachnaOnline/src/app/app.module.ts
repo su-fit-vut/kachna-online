@@ -17,6 +17,7 @@ import { HttpClientModule, HttpRequest } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventFormComponent } from './events/event-form/event-form.component';
 import { HomeComponent } from './home/home.component';
+import { ChillzoneDetailsComponent } from './home/chillzone-details/chillzone-details.component';
 import { EventsFromAllComponent } from './events/events-from-all/events-from-all.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -59,6 +60,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     LoggedOutContentComponent,
     PlanEventsComponent,
     ForbiddenComponent,
+    ChillzoneDetailsComponent,
   ],
   imports: [
     ComponentsModule,
