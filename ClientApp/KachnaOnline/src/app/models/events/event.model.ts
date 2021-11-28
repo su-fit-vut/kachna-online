@@ -14,7 +14,7 @@ export class Event {
   url: string = "";
   from: Date;
   to: Date;
-  linkedPlannedStateIds: number[] | null;
+  linkedPlannedStateIds: number[] | null = [];
   madeById: string = "";
   linkedStatesDtos: ClubState[];
 }

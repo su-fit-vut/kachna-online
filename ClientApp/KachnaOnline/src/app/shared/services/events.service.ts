@@ -101,8 +101,8 @@ export class EventsService {
     }
   }
 
-  public getEventData(eventId: number) {
-    this.getEvent(eventId).subscribe(
+  public getEventData(eventId: number, withLinkedStates: boolean = false) {
+    this.getEvent(eventId, withLinkedStates).subscribe(
       res => {
         this.eventDetail = res as Event;
       },

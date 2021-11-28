@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { EventsService } from "../../shared/services/events.service";
 
 @Component({
   selector: 'app-linked-states',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LinkedStatesComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public eventsService: EventsService,
+  ) { }
 
   ngOnInit(): void {
   }
