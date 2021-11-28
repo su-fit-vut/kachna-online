@@ -334,7 +334,7 @@ namespace KachnaOnline.App.Controllers
         /// <response code="204">The state was unlinked from events.</response>
         /// <response code="404">No such state exists.</response>
         /// <response code="409">The state has already started and cannot be modified.</response>
-        [HttpDelete("{id}/linkedEvent")]
+        [HttpDelete("{stateId}/linkedEvent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
