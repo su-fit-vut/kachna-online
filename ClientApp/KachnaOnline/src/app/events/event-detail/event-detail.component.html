@@ -45,8 +45,14 @@ Author: David Chocholatý
                     data-backdrop="static" data-keyboard="false">
               Upravit akci
             </button>
-
           </li>
+
+          <li class="list-group-item border-0">
+            <button class="btn btn-secondary" (click)="onManageLinkedStatesClicked()">
+              Spravovat připojené stavy klubu
+            </button>
+          </li>
+
           <li class="list-group-item border-0">
             <button  class="btn btn-danger" (click)="onDeleteButtonClicked()">Zrušit akci</button>
           </li>

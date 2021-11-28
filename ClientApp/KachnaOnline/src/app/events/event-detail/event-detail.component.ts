@@ -21,6 +21,7 @@ export class EventDetailComponent implements OnInit {
     public eventsService: EventsService,
     private toastrService: ToastrService,
     private route: ActivatedRoute,
+    private router: Router,
     public authenticationService: AuthenticationService,
     ) { }
 
@@ -31,9 +32,7 @@ export class EventDetailComponent implements OnInit {
     });
   }
 
-
   onModifyButtonClicked() {
-    this.activateEditEventModal = true;
   }
 
   onCloseModalClicked() {
@@ -42,5 +41,9 @@ export class EventDetailComponent implements OnInit {
 
   onDeleteButtonClicked() {
     this.eventsService.handleRemoveEventRequest();
+  }
+
+  onManageLinkedStatesClicked() {
+    this.router.navigate([`/events/${this.eventsService.eventDetail.id}/linked-states`]).then(() => null);
   }
 }

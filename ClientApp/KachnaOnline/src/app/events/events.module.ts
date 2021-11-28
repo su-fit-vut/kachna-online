@@ -14,6 +14,7 @@ import { PlanEventsComponent } from "./plan-events/plan-events.component";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
 import { LinkedStatesComponent } from './linked-states/linked-states.component';
+import { ManageLinkedStatesComponent } from './linked-states/manage-linked-states/manage-linked-states.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { LinkedStatesComponent } from './linked-states/linked-states.component';
     CurrentEventsComponent,
     PlanEventsComponent,
     LinkedStatesComponent,
+    ManageLinkedStatesComponent,
   ],
   imports: [
     CommonModule,
