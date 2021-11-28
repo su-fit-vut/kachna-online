@@ -124,15 +124,6 @@ namespace KachnaOnline.App
             // Add Serilog's request logging middleware.
             app.UseSerilogRequestLogging();
 
-            if (!env.IsDevelopment())
-            {
-                // Redirect all HTTP requests to HTTPS.
-                app.UseHttpsRedirection();
-            }
-
-            // Serve client app.
-            app.UseStaticFiles();
-
             // Serve uploaded images.
             app.UseUploadedImagesStaticFiles(env);
 
@@ -153,7 +144,10 @@ namespace KachnaOnline.App
             app.UseAuthorization();
 
             // Map controller endpoints using the default mapping strategy.
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

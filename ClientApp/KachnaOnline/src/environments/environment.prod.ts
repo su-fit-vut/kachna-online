@@ -8,7 +8,7 @@ import { IEnvironment, IEnvironmentParams } from "./ienvironment";
  */
 const params: IEnvironmentParams = {
   production: true,
-  baseApiUrl: 'https://www.su.fit.vutbr.cz/kachna/api/',
+  baseApiUrl: 'https://www.su.fit.vutbr.cz/kachna/api',
   baseApiUrlDomain: 'su.fit.vutbr.cz',
 };
 
