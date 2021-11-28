@@ -1,6 +1,8 @@
-<div class="form-check">
-  <input (change)="onCheckboxChange($event)" class="form-check-input" type="checkbox" id="categoryCheck"
-         [checked]="startingValue">
-  <label class="form-check-label" for="categoryCheck"
-         [ngStyle]="{'color': '#' + category.colourHex}">{{category.name}}</label>
-</div>
+<li class="list-group-item" (click)="$event.stopPropagation()">
+  <div class="form-check">
+    <input (change)="onCheckboxChange($event)" class="form-check-input checkbox" type="checkbox" id="categoryCheck{{category.id}}"
+           [checked]="startingValue">
+    <label class="form-check-label" for="categoryCheck{{category.id}}"
+           [ngStyle]="{'color': '#' + category.colourHex}">{{category.name}}</label>
+  </div>
+</li>
