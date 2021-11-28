@@ -33,6 +33,10 @@ import { BoardGamesModule } from "./board-games/board-games.module";
 import { ComponentsModule } from "./shared/components/components.module";
 import localeCs from '@angular/common/locales/cs';
 import { registerLocaleData } from "@angular/common";
+import { RepeatingStatesComponent } from './home/repeating-states/repeating-states.component';
+import { TimeStrPipe } from './shared/pipes/time-str.pipe';
+import { DayLocPipe } from './shared/pipes/day-loc.pipe';
+import { StateLocPipe } from './shared/pipes/state-loc.pipe';
 registerLocaleData(localeCs);
 
 export function tokenGetter(request?: HttpRequest<any>) {
@@ -61,6 +65,10 @@ export function tokenGetter(request?: HttpRequest<any>) {
     PlanEventsComponent,
     ForbiddenComponent,
     ChillzoneDetailsComponent,
+    RepeatingStatesComponent,
+    TimeStrPipe,
+    DayLocPipe,
+    StateLocPipe,
   ],
   imports: [
     ComponentsModule,

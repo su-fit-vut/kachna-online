@@ -22,15 +22,6 @@
   font-weight: 300;
 }
 
-thead th{
-  font-weight: 400;
-}
-
-table tbody tr:hover {
-  background-color: #fffbf2;
-  cursor: pointer;
-}
-
 /* For invalid form controls. */
 input.invalid {
   border-color: red;

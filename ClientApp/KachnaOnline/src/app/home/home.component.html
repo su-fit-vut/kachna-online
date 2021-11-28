@@ -4,7 +4,7 @@ Author: David Chocholatý
 -->
 
 <div class="text-center pt-2 pb-2 mb-2 border-bottom">
-  <h1 class="display-4 text-center">
+  <div class="display-4">
     <ng-container *ngIf="state.state==ST.OpenChillzone">
       Kachna je otevřená v&nbsp;režimu chillzóna do&nbsp;{{state.plannedEnd | date:'HH:mm'}}.
     </ng-container>
@@ -17,11 +17,17 @@ Author: David Chocholatý
     <ng-container *ngIf="state.state==ST.Closed">
       Kachna je zavřená.
     </ng-container>
-  </h1>
+  </div>
   <a href="#" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k nám?</a>
 </div>
 
 <app-chillzone-details *ngIf="state.state==ST.OpenChillzone" [state]="state"></app-chillzone-details>
+
+<div class="text-center">
+  <h2>Pravidelná otevírací doba</h2>
+</div>
+
+<app-repeating-states></app-repeating-states>
 
 <button type="button" class="btn btn-primary btn-block" *ngIf="authenticationService.isLoggedOut()">Stát se členem
   klubu
