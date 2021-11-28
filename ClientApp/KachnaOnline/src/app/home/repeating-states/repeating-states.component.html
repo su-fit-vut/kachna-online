@@ -1,5 +1,13 @@
 <div class="d-flex justify-content-center border-bottom pb-2">
-  <table class="open-hours">
+  <h5 *ngIf="hasRegularOpenings == undefined" class="text-muted">
+    Zjišťuji pravidelnou otevírací dobu...
+  </h5>
+
+  <h5 *ngIf="hasRegularOpenings != undefined && !hasRegularOpenings">
+    Aktuálně nemáme naplánované žádné pravidelné otvírání.
+  </h5>
+
+  <table *ngIf="hasRegularOpenings" class="open-hours">
     <tbody>
     <ng-container *ngFor="let day of states">
       <ng-container *ngFor="let state of day.values; let i = index">

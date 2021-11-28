@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RepeatingStatesService } from "../../shared/services/repeating-states.service";
-import { RepeatingState } from "../../models/states/repeating-state.model";
 import { groupBy, map, tap, toArray } from "rxjs/operators";
 import { from } from "rxjs";
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
@@ -14,6 +13,7 @@ export class RepeatingStatesComponent implements OnInit {
   constructor(public service: RepeatingStatesService) { }
 
   states: RegularOpeningDay[];
+  hasRegularOpenings: boolean;
 
   ngOnInit(): void {
     this.service.get().subscribe(arr =>
@@ -37,8 +37,13 @@ export class RepeatingStatesComponent implements OnInit {
       ).subscribe(e => {
         this.states = e;
 
-        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-        this.states.sort((a, b) => days.indexOf(a.day) - days.indexOf(b.day));
+        if (e.length == 0) {
+          this.hasRegularOpenings = false;
+        } else {
+          this.hasRegularOpenings = true;
+          const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+          this.states.sort((a, b) => days.indexOf(a.day) - days.indexOf(b.day));
+        }
       }));
   }
 }
