@@ -20,7 +20,7 @@ Author: František Nečas
   <ul class="list-group">
     <li *ngFor="let item of reservation.items.slice(0, maxGames)" class="list-group-item">{{item.boardGame.name}}</li>
     <li *ngIf="reservation.items.length > maxGames" class="list-group-item list-group-item-info">...
-      a {{reservation.items.length - maxGames}} další
+      a {{reservation.items.length - maxGames}} další{{reservation.items.length - maxGames > 4 ? "ch": ""}}
     </li>
   </ul>
 </td>

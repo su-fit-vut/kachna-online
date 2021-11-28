@@ -4,7 +4,7 @@ Author: František Nečas
 -->
 <div class="d-flex justify-content-between">
   <h1>Deskové hry</h1>
-  <button type="button" class="btn btn-primary d-none d-sm-block" routerLink="reservations">Moje rezervace</button>
+  <button type="button" class="btn btn-primary d-none d-sm-block font-weight-bold" routerLink="reservations">Moje rezervace</button>
 </div>
 
 <input class="form-control mt-3" type="text" [ngModel]="searchModel" [ngbTypeahead]="search"
@@ -34,12 +34,15 @@ Author: František Nečas
 </div>
 <hr/>
 
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
+<div *ngIf="shownGames.length > 0" class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
   <div class="col mb-3 d-flex align-items-stretch" *ngFor="let boardGame of shownGames">
     <app-board-game [boardGame]="boardGame" [initialReserved]="currentReservation.get(boardGame.id) || 0"
                     (reservationUpdate)="onReservationUpdate($event)"
                     class="d-flex align-items-stretch"></app-board-game>
   </div>
+</div>
+<div *ngIf="shownGames.length == 0" class="mb-5 d-flex justify-content-center">
+  <h3 class="text-secondary">Žádnou takovou hru bohužel nemáme :-(</h3>
 </div>
 <button *ngIf="currentReservation.size > 0" type="button" class="btn btn-success btn-lg" id="reserveBtn"
         routerLink="reserve">Dokončit

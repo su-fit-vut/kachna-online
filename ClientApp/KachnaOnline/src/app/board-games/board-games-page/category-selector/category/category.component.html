@@ -2,7 +2,7 @@
   <div class="form-check">
     <input (change)="onCheckboxChange($event)" class="form-check-input checkbox" type="checkbox" id="categoryCheck{{category.id}}"
            [checked]="startingValue">
-    <label class="form-check-label" for="categoryCheck{{category.id}}"
+    <label class="form-check-label ml-3" for="categoryCheck{{category.id}}"
            [ngStyle]="{'color': '#' + category.colourHex}">{{category.name}}</label>
   </div>
 </li>
