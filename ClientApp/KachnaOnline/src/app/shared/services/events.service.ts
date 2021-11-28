@@ -97,4 +97,28 @@ export class EventsService {
       }
     );
   }
+
+  refreshLinkedStatesList(eventId: number) {
+    this.getEventData(eventId, true);
+  }
+
+  unlinkLinkedState(linkedStateId: number) {
+    return this.http.delete(`${this.EventsUrl}/`);
+  }
+
+  unlinkAllLinkedStates() {
+    this.unlinkAllLinkedStatesRequest().toPromise()
+      .then(() => {
+        this.refreshLinkedStatesList(this.eventDetail.id);
+      }).catch((error: any) => {
+        console.log(error);
+        this.toastrService.error("Nepodařilo se získat eventy.", "Načtení eventů");
+        return;
+      }
+    );
+  }
+
+  private unlinkAllLinkedStatesRequest() {
+    return this.http.delete(`${this.EventsUrl}/${this.eventDetail.id}/linkedStates`);
+  }
 }

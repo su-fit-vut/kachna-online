@@ -28,13 +28,15 @@ import { LoggedInContentComponent } from '../navigation-bar/account-popup/logged
 import { LoggedOutContentComponent } from '../navigation-bar/account-popup/logged-out-content/logged-out-content.component';
 import { ForbiddenComponent } from '../forbidden/forbidden.component';
 import { EventsListComponent } from "./events-list/events-list.component";
+import { ManageLinkedStatesComponent } from "./linked-states/manage-linked-states/manage-linked-states.component";
 
 const routes: Routes = [
   {
     path: 'events',
     children: [
       {
-        path: '', children: [
+        path: '',
+        children: [
           {
             path: 'current',
             component: CurrentEventsComponent,
@@ -65,11 +67,34 @@ const routes: Routes = [
             }
           },
           {
+            path: 'linked-states',
+            component: ManageLinkedStatesComponent,
+          },
+          {
             path: ':eventId',
+            pathMatch: 'full',
             component: EventDetailComponent,
             data: {
               title: `${environment.siteName} | Detail akce`,
               description: 'Detailní popis akce',
+            },
+            children: [
+              {
+                path: '',
+                component: EventDetailComponent,
+                children: [
+                ]
+              }
+            ]
+          },
+          {
+            path: ':eventId/linked-states',
+            pathMatch: 'full',
+            component: ManageLinkedStatesComponent,
+            canActivate: [EventsManagerGuard],
+            data: {
+              title: `${environment.siteName} | Připojené stavy`,
+              description: 'Správa připojených stavů',
             }
           },
         ]

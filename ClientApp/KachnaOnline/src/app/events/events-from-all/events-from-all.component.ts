@@ -28,7 +28,7 @@ export class EventsFromAllComponent implements OnInit {
 
 
   openEventDetail(eventDetail: Event) {
-    this.router.navigate([`/events/${eventDetail.id}`]).then(() => null); // FIXME: Open in modal view.
+    this.router.navigate([`/events/${eventDetail.id}`]).then(() => null);
   }
 
   onDeleteButtonClicked(selectedEventDetail: Event) {
