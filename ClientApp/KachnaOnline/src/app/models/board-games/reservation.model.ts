@@ -1,8 +1,8 @@
-// reservation-model.ts
+// reservation.model.ts
 // Author: František Nečas
 
 import { MadeByUser } from "../users/made-by-user-model";
-import { ReservationItem } from "./reservation-item-model";
+import { ReservationItem } from "./reservation-item.model";
 
 /**
  * Overall state of the reservation which can be filtered by.

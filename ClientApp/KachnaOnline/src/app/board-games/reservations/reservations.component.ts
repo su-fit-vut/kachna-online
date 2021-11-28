@@ -4,9 +4,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BoardGamesService } from "../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
-import { Reservation, ReservationState } from "../../models/board-games/reservation-model";
+import { Reservation, ReservationState } from "../../models/board-games/reservation.model";
 import { FormControl } from "@angular/forms";
-import { ReservationItemState } from "../../models/board-games/reservation-item-model";
+import { ReservationItemState } from "../../models/board-games/reservation-item.model";
 import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({

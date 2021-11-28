@@ -1,7 +1,6 @@
-// reservation-item-model.ts
+// reservation-item.model.ts
 // Author: František Nečas
 
-import { ReservedGame } from "./reserved-game-model";
 import { MadeByUser } from "../users/made-by-user-model";
 
 /**
@@ -14,6 +13,14 @@ export enum ReservationItemState {
   HandedOver = "HandedOver",
   Done = "Done",
   Expired = "Expired"
+}
+
+/**
+ * Contains basic information about a reserved game.
+ */
+export class ReservedGame {
+  id: number
+  name: string
 }
 
 /**

@@ -1,11 +1,11 @@
 // reservation-details-item.component.ts
 // Author: František Nečas
 import { Component, Input, OnInit } from '@angular/core';
-import { ReservationItem, ReservationItemState } from "../../../models/board-games/reservation-item-model";
+import { ReservationItem, ReservationItemState } from "../../../models/board-games/reservation-item.model";
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 import { formatDate } from "@angular/common";
-import { ReservationEventType } from "../../../models/board-games/reservation-item-event-model";
+import { ReservationEventType } from "../../../models/board-games/reservation-item-event.model";
 import { HttpStatusCode } from "@angular/common/http";
 
 @Component({

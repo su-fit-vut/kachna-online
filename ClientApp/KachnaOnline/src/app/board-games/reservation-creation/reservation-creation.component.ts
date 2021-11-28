@@ -3,7 +3,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BoardGamesService } from "../../shared/services/board-games.service";
-import { BoardGame } from "../../models/board-games/board-game-model";
+import { BoardGame } from "../../models/board-games/board-game.model";
 import { ToastrService } from "ngx-toastr";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";

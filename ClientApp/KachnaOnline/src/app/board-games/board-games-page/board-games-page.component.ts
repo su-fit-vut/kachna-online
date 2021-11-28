@@ -4,12 +4,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, OperatorFunction } from "rxjs";
 import { distinctUntilChanged, map } from "rxjs/operators";
-import { BoardGame } from "../../models/board-games/board-game-model";
+import { BoardGame } from "../../models/board-games/board-game.model";
 import { BoardGamesService } from "../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { FormControl } from "@angular/forms";
-import { BoardGameCategory } from "../../models/board-games/category-model";
+import { BoardGameCategory } from "../../models/board-games/board-game-category.model";
 import { AuthenticationService } from "../../shared/services/authentication.service";
 
 @Component({

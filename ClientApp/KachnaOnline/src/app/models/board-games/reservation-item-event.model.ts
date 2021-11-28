@@ -1,4 +1,4 @@
-// reservation-item-event-model.ts
+// reservation-item-event.model.ts
 // Author: František Nečas
 
 /**

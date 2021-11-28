@@ -1,4 +1,4 @@
-// categogry-model.ts
+// board-game-category.model.ts
 // Author: František Nečas
 
 /**
