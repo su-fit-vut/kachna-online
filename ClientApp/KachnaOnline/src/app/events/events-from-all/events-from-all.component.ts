@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EventsService } from '../../shared/services/events.service';
 import { Event } from '../../models/events/event.model';
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from "../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-events-from-all',
@@ -18,6 +19,7 @@ export class EventsFromAllComponent implements OnInit {
     public eventsService: EventsService,
     private toastrService: ToastrService,
     private router: Router,
+    public authenticationService: AuthenticationService,
   ) { }
 
   activateEditEventModal: boolean = false;
