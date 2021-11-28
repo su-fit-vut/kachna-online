@@ -18,6 +18,7 @@ import { ReservationsComponent } from './reservations/reservations.component';
 import { BoardGameDetailsComponent } from './board-game-details/board-game-details.component';
 import { ReservationButtonComponent } from './board-games-page/board-game-card/reservation-button/reservation-button.component';
 import { ComponentsModule } from "../shared/components/components.module";
+import { ReservationComponent } from './reservations/reservation/reservation.component';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { ComponentsModule } from "../shared/components/components.module";
     ReservationsComponent,
     BoardGameDetailsComponent,
     ReservationButtonComponent,
+    ReservationComponent,
   ],
   imports: [
     CommonModule,

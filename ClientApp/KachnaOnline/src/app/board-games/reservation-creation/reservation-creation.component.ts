@@ -44,6 +44,9 @@ export class ReservationCreationComponent implements OnInit {
   updateReservation(boardGame: BoardGame): void {
     if (boardGame.toReserve == 0) {
       this.currentReservation.delete(boardGame.id);
+      if (this.currentReservation.size == 0) {
+        this.router.navigate(['/board-games']).then();
+      }
     } else {
       this.currentReservation.set(boardGame.id, boardGame.toReserve);
     }

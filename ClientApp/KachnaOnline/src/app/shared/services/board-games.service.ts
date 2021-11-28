@@ -7,7 +7,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { forkJoin, Observable } from "rxjs";
 import { BoardGame } from "../../models/board-games/board-game-model";
 import { BoardGameCategory } from "../../models/board-games/category-model";
-import { Reservation } from "../../models/board-games/reservation-model";
+import { Reservation, ReservationState } from "../../models/board-games/reservation-model";
 
 enum ApiPaths {
   Categories = '/categories',
@@ -27,7 +27,12 @@ export class BoardGamesService {
   categoryIds: number[] = [];
   currentReservation: Map<number, number> = new Map();
 
+  // Reservation filter storage
+  reservationFilter: ReservationState | undefined = undefined;
+
   readonly BoardGamesUrl = environment.baseApiUrl + '/boardGames';
+  readonly CategoriesUrl = `${this.BoardGamesUrl}${ApiPaths.Categories}`;
+  readonly ReservationsUrl = `${this.BoardGamesUrl}${ApiPaths.Reservations}`;
 
   constructor(
     private http: HttpClient,
@@ -103,8 +108,25 @@ export class BoardGamesService {
    * Returns an observable array of categories.
    */
   getCategories(): Observable<BoardGameCategory[]> {
-    let url = `${this.BoardGamesUrl}${ApiPaths.Categories}`;
+    let url = this.CategoriesUrl;
     return this.http.get<BoardGameCategory[]>(url);
+  }
+
+  // Reservations
+
+  /**
+   * Saves a reservation filter.
+   * @param filter Filter to save.
+   */
+  saveReservationFilter(filter: ReservationState | undefined): void {
+    this.reservationFilter = filter;
+  }
+
+  /**
+   * Returns the previously saved reservation filter.
+   */
+  getReservationFilter(): ReservationState | undefined {
+    return this.reservationFilter;
   }
 
   /**
@@ -119,6 +141,18 @@ export class BoardGamesService {
       ids = ids.concat(Array(count).fill(game));
     }
     let newReservation = {noteUser: note, boardGameIds: ids};
-    return this.http.post<Reservation>(`${this.BoardGamesUrl}${ApiPaths.Reservations}`, newReservation)
+    return this.http.post<Reservation>(this.ReservationsUrl, newReservation);
+  }
+
+  /**
+   * Returns a list of reservations of the currently signed-in user.
+   * @param state Overall state of the reservation to filter by. Undefined for all reservations.
+   */
+  getReservations(state: ReservationState | undefined): Observable<Reservation[]> {
+    let params = new HttpParams();
+    if (state != undefined) {
+      params = params.set("state", state);
+    }
+    return this.http.get<Reservation[]>(this.ReservationsUrl, {params: params});
   }
 }
