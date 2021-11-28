@@ -3,7 +3,7 @@
 
 import { environment } from '../environments/environment';
 import { EventsService } from './shared/services/events.service';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,6 +30,9 @@ import { EventsModule } from "./events/events.module";
 import { StatesModule } from "./states/states.module";
 import { BoardGamesModule } from "./board-games/board-games.module";
 import { ComponentsModule } from "./shared/components/components.module";
+import localeCs from '@angular/common/locales/cs';
+import { registerLocaleData } from "@angular/common";
+registerLocaleData(localeCs);
 
 export function tokenGetter(request?: HttpRequest<any>) {
   if (request != null) {
@@ -79,7 +82,10 @@ export function tokenGetter(request?: HttpRequest<any>) {
     }),
     AppRoutingModule,
   ],
-  providers: [EventsService],
+  providers: [
+    EventsService,
+    {provide: LOCALE_ID, useValue: 'cs-CZ'},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
