@@ -482,6 +482,11 @@ namespace KachnaOnline.Business.Services
                     StatePlanningSemaphore.Release();
                 }
             }
+            else
+            {
+                // We still have to save the changed properties somewhere
+                await _unitOfWork.SaveChanges();
+            }
 
             return new RepeatingStatePlanningResult()
             {
