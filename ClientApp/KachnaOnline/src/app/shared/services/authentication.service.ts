@@ -30,7 +30,7 @@ export class AuthenticationService {
     private toastr: ToastrService,
     private location: Location,
     public jwtHelper: JwtHelperService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) { }
 
   localTokenContent: LocalTokenContent = new LocalTokenContent();
@@ -41,14 +41,16 @@ export class AuthenticationService {
   user: User = new User();
 
   getSessionIdFromKisEduId() {
-    let params = new HttpParams().set('redirect', `${window.location.origin}/login`)
+    let targetLocation = this.location.prepareExternalUrl("/login");
+    let params = new HttpParams().set('redirect', `${window.location.origin}${targetLocation}`)
+
     this.http.get<KisEduIdResponse>(`${environment.kisApiUrl}/auth/eduid`, { params: params }).toPromise()
       .then((res: KisEduIdResponse) => {
         let kisResponse = res;
         localStorage.setItem(environment.returnAddressStorageName, this.router.url);
         window.open(kisResponse.wayf_url, '_self');
       }).catch((error: any) => {
-        this.toastr.error("Přihlášení se ke KIS selhalo.", "Autentizace");
+        this.toastr.error("Přihlášení do KIS selhalo.", "Přihlášení");
         return throwError(error);
     });
   }
@@ -65,7 +67,7 @@ export class AuthenticationService {
         .then((res) => {
           this.handleAccessTokens(res);
         }).catch((error: any) => {
-          this.toastr.error("Načtení přístupových údajů selhalo.", "Autentizace");
+          this.toastr.error("Načtení přístupových údajů selhalo.", "Přihlášení");
           return throwError(error);
     });
   }
@@ -137,7 +139,7 @@ export class AuthenticationService {
       .then((res) => {
         this.handleAccessTokens(res);
       }).catch((error: any) => {
-        this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Autentizace");
+        this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
         this.logOut();
         return throwError(error);
     });
@@ -152,7 +154,7 @@ export class AuthenticationService {
         this.decodeKisToken();
         this.getInformationAboutUser();
       }).catch((error: any) => {
-        this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Autentizace");
+        this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
         this.logOut();
         return throwError(error);
     });
@@ -214,7 +216,7 @@ export class AuthenticationService {
         this.storeUserDataToStorage();
       }).catch((error: any) => {
         throwError(error);
-        this.toastr.error("Stažení informací o uživateli z KIS se nezdařilo.", "Autentizace");
+        this.toastr.error("Stažení informací o uživateli z KIS se nezdařilo.", "Přihlášení");
     });
   }
 

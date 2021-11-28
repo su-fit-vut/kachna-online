@@ -39,6 +39,7 @@ import { DayLocPipe } from './shared/pipes/day-loc.pipe';
 import { StateLocPipe } from './shared/pipes/state-loc.pipe';
 import { BarDetailsComponent } from './home/bar-details/bar-details.component';
 import { PrestigeTableComponent } from './home/bar-details/prestige-table/prestige-table.component';
+
 registerLocaleData(localeCs);
 
 export function tokenGetter(request?: HttpRequest<any>) {
@@ -98,7 +99,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
   ],
   providers: [
     EventsService,
-    {provide: LOCALE_ID, useValue: 'cs-CZ'},
+    {provide: LOCALE_ID, useValue: 'cs-CZ'}
   ],
   bootstrap: [AppComponent]
 })
