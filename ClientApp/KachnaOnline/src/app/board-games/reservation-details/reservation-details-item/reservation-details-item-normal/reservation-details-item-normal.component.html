@@ -7,10 +7,10 @@ Author: František Nečas
 <td>{{formattedExpiration}}</td>
 <td>{{item.assignedTo?.name}}</td>
 <td>
-  <button type="button" class="btn btn-danger" *ngIf="item.state == itemState.New" (click)="cancelReservation()">
+  <button type="button" class="btn btn-danger" *ngIf="item.state == itemState.New" (click)="$event.stopPropagation(); cancelReservation()">
     Zrušit
   </button>
-  <button type="button" class="btn btn-primary" *ngIf="item.state == itemState.HandedOver" (click)="requestExtension()">
+  <button type="button" class="btn btn-primary" *ngIf="item.state == itemState.HandedOver" (click)="$event.stopPropagation(); requestExtension()">
     Prodloužit
   </button>
 </td>

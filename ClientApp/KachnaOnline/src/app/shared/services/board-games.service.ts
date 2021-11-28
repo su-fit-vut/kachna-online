@@ -32,6 +32,9 @@ export class BoardGamesService {
   // Reservation filter storage
   reservationFilter: ReservationState | undefined = undefined;
 
+  // Board game details page route storage
+  backRoute: string = "..";
+
   readonly BoardGamesUrl = environment.baseApiUrl + '/boardGames';
   readonly CategoriesUrl = `${this.BoardGamesUrl}${ApiPaths.Categories}`;
   readonly ReservationsUrl = `${this.BoardGamesUrl}${ApiPaths.Reservations}`;
@@ -54,6 +57,18 @@ export class BoardGamesService {
     this.availableOnly = availableOnly;
     this.categoryIds = categoryIds;
     this.currentReservation = currentReservation;
+  }
+
+  saveBackRoute(route: string): void {
+    this.backRoute = route;
+  }
+
+  getBackRoute(): string {
+    return this.backRoute;
+  }
+
+  resetBackRoute(): void {
+    this.backRoute = "..";
   }
 
   /**

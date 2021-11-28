@@ -21,7 +21,6 @@ export class NumberSelectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(`Setting to ${this.initialValue}`)
     this.countForm.setValue(this.initialValue);
     this.countForm.valueChanges.subscribe(value => {
       if (value !== undefined && this.minimum !== undefined && value < this.minimum) {

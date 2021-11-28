@@ -1,7 +1,7 @@
 // reservation-details-item.component.ts
 // Author: František Nečas
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ReservationItem, ReservationItemState } from "../../../models/board-games/reservation-item.model";
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
@@ -17,6 +17,7 @@ import { HttpStatusCode } from "@angular/common/http";
 export class ReservationDetailsItemComponent implements OnInit {
   @Input() reservationId: number;
   @Input() item: ReservationItem;
+  @Output() reservationItemClicked: EventEmitter<ReservationItem> = new EventEmitter();
   formattedExpiration: string;
   formattedStates: Map<string, string> = new Map([
     ["New", "Nová"],

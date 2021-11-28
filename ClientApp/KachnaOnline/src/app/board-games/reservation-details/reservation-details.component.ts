@@ -60,4 +60,9 @@ export class ReservationDetailsComponent implements OnInit {
         this.toastrService.error("Nastavení poznámky selhalo (možná je příliš dlouhá?).");
       })
   }
+
+  routeToBoardGame(item: ReservationItem): void {
+    this.boardGamesService.saveBackRoute(this.router.url);
+    this.router.navigate([`/board-games/${item.boardGame.id}`]).then();
+  }
 }
