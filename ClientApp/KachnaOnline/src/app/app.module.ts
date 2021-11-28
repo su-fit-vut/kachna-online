@@ -13,7 +13,7 @@ import { NavigationBarComponent } from './navigation-bar/navigation-bar.componen
 import { CurrentEventsComponent } from './events/current-events/current-events.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { EventDetailComponent } from './events/event-detail/event-detail.component';
-import { HttpClientModule, HttpRequest } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpRequest } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventFormComponent } from './events/event-form/event-form.component';
 import { HomeComponent } from './home/home.component';
@@ -39,6 +39,8 @@ import { DayLocPipe } from './shared/pipes/day-loc.pipe';
 import { StateLocPipe } from './shared/pipes/state-loc.pipe';
 import { BarDetailsComponent } from './home/bar-details/bar-details.component';
 import { PrestigeTableComponent } from './home/bar-details/prestige-table/prestige-table.component';
+import { UpcomingOpeningsComponent } from './home/upcoming-openings/upcoming-openings.component';
+import { JsonDateInterceptor } from "./shared/interceptors/json-date.interceptor";
 
 registerLocaleData(localeCs);
 
@@ -74,6 +76,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     DayLocPipe,
     StateLocPipe,
     PrestigeTableComponent,
+    UpcomingOpeningsComponent,
   ],
   imports: [
     ComponentsModule,
@@ -99,7 +102,8 @@ export function tokenGetter(request?: HttpRequest<any>) {
   ],
   providers: [
     EventsService,
-    {provide: LOCALE_ID, useValue: 'cs-CZ'}
+    {provide: LOCALE_ID, useValue: 'cs-CZ'},
+    {provide: HTTP_INTERCEPTORS, useClass: JsonDateInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })
