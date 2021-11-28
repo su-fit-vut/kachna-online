@@ -17,9 +17,12 @@ Author: František Nečas
 <form>
   <div class="form-group">
     <label for="userNote">Poznámka</label>
-    <textarea class="form-control" id="userNote" rows="2" [formControl]="noteForm"></textarea>
+    <textarea class="form-control" id="userNote" rows="2" [formControl]="noteForm"
+              placeholder="Můžeš například zmínit, kdy si chceš hry vyzvednout"></textarea>
   </div>
-  <button type="button" class="btn btn-lg btn-success" *ngIf="currentReservation.size > 0" (click)="reserve()">Zarezervovat
+  <button type="button" class="btn btn-lg btn-success" *ngIf="currentReservation.size > 0" (click)="reserve()">
+    Zarezervovat
   </button>
-  <button type="button" class="btn btn-lg btn-success" *ngIf="currentReservation.size == 0" disabled>Zarezervovat</button>
+  <button type="button" class="btn btn-lg btn-success" *ngIf="currentReservation.size == 0" disabled>Zarezervovat
+  </button>
 </form>

@@ -1,4 +1,12 @@
+// reservations.component.ts
+// Author: František Nečas
+
 import { Component, OnInit } from '@angular/core';
+import { BoardGamesService } from "../../shared/services/board-games.service";
+import { ToastrService } from "ngx-toastr";
+import { Reservation, ReservationState } from "../../models/board-games/reservation-model";
+import { FormControl } from "@angular/forms";
+import { ReservationItemState } from "../../models/board-games/reservation-item-model";
 
 @Component({
   selector: 'app-reservations',
@@ -6,10 +14,46 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./reservations.component.css']
 })
 export class ReservationsComponent implements OnInit {
+  reservations: Reservation[]
+  filterKeys: [string, ReservationState][] = [
+    ["Právě běžící", ReservationState.Current],
+    ["Platnost vypršela", ReservationState.Expired],
+    ["Dokončené", ReservationState.Done]
+  ]
+  reservationFilterForm = new FormControl("---");
+  reservationFilter: ReservationState | undefined = undefined;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService) {
   }
 
+  ngOnInit(): void {
+    this.reservationFilter = this.boardGamesService.getReservationFilter();
+    this.reservationFilterForm.valueChanges.subscribe(value => {
+      let filter = this.filterKeys.find(k => k[0] == value);
+      this.reservationFilter = filter ? filter[1] : undefined;
+      this.fetchReservations();
+    })
+    this.fetchReservations();
+  }
+
+  fetchReservations(): void {
+    this.boardGamesService.getReservations(this.reservationFilter).subscribe(
+      reservations => {
+        this.reservations = reservations;
+        console.log(this.reservations);
+      },
+      err => {
+        console.log(err);
+        this.toastrService.error("Načtení rezervací se nezdařilo.");
+      }
+    )
+  }
+
+  ngOnDestroy(): void {
+    this.boardGamesService.saveReservationFilter(this.reservationFilter);
+  }
+
+  isExpired(reservation: Reservation): boolean {
+    return reservation.items.find(i => i.state == ReservationItemState.Expired) !== undefined;
+  }
 }

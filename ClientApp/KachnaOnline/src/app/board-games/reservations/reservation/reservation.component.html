@@ -1,0 +1,25 @@
+<!--
+reservation.component.html
+Author: František Nečas
+-->
+<td class="align-middle">{{formattedDate}}</td>
+<td class="d-none d-sm-table-cell my-auto align-middle">
+  <p>{{formattedNote}}</p>
+  <button type="button" class="btn btn-outline-secondary mt-1 note-button" *ngIf="noteTooLong" [ngbPopover]="reservation.noteUser"
+          popoverTitle="Poznámka" placement="right">
+    Celá poznámka
+  </button>
+</td>
+<td>
+  <ul class="list-group">
+    <li *ngFor="let assigned of assignedUsers" class="list-group-item">
+      {{assigned.name}} {{assigned.discordId ? ("(" + assigned.discordId + ")") : ""}}
+    </li>
+  </ul>
+</td>
+<td class="d-none d-sm-table-cell align-middle">
+  <ul class="list-group">
+    <li *ngFor="let item of reservation.items" class="list-group-item">{{item.boardGame.name}}</li>
+  </ul>
+</td>
+<td class="d-table-cell d-sm-none align-middle">{{reservation.items.length}}</td>
