@@ -1,8 +1,14 @@
 <div class="card-body">
-  <div *ngFor="let linkedState of eventsService.eventDetail.linkedStatesDtos">
-    <card>
-      test
-    </card>
-
+  <div class="container">
+    <div *ngFor="let linkedState of eventsService.eventDetail.linkedStatesDtos">
+        <div class="row">
+          <div class="col-md-auto">
+            {{linkedState.start}} – {{linkedState.plannedEnd}}
+          </div>
+          <div class="col">
+            ({{linkedState.state}})
+          </div>
+    </div>
   </div>
+</div>
 </div>
