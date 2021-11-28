@@ -21,6 +21,8 @@ import { ComponentsModule } from "../shared/components/components.module";
 import { ReservationComponent } from './reservations/reservation/reservation.component';
 import { ReservationDetailsComponent } from './reservation-details/reservation-details.component';
 import { ReservationDetailsItemComponent } from './reservation-details/reservation-details-item/reservation-details-item.component';
+import { ReservationDetailsItemNormalComponent } from './reservation-details/reservation-details-item/reservation-details-item-normal/reservation-details-item-normal.component';
+import { ReservationDetailsItemXsComponent } from './reservation-details/reservation-details-item/reservation-details-item-xs/reservation-details-item-xs.component';
 
 
 @NgModule({
@@ -38,6 +40,8 @@ import { ReservationDetailsItemComponent } from './reservation-details/reservati
     ReservationComponent,
     ReservationDetailsComponent,
     ReservationDetailsItemComponent,
+    ReservationDetailsItemNormalComponent,
+    ReservationDetailsItemXsComponent,
   ],
   imports: [
     CommonModule,

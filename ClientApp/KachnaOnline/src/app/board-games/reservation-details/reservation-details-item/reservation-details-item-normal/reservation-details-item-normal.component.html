@@ -1,0 +1,15 @@
+<!--
+reservation-details-item-normal.component.html
+Author: František Nečas
+-->
+<td>{{item.boardGame.name}}</td>
+<td>{{formattedExpiration}}</td>
+<td>{{item.assignedTo?.name}}</td>
+<td>
+  <button type="button" class="btn btn-danger" *ngIf="item.state == itemState.New" (click)="cancelReservation()">
+    Zrušit
+  </button>
+  <button type="button" class="btn btn-primary" *ngIf="item.state == itemState.HandedOver" (click)="requestExtension()">
+    Prodloužit
+  </button>
+</td>
