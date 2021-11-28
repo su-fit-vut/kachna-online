@@ -20,19 +20,19 @@ Author: David Chocholatý
 
     <app-account-popup class="d-lg-none d-xl-none"></app-account-popup>
 
-    <div id="navbarsExample04" [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
+    <div id="collapse_navbar" [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item mr-3" ngbDropdown>
+        <li class="nav-item mr-3" ngbDropdown *ngIf="authenticationService.isStatesManager()">
           <div class="btn-group btn-block mr-3">
             <button type="button" class="btn btn-secondary text-nowrap btn-block" style="text-align:left" [routerLink]="'.'" (click)="isMenuCollapsed = true">Stav klubu</button>
-            <button type="button" *ngIf="authenticationService.isStatesManager()" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" id="tmp" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right" id="tmp" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" *ngIf="authenticationService.isStatesManager()" ngbDropdownItem>Změnit aktuální stav</button>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" *ngIf="authenticationService.isStatesManager()" ngbDropdownItem>Naplánovat budoucí stav</button>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" *ngIf="authenticationService.isStatesManager()" ngbDropdownItem>Plán stavů</button>
-              <button (click)="isMenuCollapsed = true" style="color: rgb(245, 116, 116);" class="dropdown-item" href="#" *ngIf="authenticationService.isStatesManager()" ngbDropdownItem>Ukončit aktuální stav</button>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Změnit aktuální stav</button>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Naplánovat budoucí stav</button>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Plán stavů</button>
+              <button (click)="isMenuCollapsed = true" style="color: rgb(245, 116, 116);" class="dropdown-item" href="#" ngbDropdownItem>Ukončit aktuální stav</button>
             </div>
           </div>
         </li>
