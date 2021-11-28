@@ -10,6 +10,9 @@ import { UserLoggedInGuard } from "../users/user-logged-in.guard";
 import { ReservationsComponent } from "./reservations/reservations.component";
 import { BoardGameDetailsComponent } from "./board-game-details/board-game-details.component";
 import { ReservationDetailsComponent } from "./reservation-details/reservation-details.component";
+import { BoardGamesManagerGuard } from "./board-games-manager.guard";
+import { ManagerReservationsComponent } from "./manager/manager-reservations/manager-reservations.component";
+import { ManagerReservationDetailsComponent } from "./manager/manager-reservation-details/manager-reservation-details.component";
 
 const routes: Routes = [
   {
@@ -61,6 +64,33 @@ const routes: Routes = [
           title: `${environment.siteName} | Desková hra`,
           description: `Detail deskové hry`
         }
+      },
+      {
+        path: 'manager',
+        canActivate: [BoardGamesManagerGuard],
+        children: [
+          {
+            path: 'reservations',
+            children: [
+              {
+                path: '',
+                component: ManagerReservationsComponent,
+                data: {
+                  title: `${environment.siteName} | Všechny rezervace`,
+                  description: `Rezervace všech uživatelů`
+                },
+              },
+              {
+                path: ':id',
+                component: ManagerReservationDetailsComponent,
+                data: {
+                  title: `${environment.siteName} | Uživatelská rezervace`,
+                  description: `Konkrétní rezervace uživatele`
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   }

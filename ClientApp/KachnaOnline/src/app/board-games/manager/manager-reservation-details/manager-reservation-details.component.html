@@ -1,0 +1,26 @@
+<!--
+manager-reservation-details.component.html
+Author: František Nečas
+-->
+<div class="d-flex">
+  <app-back-arrow targetRoute=".."></app-back-arrow>
+  <h2>Uživatelská rezervace</h2>
+</div>
+<h4>Vytvořena {{formattedDate}}</h4>
+
+<app-reservation-items [items]="items" [reservation]="reservation"
+                       (reservationItemClicked)="routeToBoardGame($event)" [managerView]="true"></app-reservation-items>
+
+<form>
+  <div class="form-group">
+    <label for="userNote">Poznámka uživatele</label>
+    <textarea class="form-control" id="userNote" rows="2" readonly>{{reservation?.noteUser}}</textarea>
+  </div>
+  <hr/>
+  <div class="form-group">
+    <label for="internalNote">Interní Poznámka</label>
+    <textarea class="form-control" id="internalNote" rows="2" [formControl]="noteInternalForm"
+              placeholder="Tuto poznámku vidí jen ostatní správci."></textarea>
+  </div>
+  <button type="button" class="btn btn-primary" (click)="updateNote()">Uložit interní poznámku</button>
+</form>

@@ -9,27 +9,12 @@ Author: František Nečas
     <label for="reservationState">Stav rezervace</label>
     <select class="form-control input ml-3 w-auto" id="reservationState" [formControl]="reservationFilterForm">
       <option>---</option>
-      <option *ngFor="let option of filterKeys">{{option[0]}}</option>
+      <!-- FIXME: possibly a bug in angular, with dynamic generation using ngFor, the form is not correctly set -->
+      <option>Právě běžící</option>
+      <option>Platnost vypršela</option>
+      <option>Dokončené</option>
     </select>
   </div>
 </form>
-<div class="table-responsive">
-  <table class="table">
-    <thead>
-    <tr>
-      <th scope="col" class="col-4 col-md-2 col-lg-2 col-xl-2">Datum vytvoření</th>
-      <th scope="col" class="d-none d-sm-table-cell col-md-4">Moje poznámka</th>
-      <th scope="col">Kontaktní osoba</th>
-      <th scope="col" class="d-none d-sm-table-cell">Hry</th>
-      <th scope="col" class="d-table-cell d-sm-none col-1">Počet her</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr app-reservation *ngFor="let reservation of reservations" [reservation]="reservation"
-        (reservationClicked)="navigateToReservation($event)" [ngClass]="{
-          'table-danger': isExpired(reservation),
-          'table-secondary': isDone(reservation)
-          }"></tr>
-    </tbody>
-  </table>
-</div>
+<app-reservation-table (reservationClicked)="navigateToReservation($event)"
+                       [reservations]="reservations"></app-reservation-table>

@@ -66,8 +66,8 @@ Author: David Chocholatý
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
               <button class="dropdown-item" routerLink="board-games/reservations" routerLinkActive="active" (click)="isMenuCollapsed = true" *ngIf="authenticationService.isLoggedIn()" ngbDropdownItem>Moje rezervace</button>
               <div *ngIf="authenticationService.isBoardGamesManager()" class="dropdown-divider"></div>
-              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Aktuální rezervace</button>
-              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Historie rezervací</button>
+              <button class="dropdown-item" routerLinkActive="active" (click)="navigateToCurrentReservations()" *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Aktuální rezervace</button>
+              <button class="dropdown-item" routerLinkActive="active" (click)="navigateToAllReservations()" *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Historie rezervací</button>
               <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Správa her</button>
               <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active" (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Správa kategorií</button>
             </div>

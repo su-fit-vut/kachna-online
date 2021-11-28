@@ -2,9 +2,9 @@
 board-games-page.component.html
 Author: František Nečas
 -->
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between align-items-center">
   <h1>Deskové hry</h1>
-  <button type="button" class="btn btn-primary d-none d-sm-block font-weight-bold" routerLink="reservations">Moje rezervace</button>
+  <button *ngIf="authenticationService.isLoggedIn()" type="button" class="btn btn-lg btn-primary d-none d-sm-block font-weight-bold" routerLink="reservations">Moje rezervace</button>
 </div>
 
 <input class="form-control mt-3" type="text" [ngModel]="searchModel" [ngbTypeahead]="search"

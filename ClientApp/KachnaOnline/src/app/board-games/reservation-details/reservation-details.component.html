@@ -8,38 +8,9 @@ Author: František Nečas
 </div>
 <h4>Vytvořena {{formattedDate}}</h4>
 
-<!-- The table on mobile would look weird, list it -->
-<div class="d-block d-sm-none">
-  <hr/>
-  <h4 class="mt-2">Rezervované hry</h4>
-  <app-reservation-details-item-xs *ngFor="let item of items" [reservationId]="reservation.id"
-                                   (reservationItemClicked)="routeToBoardGame($event)"
-                                   [item]="item"></app-reservation-details-item-xs>
-</div>
+<app-reservation-items (reservationItemClicked)="routeToBoardGame($event)" [reservation]="reservation"
+                       [items]="items"></app-reservation-items>
 
-<div class="table-responsive d-none d-sm-block">
-  <table class="table">
-    <thead>
-    <tr>
-      <th scope="col">Hra</th>
-      <th scope="col">Stav</th>
-      <th scope="col">Vypůjčeno do</th>
-      <th scope="col">Kontaktní osoba</th>
-      <th scope="col">Akce</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr app-reservation-details-item-normal *ngFor="let item of items" [item]="item" [reservationId]="reservation.id"
-        (reservationItemClicked)="routeToBoardGame($event)"
-        [ngClass]="{
-          'table-danger': item.state === itemState.Expired,
-          'table-secondary': item.state == itemState.Cancelled || item.state == itemState.Done,
-          'table-success': item.state == itemState.HandedOver,
-          'table-info': item.state == itemState.Assigned
-          }"></tr>
-    </tbody>
-  </table>
-</div>
 <form>
   <div class="form-group">
     <label for="userNote">Poznámka</label>
