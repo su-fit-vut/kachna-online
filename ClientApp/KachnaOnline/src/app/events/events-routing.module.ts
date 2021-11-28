@@ -9,27 +9,10 @@ import { EventsFromAllComponent } from "./events-from-all/events-from-all.compon
 import { PlanEventsComponent } from "./plan-events/plan-events.component";
 import { EventsManagerGuard } from "./events-manager.guard";
 import { EventDetailComponent } from "./event-detail/event-detail.component";
-
-import { EventsService } from '../shared/services/events.service';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AccountPopupComponent } from '../navigation-bar/account-popup/account-popup.component';
-import { NavigationBarComponent } from '../navigation-bar/navigation-bar.component';
-import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EventFormComponent } from './event-form/event-form.component';
-import { HomeComponent } from '../home/home.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr';
-import { JwtModule } from '@auth0/angular-jwt';
-import { LoggedInContentComponent } from '../navigation-bar/account-popup/logged-in-content/logged-in-content.component';
-import { LoggedOutContentComponent } from '../navigation-bar/account-popup/logged-out-content/logged-out-content.component';
-import { ForbiddenComponent } from '../forbidden/forbidden.component';
 import { EventsListComponent } from "./events-list/events-list.component";
 import { ManageLinkedStatesComponent } from "./linked-states/manage-linked-states/manage-linked-states.component";
 import { ConflictingStatesComponent } from "./linked-states/conflicting-states/conflicting-states.component";
+import { EditEventsComponent } from "./edit-events/edit-events.component";
 
 const routes: Routes = [
   {
@@ -106,6 +89,16 @@ const routes: Routes = [
             data: {
               title: `${environment.siteName} | Existující stavy`,
               description: 'Přidání existujících stavů',
+            }
+          },
+          {
+            path: ':eventId/edit',
+            pathMatch: 'full',
+            component: EditEventsComponent,
+            canActivate: [EventsManagerGuard],
+            data: {
+              title: `${environment.siteName} | Úprava akce`,
+              description: 'Úprava existující akce',
             }
           },
         ]

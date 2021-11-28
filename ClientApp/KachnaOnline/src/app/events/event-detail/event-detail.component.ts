@@ -33,6 +33,10 @@ export class EventDetailComponent implements OnInit {
   }
 
   onModifyButtonClicked() {
+    this.route.paramMap.subscribe(params => {
+      let eventId = Number(params.get('eventId'));
+      this.router.navigate([`/events/${eventId}/edit`]).then();
+    });
   }
 
   onCloseModalClicked() {
@@ -44,6 +48,9 @@ export class EventDetailComponent implements OnInit {
   }
 
   onManageLinkedStatesClicked() {
-    this.router.navigate([`/events/${this.eventsService.eventDetail.id}/linked-states`]).then(() => null);
+    this.route.paramMap.subscribe(params => {
+      let eventId = Number(params.get('eventId'));
+      this.router.navigate([`/events/${eventId}/linked-states`]).then();
+    });
   }
 }

@@ -6,6 +6,7 @@ import { EventsService } from '../../shared/services/events.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: 'app-event-form',
@@ -17,6 +18,8 @@ export class EventFormComponent implements OnInit {
   constructor(
     public eventsService: EventsService,
     private toastrService: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router,
     ) { }
 
   @Input() editMode: boolean = false;
@@ -69,5 +72,10 @@ export class EventFormComponent implements OnInit {
     this.eventsService.eventDetail = new Event();
   }
 
-
+  onManageLinkedStatesClicked() {
+    this.route.paramMap.subscribe(params => {
+      let eventId = Number(params.get('eventId'));
+      this.router.navigate([`/events/${eventId}/linked-states`]).then();
+    });
+  }
 }

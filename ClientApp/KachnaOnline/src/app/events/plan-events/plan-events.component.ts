@@ -4,7 +4,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-plan',
+  selector: 'app-plan-events',
   templateUrl: './plan-events.component.html',
   styleUrls: ['./plan-events.component.css']
 })
