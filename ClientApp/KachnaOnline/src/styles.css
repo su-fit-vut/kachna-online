@@ -1,5 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
+* {
+  font-family: 'Dosis', sans-serif;
+  font-weight: 400;
+}
+
+.display-4 {
+  font-weight: 400;
+}
+
 .form-group label {
   color: grey;
 }
