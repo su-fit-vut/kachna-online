@@ -6,32 +6,40 @@ Author: František Nečas
   <div class="col">
     <div class="d-flex col">
       <app-back-arrow targetRoute="{{backRoute}}"></app-back-arrow>
-      <h2>{{boardGame.name}}</h2>
+      <ng-container *ngIf="boardGame">
+        <h2>{{boardGame.name}}</h2>
+      </ng-container>
     </div>
-    <div class="col">
-      <h4 [ngStyle]="{'color': '#' + boardGame.category.colourHex}">{{boardGame.category.name}}</h4>
-    </div>
-    <div class="col" *ngIf="boardGame.playersMin || boardGame.playersMax">
-      <p>{{boardGame.playersMin}} - {{boardGame.playersMax}} hráčů</p>
-    </div>
-    <div class="col">
-      <p>Celkem v klubu: {{boardGame.inStock}} ks</p>
-    </div>
-    <div class="col">
-      <p>Aktuálně dostupné: {{boardGame.available}} ks</p>
-    </div>
+    <ng-container *ngIf="boardGame">
+      <div class="col">
+        <h4 [ngStyle]="{'color': '#' + boardGame.category.colourHex}">{{boardGame.category.name}}</h4>
+      </div>
+      <div class="col" *ngIf="boardGame.playersMin || boardGame.playersMax">
+        <p>{{boardGame.playersMin}} - {{boardGame.playersMax}} hráčů</p>
+      </div>
+      <div class="col">
+        <p>Celkem v klubu: {{boardGame.inStock}} ks</p>
+      </div>
+      <div class="col">
+        <p>Aktuálně dostupné: {{boardGame.available}} ks</p>
+      </div>
+    </ng-container>
   </div>
   <div class="col-sm-5">
-    <div class="col">
-      <img src="{{boardGame.imageUrl ? boardGame.imageUrl : 'assets/image_not_found.jpg'}}" class="img-fluid rounded"
-           alt="Fotka deskové hry"/>
-    </div>
-    <div class="col mt-3">
-      <app-reservation-button (countChanged)="onReservationUpdate($event)"
-                              [available]="boardGame.available"
-                              [currentValue]="currentReservation.get(boardGame.id) || 0"></app-reservation-button>
-    </div>
+    <ng-container *ngIf="boardGame">
+      <div class="col">
+        <img src="{{boardGame.imageUrl ? boardGame.imageUrl : 'assets/image_not_found.jpg'}}" class="img-fluid rounded"
+             alt="Fotka deskové hry"/>
+      </div>
+      <div class="col mt-3">
+        <app-reservation-button (countChanged)="onReservationUpdate($event)"
+                                [available]="boardGame.available"
+                                [currentValue]="currentReservation.get(boardGame.id) || 0"></app-reservation-button>
+      </div>
+    </ng-container>
   </div>
 </div>
 <hr/>
-<p>{{boardGame.description}}</p>
+<ng-container *ngIf="boardGame">
+  <p>{{boardGame.description}}</p>
+</ng-container>
