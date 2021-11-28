@@ -1,0 +1,30 @@
+<div class="row state-details">
+  <div class="col-sm-6">
+    <div class="text-center text-sm-left">
+      Otevírá {{state.madeByUser.name}}
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="float-sm-right text-center text-sm-left">
+      Otevřeno od {{state.start | date:'HH:mm'}}
+    </div>
+  </div>
+</div>
+
+<div class="border-bottom pb-2 mb-2">
+  <div class="state-details text-center" *ngIf="state.note != null && state.note.length > 0">
+    {{state.note}}
+  </div>
+
+  <div class="state-details text-center mt-2" *ngIf="state.noteInternal != null && state.noteInternal.length > 0">
+    <div class="font-weight-light small">Interní poznámka:</div>
+    {{state.noteInternal}}
+  </div>
+</div>
+
+<p class="border-bottom pb-2 text-justify">
+  Režim chillzóna je klidnější druh otvíračky, při kterém můžeš do Kachničky přijít, dělat na projektech, zahrát si
+  kulečník, fotbálek nebo nějakou deskovku. Není při něm zaručena obsluha baru, ale když se zeptáš někoho z&nbsp;SU,
+  dost možná ti něco na zub, džus nebo Kofolu prodá. Chillzónu otevíráme nepravidelně, o&nbsp;jejím otevření se dozvíš
+  vždy na Discordu v&nbsp;kanálu #kachna-info a&nbsp;zde, na webu Kachna Online.
+</p>

@@ -1,14 +1,11 @@
 .navbar {
-    /*background-color: #fcc859;*/
+  /*background-color: #fcc859;*/
 }
 
-  a,
-  a:visited,
-  a:hover {
-    color: #1976d2;
-    text-decoration: none;
-  }
-
-  a:hover {
-    color: #125699;
-  }
+a,
+a:visited,
+a:hover {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}

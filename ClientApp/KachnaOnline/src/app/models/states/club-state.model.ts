@@ -10,10 +10,10 @@ export class ClubState {
   madeByUser: MadeByUser;
   start: Date;
   plannedEnd: Date;
-  note: string;
-  eventId: number;
-  followingState: ClubState;
-  noteInternal: string;
-  actualEnd: Date;
-  closedByUser: MadeByUser;
+  note: string | null;
+  noteInternal: string | null;
+  eventId: number | null;
+  followingState: ClubState | null;
+  actualEnd: Date | null;
+  closedByUser: MadeByUser | null;
 }
