@@ -4,21 +4,22 @@ import { ToastrService } from "ngx-toastr";
 import { Observable } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { RepeatingState } from "../../models/states/repeating-state.model";
+import { ClubState } from "../../models/states/club-state.model";
 
 @Injectable({
   providedIn: 'root'
 })
-export class RepeatingStatesService {
+export class StatesService {
 
-  readonly RepeatingStatesUrl = environment.baseApiUrl + '/states/repeating';
+  readonly StatesUrl = environment.baseApiUrl + '/states';
 
   constructor(
     private http: HttpClient,
     private toastrService: ToastrService,
   ) {}
 
-  get(): Observable<RepeatingState[]> {
-    return this.http.get<RepeatingState[]>(`${this.RepeatingStatesUrl}/active/now`);
+  getCurrent(): Observable<ClubState> {
+    return this.http.get<ClubState>(`${this.StatesUrl}/current`);
   }
 
 }

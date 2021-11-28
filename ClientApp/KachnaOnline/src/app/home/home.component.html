@@ -3,36 +3,42 @@ home.component.html
 Author: David Chocholatý
 -->
 
-<div class="text-center pt-2 pb-2 mb-2 border-bottom">
-  <div class="display-4">
-    <ng-container *ngIf="state.state==ST.OpenChillzone">
-      Kachna je otevřená v&nbsp;režimu chillzóna do&nbsp;{{state.plannedEnd | date:'HH:mm'}}.
-    </ng-container>
-    <ng-container *ngIf="state.state==ST.OpenBar">
-      V Kachně právě probíhá otvíračka s&nbsp;barem!
-    </ng-container>
-    <ng-container *ngIf="state.state==ST.Private">
-      V Kachně právě probíhá soukromá akce.
-    </ng-container>
-    <ng-container *ngIf="state.state==ST.Closed">
-      Kachna je zavřená.
-    </ng-container>
+<ng-container *ngIf="state">
+  <div class="text-center pt-2 pb-2 mb-2 border-bottom">
+    <div class="display-4 mb-1">
+      <ng-container *ngIf="state.state==ST.OpenChillzone">
+        Kachna je otevřená v&nbsp;režimu chillzóna do&nbsp;{{state.plannedEnd | date:'HH:mm'}}.
+      </ng-container>
+      <ng-container *ngIf="state.state==ST.OpenBar">
+        V Kachně právě probíhá otvíračka s&nbsp;barem!
+      </ng-container>
+      <ng-container *ngIf="state.state==ST.Private">
+        V Kachně právě probíhá soukromá akce.
+      </ng-container>
+      <ng-container *ngIf="state.state==ST.Closed">
+        Kachna je zavřená.
+      </ng-container>
+    </div>
+    <a href="#" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k nám?</a>
   </div>
-  <a href="#" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k nám?</a>
+
+  <app-bar-details *ngIf="state.state==ST.OpenBar" [state]="state"></app-bar-details>
+  <app-chillzone-details *ngIf="state.state==ST.OpenChillzone" [state]="state"></app-chillzone-details>
+
+  <div class="text-center">
+    <h2>Pravidelná otevírací doba</h2>
+  </div>
+
+  <app-repeating-states></app-repeating-states>
+
+  <button type="button" class="btn btn-primary btn-block" *ngIf="authenticationService.isLoggedOut()">Stát se členem
+    klubu
+  </button>
+</ng-container>
+
+<div class="text-center" *ngIf="!state">
+  <h4 class="text-muted">Zjišťuji stav Kachny...</h4>
 </div>
-
-<app-bar-details *ngIf="state.state==ST.OpenBar" [state]="state"></app-bar-details>
-<app-chillzone-details *ngIf="state.state==ST.OpenChillzone" [state]="state"></app-chillzone-details>
-
-<div class="text-center">
-  <h2>Pravidelná otevírací doba</h2>
-</div>
-
-<app-repeating-states></app-repeating-states>
-
-<button type="button" class="btn btn-primary btn-block" *ngIf="authenticationService.isLoggedOut()">Stát se členem
-  klubu
-</button>
 
 <ng-template #getting_there let-modal>
   <div class="modal-header">
