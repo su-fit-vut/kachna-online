@@ -4,17 +4,17 @@
 import { ClubState } from "../states/club-state.model";
 
 export class Event {
-  id:number = -1;
-  name:string = "";
-  place:string = "";
-  placeUrl:string = "";
-  imageUrl:string = "";
-  shortDescription:string = "";
-  fullDescription:string = "";
-  url:string = "";
-  from: string = "";
-  to:string = "";
+  id: number = -1;
+  name: string = "";
+  place: string = "";
+  placeUrl: string = "";
+  imageUrl: string = "";
+  shortDescription: string = "";
+  fullDescription: string = "";
+  url: string = "";
+  from: Date;
+  to: Date;
   linkedPlannedStateIds: number[] = [];
-  madeById:string = "";
+  madeById: string = "";
   linkedStatesDtos: ClubState[];
 }

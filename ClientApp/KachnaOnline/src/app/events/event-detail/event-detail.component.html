@@ -25,28 +25,17 @@ Author: David Chocholatý
         <p *ngIf="!eventsService.eventDetail.placeUrl" href="." class="mb-1">{{eventsService.eventDetail.place}}</p>
         <a [href]="eventsService.eventDetail.placeUrl" *ngIf="eventsService.eventDetail.placeUrl" href="." class="mb-1">{{eventsService.eventDetail.place}}</a>
       </div>
+    <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.linkedPlannedStateIds.length">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">Kachna bude v rámci akce otevřená</h5>
+      </div>
+      <app-linked-states></app-linked-states>
+    </div>
     <div class="list-group-item" *ngIf="eventsService.eventDetail.fullDescription">
       <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1">Podrobný popis</h5>
       </div>
       <p class="mb-1">{{eventsService.eventDetail.fullDescription}}</p>
-    </div>
-    <div class="list-group-item">
-      <div class="accordion" id="accordionExample">
-        <div class="card">
-          <div class="card-header" id="headingOne">
-            <h2 class="mb-0">
-              <button class="btn btn-block btn-outline-secondary text-left" type="button" data-toggle="collapse" data-target="#collapseLinkedStates" aria-expanded="true" aria-controls="collapseLinkedStates">
-                Zobrazit dění v klubu
-              </button>
-            </h2>
-          </div>
-
-          <div id="collapseLinkedStates" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-              <app-linked-states></app-linked-states>
-          </div>
-        </div>
-      </div>
     </div>
     <div *ngIf="authenticationService.isEventsManager()" class="list-group-item">
         <ul class="list-group list-group-horizontal">
