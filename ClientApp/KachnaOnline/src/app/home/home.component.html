@@ -21,6 +21,7 @@ Author: David Chocholatý
   <a href="#" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k nám?</a>
 </div>
 
+<app-bar-details *ngIf="state.state==ST.OpenBar" [state]="state"></app-bar-details>
 <app-chillzone-details *ngIf="state.state==ST.OpenChillzone" [state]="state"></app-chillzone-details>
 
 <div class="text-center">
