@@ -2,14 +2,3 @@
 reservation-details-item.component.html
 Author: František Nečas
 -->
-<td>{{item.boardGame.name}}</td>
-<td>{{formattedExpiration}}</td>
-<td>{{item.assignedTo?.name}}</td>
-<td>
-  <button type="button" class="btn btn-danger mx-3" *ngIf="item.state == itemState.New" (click)="cancelReservation()">
-    Zrušit
-  </button>
-  <button type="button" class="btn btn-primary mx-3" *ngIf="item.state == itemState.HandedOver" (click)="requestExtension()">
-    Prodloužit
-  </button>
-</td>

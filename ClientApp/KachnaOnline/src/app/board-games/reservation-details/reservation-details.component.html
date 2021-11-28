@@ -7,10 +7,16 @@ Author: František Nečas
   <h2>Rezervace</h2>
 </div>
 <h4>Vytvořena {{formattedDate}}</h4>
-<div class="table-responsive-sm">
 
+<!-- The table on mobile would look weird, list it -->
+<div class="d-block d-sm-none">
+  <hr/>
+  <h4 class="mt-2">Rezervované hry</h4>
+  <app-reservation-details-item-xs *ngFor="let item of items" [reservationId]="reservation.id"
+                                   [item]="item"></app-reservation-details-item-xs>
 </div>
-<div class="table-responsive">
+
+<div class="table-responsive d-none d-sm-block">
   <table class="table">
     <thead>
     <tr>
@@ -21,7 +27,7 @@ Author: František Nečas
     </tr>
     </thead>
     <tbody>
-    <tr app-reservation-details-item *ngFor="let item of items" [item]="item" [reservationId]="reservation.id"
+    <tr app-reservation-details-item-normal *ngFor="let item of items" [item]="item" [reservationId]="reservation.id"
         [ngClass]="{
           'table-danger': item.state === itemState.Expired,
           'table-secondary': item.state == itemState.Cancelled || item.state == itemState.Done
