@@ -1,0 +1,58 @@
+<!--
+conflicting-states.component.html
+Author: David Chocholatý
+-->
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-auto">
+      <app-back-arrow targetRoute="../linked-states"></app-back-arrow>
+    </div>
+    <div class="col-md-auto">
+      <button type="button" class="btn mr-1 btn-secondary" (click)="onPlanNewClubStateClicked()">
+        Naplánovat nový stav klubu
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <table class="table table-stripped">
+      <thead class="thead-light">
+      <tr>
+        <th>Trvání od</th>
+        <th>Trvání do</th>
+        <th>Typ</th>
+        <th>Operace</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let conflictingState of eventsService.conflictingStatesList">
+        <td (click)="openClubStateDetail(conflictingState)">{{conflictingState.start}}</td>
+        <td (click)="openClubStateDetail(conflictingState)">{{conflictingState.plannedEnd}}</td>
+        <td (click)="openClubStateDetail(conflictingState)">{{conflictingState.state}}</td>
+        <td>
+          <button type="button" class="btn mr-1 btn-primary"
+                  (click)="onLinkConflictingClubState(conflictingState)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+            </svg>
+            Přidat
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <div class="col-md-auto">
+      <button type="button" class="btn mr-1 btn-primary" (click)="onLinkAllConflictingClubStates()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+        </svg>
+        Přidat všechny překrývající se stavy klubu
+      </button>
+    </div>
+  </div>
+</div>

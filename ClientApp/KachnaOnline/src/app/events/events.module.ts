@@ -15,6 +15,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
 import { LinkedStatesComponent } from './linked-states/linked-states.component';
 import { ManageLinkedStatesComponent } from './linked-states/manage-linked-states/manage-linked-states.component';
+import { ConflictingStatesComponent } from './linked-states/conflicting-states/conflicting-states.component';
+import { ComponentsModule } from "../shared/components/components.module";
 
 
 @NgModule({
@@ -27,12 +29,14 @@ import { ManageLinkedStatesComponent } from './linked-states/manage-linked-state
     PlanEventsComponent,
     LinkedStatesComponent,
     ManageLinkedStatesComponent,
+    ConflictingStatesComponent,
   ],
-  imports: [
-    CommonModule,
-    EventsRoutingModule,
-    NgbModule,
-    FormsModule,
-  ]
+    imports: [
+        CommonModule,
+        EventsRoutingModule,
+        NgbModule,
+        FormsModule,
+        ComponentsModule,
+    ]
 })
 export class EventsModule { }

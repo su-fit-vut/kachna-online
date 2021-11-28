@@ -29,6 +29,7 @@ import { LoggedOutContentComponent } from '../navigation-bar/account-popup/logge
 import { ForbiddenComponent } from '../forbidden/forbidden.component';
 import { EventsListComponent } from "./events-list/events-list.component";
 import { ManageLinkedStatesComponent } from "./linked-states/manage-linked-states/manage-linked-states.component";
+import { ConflictingStatesComponent } from "./linked-states/conflicting-states/conflicting-states.component";
 
 const routes: Routes = [
   {
@@ -95,6 +96,16 @@ const routes: Routes = [
             data: {
               title: `${environment.siteName} | Připojené stavy`,
               description: 'Správa připojených stavů',
+            }
+          },
+          {
+            path: ':eventId/conflicting-states',
+            pathMatch: 'full',
+            component: ConflictingStatesComponent,
+            canActivate: [EventsManagerGuard],
+            data: {
+              title: `${environment.siteName} | Existující stavy`,
+              description: 'Přidání existujících stavů',
             }
           },
         ]
