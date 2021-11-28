@@ -214,6 +214,7 @@ namespace KachnaOnline.Business.Facades
         /// does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with the ID assigned to the game does
         /// not exist.</exception>
+        /// <exception cref="InvalidPlayerRangeException">When the provided player range is invalid.</exception>
         public async Task<BoardGameDto> CreateBoardGame(CreateBoardGameDto game)
         {
             var createdGame = await _boardGamesService.CreateBoardGame(_mapper.Map<BoardGame>(game));
@@ -234,6 +235,7 @@ namespace KachnaOnline.Business.Facades
         /// does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with the ID assigned to the game does
         /// not exist.</exception>
+        /// <exception cref="InvalidPlayerRangeException">When the provided player range is invalid.</exception>
         public async Task UpdateBoardGame(int id, CreateBoardGameDto game)
         {
             await _boardGamesService.UpdateBoardGame(id, _mapper.Map<BoardGame>(game));

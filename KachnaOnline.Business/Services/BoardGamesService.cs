@@ -109,6 +109,9 @@ namespace KachnaOnline.Business.Services
             if (game.OwnerId is not null && await _userRepository.Get(game.OwnerId.Value) is null)
                 throw new UserNotFoundException(game.OwnerId.Value);
 
+            if (game.PlayersMin.HasValue && game.PlayersMax.HasValue && game.PlayersMin.Value > game.PlayersMax.Value)
+                throw new InvalidPlayerRangeException();
+
             var gameEntity = _mapper.Map<KachnaOnline.Data.Entities.BoardGames.BoardGame>(game);
             await _boardGamesRepository.Add(gameEntity);
             try
@@ -141,6 +144,9 @@ namespace KachnaOnline.Business.Services
 
             if (game.OwnerId is not null && await _userRepository.Get(game.OwnerId.Value) is null)
                 throw new UserNotFoundException(game.OwnerId.Value);
+
+            if (game.PlayersMin.HasValue && game.PlayersMax.HasValue && game.PlayersMin.Value > game.PlayersMax.Value)
+                throw new InvalidPlayerRangeException();
 
             _mapper.Map(game, currentGame);
             try

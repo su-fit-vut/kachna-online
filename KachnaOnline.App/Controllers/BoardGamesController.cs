@@ -102,12 +102,15 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <param name="game">A model of the game to create.</param>
         /// <response code="201">The created game.</response>
-        /// <response code="422">A category or user with the given ID does not exist.</response>
+        /// <response code="422">A category or user with the given ID does not exist or the number of minimum
+        /// players is larger than the number of maximum players.</response>
         [ProducesResponseType(typeof(ManagerBoardGameDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [HttpPost]
         public async Task<ActionResult<ManagerBoardGameDto>> CreateBoardGame(CreateBoardGameDto game)
         {
+            if (game.PlayersMin.HasValue && game.PlayersMax.HasValue && game.PlayersMin.Value > game.PlayersMax.Value)
+                return this.UnprocessableEntityProblem("Invalid player range provided.");
             try
             {
                 var createdGame = await _facade.CreateBoardGame(game);
@@ -121,6 +124,10 @@ namespace KachnaOnline.App.Controllers
             {
                 return this.UnprocessableEntityProblem("The specified user does not exist.");
             }
+            catch (InvalidPlayerRangeException)
+            {
+                return this.UnprocessableEntityProblem("Invalid player range provided.");
+            }
         }
 
         /// <summary>
@@ -130,13 +137,16 @@ namespace KachnaOnline.App.Controllers
         /// <param name="game">A model representing the new state.</param>
         /// <response code="204">Board game was updated.</response>
         /// <response code="404">Board game with the given ID does not exist.</response>
-        /// <response code="422">A category or user with the given ID does not exist.</response>
+        /// <response code="422">A category or user with the given ID does not exist or the number of minimum
+        /// players is larger than the number of maximum players.</response>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBoardGame(int id, CreateBoardGameDto game)
         {
+            if (game.PlayersMin.HasValue && game.PlayersMax.HasValue && game.PlayersMin.Value > game.PlayersMax.Value)
+                return this.UnprocessableEntityProblem("Invalid player range provided.");
             try
             {
                 await _facade.UpdateBoardGame(id, game);
@@ -153,6 +163,10 @@ namespace KachnaOnline.App.Controllers
             catch (UserNotFoundException)
             {
                 return this.UnprocessableEntityProblem("The specified user does not exist.");
+            }
+            catch (InvalidPlayerRangeException)
+            {
+                return this.UnprocessableEntityProblem("Invalid player range provided.");
             }
         }
 

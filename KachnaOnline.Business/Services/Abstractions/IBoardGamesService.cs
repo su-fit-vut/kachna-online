@@ -44,6 +44,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with the ID assigned to the game does
         /// not exist.</exception>
+        /// <exception cref="InvalidPlayerRangeException">When the provided player range is invalid.</exception>
         /// <exception cref="ArgumentNullException">When <paramref name="game"/> is null.</exception>
         Task<BoardGame> CreateBoardGame(BoardGame game);
 
@@ -59,6 +60,7 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with the ID assigned to the game does
         /// not exist.</exception>
+        /// <exception cref="InvalidPlayerRangeException">When the provided player range is invalid.</exception>
         /// <exception cref="ArgumentNullException">When <paramref name="game"/> is null.</exception>
         Task UpdateBoardGame(int id, BoardGame game);
 
