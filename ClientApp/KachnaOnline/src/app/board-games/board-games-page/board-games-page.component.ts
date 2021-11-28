@@ -76,8 +76,7 @@ export class BoardGamesPageComponent implements OnInit {
     this.categoryIds = this.categoryIds.filter(c => c != category);
     if (this.categoryIds.length == 0) {
       // We need to re-fetch. If other filters are applied this.boardGames may not have all games.
-      this.boardGames = [];
-      this.fetchGames([]);
+      this.fetchGames([], false, true);
       this.filteredGames = this.boardGames;
     } else {
       this.filteredGames = this.filteredGames.filter(g => g.category.id != category);
@@ -87,13 +86,15 @@ export class BoardGamesPageComponent implements OnInit {
 
   onAvailabilityUpdate(newAvailability: boolean): void {
     this.availableOnly = newAvailability ? newAvailability : undefined;
-    this.boardGames = [];
-    this.fetchGames(this.categoryIds);
+    this.fetchGames(this.categoryIds, false, true);
   }
 
-  fetchGames(categoryIds: number[], init: boolean = false): void {
+  fetchGames(categoryIds: number[], init: boolean = false, resetGames: boolean = false): void {
     this.boardGamesService.getBoardGames(categoryIds, this.players, this.availableOnly).subscribe(
       games => {
+        if (resetGames) {
+          this.boardGames = [];
+        }
         for (let gamesSet of games) {
           this.boardGames = this.boardGames.concat(gamesSet);
         }
@@ -113,8 +114,7 @@ export class BoardGamesPageComponent implements OnInit {
 
   onPlayersChange(value: number | undefined): void {
     this.players = value;
-    this.boardGames = [];
-    this.fetchGames(this.categoryIds);
+    this.fetchGames(this.categoryIds, false, true);
   }
 
   search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
