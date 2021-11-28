@@ -9,7 +9,7 @@ import { HttpStatusCode } from "@angular/common/http";
 import { Reservation } from "../../models/board-games/reservation.model";
 import { FormControl } from "@angular/forms";
 import { formatDate } from "@angular/common";
-import { ReservationItem, ReservationItemState } from "../../models/board-games/reservation-item.model";
+import { ReservationItem } from "../../models/board-games/reservation-item.model";
 
 @Component({
   selector: 'app-reservation-details',
@@ -24,10 +24,6 @@ export class ReservationDetailsComponent implements OnInit {
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               private router: Router, private route: ActivatedRoute) {
-  }
-
-  public get itemState(): typeof ReservationItemState {
-    return ReservationItemState;
   }
 
   ngOnInit(): void {

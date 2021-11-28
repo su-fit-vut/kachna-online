@@ -17,11 +17,16 @@ import { ReservationsComponent } from './reservations/reservations.component';
 import { BoardGameDetailsComponent } from './board-game-details/board-game-details.component';
 import { ReservationButtonComponent } from './board-games-page/board-game-card/reservation-button/reservation-button.component';
 import { ComponentsModule } from "../shared/components/components.module";
-import { ReservationComponent } from './reservations/reservation/reservation.component';
+import { ReservationComponent } from './reservations/reservation-table/reservation/reservation.component';
 import { ReservationDetailsComponent } from './reservation-details/reservation-details.component';
 import { ReservationDetailsItemComponent } from './reservation-details/reservation-details-item/reservation-details-item.component';
 import { ReservationDetailsItemNormalComponent } from './reservation-details/reservation-details-item/reservation-details-item-normal/reservation-details-item-normal.component';
 import { ReservationDetailsItemXsComponent } from './reservation-details/reservation-details-item/reservation-details-item-xs/reservation-details-item-xs.component';
+import { NumberSelectionComponent } from "../shared/components/number-selection/number-selection.component";
+import { ReservationTableComponent } from './reservations/reservation-table/reservation-table.component';
+import { ManagerReservationsComponent } from './manager/manager-reservations/manager-reservations.component';
+import { ReservationItemsComponent } from './reservation-details/reservation-items/reservation-items.component';
+import { ManagerReservationDetailsComponent } from './manager/manager-reservation-details/manager-reservation-details.component';
 
 
 @NgModule({
@@ -40,6 +45,10 @@ import { ReservationDetailsItemXsComponent } from './reservation-details/reserva
     ReservationDetailsItemComponent,
     ReservationDetailsItemNormalComponent,
     ReservationDetailsItemXsComponent,
+    ReservationTableComponent,
+    ManagerReservationsComponent,
+    ReservationItemsComponent,
+    ManagerReservationDetailsComponent,
   ],
   imports: [
     CommonModule,

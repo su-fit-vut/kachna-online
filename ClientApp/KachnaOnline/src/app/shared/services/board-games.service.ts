@@ -8,12 +8,19 @@ import { forkJoin, Observable } from "rxjs";
 import { BoardGame } from "../../models/board-games/board-game.model";
 import { BoardGameCategory } from "../../models/board-games/board-game-category.model";
 import { Reservation, ReservationState } from "../../models/board-games/reservation.model";
-import { ReservationItemState } from "../../models/board-games/reservation-item.model";
 import { ReservationEventType } from "../../models/board-games/reservation-item-event.model";
 
 enum ApiPaths {
   Categories = '/categories',
   Reservations = '/reservations'
+}
+
+enum ReservationApiPaths {
+  Note = '/note',
+  NoteInternal = '/noteInternal',
+  Events = '/events',
+  All = '/all',
+  AssignedToMe = '/assignedTo/me'
 }
 
 /**
@@ -31,6 +38,10 @@ export class BoardGamesService {
 
   // Reservation filter storage
   reservationFilter: ReservationState | undefined = undefined;
+
+  // Manager reservation filter storage
+  managerReservationFilter: ReservationState | undefined = undefined;
+  onlyAssignedToMe: boolean = false;
 
   // Board game details page route storage
   backRoute: string = "..";
@@ -59,16 +70,46 @@ export class BoardGamesService {
     this.currentReservation = currentReservation;
   }
 
+  /**
+   * Saves a back route for a detailed board game page.
+   * @param route The route to save.
+   */
   saveBackRoute(route: string): void {
     this.backRoute = route;
   }
 
+  /**
+   * Returns the previously saved back route for a detailed board game page.
+   */
   getBackRoute(): string {
     return this.backRoute;
   }
 
+  /**
+   * Resets a previously set back route to its initial value.
+   */
   resetBackRoute(): void {
     this.backRoute = "..";
+  }
+
+  /**
+   * Saves the current manager filters.
+   * @param filter Reservation of which states are currently shown.
+   * @param assignedToMe Whether only the reservations which the current user is assigned to are shown. Nothing
+   *  is saved if the value is undefined.
+   */
+  saveManagerFilter(filter: ReservationState | undefined, assignedToMe: boolean | undefined = undefined): void {
+    this.managerReservationFilter = filter;
+    if (assignedToMe !== undefined) {
+      this.onlyAssignedToMe = assignedToMe;
+    }
+  }
+
+  /**
+   * Get the previously saved manager filters.
+   */
+  getManagerFilter(): [ReservationState | undefined, boolean] {
+    return [this.managerReservationFilter, this.onlyAssignedToMe];
   }
 
   /**
@@ -174,6 +215,31 @@ export class BoardGamesService {
   }
 
   /**
+   * Returns a list of all reservations.
+   * @param state Overall state of the reservation to filter by. Undefined for all reservations.
+   */
+  getAllReservations(state: ReservationState | undefined): Observable<Reservation[]> {
+    let params = new HttpParams();
+    if (state != undefined) {
+      params = params.set("state", state);
+    }
+    return this.http.get<Reservation[]>(`${this.ReservationsUrl}${ReservationApiPaths.All}`, {params: params});
+  }
+
+  /**
+   * Returns a list of all reservations assigned to the currently signed in user.
+   * @param state Overall state of the reservation to filter by. Undefined for all reservations.
+   */
+  getAllReservationsAssignedToMe(state: ReservationState | undefined): Observable<Reservation[]> {
+    let params = new HttpParams();
+    if (state != undefined) {
+      params = params.set("state", state);
+    }
+    return this.http.get<Reservation[]>(
+      `${this.ReservationsUrl}${ReservationApiPaths.All}${ReservationApiPaths.AssignedToMe}`, {params: params});
+  }
+
+  /**
    * Returns a reservation with the given ID.
    * @param id ID of the reservation to return.
    */
@@ -187,7 +253,18 @@ export class BoardGamesService {
    * @param newNote New note.
    */
   setReservationUserNote(reservationId: number, newNote: string): Observable<any> {
-    return this.http.put<any>(`${this.ReservationsUrl}/${reservationId}/note`, {noteUser: newNote});
+    return this.http.put<any>(`${this.ReservationsUrl}/${reservationId}${ReservationApiPaths.Note}`,
+      {noteUser: newNote});
+  }
+
+  /**
+   * Updates an internal note in a reservation.
+   * @param reservationId ID of the reservation to update.
+   * @param newNote New note.
+   */
+  setReservationInternalNote(reservationId: number, newNote: string): Observable<any> {
+    return this.http.put<any>(`${this.ReservationsUrl}/${reservationId}${ReservationApiPaths.NoteInternal}`,
+      {noteInternal: newNote});
   }
 
   /**
@@ -198,6 +275,7 @@ export class BoardGamesService {
    */
   updateReservationState(reservationId: number, itemId: number, type: ReservationEventType): Observable<any> {
     let params = new HttpParams().set("type", type);
-    return this.http.post<any>(`${this.ReservationsUrl}/${reservationId}/${itemId}/events`, {}, {params: params});
+    return this.http.post<any>(`${this.ReservationsUrl}/${reservationId}/${itemId}${ReservationApiPaths.Events}`,
+      {}, {params: params});
   }
 }

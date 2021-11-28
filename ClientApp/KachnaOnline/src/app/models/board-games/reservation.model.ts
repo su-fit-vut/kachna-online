@@ -22,5 +22,6 @@ export class Reservation {
   madeBy: MadeByUser
   madeOn: Date
   noteUser: string
+  noteInternal: string
   items: ReservationItem[]
 }

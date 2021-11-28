@@ -6,7 +6,6 @@ import { BoardGamesService } from "../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 import { Reservation, ReservationState } from "../../models/board-games/reservation.model";
 import { FormControl } from "@angular/forms";
-import { ReservationItemState } from "../../models/board-games/reservation-item.model";
 import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
@@ -30,6 +29,9 @@ export class ReservationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.reservationFilter = this.boardGamesService.getReservationFilter();
+    let formValue = this.filterKeys.find(k => k[1] == this.reservationFilter);
+    this.reservationFilterForm.reset(formValue ? formValue[0] : "---");
+
     this.reservationFilterForm.valueChanges.subscribe(value => {
       let filter = this.filterKeys.find(k => k[0] == value);
       this.reservationFilter = filter ? filter[1] : undefined;
@@ -61,15 +63,6 @@ export class ReservationsComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.boardGamesService.saveReservationFilter(this.reservationFilter);
-  }
-
-  isExpired(reservation: Reservation): boolean {
-    return reservation.items.find(i => i.state == ReservationItemState.Expired) !== undefined;
-  }
-
-  isDone(reservation: Reservation): boolean {
-    return reservation.items.every(
-      i => i.state == ReservationItemState.Cancelled || i.state == ReservationItemState.Done);
   }
 
   navigateToReservation(reservation: Reservation): void {

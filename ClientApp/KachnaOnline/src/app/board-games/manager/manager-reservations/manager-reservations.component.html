@@ -1,0 +1,25 @@
+<!--
+manager-reservations.component.html
+Author: František Nečas
+-->
+<h1>Uživatelské rezervace</h1>
+
+<form>
+  <div class="d-flex">
+    <div class="form-group form-inline">
+      <label for="reservationState">Stav rezervace</label>
+      <select class="form-control input ml-3 w-auto" id="reservationState" [formControl]="reservationFilterForm">
+        <option>---</option>
+        <!-- FIXME: possibly a bug in angular, with dynamic generation using ngFor, the form is not correctly set -->
+        <option>Nově přidané</option>
+        <option>Právě běžící</option>
+        <option>Platnost vypršela</option>
+        <option>Dokončené</option>
+      </select>
+    </div>
+    <app-togglable-button [text]="'Pouze mně přiřazené'" (valueChanged)="onButtonToggle($event)"
+                          [startingValue]="assignedFilter" class="ml-2"></app-togglable-button>
+  </div>
+</form>
+<app-reservation-table (reservationClicked)="navigateToReservation($event)" [managerView]="true"
+                       [reservations]="reservations"></app-reservation-table>

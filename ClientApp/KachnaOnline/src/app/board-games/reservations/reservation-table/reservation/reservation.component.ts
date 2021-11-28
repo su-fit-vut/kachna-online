@@ -2,7 +2,7 @@
 // Author: František Nečas
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Reservation } from "../../../models/board-games/reservation.model";
+import { Reservation } from "../../../../models/board-games/reservation.model";
 import { formatDate } from "@angular/common";
 import { HostListener } from "@angular/core"
 
@@ -12,6 +12,7 @@ import { HostListener } from "@angular/core"
   styleUrls: ['./reservation.component.css']
 })
 export class ReservationComponent implements OnInit {
+  @Input() managerView: boolean = false;
   @Input() reservation: Reservation;
   @Output() reservationClicked: EventEmitter<Reservation> = new EventEmitter();
   formattedDate: string = "";
@@ -30,8 +31,9 @@ export class ReservationComponent implements OnInit {
 
   ngOnInit(): void {
     this.formattedDate = formatDate(this.reservation.madeOn, "d. M. y", "cs-CZ");
-    this.formattedNote = this.reservation.noteUser.substr(0, this.shownNoteChars);
-    if (this.reservation.noteUser.length > this.shownNoteChars) {
+    let note = this.managerView ? (this.reservation.noteInternal || "") : this.reservation.noteUser;
+    this.formattedNote = note.substr(0, this.shownNoteChars);
+    if (note.length > this.shownNoteChars) {
       this.noteTooLong = true;
       this.formattedNote += "...";
     }
