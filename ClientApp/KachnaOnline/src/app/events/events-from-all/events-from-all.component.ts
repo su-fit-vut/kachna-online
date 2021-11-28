@@ -14,7 +14,6 @@ import { AuthenticationService } from "../../shared/services/authentication.serv
   styleUrls: ['./events-from-all.component.css']
 })
 export class EventsFromAllComponent implements OnInit {
-
   constructor(
     public eventsService: EventsService,
     private toastrService: ToastrService,
@@ -22,15 +21,12 @@ export class EventsFromAllComponent implements OnInit {
     public authenticationService: AuthenticationService,
   ) { }
 
-  activateEditEventModal: boolean = false;
-
   ngOnInit(): void {
     this.eventsService.refreshEventsList();
   }
 
-
   openEventDetail(eventDetail: Event) {
-    this.router.navigate([`/events/${eventDetail.id}`]).then(() => null);
+    this.router.navigate([`/events/${eventDetail.id}`]).then();
   }
 
   onDeleteButtonClicked(selectedEventDetail: Event) {
@@ -38,12 +34,10 @@ export class EventsFromAllComponent implements OnInit {
   }
 
   onModifyButtonClicked(selectedEventDetail: Event) {
-    this.eventsService.populateForm(selectedEventDetail);
-    this.activateEditEventModal = true;
+    this.router.navigate([`/events/${selectedEventDetail.id}/edit`]).then();
   }
 
   onCloseModalClicked() {
-    this.activateEditEventModal = false;
     this.eventsService.refreshEventsList();
   }
 }
