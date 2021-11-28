@@ -1,0 +1,52 @@
+<div class="state-details text-center">
+  Zavíráme ve <span class="font-weight-bold">{{state.plannedEnd | date:'HH:mm'}}</span>.
+</div>
+
+<div class="border-bottom pb-2 mb-2 text-center">
+  <div class="state-details" *ngIf="state.note != null && state.note.length > 0">
+    {{state.note}}
+  </div>
+
+  <div class="state-details mt-2" *ngIf="state.noteInternal != null && state.noteInternal.length > 0">
+    <div class="font-weight-light small">Interní poznámka:</div>
+    {{state.noteInternal}}
+  </div>
+
+  <div class="d-block mt-3">
+    <button class="btn btn-link btn-sm text-decoration-none state-details"
+            (click)="currentOffer.toggle()">
+      Aktuální nabídka {{currentOfferCollapsed ? "▼" : "▲"}}
+    </button>
+  </div>
+
+  <div #currentOffer="ngbCollapse" [(ngbCollapse)]="currentOfferCollapsed">
+    <div class="card">
+      <div class="card-body">
+        You can collapse this card by clicking Toggle
+      </div>
+    </div>
+  </div>
+
+  <div class=" d-block mt-3">
+    <button class="btn btn-link btn-sm text-decoration-none state-details"
+            (click)="leaderboard.toggle(); loadPrestige()">
+      Žebříček prestiže {{leaderboardCollapsed ? "▼" : "▲"}}
+    </button>
+  </div>
+
+  <div #leaderboard="ngbCollapse" [(ngbCollapse)]="leaderboardCollapsed">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <app-prestige-table [title]="'Dnešní prestiž'" [leaderboard]="todayPrestige"></app-prestige-table>
+          </div>
+          <div class="col-sm-6">
+            <app-prestige-table [title]="'Semestrální prestiž'" [leaderboard]="semesterPrestige"></app-prestige-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

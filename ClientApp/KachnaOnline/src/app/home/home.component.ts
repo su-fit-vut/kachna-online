@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.state = {
       id: 1,
-      state: ClubStateTypes.OpenChillzone,
+      state: ClubStateTypes.OpenBar,
       madeByUser: {
         id: 195,
         name: "LeO"
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
       start: new Date(2021, 11, 28, 10, 11, 1),
       plannedEnd: new Date(2021, 11, 28, 14, 28, 32),
       note: "Velmi pěkná veřejná poznámka",
-      noteInternal: "Interní poznámka se zobrazuje jen manažerům",
+      noteInternal: null,//"Interní poznámka se zobrazuje jen manažerům",
       actualEnd: null,
       closedByUser: null,
       eventId: null,

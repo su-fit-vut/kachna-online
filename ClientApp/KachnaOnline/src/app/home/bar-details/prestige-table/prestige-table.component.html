@@ -1,0 +1,12 @@
+<h4 class="text-center border-bottom pb-2">{{title}}</h4>
+<h5 class="text-secondary" *ngIf="leaderboard == undefined">načítám...</h5>
+<h5 class="text-secondary" *ngIf="leaderboard != undefined && leaderboard.length == 0">zatím zde nic není :(</h5>
+
+<table class="table prestige-table">
+  <tbody>
+  <tr *ngFor="let i of leaderboard">
+    <td>{{i.name}}</td>
+    <td>{{i.prestige}}</td>
+  </tr>
+  </tbody>
+</table>
