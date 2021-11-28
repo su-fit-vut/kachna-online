@@ -7,6 +7,7 @@ import { ToastrService } from "ngx-toastr";
 import { Reservation, ReservationState } from "../../models/board-games/reservation-model";
 import { FormControl } from "@angular/forms";
 import { ReservationItemState } from "../../models/board-games/reservation-item-model";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: 'app-reservations',
@@ -23,7 +24,8 @@ export class ReservationsComponent implements OnInit {
   reservationFilterForm = new FormControl("---");
   reservationFilter: ReservationState | undefined = undefined;
 
-  constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService) {
+  constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
+              private router: Router, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -39,8 +41,16 @@ export class ReservationsComponent implements OnInit {
   fetchReservations(): void {
     this.boardGamesService.getReservations(this.reservationFilter).subscribe(
       reservations => {
-        this.reservations = reservations;
-        console.log(this.reservations);
+        // FIXME: Possibly move this sort to backend (also related to pagination)
+        this.reservations = reservations.sort((a, b) => {
+          if (a.madeOn > b.madeOn) {
+            return -1;
+          } else if (a.madeOn < b.madeOn) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
       },
       err => {
         console.log(err);
@@ -55,5 +65,14 @@ export class ReservationsComponent implements OnInit {
 
   isExpired(reservation: Reservation): boolean {
     return reservation.items.find(i => i.state == ReservationItemState.Expired) !== undefined;
+  }
+
+  isDone(reservation: Reservation): boolean {
+    return reservation.items.every(
+      i => i.state == ReservationItemState.Cancelled || i.state == ReservationItemState.Done);
+  }
+
+  navigateToReservation(reservation: Reservation): void {
+    this.router.navigate([`./${reservation.id}`], {relativeTo: this.activatedRoute}).then();
   }
 }

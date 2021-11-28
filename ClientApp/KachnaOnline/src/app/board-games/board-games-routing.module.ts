@@ -9,6 +9,7 @@ import { ReservationCreationComponent } from "./reservation-creation/reservation
 import { UserLoggedInGuard } from "../users/user-logged-in.guard";
 import { ReservationsComponent } from "./reservations/reservations.component";
 import { BoardGameDetailsComponent } from "./board-game-details/board-game-details.component";
+import { ReservationDetailsComponent } from "./reservation-details/reservation-details.component";
 
 const routes: Routes = [
   {
@@ -33,12 +34,25 @@ const routes: Routes = [
       },
       {
         path: 'reservations',
-        component: ReservationsComponent,
         canActivate: [UserLoggedInGuard],
-        data: {
-          title: `${environment.siteName} | Moje rezervace`,
-          description: "Seznam mých rezervací"
-        }
+        children: [
+          {
+            path: '',
+            component: ReservationsComponent,
+            data: {
+              title: `${environment.siteName} | Moje rezervace`,
+              description: "Seznam mých rezervací"
+            }
+          },
+          {
+            path: ':id',
+            component: ReservationDetailsComponent,
+            data: {
+              title: `${environment.siteName} | Moje rezervace`,
+              description: "Moje rezervace"
+            }
+          }
+        ]
       },
       {
         path: ':id',

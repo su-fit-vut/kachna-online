@@ -3,11 +3,13 @@
 
 import { Injectable } from '@angular/core';
 import { environment } from "../../../environments/environment";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpParams, HttpResponse } from "@angular/common/http";
 import { forkJoin, Observable } from "rxjs";
 import { BoardGame } from "../../models/board-games/board-game-model";
 import { BoardGameCategory } from "../../models/board-games/category-model";
 import { Reservation, ReservationState } from "../../models/board-games/reservation-model";
+import { ReservationItemState } from "../../models/board-games/reservation-item-model";
+import { ReservationEventType } from "../../models/board-games/reservation-item-event-model";
 
 enum ApiPaths {
   Categories = '/categories',
@@ -154,5 +156,33 @@ export class BoardGamesService {
       params = params.set("state", state);
     }
     return this.http.get<Reservation[]>(this.ReservationsUrl, {params: params});
+  }
+
+  /**
+   * Returns a reservation with the given ID.
+   * @param id ID of the reservation to return.
+   */
+  getReservation(id: number): Observable<Reservation> {
+    return this.http.get<Reservation>(`${this.ReservationsUrl}/${id}`);
+  }
+
+  /**
+   * Updates a user note in a reservation.
+   * @param reservationId ID of the reservation to update.
+   * @param newNote New note.
+   */
+  setReservationUserNote(reservationId: number, newNote: string): Observable<any> {
+    return this.http.put<any>(`${this.ReservationsUrl}/${reservationId}/note`, {noteUser: newNote});
+  }
+
+  /**
+   * Updates a state of a reservation item.
+   * @param reservationId ID of the reservation the item is in.
+   * @param itemId ID of the item to update state of.
+   * @param type The type of event to perform.
+   */
+  updateReservationState(reservationId: number, itemId: number, type: ReservationEventType): Observable<any> {
+    let params = new HttpParams().set("type", type);
+    return this.http.post<any>(`${this.ReservationsUrl}/${reservationId}/${itemId}/events`, {}, {params: params});
   }
 }
