@@ -20,15 +20,12 @@ export class CurrentEventsComponent implements OnInit {
     public authenticationService: AuthenticationService,
   ) { }
 
-  activateEditEventModal: boolean = false;
-
   ngOnInit(): void {
     this.eventsService.refreshCurrentEvents();
   }
 
-
   openEventDetail(eventDetail: Event) {
-    this.router.navigate([`/events/${eventDetail.id}`]).then(() => null);
+    this.router.navigate([`/events/${eventDetail.id}`]).then();
   }
 
   onDeleteButtonClicked(selectedEventDetail: Event) {
@@ -36,13 +33,6 @@ export class CurrentEventsComponent implements OnInit {
   }
 
   onModifyButtonClicked(selectedEventDetail: Event) {
-    this.eventsService.populateForm(selectedEventDetail);
-    this.activateEditEventModal = true;
+    this.router.navigate([`/events/${selectedEventDetail.id}/edit`]).then();
   }
-
-  onCloseModalClicked() {
-    this.activateEditEventModal = false;
-    this.eventsService.refreshCurrentEvents();
-  }
-
 }

@@ -17,6 +17,7 @@ import { LinkedStatesComponent } from './linked-states/linked-states.component';
 import { ManageLinkedStatesComponent } from './linked-states/manage-linked-states/manage-linked-states.component';
 import { ConflictingStatesComponent } from './linked-states/conflicting-states/conflicting-states.component';
 import { ComponentsModule } from "../shared/components/components.module";
+import { EditEventsComponent } from './edit-events/edit-events.component';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { ComponentsModule } from "../shared/components/components.module";
     LinkedStatesComponent,
     ManageLinkedStatesComponent,
     ConflictingStatesComponent,
+    EditEventsComponent,
   ],
     imports: [
         CommonModule,
