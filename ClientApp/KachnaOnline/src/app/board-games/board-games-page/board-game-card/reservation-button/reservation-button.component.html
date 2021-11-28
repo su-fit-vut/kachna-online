@@ -5,23 +5,23 @@ Author: František Nečas
 <div *ngIf="authenticationService.isLoggedIn()">
   <div *ngIf="available <= 0; then thenBlock else elseBlock"></div>
   <ng-template #thenBlock>
-    <button type="button" class="btn btn-secondary" disabled>Aktuálně nedostupné</button>
+    <button type="button" class="btn btn-secondary expand" disabled>Aktuálně nedostupné</button>
   </ng-template>
   <ng-template #elseBlock>
-    <button *ngIf="!currentValue" type="button" class="btn btn-success" (click)="reservedInitial()" [ngStyle]="styles">
+    <button *ngIf="!currentValue" type="button" class="btn btn-success expand" (click)="reservedInitial()"
+            [ngStyle]="styles">
       Rezervovat
     </button>
-    <div *ngIf="currentValue" class="btn-group" role="group">
+    <div *ngIf="currentValue" class="btn-group expand" role="group">
       <button type="button" class="btn btn-outline-success" [ngStyle]="styles" disabled>Zarezervováno {{currentValue}}ks
       </button>
-      <div class="btn-group-vertical" role="group">
-        <button *ngIf="currentValue < available" type="button" class="btn btn-success btn-xs" [ngStyle]="styles"
-                (click)="reservedIncrement()">+
-        </button>
-        <button *ngIf="currentValue >= available" type="button" class="btn btn-success btn-xs" [ngStyle]="styles"
-                disabled>+</button>
-        <button type="button" class="btn btn-danger btn-xs" (click)="reservedDecrement()" [ngStyle]="styles">-</button>
-      </div>
+      <button *ngIf="currentValue < available" type="button" class="btn btn-success btn-sm" [ngStyle]="styles"
+              (click)="reservedIncrement()">+
+      </button>
+      <button *ngIf="currentValue >= available" type="button" class="btn btn-success btn-sm" [ngStyle]="styles"
+              disabled>+
+      </button>
+      <button type="button" class="btn btn-danger btn-sm" (click)="reservedDecrement()" [ngStyle]="styles">-</button>
     </div>
   </ng-template>
 </div>
