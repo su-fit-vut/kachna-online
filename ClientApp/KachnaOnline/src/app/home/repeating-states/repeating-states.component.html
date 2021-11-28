@@ -1,0 +1,21 @@
+<div class="d-flex justify-content-center border-bottom pb-2">
+  <table class="open-hours">
+    <tbody>
+    <ng-container *ngFor="let day of states">
+      <ng-container *ngFor="let state of day.values; let i = index">
+        <tr>
+          <th>
+            <span class="font-weight-bold pr-4" *ngIf="i == 0">{{day.day | dayLoc}}</span>
+          </th>
+          <td>
+            {{state.from | timeStr}}–{{state.to | timeStr}}
+          </td>
+          <td>
+            <span class="pl-2">{{state.type | stateLoc}}</span>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
+    </tbody>
+  </table>
+</div>
