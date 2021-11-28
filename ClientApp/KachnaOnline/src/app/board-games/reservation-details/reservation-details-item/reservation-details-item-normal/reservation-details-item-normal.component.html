@@ -3,6 +3,7 @@ reservation-details-item-normal.component.html
 Author: František Nečas
 -->
 <td>{{item.boardGame.name}}</td>
+<td>{{formattedStates.get(item.state)}}</td>
 <td>{{formattedExpiration}}</td>
 <td>{{item.assignedTo?.name}}</td>
 <td>
