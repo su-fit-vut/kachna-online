@@ -17,7 +17,7 @@ export class ReservationComponent implements OnInit {
   @Output() reservationClicked: EventEmitter<Reservation> = new EventEmitter();
   formattedDate: string = "";
   formattedNote: string = "";
-  assignedUsers: Set<MadeByUser> = new Set();
+  assignedUsers: Set<string> = new Set();
   shownNoteChars: number = 128
   noteTooLong: boolean = false;
 
@@ -37,7 +37,7 @@ export class ReservationComponent implements OnInit {
     }
     for (let reservationItem of this.reservation.items) {
       if (reservationItem.assignedTo !== null) {
-        this.assignedUsers.add(reservationItem.assignedTo);
+        this.assignedUsers.add(reservationItem.assignedTo.name);
       }
     }
   }

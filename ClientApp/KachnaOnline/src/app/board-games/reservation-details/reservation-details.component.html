@@ -21,7 +21,8 @@ Author: František Nečas
     <thead>
     <tr>
       <th scope="col">Hra</th>
-      <th scope="col">Konec platnosti</th>
+      <th scope="col">Stav</th>
+      <th scope="col">Vypůjčeno do</th>
       <th scope="col">Kontaktní osoba</th>
       <th scope="col">Akce</th>
     </tr>
@@ -30,7 +31,9 @@ Author: František Nečas
     <tr app-reservation-details-item-normal *ngFor="let item of items" [item]="item" [reservationId]="reservation.id"
         [ngClass]="{
           'table-danger': item.state === itemState.Expired,
-          'table-secondary': item.state == itemState.Cancelled || item.state == itemState.Done
+          'table-secondary': item.state == itemState.Cancelled || item.state == itemState.Done,
+          'table-success': item.state == itemState.HandedOver,
+          'table-info': item.state == itemState.Assigned
           }"></tr>
     </tbody>
   </table>

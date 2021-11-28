@@ -18,6 +18,14 @@ export class ReservationDetailsItemComponent implements OnInit {
   @Input() reservationId: number;
   @Input() item: ReservationItem;
   formattedExpiration: string;
+  formattedStates: Map<string, string> = new Map([
+    ["New", "Nová"],
+    ["Cancelled", "Zrušená"],
+    ["Assigned", "Připravena k předání"],
+    ["HandedOver", "Převzatá"],
+    ["Done", "Vrácená"],
+    ["Expired", "Platnost vypršela"]
+  ]);
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService) {
   }

@@ -4,6 +4,12 @@ Author: František Nečas
 -->
 <h5 class="mt-4">{{item.boardGame.name}}</h5>
 <ul class="no-bullets pl-3">
+  <li [ngClass]="{
+    'text-danger': item.state === itemState.Expired,
+    'text-secondary': item.state == itemState.Cancelled || item.state == itemState.Done,
+    'text-success': item.state == itemState.HandedOver,
+    'text-info': item.state == itemState.Assigned
+  }">Stav: {{formattedStates.get(item.state)}}</li>
   <li *ngIf="item.expiresOn" [ngClass]="{'text-danger': item.state == itemState.Expired}">Vypůjčeno
     do: {{formattedExpiration}}</li>
   <li *ngIf="item.assignedTo">Kontaktní osoba: {{item.assignedTo.name}}</li>
