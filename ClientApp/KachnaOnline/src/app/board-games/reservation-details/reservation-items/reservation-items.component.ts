@@ -15,6 +15,7 @@ export class ReservationItemsComponent implements OnInit {
   @Input() items: ReservationItem[];
   @Input() managerView: boolean = false;
   @Output() reservationItemClicked: EventEmitter<ReservationItem> = new EventEmitter();
+  @Output() itemStateUpdated: EventEmitter<ReservationItem> = new EventEmitter();
 
   constructor() {
   }
@@ -28,6 +29,10 @@ export class ReservationItemsComponent implements OnInit {
 
   rowClicked(item: ReservationItem): void {
     this.reservationItemClicked.emit(item);
+  }
+
+  itemStateChanged(item: ReservationItem): void {
+    this.itemStateUpdated.emit(item);
   }
 
 }

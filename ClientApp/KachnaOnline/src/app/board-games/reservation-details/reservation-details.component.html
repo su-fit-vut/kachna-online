@@ -9,7 +9,7 @@ Author: František Nečas
 <h4>Vytvořena {{formattedDate}}</h4>
 
 <app-reservation-items (reservationItemClicked)="routeToBoardGame($event)" [reservation]="reservation"
-                       [items]="items"></app-reservation-items>
+                       (itemStateUpdated)="fetchReservation()" [items]="items"></app-reservation-items>
 
 <form>
   <div class="form-group">

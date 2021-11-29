@@ -9,6 +9,7 @@ import { Reservation } from "../../../models/board-games/reservation.model";
 import { ReservationItem } from "../../../models/board-games/reservation-item.model";
 import { FormControl } from "@angular/forms";
 import { formatDate } from "@angular/common";
+import { HttpStatusCode } from "@angular/common/http";
 
 @Component({
   selector: 'app-manager-reservation-details',
@@ -20,6 +21,7 @@ export class ManagerReservationDetailsComponent implements OnInit {
   items: ReservationItem[];
   noteInternalForm: FormControl = new FormControl('');
   formattedDate: string;
+  reservationId: number;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               private router: Router, private route: ActivatedRoute) {
@@ -27,19 +29,27 @@ export class ManagerReservationDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.boardGamesService.getReservation(params['id']).subscribe(reservation => {
-          this.reservation = reservation;
-          this.items = reservation.items;
-          this.noteInternalForm.setValue(this.reservation.noteInternal);
-          this.formattedDate = formatDate(this.reservation.madeOn, "d. M. y", "cs-CZ");
-        },
-        err => {
-          console.log(err);
-          this.toastrService.error("Načtení rezervace se nezdařilo.");
-          this.router.navigate(['..'], {relativeTo: this.route}).then();
-        })
+      this.reservationId = params['id'];
+      this.fetchReservation();
     })
   }
+
+  fetchReservation(): void {
+    this.boardGamesService.getReservation(this.reservationId).subscribe(reservation => {
+        this.reservation = reservation;
+        this.items = reservation.items;
+        this.noteInternalForm.setValue(this.reservation.noteUser);
+        this.formattedDate = formatDate(this.reservation.madeOn, "d. M. y", "cs-CZ");
+      },
+      err => {
+        console.log(err);
+        this.toastrService.error("Načtení rezervace se nezdařilo.")
+        this.router.navigate(['..'], {relativeTo: this.route}).then()
+
+      })
+
+  }
+
 
   routeToBoardGame(item: ReservationItem): void {
     this.boardGamesService.saveBackRoute(this.router.url);
@@ -47,7 +57,7 @@ export class ManagerReservationDetailsComponent implements OnInit {
   }
 
   updateNote(): void {
-    this.boardGamesService.setReservationUserNote(this.reservation.id, this.noteInternalForm.value).subscribe(_ => {
+    this.boardGamesService.setReservationInternalNote(this.reservation.id, this.noteInternalForm.value).subscribe(_ => {
         this.toastrService.success("Poznámka uložena.");
       },
       err => {
