@@ -12,13 +12,14 @@ Author: František Nečas
             (click)="$event.stopPropagation(); cancelReservation()">
       Zrušit
     </button>
-    <button type="button" class="btn btn-primary" *ngIf="item.state == itemState.HandedOver"
+    <button type="button" class="btn btn-primary"
+            *ngIf="item.state == itemState.HandedOver && item.lastEventType != eventType.ExtensionRequested"
             (click)="$event.stopPropagation(); requestExtension()">
       Prodloužit
     </button>
   </ng-container>
   <ng-container *ngIf="managerView">
-    <app-manager-button-cluster [item]="item" [lastEvent]="lastEvent" (assign)="assign()" (handOver)="handOver()"
+    <app-manager-button-cluster [item]="item" (assign)="assign()" (handOver)="handOver()"
                                 (cancel)="cancelReservation()" (extend)="extend()"
                                 (refuseExtension)="refuseExtension()"
                                 (returned)="return()"></app-manager-button-cluster>

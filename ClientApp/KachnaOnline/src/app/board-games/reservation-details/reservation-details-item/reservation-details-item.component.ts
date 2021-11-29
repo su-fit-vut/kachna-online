@@ -20,7 +20,6 @@ export class ReservationDetailsItemComponent implements OnInit {
   @Input() managerView: boolean = false;
   @Output() reservationItemClicked: EventEmitter<ReservationItem> = new EventEmitter();
   @Output() stateChanged: EventEmitter<ReservationItem> = new EventEmitter();
-  lastEvent: ReservationItemEvent;
 
   formattedExpiration: string;
   formattedStates: Map<string, string> = new Map([
@@ -39,8 +38,11 @@ export class ReservationDetailsItemComponent implements OnInit {
     return ReservationItemState;
   }
 
+  public get eventType(): typeof ReservationEventType {
+    return ReservationEventType;
+  }
+
   ngOnInit(): void {
-    this.fetchLastEvent();
     if (!this.item.expiresOn) {
       this.formattedExpiration = "";
     } else {
@@ -48,20 +50,10 @@ export class ReservationDetailsItemComponent implements OnInit {
     }
   }
 
-  fetchLastEvent(): void {
-    if (this.managerView) {
-      this.boardGamesService.getReservationItemHistory(this.reservationId, this.item.id).subscribe(history => {
-        if (history.length > 0) {
-          this.lastEvent = history[0];
-        }
-      })
-    }
-  }
-
   cancelReservation(): void {
     this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
       ReservationEventType.Cancelled).subscribe(_ => {
-        this.item.state = ReservationItemState.Cancelled;
+        this.stateChanged.emit(this.item);
         this.toastrService.success("Rezervace hry zrušena.");
       },
       err => {
@@ -74,23 +66,23 @@ export class ReservationDetailsItemComponent implements OnInit {
   requestExtension(): void {
     this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
       ReservationEventType.ExtensionRequested).subscribe(_ => {
+      this.stateChanged.emit(this.item);
       this.toastrService.success("Bylo zažádáno o prodloužení. Vyčkej, prosím, než ho někdo schválí " +
         "nebo napiš kontaktní osobě.");
     }, err => {
-        console.log(err);
-        if (err.status == HttpStatusCode.Conflict) {
-          this.toastrService.warning("Již jsi žádal*a o prodloužení, vyčkej, prosím, než ho někdo schválí " +
-            "nebo napiš kontaktní osobě.");
-        } else {
-          this.toastrService.error("Zaslání žádosti o prodloužení selhalo.");
-        }
+      console.log(err);
+      if (err.status == HttpStatusCode.Conflict) {
+        this.toastrService.warning("Již jsi žádal*a o prodloužení, vyčkej, prosím, než ho někdo schválí " +
+          "nebo napiš kontaktní osobě.");
+      } else {
+        this.toastrService.error("Zaslání žádosti o prodloužení selhalo.");
+      }
     })
   }
 
   assign(): void {
     this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
       ReservationEventType.Assigned).subscribe(_ => {
-        this.item.state = ReservationItemState.Assigned;
         this.stateChanged.emit(this.item);
         this.toastrService.success("Hra byla přiřazena.");
       },

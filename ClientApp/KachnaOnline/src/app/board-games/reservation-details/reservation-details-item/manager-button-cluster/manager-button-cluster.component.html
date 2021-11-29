@@ -15,7 +15,7 @@ Author: František Nečas
   <button type="button" class="btn btn-success m-1" *ngIf="item.state == itemState.HandedOver" (click)="$event.stopPropagation(); extend.emit(item)">
     Prodloužit
   </button>
-  <button type="button" class="btn btn-danger m-1" *ngIf="lastEvent.type == eventType.ExtensionRequested" (click)="$event.stopPropagation(); refuseExtension.emit(item)">
+  <button type="button" class="btn btn-danger m-1" *ngIf="item.lastEventType == eventType.ExtensionRequested" (click)="$event.stopPropagation(); refuseExtension.emit(item)">
     Zamítnout prodloužení
   </button>
   <button type="button" class="btn btn-success m-1" *ngIf="item.state == itemState.HandedOver" (click)="$event.stopPropagation(); returned.emit(item)">
