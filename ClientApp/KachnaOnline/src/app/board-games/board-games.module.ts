@@ -27,6 +27,7 @@ import { ManagerReservationsComponent } from './manager/manager-reservations/man
 import { ReservationItemsComponent } from './reservation-details/reservation-items/reservation-items.component';
 import { ManagerReservationDetailsComponent } from './manager/manager-reservation-details/manager-reservation-details.component';
 import { ManagerButtonClusterComponent } from './reservation-details/reservation-details-item/manager-button-cluster/manager-button-cluster.component';
+import { ReservationHistoryComponent } from './manager/reservation-history/reservation-history.component';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import { ManagerButtonClusterComponent } from './reservation-details/reservation
     ReservationItemsComponent,
     ManagerReservationDetailsComponent,
     ManagerButtonClusterComponent,
+    ReservationHistoryComponent,
   ],
   imports: [
     CommonModule,

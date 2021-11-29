@@ -8,7 +8,7 @@ Author: František Nečas
 <td>{{item.assignedTo?.name}}</td>
 <td>
   <ng-container *ngIf="!managerView">
-    <button type="button" class="btn btn-danger" *ngIf="item.state == itemState.New"
+    <button type="button" class="btn btn-danger" *ngIf="item.state == itemState.New || item.state == itemState.Assigned"
             (click)="$event.stopPropagation(); cancelReservation()">
       Zrušit
     </button>
@@ -19,7 +19,7 @@ Author: František Nečas
     </button>
   </ng-container>
   <ng-container *ngIf="managerView">
-    <app-manager-button-cluster [item]="item" (assign)="assign()" (handOver)="handOver()"
+    <app-manager-button-cluster [item]="item" (handOver)="handOver()"
                                 (cancel)="cancelReservation()" (extend)="extend()"
                                 (refuseExtension)="refuseExtension()"
                                 (returned)="return()"></app-manager-button-cluster>

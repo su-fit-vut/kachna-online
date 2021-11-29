@@ -15,7 +15,6 @@ import {
 export class ManagerButtonClusterComponent implements OnInit {
   @Input() item: ReservationItem;
   @Output() cancel: EventEmitter<ReservationItem> = new EventEmitter();
-  @Output() assign: EventEmitter<ReservationItem> = new EventEmitter();
   @Output() handOver: EventEmitter<ReservationItem> = new EventEmitter();
   @Output() extend: EventEmitter<ReservationItem> = new EventEmitter();
   @Output() refuseExtension: EventEmitter<ReservationItem> = new EventEmitter();
