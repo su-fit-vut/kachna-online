@@ -25,5 +25,5 @@ export class ReservationItemEvent {
   madeOn: Date
   type: ReservationEventType
   // May be null if the expiration did not change.
-  newExpiryDate: Date
+  newExpiryDateTime: Date
 }

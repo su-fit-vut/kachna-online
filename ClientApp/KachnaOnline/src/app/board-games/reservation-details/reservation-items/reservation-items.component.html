@@ -32,7 +32,8 @@ Author: František Nečas
           'table-danger': item.state === itemState.Expired,
           'table-secondary': item.state == itemState.Cancelled || item.state == itemState.Done,
           'table-success': item.state == itemState.HandedOver,
-          'table-info': item.state == itemState.Assigned
+          'table-info': item.state == itemState.Assigned,
+          'table-warning': managerView && item.lastEventType == eventType.ExtensionRequested
           }"></tr>
     </tbody>
   </table>

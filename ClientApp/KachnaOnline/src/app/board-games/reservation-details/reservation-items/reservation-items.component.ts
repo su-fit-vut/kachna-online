@@ -4,6 +4,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ReservationItem, ReservationItemState } from "../../../models/board-games/reservation-item.model";
 import { Reservation } from "../../../models/board-games/reservation.model";
+import { ReservationEventType } from "../../../models/board-games/reservation-item-event.model";
 
 @Component({
   selector: 'app-reservation-items',
@@ -18,6 +19,10 @@ export class ReservationItemsComponent implements OnInit {
   @Output() itemStateUpdated: EventEmitter<ReservationItem> = new EventEmitter();
 
   constructor() {
+  }
+
+  public get eventType(): typeof ReservationEventType {
+    return ReservationEventType;
   }
 
   public get itemState(): typeof ReservationItemState {

@@ -6,6 +6,7 @@ import {
   ReservationEventType,
   ReservationItemEvent
 } from "../../../../models/board-games/reservation-item-event.model";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: 'app-manager-button-cluster',
@@ -20,7 +21,7 @@ export class ManagerButtonClusterComponent implements OnInit {
   @Output() refuseExtension: EventEmitter<ReservationItem> = new EventEmitter();
   @Output() returned: EventEmitter<ReservationItem> = new EventEmitter();
 
-  constructor() { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
 
   public get itemState(): typeof ReservationItemState {
     return ReservationItemState;
@@ -34,6 +35,6 @@ export class ManagerButtonClusterComponent implements OnInit {
   }
 
   showHistory(): void {
-    console.log(`Show history of item ${this.item.id}`);
+    this.router.navigate([`${this.item.id}`], {relativeTo: this.activatedRoute}).then();
   }
 }
