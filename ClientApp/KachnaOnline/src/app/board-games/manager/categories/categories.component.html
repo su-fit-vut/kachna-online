@@ -1,0 +1,24 @@
+<!--
+categories.component.html
+Author: František Nečas
+-->
+<div class="d-flex justify-content-between align-items-center">
+  <h1>Kategorie her</h1>
+  <button type="button" class="btn btn-primary btn-lg font-weight-bold" routerLink="create">Vytvořit</button>
+</div>
+
+<div class="table-responsive mt-3">
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Jméno</th>
+      <th scope="col">Barva</th>
+      <th scope="col">Počet her</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let category of categories" app-category-table-item [category]="category"
+        [gameCount]="boardGameCounts.get(category.id) || 0" (categoryClicked)="routeToCategory($event)"></tr>
+    </tbody>
+  </table>
+</div>

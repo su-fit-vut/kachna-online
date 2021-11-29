@@ -109,11 +109,11 @@ Author: David Chocholatý
               <button class="dropdown-item" routerLinkActive="active" (click)="navigateToAllReservations()"
                       *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Historie rezervací
               </button>
-              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active"
+              <button class="dropdown-item" routerLink="board-games/manager/games" routerLinkActive="active"
                       (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()"
                       ngbDropdownItem>Správa her
               </button>
-              <button class="dropdown-item" routerLink="boardgames/" routerLinkActive="active"
+              <button class="dropdown-item" routerLink="board-games/manager/categories" routerLinkActive="active"
                       (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()"
                       ngbDropdownItem>Správa kategorií
               </button>

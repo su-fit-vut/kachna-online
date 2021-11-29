@@ -4,7 +4,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReservationEventType, ReservationItemEvent } from "../../../models/board-games/reservation-item-event.model";
 import { BoardGamesService } from "../../../shared/services/board-games.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { formatDate } from "@angular/common";
 
@@ -27,7 +27,7 @@ export class ReservationHistoryComponent implements OnInit {
   events: ReservationItemEvent[] = [];
 
   constructor(private boardGamesService: BoardGamesService, private route: ActivatedRoute,
-              private toastrService: ToastrService) { }
+              private toastrService: ToastrService, private router: Router) { }
 
   public get eventType(): typeof ReservationEventType {
     return ReservationEventType;
@@ -48,6 +48,7 @@ export class ReservationHistoryComponent implements OnInit {
       }, err => {
         console.log(err);
         this.toastrService.error("Načtení historie rezervace selhalo.");
+        this.router.navigate(['..'], {relativeTo: this.route}).then();
       })
     })
   }

@@ -14,6 +14,10 @@ import { BoardGamesManagerGuard } from "./board-games-manager.guard";
 import { ManagerReservationsComponent } from "./manager/manager-reservations/manager-reservations.component";
 import { ManagerReservationDetailsComponent } from "./manager/manager-reservation-details/manager-reservation-details.component";
 import { ReservationHistoryComponent } from "./manager/reservation-history/reservation-history.component";
+import { CategoriesComponent } from "./manager/categories/categories.component";
+import { CategoryCreateComponent } from "./manager/categories/category-create/category-create.component";
+import { CategoryUpdateComponent } from "./manager/categories/category-update/category-update.component";
+import { ManagerBoardGamesComponent } from "./manager/manager-board-games/manager-board-games.component";
 
 const routes: Routes = [
   {
@@ -70,6 +74,43 @@ const routes: Routes = [
         path: 'manager',
         canActivate: [BoardGamesManagerGuard],
         children: [
+          {
+            path: 'games',
+            component: ManagerBoardGamesComponent,
+            data: {
+              title: `${environment.siteName} | Deskové hry`,
+              description: `Správa deskových her`
+            }
+          },
+          {
+            path: 'categories',
+            children: [
+              {
+                path: '',
+                component: CategoriesComponent,
+                data: {
+                  title: `${environment.siteName} | Kategorie`,
+                  description: `Přehled kategorií`
+                }
+              },
+              {
+                path: 'create',
+                component: CategoryCreateComponent,
+                data: {
+                  title: `${environment.siteName} | Tvorba kategorie`,
+                  description: `Tvorba kategorie`
+                }
+              },
+              {
+                path: ':id',
+                component: CategoryUpdateComponent,
+                data: {
+                  title: `${environment.siteName} | Správa kategorie`,
+                  description: `Správa a úprava kategorie`
+                }
+              }
+            ]
+          },
           {
             path: 'reservations',
             children: [

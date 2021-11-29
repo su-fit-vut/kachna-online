@@ -1,0 +1,25 @@
+<!--
+category-update.component.html
+Author: František Nečas
+-->
+<div class="d-flex justify-content-between align-items-center">
+  <div class="d-flex">
+    <app-back-arrow targetRoute=".."></app-back-arrow>
+    <h2>Úprava kategorie {{category?.name}}</h2>
+  </div>
+  <button type="button" class="btn btn-danger btn-lg align-self-start" (click)="deleteCategory()">Smazat</button>
+</div>
+
+<form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="cat-name">Jméno</label>
+    <input id="cat-name" type="text" class="form-control" minlength="1" maxlength="64" formControlName="name" required/>
+  </div>
+  <div class="form-group">
+    <label for="cat-color">Barva</label>
+    <input [colorPicker]="color" [style.background]="color" (colorPickerChange)="onColorChange($event)"
+           formControlName="color" type="text" maxlength="7" minlength="7" class="form-control" id="cat-color"
+           required/>
+  </div>
+  <button type="submit" [disabled]="!categoryForm.valid" class="btn btn-primary">Upravit kategorii</button>
+</form>

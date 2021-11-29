@@ -1,0 +1,21 @@
+<!--
+category-create.component.html
+Author: František Nečas
+-->
+<div class="d-flex">
+  <app-back-arrow targetRoute=".."></app-back-arrow>
+  <h2>Tvorba kategorie</h2>
+</div>
+<form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="cat-name">Jméno</label>
+    <input id="cat-name" type="text" class="form-control" minlength="1" maxlength="64" formControlName="name" required/>
+  </div>
+  <div class="form-group">
+    <label for="cat-color">Barva</label>
+    <input [colorPicker]="color" [style.background]="color" (colorPickerChange)="onColorChange($event)"
+           formControlName="color" type="text" maxlength="7" minlength="7" class="form-control" id="cat-color"
+           required/>
+  </div>
+  <button type="submit" [disabled]="!categoryForm.valid" class="btn btn-primary">Vytvořit kategorii</button>
+</form>
