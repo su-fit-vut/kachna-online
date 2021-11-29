@@ -245,6 +245,10 @@ export class EventsService {
     this.getConflictingStatesForEventRequest(eventId).toPromise()
       .then((res: ClubState[]) => {
         for (let conflictingState of res) {
+          if (this.eventDetail.linkedPlannedStateIds == null) {
+            this.eventDetail.linkedPlannedStateIds = [];
+          }
+
           if (!this.eventDetail.linkedPlannedStateIds.includes(conflictingState.id)
             && new Date(conflictingState.plannedEnd).getTime() > Date.now()) {
             this.conflictingStatesList.push(conflictingState);

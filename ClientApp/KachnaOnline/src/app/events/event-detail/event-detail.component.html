@@ -30,7 +30,7 @@ Author: David Chocholatý
         <p *ngIf="!eventsService.eventDetail.placeUrl" class="mb-1">{{eventsService.eventDetail.place}}</p>
         <a [href]="eventsService.eventDetail.placeUrl" *ngIf="eventsService.eventDetail.placeUrl" href="." class="mb-1">{{eventsService.eventDetail.place}}</a>
       </div>
-    <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.linkedPlannedStateIds.length">
+    <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.linkedPlannedStateIds?.length">
       <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1">Kachna bude v rámci akce otevřená</h5>
       </div>

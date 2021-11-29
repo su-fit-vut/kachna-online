@@ -28,7 +28,7 @@ export class BarDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (!this.reloadSubscription.closed) {
+    if (this.reloadSubscription != undefined && !this.reloadSubscription.closed) {
       this.reloadSubscription.unsubscribe();
     }
   }

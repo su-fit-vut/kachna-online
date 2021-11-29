@@ -69,7 +69,8 @@ Author: David Chocholatý
         <div style="color: grey;">(povinné)</div>
       </div>
       <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání akce od" name="from"
-      #from="ngModel" [(ngModel)]="eventsService.eventDetail.from"
+      #from="ngModel" [ngModel]="eventsService.eventDetail.from | date:'yyyy-MM-ddTHH:mm'"
+             (ngModelChange)="eventsService.eventDetail.from = $event"
       required [class.invalid]="from.invalid && from.touched">
     </div>
 
@@ -79,7 +80,8 @@ Author: David Chocholatý
         <div style="color: grey;">(povinné)</div>
       </div>
       <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání akce do" name="to"
-      #to="ngModel" [(ngModel)]="eventsService.eventDetail.to"
+      #to="ngModel" [ngModel]="eventsService.eventDetail.to | date:'yyyy-MM-ddTHH:mm'"
+             (ngModelChange)="eventsService.eventDetail.to = $event"
       required [class.invalid]="to.invalid && to.touched">
     </div>
   </div>
