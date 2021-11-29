@@ -9,7 +9,6 @@ import { Reservation } from "../../../models/board-games/reservation.model";
 import { ReservationItem } from "../../../models/board-games/reservation-item.model";
 import { FormControl } from "@angular/forms";
 import { formatDate } from "@angular/common";
-import { HttpStatusCode } from "@angular/common/http";
 
 @Component({
   selector: 'app-manager-reservation-details',
