@@ -73,6 +73,7 @@ const routes: Routes = [
       {
         path: 'manager',
         canActivate: [BoardGamesManagerGuard],
+        runGuardsAndResolvers: 'always',
         children: [
           {
             path: 'games',
@@ -138,7 +139,7 @@ const routes: Routes = [
                     component: ReservationHistoryComponent,
                     data: {
                       title: `${environment.siteName} | Historie rezervace`,
-                      description: `Histori rezervace jedné hry`
+                      description: `Historie rezervace jedné hry`
                     }
                   }
                 ]

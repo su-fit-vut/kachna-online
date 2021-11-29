@@ -6,8 +6,9 @@ import { Reservation, ReservationState } from "../../../models/board-games/reser
 import { FormControl } from "@angular/forms";
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { BoardGamesStoreService } from "../../../shared/services/board-games-store.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-manager-reservations',
@@ -25,6 +26,7 @@ export class ManagerReservationsComponent implements OnInit {
   reservationFilterForm = new FormControl("---");
   reservationFilter: ReservationState | undefined = undefined;
   assignedFilter: boolean = false;
+  routerReloadSubscription: Subscription;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               private router: Router, private activatedRoute: ActivatedRoute,
@@ -32,10 +34,12 @@ export class ManagerReservationsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    [this.reservationFilter, this.assignedFilter] = this.storeService.getManagerFilter();
-    let formValue = this.filterKeys.find(k => k[1] == this.reservationFilter);
-    this.reservationFilterForm.reset(formValue ? formValue[0] : "---");
-
+    this.routerReloadSubscription = this.router.events.subscribe((e: any) => {
+      if (e instanceof NavigationEnd) {
+        this.loadState();
+      }
+    })
+    this.loadState();
     this.reservationFilterForm.valueChanges.subscribe(value => {
       let filter = this.filterKeys.find(k => k[0] == value);
       this.reservationFilter = filter ? filter[1] : undefined;
@@ -44,8 +48,15 @@ export class ManagerReservationsComponent implements OnInit {
     this.fetchReservations();
   }
 
+  loadState(): void {
+    [this.reservationFilter, this.assignedFilter] = this.storeService.getManagerFilter();
+    let formValue = this.filterKeys.find(k => k[1] == this.reservationFilter);
+    this.reservationFilterForm.reset(formValue ? formValue[0] : "---");
+  }
+
   ngOnDestroy(): void {
     this.storeService.saveManagerFilter(this.reservationFilter, this.assignedFilter);
+    this.routerReloadSubscription?.unsubscribe();
   }
 
   fetchReservations(): void {
