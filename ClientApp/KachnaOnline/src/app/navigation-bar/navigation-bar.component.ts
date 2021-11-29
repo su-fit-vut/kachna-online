@@ -6,6 +6,7 @@ import { AuthenticationService } from "../shared/services/authentication.service
 import { BoardGamesService } from "../shared/services/board-games.service";
 import { ReservationState } from "../models/board-games/reservation.model";
 import { Router } from "@angular/router";
+import { StatesService } from "../shared/services/states.service";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -17,9 +18,11 @@ export class NavigationBarComponent implements OnInit {
   constructor(
     public authenticationService: AuthenticationService,
     public boardGamesService: BoardGamesService,
+    public stateService: StatesService,
     public router: Router
-  ) {
-  }
+  ) {}
+
+  public isMenuCollapsed = true;
 
   ngOnInit(): void {
   }
@@ -42,5 +45,7 @@ export class NavigationBarComponent implements OnInit {
     })
   }
 
-  public isMenuCollapsed = true;
+  closeCurrentState(): void {
+    this.stateService.closeCurrent().subscribe(_ => this.router.navigate(['/']).finally());
+  }
 }

@@ -11,15 +11,16 @@ const routes: Routes = [
   /* Route order
 The order of routes is important because the Router uses a first-match wins strategy when matching routes, so more specific routes should be placed above less specific routes. List routes with a static path first, followed by an empty path route, which matches the default route. The wildcard route comes last because it matches every URL and the Router selects it only if no other routes match first.
 */
-  { path: 'forbidden', component: ForbiddenComponent },
+  {path: 'forbidden', component: ForbiddenComponent},
 
-  { path: '', component: HomeComponent }, // Default home page.
+  {path: '', component: HomeComponent}, // Default home page.
   //{ path: '',   redirectTo: '/states', pathMatch: 'full' }, // Redirect to default states page.
-  { path: '**', component: PageNotFoundComponent },  // Wildcard route for a 404 page.
+  {path: '**', component: PageNotFoundComponent},  // Wildcard route for a 404 page.
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: "reload"})],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

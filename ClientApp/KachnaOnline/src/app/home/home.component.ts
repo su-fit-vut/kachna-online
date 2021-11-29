@@ -8,6 +8,7 @@ import { ClubStateTypes } from "../models/states/club-state-types.model";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { StatesService } from "../shared/services/states.service";
 import { Subscription, timer } from "rxjs";
+import { NavigationEnd, Router } from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -17,21 +18,34 @@ import { Subscription, timer } from "rxjs";
 export class HomeComponent implements OnInit, OnDestroy {
   constructor(public authenticationService: AuthenticationService,
               public stateService: StatesService,
-              public modalService: NgbModal) {
+              public modalService: NgbModal,
+              private router: Router) {
   }
 
   ST = ClubStateTypes;
 
   state: ClubState;
-  reloadSubscription: Subscription;
+  statesReloadSubscription: Subscription;
+  routerReloadSubscription: Subscription;
 
   ngOnInit(): void {
-    this.reloadSubscription = timer(0, 60000)
-      .subscribe(_ => { this.stateService.getCurrent().subscribe(result => this.state = result);});
+    this.statesReloadSubscription = timer(0, 60000)
+      .subscribe(_ => this.loadState());
+
+    this.routerReloadSubscription = this.router.events.subscribe((e: any) => {
+      if (e instanceof NavigationEnd) {
+        this.loadState();
+      }
+    });
   }
 
   ngOnDestroy(): void {
-    this.reloadSubscription.unsubscribe()
+    this.statesReloadSubscription?.unsubscribe()
+    this.routerReloadSubscription?.unsubscribe();
+  }
+
+  loadState(): void {
+    this.stateService.getCurrent().subscribe(result => this.state = result);
   }
 
 }

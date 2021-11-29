@@ -29,13 +29,13 @@ export class BarDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.reloadSubscription != undefined && !this.reloadSubscription.closed) {
-      this.reloadSubscription.unsubscribe();
+      this.reloadSubscription?.unsubscribe();
     }
   }
 
   startLoadingPrestige(): void {
     if (this.leaderboardCollapsed) {
-      this.reloadSubscription.unsubscribe();
+      this.reloadSubscription?.unsubscribe();
     } else {
       this.reloadSubscription = timer(0, 10000).subscribe(_ => {
         if (!this.leaderboardCollapsed) {

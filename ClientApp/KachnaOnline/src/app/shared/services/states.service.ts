@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { ClubState } from "../../models/states/club-state.model";
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
+import { tap } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,8 @@ import { ClubStateTypes } from "../../models/states/club-state-types.model";
 export class StatesService {
 
   readonly StatesUrl = environment.baseApiUrl + '/states';
+
+  currentState: ClubState;
 
   constructor(
     private http: HttpClient,
@@ -23,7 +26,7 @@ export class StatesService {
   }
 
   getCurrent(): Observable<ClubState> {
-    return this.http.get<ClubState>(`${this.StatesUrl}/current`);
+    return this.http.get<ClubState>(`${this.StatesUrl}/current`).pipe(tap(res => this.currentState = res));
   }
 
   getNext(type: ClubStateTypes): Observable<ClubState> {
@@ -42,6 +45,10 @@ export class StatesService {
       lastDay = new Date(month.getFullYear(), month.getMonth() + 1, -1, 23, 59, 59);
     }
     return this.http.get<ClubState[]>(`${this.StatesUrl}?from=${firstDay.toISOString()}&to=${lastDay.toISOString()}`);
+  }
+
+  closeCurrent(): Observable<any> {
+    return this.http.delete(`${this.StatesUrl}/current`).pipe(tap(res => this.getCurrent()));
   }
 
 }
