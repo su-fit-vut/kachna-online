@@ -610,6 +610,15 @@ namespace KachnaOnline.Business.Services
                 await _reservationItemEventRepository.GetByItemIdChronologically(itemId));
         }
 
+        /// <inheritdoc />
+        public async Task<ReservationItemEvent> GetLatestEvent(int reservationId, int itemId)
+        {
+            var item = await _reservationItemRepository.Get(itemId);
+            if (item is null || item.ReservationId != reservationId)
+                throw new ReservationNotFoundException();
+            return _mapper.Map<ReservationItemEvent>(await _reservationItemEventRepository.GetLatestEvent(itemId));
+        }
+
         /// <summary>
         /// Handles a simple event transition which requires only a new event to be written to DB.
         /// </summary>

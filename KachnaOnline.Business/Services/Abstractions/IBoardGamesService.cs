@@ -246,6 +246,17 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<ICollection<ReservationItemEvent>> GetItemHistory(int reservationId, int itemId);
 
         /// <summary>
+        /// Returns the latest event of a reservation item.
+        /// </summary>
+        /// <param name="reservationId">ID of reservation the item belongs to.</param>
+        /// <param name="itemId">ID of an item to get history of.</param>
+        /// <remarks>See <see cref="GetItemHistory"/> for information about redundancy of <paramref name="itemId"/>
+        /// and <see cref="reservationId"/>.</remarks>
+        /// <exception cref="ReservationNotFoundException">When no such item exists.</exception>
+        /// <returns>The latest event that happened to an item with <paramref name="itemId"/>.</returns>
+        Task<ReservationItemEvent> GetLatestEvent(int reservationId, int itemId);
+
+        /// <summary>
         /// Creates a new event which modifies the state of a reservation item.
         /// </summary>
         /// <param name="user">User requesting the change.</param>

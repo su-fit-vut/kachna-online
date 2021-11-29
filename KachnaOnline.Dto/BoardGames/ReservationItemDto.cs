@@ -38,5 +38,16 @@ namespace KachnaOnline.Dto.BoardGames
         /// Current state of the reservation item.
         /// </summary>
         public ReservationItemState State { get; set; }
+
+        /// <summary>
+        /// Type of the last event performed to this item.
+        /// </summary>
+        /// <remarks>
+        /// Semantics of this property are a bit different from <see cref="State"/>. Unlike <see cref="State"/>,
+        /// this property allows fully determining which actions can be performed with the item, whereas
+        /// <see cref="State"/> is only a subset of overall item states and information such as whether extension
+        /// was requested cannot be distinguished.
+        /// </remarks>
+        public ReservationEventType LastEventType { get; set; }
     }
 }

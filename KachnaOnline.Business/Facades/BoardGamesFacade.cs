@@ -59,6 +59,8 @@ namespace KachnaOnline.Business.Facades
                     await this.MakeMadeByDto(await _boardGamesService.GetReservationItemAssignee(itemDto.Id));
                 itemDto.BoardGame =
                     _mapper.Map<ReservedBoardGameDto>(await _boardGamesService.GetBoardGame(item.BoardGameId));
+                var state = await _boardGamesService.GetLatestEvent(reservationId, item.Id);
+                itemDto.LastEventType = _mapper.Map<ReservationEventType>(state?.Type);
                 items.Add(itemDto);
             }
 
@@ -353,6 +355,8 @@ namespace KachnaOnline.Business.Facades
             var itemDto = _mapper.Map<ReservationItemDto>(item);
             itemDto.AssignedTo =
                 await this.MakeMadeByDto(await _boardGamesService.GetReservationItemAssignee(itemDto.Id));
+            var state = await _boardGamesService.GetLatestEvent(reservationId, item.Id);
+            itemDto.LastEventType = _mapper.Map<ReservationEventType>(state?.Type);
             return itemDto;
         }
 
