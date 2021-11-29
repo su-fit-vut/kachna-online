@@ -80,19 +80,6 @@ export class ReservationDetailsItemComponent implements OnInit {
     })
   }
 
-  assign(): void {
-    this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
-      ReservationEventType.Assigned).subscribe(_ => {
-        this.stateChanged.emit(this.item);
-        this.toastrService.success("Hra byla přiřazena.");
-      },
-      err => {
-        console.log(err);
-        this.toastrService.error("Přiřazení se nezdařilo nezdařilo.");
-      }
-    )
-  }
-
   handOver(): void {
     this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
       ReservationEventType.HandedOver).subscribe(_ => {

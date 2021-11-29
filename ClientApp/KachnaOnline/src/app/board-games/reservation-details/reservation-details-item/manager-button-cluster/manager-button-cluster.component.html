@@ -3,25 +3,28 @@ manager-button-cluster.component.html
 Author: František Nečas
 -->
 <div class="d-flex flex-wrap">
-  <button type="button" class="btn btn-danger m-1" *ngIf="item.state == itemState.New" (click)="$event.stopPropagation(); cancel.emit(item)">
+  <button type="button" class="btn btn-danger m-1" *ngIf="item.state == itemState.New || item.state == itemState.Assigned"
+          (click)="$event.stopPropagation(); cancel.emit(item)">
     Zrušit
   </button>
-  <button type="button" class="btn btn-info m-1" *ngIf="item.state == itemState.New" (click)="$event.stopPropagation(); assign.emit(item)">
-    Vzít si na starost
+  <button type="button" class="btn btn-success m-1" *ngIf="item.state == itemState.Assigned"
+          (click)="$event.stopPropagation(); handOver.emit(item)">
+    Předat
   </button>
-  <button type="button" class="btn btn-success m-1" *ngIf="item.state == itemState.Assigned" (click)="$event.stopPropagation(); handOver.emit(item)">
-    Předána
-  </button>
-  <button type="button" class="btn btn-success m-1" *ngIf="item.state == itemState.HandedOver" (click)="$event.stopPropagation(); extend.emit(item)">
+  <button type="button" class="btn btn-success m-1" *ngIf="item.state == itemState.HandedOver"
+          (click)="$event.stopPropagation(); extend.emit(item)">
     Prodloužit
   </button>
-  <button type="button" class="btn btn-danger m-1" *ngIf="item.lastEventType == eventType.ExtensionRequested" (click)="$event.stopPropagation(); refuseExtension.emit(item)">
+  <button type="button" class="btn btn-danger m-1"
+          *ngIf="item.state != itemState.Done && item.lastEventType == eventType.ExtensionRequested"
+          (click)="$event.stopPropagation(); refuseExtension.emit(item)">
     Zamítnout prodloužení
   </button>
-  <button type="button" class="btn btn-success m-1" *ngIf="item.state == itemState.HandedOver" (click)="$event.stopPropagation(); returned.emit(item)">
-    Převzata zpět
+  <button type="button" class="btn btn-success m-1" *ngIf="item.state == itemState.HandedOver"
+          (click)="$event.stopPropagation(); returned.emit(item)">
+    Převzít zpět
   </button>
-  <button type="button" class="btn btn-info m-1" (click)="$event.stopPropagation(); showHistory()">
+  <button type="button" class="btn btn-outline-secondary m-1" (click)="$event.stopPropagation(); showHistory()">
     Zobrazit historii
   </button>
 </div>
