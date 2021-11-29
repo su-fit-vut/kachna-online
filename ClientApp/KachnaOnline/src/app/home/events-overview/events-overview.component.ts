@@ -56,7 +56,7 @@ export class EventsOverviewComponent implements OnInit {
       };
 
       if (s.eventId != null) {
-        let req = this.eventsService.getEvent(s.eventId);
+        let req = this.eventsService.getEventRequest(s.eventId);
         waiting.push(req);
         req.subscribe(e => {
           state.eventName = e.name;

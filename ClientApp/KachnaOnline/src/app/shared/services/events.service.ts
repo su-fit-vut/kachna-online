@@ -35,12 +35,18 @@ export class EventsService {
     return this.http.get<Event[]>(`${this.EventsUrl}/next`);
   }
 
-  getFromToEvents(from: string = "", to: string = ""): Observable<Event[]> {
+  /**
+   * Gets events starting in interval specified by parameter up to maximal allowed length
+   * (as specified by backend settings).
+   * @param from Start of the interval.
+   * @param to End of the interval.
+   */
+  getEventsInInterval(from?: string, to?: string): Observable<Event[]> {
     let params = new HttpParams();
-    if (from != "") {
+    if (from) {
       params = params.set("from", from);
     }
-    if (to != "") {
+    if (to) {
       params = params.set("to", to);
     }
 
@@ -58,10 +64,10 @@ export class EventsService {
     } else {
       lastDay = new Date(month.getFullYear(), month.getMonth() + 1, -1, 23, 59, 59);
     }
-    return this.getFromToEvents(firstDay.toISOString(), lastDay.toISOString());
+    return this.getEventsInInterval(firstDay.toISOString(), lastDay.toISOString());
   }
 
-  getEvent(eventId: number, withLinkedStates: boolean = false): Observable<Event> {
+  getEventRequest(eventId: number, withLinkedStates: boolean = false): Observable<Event> {
     let params = new HttpParams().set('withLinkedStates', withLinkedStates);
     return this.http.get<Event>(`${this.EventsUrl}/${eventId}`, {params});
   }
@@ -69,12 +75,12 @@ export class EventsService {
   /**
    * Gets current events as a list of events.
    */
-  getCurrentEvents(): Observable<Event[]> {
+  getCurrentEventsRequest(): Observable<Event[]> {
     return this.http.get<Event[]>(`${this.EventsUrl}/current`);
   }
 
   refreshCurrentEvents() {
-    this.getCurrentEvents().toPromise()
+    this.getCurrentEventsRequest().toPromise()
       .then((res: Event[]) => {
         this.eventsList = res;
       }).catch((error: any) => {
@@ -84,20 +90,20 @@ export class EventsService {
     });
   }
 
-  planEvent() {
+  planEventRequest() {
     return this.http.post(this.EventsUrl, this.eventDetail);
   }
 
-  modifyEvent() {
+  modifyEventRequest() {
     return this.http.put(`${this.EventsUrl}/${this.eventDetail.id}`, this.eventDetail);
   }
 
-  removeEvent(eventId: number): Observable<any> {
+  removeEventRequest(eventId: number): Observable<any> {
     return this.http.delete(`${this.EventsUrl}/${eventId}`);
   }
 
   refreshEventsList() {
-    this.getFromToEvents().toPromise()
+    this.getEventsInInterval().toPromise()
       .then((res: Event[]) => {
         this.eventsList = res;
       }).catch((error: any) => {
@@ -117,7 +123,7 @@ export class EventsService {
     }
 
     if (confirm("Opravdu chcete odstranit akci " + this.eventDetail.name + "?")) {
-      this.removeEvent(this.eventDetail.id).subscribe(
+      this.removeEventRequest(this.eventDetail.id).subscribe(
         res => {
           this.refreshEventsList();
           this.toastr.success('Akce úspěšně zrušena.', 'Zrušení akce');
@@ -131,7 +137,7 @@ export class EventsService {
   }
 
   public getEventData(eventId: number, withLinkedStates: boolean = false) {
-    this.getEvent(eventId, withLinkedStates).subscribe(
+    this.getEventRequest(eventId, withLinkedStates).subscribe(
       res => {
         this.eventDetail = res as Event;
       },
@@ -176,7 +182,7 @@ export class EventsService {
     }
   }
 
-  private unlinkAllLinkedStatesRequest() {
+  unlinkAllLinkedStatesRequest() {
     return this.http.delete(`${this.EventsUrl}/${this.eventDetail.id}/linkedStates`);
   }
 
@@ -258,8 +264,8 @@ export class EventsService {
     this.linkAllConflictingStates(ids);
   }
 
-  private getConflictingStatesIdsForEvent() {
-    let ids = [];
+  private getConflictingStatesIdsForEvent(): number[] {
+    let ids: number[] = [];
     for (let conflictingState of this.shownConflictingStatesList) {
       ids.push(conflictingState.id);
     }
