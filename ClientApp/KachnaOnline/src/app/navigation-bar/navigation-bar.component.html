@@ -45,13 +45,12 @@ Author: David Chocholatý
             </button>
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
               <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/current" routerLinkActive="active" ngbDropdownItem>Probíhající akce</button>
-              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Plán akcí</button>
               <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/next">Nejbližší akce</button>
-              <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/list">Seznam akcí</button>
               <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/all">Seznam následujících akcí</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/events/list">Seznam akcí</button>
+              <button (click)="isMenuCollapsed = true" ngbDropdownItem>Plán akcí</button>
               <div *ngIf="authenticationService.isEventsManager()" class="dropdown-divider"></div>
-              <button (click)="isMenuCollapsed = true" *ngIf="authenticationService.isEventsManager()" ngbDropdownItem>Přidat akci</button>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/plan" routerLinkActive="active" *ngIf="authenticationService.isEventsManager()" ngbDropdownItem>Naplánovat novou akci</button>
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/plan" routerLinkActive="active" *ngIf="authenticationService.isEventsManager()" ngbDropdownItem>Přidat akci</button>
             </div>
           </div>
         </li>
