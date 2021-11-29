@@ -3,9 +3,8 @@ event-detail.component.html
 Author: David Chocholatý
 -->
 
-<div class="jumbotron py-1">
-  <h1 class="display-5 text-center">Detail akce</h1>
-</div>
+<h1>Detail akce</h1>
+
 <div class="container" *ngIf="eventsService.eventDetail.name">
   <h3 *ngIf="!eventsService.eventDetail.url" class="mb-1">{{eventsService.eventDetail.name}}</h3>
   <h3 *ngIf="eventsService.eventDetail.url" class="mb-1">
@@ -14,22 +13,23 @@ Author: David Chocholatý
     </a>
   </h3>
   <div class="list-group">
-      <p class=" list-group-item mb-1">{{eventsService.eventDetail.shortDescription}}</p>
-      <div class="list-group-item">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">Termín konání</h5>
-        </div>
-        <div class="container row">
-          <p>Od {{eventsService.getFormattedFromDate()}} do {{eventsService.getFormattedToDate()}}</p>
-        </div>
+    <p class=" list-group-item mb-1">{{eventsService.eventDetail.shortDescription}}</p>
+    <div class="list-group-item">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">Termín konání</h5>
       </div>
-      <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.place">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">Místo</h5>
-        </div>
-        <p *ngIf="!eventsService.eventDetail.placeUrl" class="mb-1">{{eventsService.eventDetail.place}}</p>
-        <a [href]="eventsService.eventDetail.placeUrl" *ngIf="eventsService.eventDetail.placeUrl" href="." class="mb-1">{{eventsService.eventDetail.place}}</a>
+      <div class="container row">
+        <p>Od {{eventsService.getFormattedFromDate()}} do {{eventsService.getFormattedToDate()}}</p>
       </div>
+    </div>
+    <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.place">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">Místo</h5>
+      </div>
+      <p *ngIf="!eventsService.eventDetail.placeUrl" class="mb-1">{{eventsService.eventDetail.place}}</p>
+      <a [href]="eventsService.eventDetail.placeUrl" *ngIf="eventsService.eventDetail.placeUrl" href="."
+         class="mb-1">{{eventsService.eventDetail.place}}</a>
+    </div>
     <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.linkedPlannedStateIds?.length">
       <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1">Kachna bude v rámci akce otevřená</h5>
@@ -43,25 +43,25 @@ Author: David Chocholatý
       <p class="mb-1">{{eventsService.eventDetail.fullDescription}}</p>
     </div>
     <div *ngIf="authenticationService.isEventsManager()" class="list-group-item">
-        <ul class="list-group list-group-horizontal">
-          <li class="list-group-item border-0">
-            <button class="btn btn-secondary" (click)="onModifyButtonClicked()"
-                    data-toggle="modal" data-target="#exampleModal"
-                    data-backdrop="static" data-keyboard="false">
-              Upravit akci
-            </button>
-          </li>
+      <ul class="list-group list-group-horizontal">
+        <li class="list-group-item border-0">
+          <button class="btn btn-secondary" (click)="onModifyButtonClicked()"
+                  data-toggle="modal" data-target="#exampleModal"
+                  data-backdrop="static" data-keyboard="false">
+            Upravit akci
+          </button>
+        </li>
 
-          <li class="list-group-item border-0">
-            <button class="btn btn-secondary" (click)="onManageLinkedStatesClicked()">
-              Spravovat připojené stavy klubu
-            </button>
-          </li>
+        <li class="list-group-item border-0">
+          <button class="btn btn-secondary" (click)="onManageLinkedStatesClicked()">
+            Spravovat připojené stavy klubu
+          </button>
+        </li>
 
-          <li class="list-group-item border-0">
-            <button  class="btn btn-danger" (click)="onDeleteButtonClicked()">Zrušit akci</button>
-          </li>
-        </ul>
+        <li class="list-group-item border-0">
+          <button class="btn btn-danger" (click)="onDeleteButtonClicked()">Zrušit akci</button>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

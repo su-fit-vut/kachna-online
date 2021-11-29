@@ -3,10 +3,7 @@ conflicting-states.component.html
 Author: David Chocholatý
 -->
 
-
-<div class="jumbotron py-1">
-  <h1 class="display-5 text-center">Přidat existující stav klubu</h1>
-</div>
+<h1>Přidat existující stav klubu</h1>
 
 <div class="d-flex flex-wrap justify-content-between">
   <div class="row">
@@ -14,7 +11,8 @@ Author: David Chocholatý
       <app-back-arrow targetRoute="../linked-states"></app-back-arrow>
     </div>
     <div class="mr-4 mt-3">
-      <app-togglable-button [startingValue]="eventsService.unlinkedOnly !== undefined" [text]="'Pouze volné stavy klubu'"
+      <app-togglable-button [startingValue]="eventsService.unlinkedOnly !== undefined"
+                            [text]="'Pouze volné stavy klubu'"
                             (valueChanged)="onUnlinkedOnlyChange($event)"></app-togglable-button>
     </div>
   </div>
@@ -42,7 +40,7 @@ Author: David Chocholatý
         <th>Operace</th>
       </tr>
       </thead>
-      <tbody *ngIf="eventsService.shownConflictingStatesList.length > 0" >
+      <tbody *ngIf="eventsService.shownConflictingStatesList.length > 0">
       <tr *ngFor="let conflictingState of eventsService.shownConflictingStatesList">
 
         <td (click)="openClubStateDetail(conflictingState)">
@@ -55,8 +53,10 @@ Author: David Chocholatý
         <td>
           <button type="button" class="btn mr-1 btn-primary"
                   (click)="onLinkConflictingClubState(conflictingState)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg"
+                 viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
             </svg>
             Přidat
           </button>
@@ -71,12 +71,14 @@ Author: David Chocholatý
   </div>
 </div>
 
-<div class="d-flex flex-wrap justify-content-between" *ngIf="eventsService.shownConflictingStatesList.length > 0" >
+<div class="d-flex flex-wrap justify-content-between" *ngIf="eventsService.shownConflictingStatesList.length > 0">
   <div class="row">
     <div class="mr-4 ">
       <button type="button" class="btn mr-1 btn-primary" (click)="onLinkAllConflictingClubStates()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg"
+             viewBox="0 0 16 16">
+          <path fill-rule="evenodd"
+                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
         </svg>
         Přidat všechny stavy klubu
       </button>
