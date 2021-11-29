@@ -356,6 +356,11 @@ namespace KachnaOnline.App.Controllers
             {
                 return this.ConflictProblem("The specified event has already passed and cannot be modified.");
             }
+            // TODO: change the underlying logic to throw a more specific exception
+            catch (EventManipulationFailedException)
+            {
+                return this.ConflictProblem("A state outside the new event's time is linked to the event.");
+            }
         }
 
         /// <summary>

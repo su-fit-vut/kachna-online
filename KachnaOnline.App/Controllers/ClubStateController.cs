@@ -330,19 +330,19 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Unlinks the specified linked state from all events.
         /// </summary>
-        /// <param name="stateId">The ID of the state.</param>
+        /// <param name="id">The ID of the state.</param>
         /// <response code="204">The state was unlinked from events.</response>
         /// <response code="404">No such state exists.</response>
         /// <response code="409">The state has already started and cannot be modified.</response>
-        [HttpDelete("{stateId}/linkedEvent")]
+        [HttpDelete("{id}/linkedEvent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> UnlinkStateFromEvent(int stateId)
+        public async Task<IActionResult> UnlinkStateFromEvent(int id)
         {
             try
             {
-                await _facade.UnlinkStateFromEvent(stateId);
+                await _facade.UnlinkStateFromEvent(id);
                 return this.NoContent();
             }
             catch (StateReadOnlyException)
