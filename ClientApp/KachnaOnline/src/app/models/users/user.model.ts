@@ -9,3 +9,12 @@ export class User {
   cardCode: string = "";
   prestige: number = -1;
 }
+
+export class UserDetail {
+  id: number = -1;
+  name: string = "";
+  nickname: string = "";
+  email: string = "";
+  discordId: string = "";
+  activeRoles: string[] = [];
+}

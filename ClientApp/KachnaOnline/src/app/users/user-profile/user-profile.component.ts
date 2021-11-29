@@ -17,16 +17,17 @@ export class UserProfileComponent implements OnInit {
     public authenticationService: AuthenticationService,
   ) { }
 
-  gamificationConsentTooltipText:string = "Tohle je souhlas s gamifikací."
-  cardCodeTooltipText:string = "Tohle je krásná karta."
+  gamificationConsentTooltipText:string = "Tímto souhlasíš s gamifikací v klubu U Kachničky."
+  cardCodeTooltipText:string = "Tohle je kód tvé klubovní karty."
 
   ngOnInit(): void {
+    this.authenticationService.updateLocalUserInformation();
   }
 
   ngOnDestroy(): void {
   }
 
   onSaveChanges(form: NgForm) {
-    // TODO: Save changes to user nickname, card and gamification approval.
+    this.authenticationService.userInfoSaved();
   }
 }

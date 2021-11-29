@@ -6,12 +6,12 @@ import { KisEduIdResponse } from '../../models/users/auth/kis/kis-eduid-response
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HTTP_INTERCEPTORS, HttpInterceptor } from '@angular/common/http';
+import { HttpClient, HttpParams, HTTP_INTERCEPTORS, HttpInterceptor, HttpHeaders } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { LocalTokenContent } from "../../models/users/auth/local-token-content.model";
 import { RoleTypes } from "../../models/users/auth/role-types.model";
-import { User } from "../../models/users/user.model";
+import { User, UserDetail } from "../../models/users/user.model";
 import { AccessTokens } from "../../models/users/auth/access-tokens.model";
 import { KisTokenContent } from "../../models/users/auth/kis/kis-token-content.model";
 import { KisLoggedInUserInformation } from "../../models/users/kis-logged-in-user-information.model";
@@ -19,6 +19,7 @@ import { KisRefreshTokenResponse } from "../../models/users/auth/kis/kis-refresh
 import { throwError } from "rxjs";
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
+const USERS_API = `${environment.baseApiUrl}/users`;
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,8 @@ export class AuthenticationService {
   refreshLocalTokenIntervalHandle: number;
 
   user: User = new User();
+  usersList: UserDetail[] = [];
+  shownUsersList: UserDetail[] = [];
 
   getSessionIdFromKisEduId() {
     let targetLocation = this.location.prepareExternalUrl("/login");
@@ -230,7 +233,7 @@ export class AuthenticationService {
   }
 
   private assignDataFromKisUserInformation() {
-    this.user.nickname = this.kisLoggedInUserInformation.nickname;
+    this.user.nickname = (this.user.nickname) ? this.user.nickname : this.kisLoggedInUserInformation.nickname;
     this.user.name = this.kisLoggedInUserInformation.name;
     this.user.email = this.kisLoggedInUserInformation.email;
     this.user.cardCode = this.kisLoggedInUserInformation.pin;
@@ -301,5 +304,50 @@ export class AuthenticationService {
   initializeUserDataIfLoggedIn() {
     this.refreshAuthTokenIfLoggedIn();
     this.updateUserDataIfLoggedIn();
+  }
+
+  refreshUsersList() {
+    this.getUsersRequest().toPromise()
+      .then(users => {
+        this.usersList = users;
+        this.shownUsersList = this.usersList;
+      }).catch((error: any) => {
+      throwError(error);
+      this.toastr.error("Stažení seznamu uživatelů se nezdařilo.", "Správa uživatelů");
+    });
+  }
+
+  getUsersRequest() {
+    return this.http.get<UserDetail[]>(`${environment.baseApiUrl}/users`);
+  }
+
+  userInfoSaved() {
+    this.updateNicknameRequest().toPromise()
+      .then( _ => {
+        this.toastr.success("Přezdívka úspěšně aktualizována.", "Správa účtu");
+        this.updateLocalUserInformation();
+      }).catch((err) => {
+        console.log(err);
+        this.toastr.error("Přezdívku nebylo možné aktualizovat.", "Správa účtu");
+      });
+  }
+
+  updateNicknameRequest() {
+    return this.http.put<any>(`${USERS_API}/me/nickname`, JSON.stringify(this.user.nickname),
+      {headers: new HttpHeaders({'Content-Type': 'application/json'})});
+  }
+
+  updateLocalUserInformation() {
+    this.getLocalUserInformationRequest().toPromise()
+      .then( (userDetail: UserDetail) => {
+        this.user.nickname = userDetail.nickname;
+      }).catch((err) => {
+      console.log(err);
+      this.toastr.error("Přezdívku nebylo možné aktualizovat.", "Správa účtu");
+    });
+  }
+
+  getLocalUserInformationRequest () {
+    return this.http.get<UserDetail>(`${USERS_API}/me/`);
   }
 }
