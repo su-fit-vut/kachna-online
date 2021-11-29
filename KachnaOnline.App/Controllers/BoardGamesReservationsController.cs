@@ -187,7 +187,7 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}/note")]
         public async Task<IActionResult> UpdateReservationNote(int id,
-            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)]
+            [StringLength(1024)][FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)]
             string note)
         {
             try
@@ -218,7 +218,7 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}/noteInternal")]
         public async Task<IActionResult> UpdateReservationNoteInternal(int id,
-            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] string note)
+            [StringLength(1024)][FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] string note)
         {
             try
             {
