@@ -238,7 +238,7 @@ export class AuthenticationService {
     this.user.nickname = (this.user.nickname) ? this.user.nickname : this.kisLoggedInUserInformation.nickname;
     this.user.name = this.kisLoggedInUserInformation.name;
     this.user.email = this.kisLoggedInUserInformation.email;
-    this.user.cardCode = this.kisLoggedInUserInformation.pin;
+    this.user.cardCode = "";
     this.user.gamificationConsent = this.kisLoggedInUserInformation.gamification_consent;
     this.user.prestige = this.kisLoggedInUserInformation.prestige;
     this.user.id = this.kisLoggedInUserInformation.id;

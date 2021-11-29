@@ -18,7 +18,7 @@ export class UserProfileComponent implements OnInit {
   ) { }
 
   gamificationConsentTooltipText:string = "Tímto souhlasíš s gamifikací v klubu U Kachničky."
-  cardCodeTooltipText:string = "Tohle je kód tvé klubovní karty."
+  cardCodeTooltipText:string = "Pro přiřazení karty ke svému účtu řekni někomu za barem. Pípneš si kartou a barman ti dá kód, který sem napíšeš."
 
   ngOnInit(): void {
     this.authenticationService.updateLocalUserInformation();
