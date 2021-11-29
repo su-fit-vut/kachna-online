@@ -132,6 +132,7 @@ namespace KachnaOnline.Business.Services
         /// <inheritdoc />
         public async Task UpdateBoardGame(int id, BoardGame game)
         {
+            game.Id = id;
             if (game is null)
                 throw new ArgumentNullException(nameof(game));
 
@@ -148,7 +149,21 @@ namespace KachnaOnline.Business.Services
             if (game.PlayersMin.HasValue && game.PlayersMax.HasValue && game.PlayersMin.Value > game.PlayersMax.Value)
                 throw new InvalidPlayerRangeException();
 
-            _mapper.Map(game, currentGame);
+            // FIXME: Exception is thrown when update is performed on a board game with reservations due to FK
+            //      constraints violations. Temporary workaround
+            // _mapper.Map(game, currentGame);
+            currentGame.Name = game.Name;
+            currentGame.Description = game.Description;
+            currentGame.ImageUrl = game.ImageUrl;
+            currentGame.PlayersMin = game.PlayersMin;
+            currentGame.PlayersMax = game.PlayersMax;
+            currentGame.CategoryId = game.CategoryId;
+            currentGame.OwnerId = game.OwnerId;
+            currentGame.NoteInternal = game.NoteInternal;
+            currentGame.InStock = game.InStock;
+            currentGame.Unavailable = game.Unavailable;
+            currentGame.Visible = game.Visible;
+            currentGame.DefaultReservationTime = game.DefaultReservationTime;
             try
             {
                 await _unitOfWork.SaveChanges();
