@@ -2,6 +2,7 @@
 // Author: František Nečas
 
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using KachnaOnline.App.Extensions;
@@ -13,6 +14,7 @@ using KachnaOnline.Dto.BoardGames;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace KachnaOnline.App.Controllers
 {
@@ -148,7 +150,7 @@ namespace KachnaOnline.App.Controllers
         /// Updates the public note of a reservation with the given ID.
         /// </summary>
         /// <param name="id">ID of the reservation to update.</param>
-        /// <param name="noteDto">A model containing the new user note.</param>
+        /// <param name="note">The new user note.</param>
         /// <response code="204">The reservation was updated.</response>
         /// <response code="403">The reservation belongs to another user.</response>
         /// <response code="404">No such reservation exists.</response>
@@ -156,12 +158,14 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}/note")]
-        public async Task<IActionResult> UpdateReservationNote(int id, ReservationNoteUserDto noteDto)
+        public async Task<IActionResult> UpdateReservationNote(int id,
+            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)]
+            string note)
         {
             try
             {
                 var userId = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
-                await _facade.UpdateReservationNote(id, userId, noteDto);
+                await _facade.UpdateReservationNote(id, userId, note);
                 return this.NoContent();
             }
             catch (ReservationAccessDeniedException)
@@ -178,18 +182,19 @@ namespace KachnaOnline.App.Controllers
         /// Updates the internal note of a reservation with the given ID.
         /// </summary>
         /// <param name="id">ID of the reservation to update.</param>
-        /// <param name="noteDto">A model containing the new internal note.</param>
+        /// <param name="note">The new internal note.</param>
         /// <response code="204">The reservation was updated.</response>
         /// <response code="404">No such reservation exists.</response>
         [Authorize(Roles = AuthConstants.BoardGamesManager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}/noteInternal")]
-        public async Task<IActionResult> UpdateReservationNoteInternal(int id, ReservationNoteInternalDto noteDto)
+        public async Task<IActionResult> UpdateReservationNoteInternal(int id,
+            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] string note)
         {
             try
             {
-                await _facade.UpdateReservationNoteInternal(id, noteDto);
+                await _facade.UpdateReservationNoteInternal(id, note);
                 return this.NoContent();
             }
             catch (ReservationNotFoundException)
@@ -240,7 +245,8 @@ namespace KachnaOnline.App.Controllers
         /// Adds extra board games to a reservation with the given ID.
         /// </summary>
         /// <param name="id">ID of the reservation to update.</param>
-        /// <param name="newItems">A model describing the items to be added.</param>
+        /// <param name="newItems">IDs of games to be added to the reservation. If a game is to be added multiple times,
+        /// it must be included in the array that many times.</param>
         /// <response code="204">The reservation was updated.</response>
         /// <response code="404">No such reservation exists or a requested game does not exist.</response>
         /// <response code="409">All of the given board games could not be reserved (e.g. are not available).
@@ -249,8 +255,8 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(int), StatusCodes.Status409Conflict)]
-        [HttpPut("{id}/items")]
-        public async Task<IActionResult> UpdateReservationItems(int id, UpdateReservationItemsDto newItems)
+        [HttpPost("{id}/items")]
+        public async Task<IActionResult> UpdateReservationItems(int id, [FromBody][MinLength(1)] int[] newItems)
         {
             try
             {

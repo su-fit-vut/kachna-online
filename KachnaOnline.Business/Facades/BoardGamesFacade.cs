@@ -335,25 +335,25 @@ namespace KachnaOnline.Business.Facades
         /// </summary>
         /// <param name="id">ID of the reservation to update.</param>
         /// <param name="userId">ID of the user requesting the change.</param>
-        /// <param name="note"><see cref="ReservationNoteUserDto"/> containing the new user note.</param>
+        /// <param name="note">The new reservation user note.</param>
         /// <exception cref="ReservationNotFoundException">When no such reservation exists.</exception>
         /// <exception cref="ReservationAccessDeniedException">When the user does not own the reservation.</exception>
         /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>
-        public async Task UpdateReservationNote(int id, int userId, ReservationNoteUserDto note)
+        public async Task UpdateReservationNote(int id, int userId, string note)
         {
-            await _boardGamesService.UpdateReservationNote(id, userId, note.NoteUser);
+            await _boardGamesService.UpdateReservationNote(id, userId, note);
         }
 
         /// <summary>
         /// Updates internal note in a reservation.
         /// </summary>
         /// <param name="id">ID of the reservation to update.</param>
-        /// <param name="note"><see cref="ReservationNoteInternalDto"/> containing the new internal note.</param>
+        /// <param name="note">The new internal note.</param>
         /// <exception cref="ReservationNotFoundException">When no such reservation exists.</exception>
         /// <exception cref="ReservationManipulationFailedException">When the reservation cannot be modified.</exception>
-        public async Task UpdateReservationNoteInternal(int id, ReservationNoteInternalDto note)
+        public async Task UpdateReservationNoteInternal(int id, string note)
         {
-            await _boardGamesService.UpdateReservationNoteInternal(id, note.NoteInternal);
+            await _boardGamesService.UpdateReservationNoteInternal(id, note);
         }
 
         /// <summary>
@@ -431,7 +431,7 @@ namespace KachnaOnline.Business.Facades
         /// </summary>
         /// <param name="reservationId">ID of the reservation to add items to.</param>
         /// <param name="addedBy">ID of the user who is adding the games.</param>
-        /// <param name="items"><see cref="UpdateReservationItemsDto"/> containing the new items.</param>
+        /// <param name="items">Items to be added to the reservation.</param>
         /// <exception cref="BoardGameNotFoundException">When a requested game does not exist.</exception>
         /// <exception cref="GameUnavailableException">When some of the requested board games are not
         /// available.</exception>
@@ -439,9 +439,9 @@ namespace KachnaOnline.Business.Facades
         /// <exception cref="ReservationNotFoundException">When a reservation with ID
         /// <paramref name="reservationId"/> does not exist.</exception>
         /// <exception cref="UserNotFoundException">When a user with ID <paramref name="addedBy"/> does not exist.</exception>
-        public async Task AddReservationItems(int reservationId, int addedBy, UpdateReservationItemsDto items)
+        public async Task AddReservationItems(int reservationId, int addedBy, int[] items)
         {
-            await _boardGamesService.AddReservationItems(reservationId, addedBy, items.BoardGameIds);
+            await _boardGamesService.AddReservationItems(reservationId, addedBy, items);
         }
 
         /// <summary>
