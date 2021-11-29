@@ -6,4 +6,51 @@ Author: František Nečas
   <app-back-arrow targetRoute=".."></app-back-arrow>
   <h2>Historie rezervace</h2>
 </div>
-<p>reservation-history works!</p>
+
+<!-- The table on mobile would look weird, list it -->
+<div class="d-block d-sm-none">
+  <hr />
+  <div *ngFor="let event of events">
+    <h5 class="mt-4" [ngClass]="{
+      'text-success': event.type == eventType.Created || event.type == eventType.Returned
+        || event.type == eventType.ExtensionGranted || event.type == eventType.HandedOver,
+      'text-danger': event.type == eventType.ExtensionRefused,
+      'text-warning': event.type == eventType.ExtensionRequested,
+      'text-info': event.type == eventType.Assigned,
+      'text-secondary': event.type == eventType.Cancelled
+    }">{{formattedEventType.get(event.type)}}</h5>
+    <ul class="no-bullets pl-3">
+      <li>Změna provedena {{dateSeconds(event.madeOn)}}</li>
+      <li>Provedl {{event.madeBy?.name}}</li>
+      <li *ngIf="event.newExpiryDateTime">Nová platnost: {{dateDays(event.newExpiryDateTime)}}</li>
+    </ul>
+  </div>
+</div>
+
+<div class="table-responsive d-none d-sm-block">
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Datum</th>
+      <th scope="col">Typ změny</th>
+      <th scope="col">Provedl</th>
+      <th scope="col">Nová platnost</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let event of events" [ngClass]="{
+      'table-success': event.type == eventType.Created || event.type == eventType.Returned
+        || event.type == eventType.ExtensionGranted || event.type == eventType.HandedOver,
+      'table-danger': event.type == eventType.ExtensionRefused,
+      'table-warning': event.type == eventType.ExtensionRequested,
+      'table-info': event.type == eventType.Assigned,
+      'table-secondary': event.type == eventType.Cancelled
+    }">
+      <td>{{dateSeconds(event.madeOn)}}</td>
+      <td>{{formattedEventType.get(event.type)}}</td>
+      <td>{{event.madeBy?.name}}</td>
+      <td>{{event.newExpiryDateTime ? dateDays(event.newExpiryDateTime) : ""}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
