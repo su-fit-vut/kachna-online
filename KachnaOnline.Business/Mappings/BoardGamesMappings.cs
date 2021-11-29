@@ -16,6 +16,7 @@ namespace KachnaOnline.Business.Mappings
         public BoardGamesMappings()
         {
             // Categories
+            this.CreateMap<CreateCategoryDto, Category>();
             this.CreateMap<KachnaOnline.Data.Entities.BoardGames.Category, Category>().ReverseMap();
             this.CreateMap<Category, CategoryDto>().ReverseMap();
 
