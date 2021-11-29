@@ -48,6 +48,7 @@ namespace KachnaOnline.Business.Data.Repositories
         {
             return Set
                 .Where(e => e.From >= from && e.From <= to)
+                .Include(e => e.LinkedPlannedStates)
                 .AsAsyncEnumerable();
         }
     }
