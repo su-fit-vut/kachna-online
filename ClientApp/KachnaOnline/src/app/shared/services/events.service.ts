@@ -250,7 +250,7 @@ export class EventsService {
           }
 
           if (!this.eventDetail.linkedPlannedStateIds.includes(conflictingState.id)
-            && new Date(conflictingState.plannedEnd).getTime() > Date.now()) {
+            && new Date(conflictingState.start).getTime() > Date.now() + (3600 * 1000)) { // TODO: +1 hour because of timezone. Fix properly.
             this.conflictingStatesList.push(conflictingState);
           }
         }

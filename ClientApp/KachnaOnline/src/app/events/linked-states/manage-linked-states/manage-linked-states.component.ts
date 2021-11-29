@@ -32,6 +32,10 @@ export class ManageLinkedStatesComponent implements OnInit {
   }
 
   onUnlinkButtonClicked(linkedState: ClubState) {
+    if (this.linkedStateHasStarted(linkedState)) {
+      this.toastrService.error("Tento stav již začal, není ho proto možné odebrat.")
+      return;
+    }
     this.eventsService.unlinkLinkedState(linkedState.id);
   }
 
@@ -59,5 +63,25 @@ export class ManageLinkedStatesComponent implements OnInit {
     for (let stateId of this.eventsService.eventDetail.linkedPlannedStateIds) {
       //this.statesService.deleteState(stateId); // TODO: Uncomment when implemented. Add a single confirmation inside.
     }
+  }
+
+  /**
+   * Checks whether linked states has already started.
+   * @param linkedState State to check.
+   */
+  linkedStateHasStarted(linkedState: ClubState): boolean {
+    return linkedState.start.getTime() <= Date.now() + (3600 * 1000); // TODO: +1 hour because of timezone. Fix properly.
+  }
+
+  /**
+   * Checks whether any linked state has already started.
+   */
+  anyLinkedStateAlreadyStarted(): boolean {
+    for (let linkedState of this.eventsService.eventDetail.linkedStatesDtos) {
+      if (this.linkedStateHasStarted(linkedState)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
