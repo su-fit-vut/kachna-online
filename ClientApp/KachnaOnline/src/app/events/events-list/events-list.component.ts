@@ -6,6 +6,7 @@ import { Event } from "../../models/events/event.model";
 import { EventsService } from "../../shared/services/events.service";
 import { ToastrService } from "ngx-toastr";
 import { Router } from "@angular/router";
+import { AuthenticationService } from "../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-events-list',
@@ -18,16 +19,15 @@ export class EventsListComponent implements OnInit {
     public eventsService: EventsService,
     private toastrService: ToastrService,
     private router: Router,
+    public authenticationService: AuthenticationService,
   ) { }
-
-  activateEditEventModal: boolean = false;
 
   ngOnInit(): void {
     this.eventsService.refreshEventsList();
   }
 
   openEventDetail(eventDetail: Event) {
-    this.router.navigate([`/events/${eventDetail.id}`]).then(() => null); // FIXME: Open in modal view.
+    this.router.navigate([`/events/${eventDetail.id}`]).then();
   }
 
   onDeleteButtonClicked(selectedEventDetail: Event) {
@@ -35,12 +35,7 @@ export class EventsListComponent implements OnInit {
   }
 
   onModifyButtonClicked(selectedEventDetail: Event) {
-    this.eventsService.populateForm(selectedEventDetail);
-    this.activateEditEventModal = true;
+    this.router.navigate([`/events/${selectedEventDetail.id}/edit`]).then();
   }
 
-  onCloseModalClicked() {
-    this.activateEditEventModal = false;
-    this.eventsService.refreshEventsList();
-  }
 }

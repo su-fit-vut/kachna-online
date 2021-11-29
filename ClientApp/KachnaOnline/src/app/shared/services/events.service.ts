@@ -75,8 +75,12 @@ export class EventsService {
 
   refreshCurrentEvents() {
     this.getCurrentEvents().toPromise()
-      .then((res) => {
-        this.eventsList = res as Event[];
+      .then((res: Event[]) => {
+        res.forEach(event => {
+          event.from = new Date(event.from);
+          event.to = new Date(event.to);
+        });
+        this.eventsList = res;
       }).catch((error: any) => {
       console.log(error);
       this.toastr.error("Nepodařilo se načíst aktuální akce.", "Načtení akcí");
@@ -98,8 +102,12 @@ export class EventsService {
 
   refreshEventsList() {
     this.getFromToEvents().toPromise()
-      .then((res) => {
-        this.eventsList = res as Event[];
+      .then((res: Event[]) => {
+        res.forEach(event => {
+          event.from = new Date(event.from);
+          event.to = new Date(event.to);
+        });
+        this.eventsList = res;
       }).catch((error: any) => {
       console.log(error);
       this.toastr.error("Nepodařilo se načíst akce.", "Načtení akcí");
@@ -300,8 +308,6 @@ export class EventsService {
           event.to = new Date(event.to);
         });
         this.eventsList = res;
-
-
       }).catch((error: any) => {
       console.log(error);
       this.toastr.error("Nepodařilo se načíst nejbližší akce.", "Načtení akcí");

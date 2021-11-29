@@ -28,6 +28,10 @@ export class EventFormComponent implements OnInit {
   ngOnInit(): void {
     if (this.editMode) {
       this.jumbotronText = "Upravit akci";
+      this.route.paramMap.subscribe(params => {
+        let eventId = Number(params.get('eventId'));
+        this.eventsService.getEventData(eventId, true);
+      });
     } else {
       this.eventsService.eventDetail = new Event();
     }
