@@ -26,6 +26,7 @@ export class LoggedInContentComponent implements OnInit {
 
   clickLogOutButton() {
     this.authenticationService.logOut();
+    window.location.reload();
   }
 
 }

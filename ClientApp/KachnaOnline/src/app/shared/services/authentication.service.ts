@@ -44,32 +44,32 @@ export class AuthenticationService {
     let targetLocation = this.location.prepareExternalUrl("/login");
     let params = new HttpParams().set('redirect', `${window.location.origin}${targetLocation}`)
 
-    this.http.get<KisEduIdResponse>(`${environment.kisApiUrl}/auth/eduid`, { params: params }).toPromise()
+    this.http.get<KisEduIdResponse>(`${environment.kisApiUrl}/auth/eduid`, {params: params}).toPromise()
       .then((res: KisEduIdResponse) => {
         let kisResponse = res;
         localStorage.setItem(environment.returnAddressStorageName, this.router.url);
         window.open(kisResponse.wayf_url, '_self');
       }).catch((error: any) => {
-        this.toastr.error("Přihlášení do KIS selhalo.", "Přihlášení");
-        return throwError(error);
+      this.toastr.error("Přihlášení do KIS selhalo.", "Přihlášení");
+      return throwError(error);
     });
   }
 
-  logIn() {
+  logIn(): Promise<any> {
     let sessionId: string = "";
     this.route.queryParams
-    .subscribe(params => {
-      sessionId = params['session'];
-    });
+      .subscribe(params => {
+        sessionId = params['session'];
+      });
 
     let params = new HttpParams().set('session', sessionId);
-    this.http.get<AccessTokens>(`${AUTH_API}/accessTokenFromSession`, { params: params }).toPromise()
-        .then((res) => {
-          this.handleAccessTokens(res);
-        }).catch((error: any) => {
-          this.toastr.error("Načtení přístupových údajů selhalo.", "Přihlášení");
-          return throwError(error);
-    });
+    return this.http.get<AccessTokens>(`${AUTH_API}/accessTokenFromSession`, {params: params}).toPromise()
+      .then((res) => {
+        return this.handleAccessTokens(res);
+      }).catch((error: any) => {
+        this.toastr.error("Načtení přístupových údajů selhalo.", "Přihlášení");
+        return throwError(error);
+      });
   }
 
   private setRefreshIntervalForAuthToken() {
@@ -84,13 +84,14 @@ export class AuthenticationService {
     return Math.floor((this.localTokenContent.exp * 1000 - Date.now()) * 0.8);
   }
 
-  private handleAccessTokens(res: AccessTokens) {
+  private handleAccessTokens(res: AccessTokens) : Promise<any> {
     localStorage.setItem(environment.accessTokenStorageName, res.accessToken);
     localStorage.setItem(environment.kisAccessTokenStorageName, res.kisAccessToken);
+
     this.decodeLocalToken();
     this.decodeKisToken();
     this.setRefreshIntervalForAuthToken();
-    this.getInformationAboutUser();
+    return this.getInformationAboutUser();
   }
 
   logOut() {
@@ -126,6 +127,7 @@ export class AuthenticationService {
       this.refreshAuthToken();
     }
   }
+
   isLoggedIn(): boolean {
     return this.getAccessToken() != null;
   }
@@ -139,24 +141,24 @@ export class AuthenticationService {
       .then((res) => {
         this.handleAccessTokens(res);
       }).catch((error: any) => {
-        this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
-        this.logOut();
-        return throwError(error);
+      this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
+      this.logOut();
+      return throwError(error);
     });
   }
 
   refreshKisToken() {
     let params = new HttpParams().set('refresh_token', localStorage.getItem(environment.kisRefreshTokenStorageName) ?? this.localTokenContent.krt);
-    this.http.get<KisRefreshTokenResponse>(`${environment.kisApiUrl}/auth/fresh_token`, { params }).toPromise()
+    this.http.get<KisRefreshTokenResponse>(`${environment.kisApiUrl}/auth/fresh_token`, {params}).toPromise()
       .then((res) => {
         localStorage.setItem(environment.kisAccessTokenStorageName, res.auth_token);
         localStorage.setItem(environment.kisRefreshTokenStorageName, res.refresh_token);
         this.decodeKisToken();
         this.getInformationAboutUser();
       }).catch((error: any) => {
-        this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
-        this.logOut();
-        return throwError(error);
+      this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
+      this.logOut();
+      return throwError(error);
     });
   }
 
@@ -205,8 +207,8 @@ export class AuthenticationService {
     return this.hasRole(RoleTypes.Admin);
   }
 
-  getInformationAboutUser() {
-    this.http.get<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me`).toPromise()
+  getInformationAboutUser(): Promise<any> {
+    return this.http.get<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me`).toPromise()
       .then((res) => {
         this.kisLoggedInUserInformation = res;
         localStorage.setItem(environment.kisLoggedInUserInformationStorageName, JSON.stringify(this.kisLoggedInUserInformation));
@@ -217,7 +219,7 @@ export class AuthenticationService {
       }).catch((error: any) => {
         throwError(error);
         this.toastr.error("Stažení informací o uživateli z KIS se nezdařilo.", "Přihlášení");
-    });
+      });
   }
 
   getUserName() {
