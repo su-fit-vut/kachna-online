@@ -4,7 +4,7 @@ Author: David Chocholatý
 -->
 
 <div class="jumbotron py-1">
-  <h1 class="display-5 text-center">Současné akce</h1>
+  <h1 class="display-5 text-center">Probíhající akce</h1>
 </div>
 
 <table class="table table-stripped">
@@ -13,7 +13,6 @@ Author: David Chocholatý
     <th>Jméno</th>
     <th>Trvání od</th>
     <th>Trvání do</th>
-    <th>Místo</th>
     <th *ngIf="authenticationService.isEventsManager()">Operace</th>
   </tr>
   </thead>
@@ -26,7 +25,6 @@ Author: David Chocholatý
     <td (click)="openEventDetail(eventDetail)">
       {{eventDetail.to.getDate()}}. {{eventDetail.to.getMonth()}}. {{eventDetail.to.getFullYear()}} {{eventDetail.to.getHours()}}:{{eventDetail.to.getMinutes()}}
     </td>
-    <td (click)="openEventDetail(eventDetail)">{{eventDetail.place}}</td>
     <td *ngIf="authenticationService.isEventsManager()">
       <div class="row">
         <button type="button" class="btn mr-1 btn-primary float-right "

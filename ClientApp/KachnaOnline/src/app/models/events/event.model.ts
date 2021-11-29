@@ -12,8 +12,8 @@ export class Event {
   shortDescription: string = "";
   fullDescription: string = "";
   url: string = "";
-  from: Date;
-  to: Date;
+  from: Date = new Date();
+  to: Date = new Date();
   linkedPlannedStateIds: number[] = [];
   madeById: string = "";
   linkedStatesDtos: ClubState[];
