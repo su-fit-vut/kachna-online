@@ -7,6 +7,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Event } from "../../models/events/event.model";
+import { ClubState } from "../../models/states/club-state.model";
 
 @Injectable({
   providedIn: 'root'
@@ -15,14 +16,14 @@ export class EventsService {
   readonly EventsUrl = environment.baseApiUrl + '/events';
 
   constructor(
-    private http:HttpClient,
+    private http: HttpClient,
     private toastrService: ToastrService,
-    ) { }
+  ) { }
 
   eventDetail: Event = new Event();
   eventsList: Event[];
 
-  getNextPlannedEvents():Observable<Event[]> {
+  getNextPlannedEvents(): Observable<Event[]> {
     return this.http.get<Event[]>(`${this.EventsUrl}/next`);
   }
 
@@ -30,10 +31,25 @@ export class EventsService {
     let params = new HttpParams()
       .set('from', from)
       .set('to', to);
-      // TODO: Handle from or to being empty strings. Is it possible it is handled automatically? Probably.
+    // TODO: Handle from or to being empty strings. Is it possible it is handled automatically? Probably.
 
     return this.http.get<Event[]>(this.EventsUrl, {params: params});
   }
+
+  getMonthEvents(month: Date, peekNextMonth: boolean = true): Observable<Event[]> {
+    let firstDay = new Date(month.getFullYear(), month.getMonth(), month.getDay());
+    firstDay.setDate(1);
+    let lastDay;
+    if (peekNextMonth) {
+      // 35 is the number of days to show when presenting a calendar
+      // firstDay is 00:00:00, so last day is firstDay + 36 days - 1 second (let's not care about leap seconds and DST...)
+      lastDay = new Date(firstDay.getTime() + 36 * 86400000 - 1);
+    } else {
+      lastDay = new Date(month.getFullYear(), month.getMonth() + 1, -1, 23, 59, 59);
+    }
+    return this.getFromToEvents(firstDay.toISOString(), lastDay.toISOString());
+  }
+
 
   getEvent(eventId: number): Observable<Event> {
     return this.http.get<Event>(`${this.EventsUrl}/${eventId}`);
@@ -47,7 +63,7 @@ export class EventsService {
     return this.http.put(`${this.EventsUrl}/${this.eventDetail.id}`, this.eventDetail);
   }
 
-  removeEvent(eventId: number):Observable<any> {
+  removeEvent(eventId: number): Observable<any> {
     return this.http.delete(`${this.EventsUrl}/${eventId}`);
   }
 

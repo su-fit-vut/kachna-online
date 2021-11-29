@@ -15,7 +15,7 @@
       <h2>Nejbližší otvíračka</h2>
       <h5 class="text-muted" *ngIf="nextBar == undefined">načítám...</h5>
       <h5 *ngIf="hasBar == false">Žádná otvíračka s barem není naplánovaná</h5>
-      <h5 *ngIf="nextBar">{{nextBar.start.getDay() | dayLoc}} {{nextChillzone.start | date:'dd. MM.'}}
+      <h5 *ngIf="nextBar">{{nextBar.start.getDay() | dayLoc}} {{nextBar.start | date:'dd. MM.'}}
         od {{nextBar.start | date:'HH:mm'}}
         do {{nextBar.plannedEnd | date:'HH:mm'}}</h5>
     </div>
