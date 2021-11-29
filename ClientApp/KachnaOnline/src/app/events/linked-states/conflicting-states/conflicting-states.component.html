@@ -45,8 +45,12 @@ Author: David Chocholatý
       <tbody *ngIf="eventsService.shownConflictingStatesList.length > 0" >
       <tr *ngFor="let conflictingState of eventsService.shownConflictingStatesList">
 
-        <td (click)="openClubStateDetail(conflictingState)">{{conflictingState.start}}</td>
-        <td (click)="openClubStateDetail(conflictingState)">{{conflictingState.plannedEnd}}</td>
+        <td (click)="openClubStateDetail(conflictingState)">
+          {{conflictingState.start.getDate()}}. {{conflictingState.start.getMonth()}}. {{conflictingState.start.getFullYear()}} {{conflictingState.start.getHours()}}:{{conflictingState.start.getMinutes()}}
+        </td>
+        <td (click)="openClubStateDetail(conflictingState)">
+          {{conflictingState.plannedEnd.getDate()}}. {{conflictingState.plannedEnd.getMonth()}}. {{conflictingState.plannedEnd.getFullYear()}} {{conflictingState.plannedEnd.getHours()}}:{{conflictingState.plannedEnd.getMinutes()}}
+        </td>
         <td (click)="openClubStateDetail(conflictingState)">{{conflictingState.state}}</td>
         <td>
           <button type="button" class="btn mr-1 btn-primary"

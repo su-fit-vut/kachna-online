@@ -5,15 +5,14 @@ Author: David Chocholatý
 
 <div class="card-body">
   <div class="container">
-    <div *ngFor="let linkedState of eventsService.eventDetail.linkedStatesDtos">
-        <div class="row">
-          <div class="col-md-auto">
-            {{linkedState.start}} – {{linkedState.plannedEnd}}
-          </div>
-          <div class="col">
-            ({{linkedState.state}})
-          </div>
+    <div class="row" *ngFor="let linkedState of eventsService.eventDetail.linkedStatesDtos">
+      <div class="col-md-8">
+        {{linkedState.start.getDate()}}. {{linkedState.start.getMonth()}}. {{linkedState.start.getFullYear()}} {{linkedState.start.getHours()}}:{{linkedState.start.getMinutes()}} –
+        {{linkedState.plannedEnd.getDate()}}. {{linkedState.plannedEnd.getMonth()}}. {{linkedState.plannedEnd.getFullYear()}} {{linkedState.plannedEnd.getHours()}}:{{linkedState.plannedEnd.getMinutes()}}
+      </div>
+      <div class="col-md-auto">
+        ({{linkedState.state}})
+      </div>
     </div>
   </div>
-</div>
 </div>

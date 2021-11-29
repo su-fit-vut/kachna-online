@@ -7,7 +7,12 @@ Author: David Chocholatý
   <h1 class="display-5 text-center">Detail akce</h1>
 </div>
 <div class="container" *ngIf="eventsService.eventDetail.name">
-  <h3>{{eventsService.eventDetail.name}}</h3>
+  <h3 *ngIf="!eventsService.eventDetail.url" class="mb-1">{{eventsService.eventDetail.name}}</h3>
+  <h3 *ngIf="eventsService.eventDetail.url" class="mb-1">
+    <a [href]="eventsService.eventDetail.url">
+      {{eventsService.eventDetail.name}}
+    </a>
+  </h3>
   <div class="list-group">
       <p class=" list-group-item mb-1">{{eventsService.eventDetail.shortDescription}}</p>
       <div class="list-group-item">
@@ -15,14 +20,14 @@ Author: David Chocholatý
           <h5 class="mb-1">Termín konání</h5>
         </div>
         <div class="container row">
-          <p>Od {{eventsService.eventDetail.from}} do {{eventsService.eventDetail.to}}</p>
+          <p>Od {{eventsService.getFormattedFromDate()}} do {{eventsService.getFormattedToDate()}}</p>
         </div>
       </div>
       <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.place">
         <div class="d-flex w-100 justify-content-between">
           <h5 class="mb-1">Místo</h5>
         </div>
-        <p *ngIf="!eventsService.eventDetail.placeUrl" href="." class="mb-1">{{eventsService.eventDetail.place}}</p>
+        <p *ngIf="!eventsService.eventDetail.placeUrl" class="mb-1">{{eventsService.eventDetail.place}}</p>
         <a [href]="eventsService.eventDetail.placeUrl" *ngIf="eventsService.eventDetail.placeUrl" href="." class="mb-1">{{eventsService.eventDetail.place}}</a>
       </div>
     <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.linkedPlannedStateIds.length">
