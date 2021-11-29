@@ -2,6 +2,7 @@
 // Author: František Nečas
 
 import { MadeByUser } from "../users/made-by-user-model";
+import { ReservationEventType } from "./reservation-item-event.model";
 
 /**
  * Overall state of a reservation item.
@@ -32,4 +33,5 @@ export class ReservationItem {
   expiresOn: Date
   assignedTo: MadeByUser
   state: ReservationItemState
+  lastEventType: ReservationEventType
 }

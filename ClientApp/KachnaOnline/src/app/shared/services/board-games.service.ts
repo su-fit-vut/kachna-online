@@ -9,6 +9,7 @@ import { BoardGame } from "../../models/board-games/board-game.model";
 import { BoardGameCategory } from "../../models/board-games/board-game-category.model";
 import { Reservation, ReservationState } from "../../models/board-games/reservation.model";
 import { ReservationEventType, ReservationItemEvent } from "../../models/board-games/reservation-item-event.model";
+import { ReservationItem } from "../../models/board-games/reservation-item.model";
 
 enum ApiPaths {
   Categories = '/categories',
@@ -277,6 +278,16 @@ export class BoardGamesService {
     let params = new HttpParams().set("type", type);
     return this.http.post<any>(`${this.ReservationsUrl}/${reservationId}/${itemId}${ReservationApiPaths.Events}`,
       {}, {params: params});
+  }
+
+  /**
+   * Returns an observable of a reservation item.
+   * @param reservationId ID of the reservation the item is in.
+   * @param itemId ID of the item to get.
+   */
+  getReservationItem(reservationId: number, itemId: number): Observable<ReservationItem> {
+    return this.http.get<ReservationItem>(
+      `${this.ReservationsUrl}/${reservationId}/${itemId}`);
   }
 
   /**

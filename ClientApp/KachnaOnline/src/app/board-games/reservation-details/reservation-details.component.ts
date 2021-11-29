@@ -51,7 +51,20 @@ export class ReservationDetailsComponent implements OnInit {
         this.router.navigate(['..'], {relativeTo: this.route}).then()
 
       })
+  }
 
+  fetchItem(item: ReservationItem): void {
+    this.boardGamesService.getReservationItem(this.reservationId, item.id).subscribe(item => {
+      for (let i = 0; i < this.items.length; i++) {
+        if (this.items[i].id == item.id) {
+          this.items[i] = item;
+          break;
+        }
+      }
+    }, err => {
+      console.log(err);
+      this.toastrService.error("Nepodařilo se znovu načíst předmět v rezervaci.");
+    });
   }
 
   updateNote(): void {

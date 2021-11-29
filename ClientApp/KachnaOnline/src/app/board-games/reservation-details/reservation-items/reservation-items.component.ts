@@ -30,9 +30,4 @@ export class ReservationItemsComponent implements OnInit {
   rowClicked(item: ReservationItem): void {
     this.reservationItemClicked.emit(item);
   }
-
-  itemStateChanged(item: ReservationItem): void {
-    this.itemStateUpdated.emit(item);
-  }
-
 }

@@ -19,7 +19,8 @@ Author: František Nečas
     </button>
   </li>
   <li>
-    <button type="button" class="btn btn-primary" *ngIf="item.state == itemState.HandedOver"
+    <button type="button" class="btn btn-primary"
+            *ngIf="item.state == itemState.HandedOver && item.lastEventType != eventType.ExtensionRequested"
             (click)="requestExtension()">
       Prodloužit
     </button>
