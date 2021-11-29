@@ -17,7 +17,6 @@ import { KisTokenContent } from "../../models/users/auth/kis/kis-token-content.m
 import { KisLoggedInUserInformation } from "../../models/users/kis-logged-in-user-information.model";
 import { KisRefreshTokenResponse } from "../../models/users/auth/kis/kis-refresh-token-response.model";
 import { throwError } from "rxjs";
-import { Event } from "../../models/events/event.model";
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
 const USERS_API = `${environment.baseApiUrl}/users`;
@@ -144,7 +143,7 @@ export class AuthenticationService {
   refreshAuthToken() {
     this.http.get<AccessTokens>(`${AUTH_API}/refreshedAccessToken`).toPromise()
       .then((res) => {
-        this.handleAccessTokens(res);
+        this.handleAccessTokens(res).then();
       }).catch((error: any) => {
       this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
       this.logOut();
@@ -159,7 +158,7 @@ export class AuthenticationService {
         localStorage.setItem(environment.kisAccessTokenStorageName, res.auth_token);
         localStorage.setItem(environment.kisRefreshTokenStorageName, res.refresh_token);
         this.decodeKisToken();
-        this.getInformationAboutUser();
+        this.getInformationAboutUser().then();
       }).catch((error: any) => {
       this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
       this.logOut();
@@ -257,7 +256,7 @@ export class AuthenticationService {
       if (userDataFromStorage != null) {
         this.user = JSON.parse(<string>userDataFromStorage);
       } else {
-        this.getInformationAboutUser();
+        this.getInformationAboutUser().then();
       }
 
       let localTokenContentFromStorage = localStorage.getItem(environment.localTokenContentStorageName);
@@ -278,7 +277,7 @@ export class AuthenticationService {
       if (kisLoggedInUserInformationFromStorage != null) {
         this.kisLoggedInUserInformation = JSON.parse(kisLoggedInUserInformationFromStorage);
       } else {
-        this.getInformationAboutUser();
+        this.getInformationAboutUser().then();
       }
     }
   }
@@ -346,7 +345,7 @@ export class AuthenticationService {
         this.user.nickname = userDetail.nickname;
       }).catch((err) => {
       console.log(err);
-      this.toastr.error("Nebylo možné aktualizovat data o uživateli aktualizovat.", "Správa účtu");
+      this.toastr.error("Nebylo možné data o uživateli aktualizovat.", "Správa účtu");
     });
   }
 
