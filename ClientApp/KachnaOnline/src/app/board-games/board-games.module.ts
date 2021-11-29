@@ -11,7 +11,6 @@ import { BoardGamesPageComponent } from './board-games-page/board-games-page.com
 import { BoardGameCardComponent } from './board-games-page/board-game-card/board-game-card.component';
 import { CategorySelectorComponent } from './board-games-page/category-selector/category-selector.component';
 import { CategoryComponent } from './board-games-page/category-selector/category/category.component';
-import { TogglableButtonComponent } from './board-games-page/togglable-button/togglable-button.component';
 import { ReservationCreationComponent } from './reservation-creation/reservation-creation.component';
 import { ReservationItemComponent } from './reservation-creation/reservation-item/reservation-item.component';
 import { ReservationsComponent } from './reservations/reservations.component';
@@ -23,7 +22,6 @@ import { ReservationDetailsComponent } from './reservation-details/reservation-d
 import { ReservationDetailsItemComponent } from './reservation-details/reservation-details-item/reservation-details-item.component';
 import { ReservationDetailsItemNormalComponent } from './reservation-details/reservation-details-item/reservation-details-item-normal/reservation-details-item-normal.component';
 import { ReservationDetailsItemXsComponent } from './reservation-details/reservation-details-item/reservation-details-item-xs/reservation-details-item-xs.component';
-import { NumberSelectionComponent } from './board-games-page/number-selection/number-selection.component';
 
 
 @NgModule({
@@ -32,7 +30,6 @@ import { NumberSelectionComponent } from './board-games-page/number-selection/nu
     BoardGameCardComponent,
     CategorySelectorComponent,
     CategoryComponent,
-    TogglableButtonComponent,
     ReservationCreationComponent,
     ReservationItemComponent,
     ReservationsComponent,
@@ -43,7 +40,6 @@ import { NumberSelectionComponent } from './board-games-page/number-selection/nu
     ReservationDetailsItemComponent,
     ReservationDetailsItemNormalComponent,
     ReservationDetailsItemXsComponent,
-    NumberSelectionComponent,
   ],
   imports: [
     CommonModule,
