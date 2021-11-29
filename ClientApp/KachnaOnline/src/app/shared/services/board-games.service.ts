@@ -76,6 +76,23 @@ export class BoardGamesService {
     return this.http.get<BoardGame>(`${this.BoardGamesUrl}/${id}`);
   }
 
+  /**
+   * Creates a new board game and returns its observable.
+   * @param game Game to create.
+   */
+  createBoardGame(game: object): Observable<BoardGame> {
+    return this.http.post<BoardGame>(`${this.BoardGamesUrl}`, game);
+  }
+
+  /**
+   * Updates a board game with the given ID.
+   * @param id ID of the game to update
+   * @param game New game data.
+   */
+  updateBoardGame(id: number, game: object): Observable<any> {
+    return this.http.put<any>(`${this.BoardGamesUrl}/${id}`, game);
+  }
+
   // Categories
 
   /**

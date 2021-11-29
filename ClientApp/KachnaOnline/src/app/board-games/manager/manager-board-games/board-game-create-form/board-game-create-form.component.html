@@ -1,0 +1,62 @@
+<!--
+board-game-create-form.component.html
+Author: František Nečas
+-->
+
+<!-- FIXME: add owner selection once a component for it is implemented -->
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="bg-name">Jméno</label>
+    <input id="bg-name" type="text" class="form-control" minlength="1" maxlength="256" formControlName="name" required/>
+    <label for="bg-cat">Kategorie</label>
+    <select id="bg-cat" class="form-control" (change)="categoryChanged($event)"
+            formControlName="category" required>
+      <option>---</option>
+      <option *ngFor="let category of categories"
+              [ngStyle]="{'color': '#' + category.colourHex}">{{category.name}}</option>
+    </select>
+    <label for="bg-description">Popis</label>
+    <textarea id="bg-description" class="form-control" formControlName="description"></textarea>
+    <label for="file">Obrázek<a *ngIf="image" href="{{image}}">, současný obrázek</a></label>
+    <input class="form-control" type="file" id="file" accept=".jpg,.jpeg" (change)="imageChanged($event)">
+  </div>
+  <div class="form-group">
+    <label for="bg-pmin">Minimálně hráčů</label>
+    <input class="form-control" type="number" id="bg-pmin" min="1" formControlName="playersMin"/>
+    <label for="bg-pmax">Maximálně hráčů</label>
+    <input class="form-control" type="number" id="bg-pmax" min="1" formControlName="playersMax"/>
+  </div>
+  <div class="form-group">
+    <label for="bg-instock">Počet kusů v klubu</label>
+    <input class="form-control" type="number" id="bg-instock" min="0" formControlName="inStock" required/>
+    <label for="bg-unavail">Počet dočasně nedostupných kusů</label>
+    <input class="form-control" type="number" id="bg-unavail" min="0" formControlName="unavailable" required/>
+    <input class="form-check-inline" type="checkbox" id="bg-visible" formControlName="visible"/>
+    <label for="bg-visible">Viditelné sympatizujícím členům</label>
+  </div>
+  <div class="form-group">
+    <label for="bg-internal">Interní poznámka</label>
+    <textarea id="bg-internal" class="form-control" formControlName="noteInternal"></textarea>
+    <label for="bg-reservation">
+      <div class="d-flex align-items-center">
+        Výchozí délka výpůjčky (dny)
+        <button
+          type="button" class="btn"
+          triggers="click hover focus" [autoClose]="true" [closeDelay]="500"
+          [ngbTooltip]="'Výchozí doba, po jakou bude hra rezervována. Pokud není specifikována, bude použito nastavení sysVýchozí doba, po jakou bude hra rezervována. Pokud není specifikována, bude použito nastavení systemu.'"
+          #tooltip3="ngbTooltip"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+               class="bi bi-question-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path
+              d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+          </svg>
+        </button>
+      </div>
+    </label>
+    <input class="form-control" type="number" id="bg-reservation" min="1" formControlName="defaultReservationDays"/>
+  </div>
+
+  <button type="submit" [disabled]="!form.valid" class="btn btn-primary">{{submitButtonText}}</button>
+</form>

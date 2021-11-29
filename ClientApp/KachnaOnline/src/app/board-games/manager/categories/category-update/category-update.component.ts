@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { FormControl, FormGroup } from "@angular/forms";
 import { HttpStatusCode } from "@angular/common/http";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-category-update',
@@ -21,25 +22,31 @@ export class CategoryUpdateComponent implements OnInit {
   })
   color: string = '#000000';
   category: BoardGameCategory;
+  routeSub: Subscription;
 
   constructor(private boardGamesService: BoardGamesService, private router: Router,
-              private toastrService: ToastrService, private activatedRoute: ActivatedRoute) { }
-
-  ngOnInit(): void {
-    this.fetchCategory();
+              private toastrService: ToastrService, private activatedRoute: ActivatedRoute) {
   }
 
-  fetchCategory(): void {
-    this.activatedRoute.params.subscribe(data => {
-      this.boardGamesService.getCategory(data['id']).subscribe(category => {
-        this.category = category;
-        this.color = '#' + this.category.colourHex;
-        this.categoryForm.patchValue({name: this.category.name, color: this.color});
-      }, err => {
-        console.log(err);
-        this.toastrService.error("Načtení kategorie se nezdařilo.");
-        this.router.navigate(['..'], {relativeTo: this.activatedRoute}).then();
-      })
+  ngOnInit(): void {
+    this.routeSub = this.activatedRoute.params.subscribe(data => {
+      this.fetchCategory(data['id']);
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.routeSub.unsubscribe();
+  }
+
+  fetchCategory(id: number): void {
+    this.boardGamesService.getCategory(id).subscribe(category => {
+      this.category = category;
+      this.color = '#' + this.category.colourHex;
+      this.categoryForm.patchValue({name: this.category.name, color: this.color});
+    }, err => {
+      console.log(err);
+      this.toastrService.error("Načtení kategorie se nezdařilo.");
+      this.router.navigate(['..'], {relativeTo: this.activatedRoute}).then();
     })
   }
 
@@ -47,7 +54,7 @@ export class CategoryUpdateComponent implements OnInit {
     let value = this.categoryForm.value
     this.boardGamesService.updateCategory(this.category.id, value['name'], value['color']).subscribe(_ => {
       this.toastrService.success("Kategorie upravena.");
-      this.fetchCategory();
+      this.fetchCategory(this.category.id);
     }, err => {
       console.log(err);
       this.toastrService.error("Úprava kategorie selhala.");

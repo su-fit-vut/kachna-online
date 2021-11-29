@@ -14,6 +14,7 @@ namespace KachnaOnline.Dto.BoardGames
         /// ID of the category that the game belongs to.
         /// </summary>
         /// <example>4</example>
+        [Required]
         public int CategoryId { get; set; }
 
         /// <summary>

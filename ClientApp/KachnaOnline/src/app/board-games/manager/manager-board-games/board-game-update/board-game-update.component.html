@@ -1,0 +1,11 @@
+<!--
+board-game-update.component.html
+Author: František Nečas
+-->
+<div class="d-flex">
+  <app-back-arrow targetRoute=".."></app-back-arrow>
+  <h2>Správa deskové hry</h2>
+</div>
+
+<app-board-game-create-form [submitButtonText]="'Upravit hru'" [startingState]="game"
+                            (formSubmitted)="updateGame($event)"></app-board-game-create-form>

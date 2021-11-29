@@ -18,6 +18,8 @@ import { CategoriesComponent } from "./manager/categories/categories.component";
 import { CategoryCreateComponent } from "./manager/categories/category-create/category-create.component";
 import { CategoryUpdateComponent } from "./manager/categories/category-update/category-update.component";
 import { ManagerBoardGamesComponent } from "./manager/manager-board-games/manager-board-games.component";
+import { BoardGameCreateComponent } from "./manager/manager-board-games/board-game-create/board-game-create.component";
+import { BoardGameUpdateComponent } from "./manager/manager-board-games/board-game-update/board-game-update.component";
 
 const routes: Routes = [
   {
@@ -77,11 +79,32 @@ const routes: Routes = [
         children: [
           {
             path: 'games',
-            component: ManagerBoardGamesComponent,
-            data: {
-              title: `${environment.siteName} | Deskové hry`,
-              description: `Správa deskových her`
-            }
+            children: [
+              {
+                path: '',
+                component: ManagerBoardGamesComponent,
+                data: {
+                  title: `${environment.siteName} | Deskové hry`,
+                  description: `Správa deskových her`
+                }
+              },
+              {
+                path: 'create',
+                component: BoardGameCreateComponent,
+                data: {
+                  title: `${environment.siteName} | Přidání hry`,
+                  description: `Přidání nové deskové hry`
+                }
+              },
+              {
+                path: ':id',
+                component: BoardGameUpdateComponent,
+                data: {
+                  title: `${environment.siteName} | Správa deskové hry`,
+                  description: `Správa a úprava deskové hry`
+                }
+              }
+            ]
           },
           {
             path: 'categories',
@@ -98,8 +121,8 @@ const routes: Routes = [
                 path: 'create',
                 component: CategoryCreateComponent,
                 data: {
-                  title: `${environment.siteName} | Tvorba kategorie`,
-                  description: `Tvorba kategorie`
+                  title: `${environment.siteName} | Přidání kategorie`,
+                  description: `Přidání kategorie`
                 }
               },
               {

@@ -11,6 +11,7 @@ import { FormControl } from "@angular/forms";
 import { formatDate } from "@angular/common";
 import { ReservationItem } from "../../models/board-games/reservation-item.model";
 import { BoardGamesStoreService } from "../../shared/services/board-games-store.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-reservation-details',
@@ -23,16 +24,21 @@ export class ReservationDetailsComponent implements OnInit {
   noteForm: FormControl = new FormControl('');
   formattedDate: string;
   reservationId: number;
+  routeSub: Subscription;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               private router: Router, private route: ActivatedRoute, private storeService: BoardGamesStoreService) {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.routeSub = this.route.params.subscribe(params => {
       this.reservationId = params['id'];
       this.fetchReservation();
     })
+  }
+
+  ngOnDestroy(): void {
+    this.routeSub.unsubscribe();
   }
 
   fetchReservation(): void {
