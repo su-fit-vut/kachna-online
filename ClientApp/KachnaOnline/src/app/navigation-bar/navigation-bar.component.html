@@ -35,11 +35,12 @@ Author: David Chocholatý
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Změnit aktuální
-                stav
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="/states/change"
+                      ngbDropdownItem>
+                Změnit aktuální stav
               </button>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Naplánovat budoucí
-                stav
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="/states/plan" ngbDropdownItem>
+                Naplánovat budoucí stav
               </button>
               <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Plán stavů
               </button>

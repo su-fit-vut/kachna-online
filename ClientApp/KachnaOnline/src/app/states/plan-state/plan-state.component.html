@@ -1,0 +1,70 @@
+<h1 *ngIf="planningNew">Naplánovat budoucí stav klubu</h1>
+<h1 *ngIf="!planningNew">Změnit stav klubu</h1>
+
+<div class="mb-3" *ngIf="stateService.currentState != undefined && stateService.currentState.state != ST.Closed">
+  <button class="btn btn-outline-danger">Ukončit aktuální stav</button>
+</div>
+
+<div class="row">
+  <form [formGroup]="mainForm" class="col-xl-6">
+    <div class="form-group">
+      <label for="stateType">Typ stavu:</label>
+      <select class="form-control" id="stateType" formControlName="stateType">
+        <option [value]="ST.OpenChillzone">Otevřeno – chillzóna</option>
+        <option [value]="ST.OpenBar">Otevřeno – bar</option>
+        <option [value]="ST.Private">Soukromá akce</option>
+      </select>
+    </div>
+
+    <div class="form-group d-flex align-items-center" *ngIf="planningNew">
+      <label for="startDate" class="text-nowrap">Začátek stavu:</label>
+
+      <div class="input-group mx-3">
+        <input class="form-control" (click)="startDate.open()" type="text" ngbDatepicker
+               #startDate="ngbDatepicker" id="startDate" formControlName="startDate"
+               placeholder="dd. MM. yyyy" autocomplete="false"/>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="startDate.toggle()" type="button"><i
+            class="far fa-calendar"></i></button>
+        </div>
+      </div>
+
+      <ngb-timepicker formControlName="startTime"></ngb-timepicker>
+    </div>
+
+    <div class="form-group d-flex align-items-center">
+      <label for="plannedEndDate" class="text-nowrap">Konec stavu:</label>
+
+      <div class="input-group mx-3">
+        <input class="form-control" (click)="plannedEndDate.open()" type="text" ngbDatepicker
+               #plannedEndDate="ngbDatepicker" id="plannedEndDate" formControlName="plannedEndDate"
+               placeholder="dd. MM. yyyy" autocomplete="false"/>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" (click)="plannedEndDate.toggle()" type="button"><i
+            class="far fa-calendar"></i></button>
+        </div>
+      </div>
+
+      <ngb-timepicker formControlName="plannedEndTime"></ngb-timepicker>
+    </div>
+
+    <div class="form-group" *ngIf="!planningNew">
+      <button class="btn btn-outline-primary" (click)="planningNew = true">Určit také datum začátku</button>
+    </div>
+
+    <div class="form-group">
+      <label for="noteInternal">Interní poznámka:</label>
+      <textarea class="form-control" id="noteInternal" formControlName="noteInternal"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="notePublic">Veřejná poznámka:</label>
+      <textarea class="form-control" id="notePublic" formControlName="notePublic"></textarea>
+    </div>
+
+    <button class="btn btn-primary">
+      <ng-container *ngIf="planningNew">Naplánovat stav</ng-container>
+      <ng-container *ngIf="!planningNew">Uložit změnu stavu</ng-container>
+    </button>
+  </form>
+</div>
