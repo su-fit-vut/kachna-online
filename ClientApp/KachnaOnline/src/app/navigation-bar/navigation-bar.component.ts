@@ -31,20 +31,14 @@ export class NavigationBarComponent implements OnInit {
 
   navigateToCurrentReservations(): void {
     this.isMenuCollapsed = true;
-    // Force re-load of the page
-    this.router.navigate(['/']).then(() => {
-      this.storeService.saveManagerFilter(ReservationState.Current);
-      this.router.navigate(['/board-games/manager/reservations']).then();
-    })
+    this.storeService.saveManagerFilter(ReservationState.Current);
+    this.router.navigate(['/board-games/manager/reservations']).then();
   }
 
   navigateToAllReservations(): void {
     this.isMenuCollapsed = true;
-    // Force re-load of the page
-    this.router.navigate(['']).then(() => {
-      this.storeService.saveManagerFilter(undefined);
-      this.router.navigate(['/board-games/manager/reservations']).then();
-    })
+    this.storeService.saveManagerFilter(undefined);
+    this.router.navigate(['/board-games/manager/reservations']).then();
   }
 
   closeCurrentState(): void {
