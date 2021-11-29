@@ -13,16 +13,24 @@ Author: František Nečas
   <li *ngIf="item.expiresOn" [ngClass]="{'text-danger': item.state == itemState.Expired}">Vypůjčeno
     do: {{formattedExpiration}}</li>
   <li *ngIf="item.assignedTo">Kontaktní osoba: {{item.assignedTo.name}}</li>
-  <li>
-    <button type="button" class="btn btn-danger" *ngIf="item.state == itemState.New" (click)="cancelReservation()">
-      Zrušit
-    </button>
-  </li>
-  <li>
-    <button type="button" class="btn btn-primary"
-            *ngIf="item.state == itemState.HandedOver && item.lastEventType != eventType.ExtensionRequested"
-            (click)="requestExtension()">
-      Prodloužit
-    </button>
-  </li>
+  <ng-container *ngIf="!managerView">
+    <li>
+      <button type="button" class="btn btn-danger" *ngIf="item.state == itemState.New" (click)="cancelReservation()">
+        Zrušit
+      </button>
+    </li>
+    <li>
+      <button type="button" class="btn btn-primary"
+              *ngIf="item.state == itemState.HandedOver && item.lastEventType != eventType.ExtensionRequested"
+              (click)="requestExtension()">
+        Prodloužit
+      </button>
+    </li>
+  </ng-container>
+  <ng-container *ngIf="managerView">
+    <app-manager-button-cluster [item]="item" (assign)="assign()" (handOver)="handOver()"
+                                (cancel)="cancelReservation()" (extend)="extend()"
+                                (refuseExtension)="refuseExtension()"
+                                (returned)="return()"></app-manager-button-cluster>
+  </ng-container>
 </ul>
