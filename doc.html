@@ -137,7 +137,27 @@
 
 <h3>Frontend</h3>
 <p>
-    TODO TODO
+    Frontend staví na webovém frameworku Angular 12 s využitím hlavně knihoven Bootstrap 4.5 s využitím widgets z ng-bootstrap v10.0.0.
+</p>
+
+<p>
+    Frontend můžeme dělit na logické celky, v případě Angular moduly, z nichž každý zpracovává jemu přidělenou části funkcionality.
+    Moduly jsou:
+</p>
+<ul>
+    <li>modul pro deskové hry zajišťující zobrazení deskových her, jejich rezervace a vyřizování rezervací,</li>
+    <li>modul pro stavy zajišťující zobrazení a plánování stavů klubu,</li>
+    <li>modul pro akce zajišťující zobrazení a plánování akcí, propojení akcí a stavů klubu,</li>
+    <li>modul pro opakované stavy umožňující plánování stavů klubu s pravidelným opakováním,</li>
+    <li>modul pro správu uživatelů, autentizaci i autorizaci,</li>
+    <li>hlavní modul aplikace sjednocující moduly a poskytující společné rozhraní.</li>
+</ul>
+
+<p>
+    Každý modul v sobě zahrnuje jak běžné, uživatelské funkce, tak podporuje správu modulu a příslušejících dat po přihlášení autorizovaným uživatelem.
+    Nepřihlášení uživatelé mají pouze omezené možnosti přístupu, přihlášení uživatelé s dostatečnými právy (správci jednotlivýhc modulů)
+    mohou přistupovat k rozšířenému rozhraní poskytujícímu veškerou funkcionalitu potřebnou pro daný modul.
+    Admin má přístup ke všech modulům a zároveň může spravovat oprávněné uživatele a přiřazovat jim role pro správce jednotlivých modulů.
 </p>
 
 <h2>Instalace</h2>
@@ -153,8 +173,13 @@
     dostupné <a href="https://www.postgresql.org/">zde</a>.
 </p>
 <p>
-    TODO: Frontend?
+    Frontend je možné spustit pomocí
 </p>
+<pre>ng serve --ssl true --serve-path "/kachna/"</pre>
+<p>
+    a následně otevřít v prohlížeči na
+</p>
+<pre>https://localhost:4200/kachna/</pre>
 
 <h3>Konfigurace</h3>
 <p>
