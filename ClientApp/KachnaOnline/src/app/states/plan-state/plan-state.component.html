@@ -2,11 +2,11 @@
 <h1 *ngIf="!planningNew">Změnit stav klubu</h1>
 
 <div class="mb-3" *ngIf="stateService.currentState != undefined && stateService.currentState.state != ST.Closed">
-  <button class="btn btn-outline-danger">Ukončit aktuální stav</button>
+  <button class="btn btn-outline-danger" (click)="closeCurrentState()">Ukončit aktuální stav</button>
 </div>
 
 <div class="row">
-  <form [formGroup]="mainForm" class="col-xl-6">
+  <form [formGroup]="mainForm" class="col-xl-6" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="stateType">Typ stavu:</label>
       <select class="form-control" id="stateType" formControlName="stateType">
@@ -62,7 +62,7 @@
       <textarea class="form-control" id="notePublic" formControlName="notePublic"></textarea>
     </div>
 
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" type="submit">
       <ng-container *ngIf="planningNew">Naplánovat stav</ng-container>
       <ng-container *ngIf="!planningNew">Uložit změnu stavu</ng-container>
     </button>

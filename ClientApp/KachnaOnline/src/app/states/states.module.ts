@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { StatesRoutingModule } from './states-routing.module';
 import { PlanStateComponent } from './plan-state/plan-state.component';
 import { ReactiveFormsModule } from "@angular/forms";
-import { NgbDateParserFormatter, NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbDateNativeAdapter, NgbDateParserFormatter, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { CustomDateParserFormatter } from "./local-date-parser-formatter";
 
 
@@ -19,7 +19,8 @@ import { CustomDateParserFormatter } from "./local-date-parser-formatter";
     NgbModule
   ],
   providers: [
-    {provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter}
+    {provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter},
+    {provide: NgbDateNativeAdapter, useClass: NgbDateNativeAdapter}
   ]
 })
 export class StatesModule {

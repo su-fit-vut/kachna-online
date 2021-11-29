@@ -62,8 +62,11 @@ export class EventsService {
       // firstDay is 00:00:00, so last day is firstDay + 36 days - 1 second (let's not care about leap seconds and DST...)
       lastDay = new Date(firstDay.getTime() + 36 * 86400000 - 1);
     } else {
-      lastDay = new Date(month.getFullYear(), month.getMonth() + 1, -1, 23, 59, 59);
+      lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0, 23, 59, 59);
     }
+
+    firstDay.setTime(firstDay.getTime() - firstDay.getTimezoneOffset() * 60000);
+    lastDay.setTime(lastDay.getTime() - lastDay.getTimezoneOffset() * 60000);
     return this.getEventsInInterval(firstDay.toISOString(), lastDay.toISOString());
   }
 
