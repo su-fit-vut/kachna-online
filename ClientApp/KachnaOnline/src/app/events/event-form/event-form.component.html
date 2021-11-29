@@ -84,17 +84,17 @@ Author: David Chocholatý
     </div>
   </div>
 
-  <div class="form-row">
-    <div class="form-group col-md-4">
+  <div class="form-row d-flex flex-wrap justify-content-between">
+    <div class="form-group mr-4 mt-3">
       <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="form.invalid">Potvrdit</button>
     </div>
-    <div class="form-group col-md-4">
-      <button class="btn btn-info btn-lg btn-block" type="button" (click)="clearForm(form)">Smazat</button>
-    </div>
-    <div class="form-group col-md-4">
+    <div class="form-group mr-4 mt-3" *ngIf="editMode">
       <button class="btn btn-info btn-lg btn-block" type="button" (click)="onManageLinkedStatesClicked()">
         Spravovat připojené stavy klubu
       </button>
+    </div>
+    <div class="form-group mt-3">
+      <button class="btn btn-info btn-lg btn-block" type="button" (click)="clearForm(form)">Smazat</button>
     </div>
   </div>
 </form>
