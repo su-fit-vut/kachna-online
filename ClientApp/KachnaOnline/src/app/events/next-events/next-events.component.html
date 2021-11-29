@@ -20,10 +20,10 @@ Author: David Chocholatý
   <tr *ngFor="let eventDetail of eventsService.eventsList">
     <td (click)="openEventDetail(eventDetail)">{{eventDetail.name}}</td>
     <td (click)="openEventDetail(eventDetail)">
-      {{eventDetail.from.getDate()}}. {{eventDetail.from.getMonth()}}. {{eventDetail.from.getFullYear()}} {{eventDetail.from.getHours()}}:{{eventDetail.from.getMinutes()}}
+      {{eventDetail.from | date:'d. M. yyyy HH:mm'}}
     </td>
     <td (click)="openEventDetail(eventDetail)">
-      {{eventDetail.to.getDate()}}. {{eventDetail.to.getMonth()}}. {{eventDetail.to.getFullYear()}} {{eventDetail.to.getHours()}}:{{eventDetail.to.getMinutes()}}
+      {{eventDetail.to | date:'d. M. yyyy HH:mm'}}
     </td>
     <td *ngIf="authenticationService.isEventsManager()">
       <div class="row">

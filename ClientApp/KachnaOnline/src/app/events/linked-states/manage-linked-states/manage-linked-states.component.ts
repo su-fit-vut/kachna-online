@@ -52,6 +52,10 @@ export class ManageLinkedStatesComponent implements OnInit {
   }
 
   onDeleteAllButtonClicked() {
+    if (this.eventsService.eventDetail.linkedPlannedStateIds == null) {
+      return;
+    }
+
     for (let stateId of this.eventsService.eventDetail.linkedPlannedStateIds) {
       //this.statesService.deleteState(stateId); // TODO: Uncomment when implemented. Add a single confirmation inside.
     }
