@@ -43,7 +43,7 @@ Author: David Chocholatý
         <td (click)="openClubStateDetail(linkedState)">
           {{linkedState.plannedEnd | date:'d. M. yyyy HH:mm'}}
         </td>
-        <td (click)="openClubStateDetail(linkedState)">{{linkedState.state}}</td>
+        <td (click)="openClubStateDetail(linkedState)">{{linkedState.state | stateLoc}}</td>
         <td>
           <div class="row">
             <button type="button" class="btn mr-1 btn-primary btn-danger float-right "

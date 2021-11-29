@@ -11,12 +11,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccountPopupComponent } from './navigation-bar/account-popup/account-popup.component';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { EventDetailComponent } from './events/event-detail/event-detail.component';
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpRequest } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { ChillzoneDetailsComponent } from './home/chillzone-details/chillzone-details.component';
-import { EventsFromAllComponent } from './events/events-from-all/events-from-all.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -31,15 +29,12 @@ import { ComponentsModule } from "./shared/components/components.module";
 import localeCs from '@angular/common/locales/cs';
 import { registerLocaleData } from "@angular/common";
 import { RepeatingStatesComponent } from './home/repeating-states/repeating-states.component';
-import { TimeStrPipe } from './shared/pipes/time-str.pipe';
-import { DayLocPipe } from './shared/pipes/day-loc.pipe';
-import { StateLocPipe } from './shared/pipes/state-loc.pipe';
 import { BarDetailsComponent } from './home/bar-details/bar-details.component';
 import { PrestigeTableComponent } from './home/bar-details/prestige-table/prestige-table.component';
 import { UpcomingOpeningsComponent } from './home/upcoming-openings/upcoming-openings.component';
 import { JsonDateInterceptor } from "./shared/interceptors/json-date.interceptor";
 import { EventsOverviewComponent } from './home/events-overview/events-overview.component';
-import { MonthLocPipe } from "./shared/pipes/month-loc.pipe";
+import { PipesModule } from "./shared/pipes/pipes.module";
 
 registerLocaleData(localeCs);
 
@@ -66,16 +61,13 @@ export function tokenGetter(request?: HttpRequest<any>) {
     ChillzoneDetailsComponent,
     RepeatingStatesComponent,
     BarDetailsComponent,
-    TimeStrPipe,
-    DayLocPipe,
-    MonthLocPipe,
-    StateLocPipe,
     PrestigeTableComponent,
     UpcomingOpeningsComponent,
     EventsOverviewComponent,
   ],
   imports: [
     ComponentsModule,
+    PipesModule,
     StatesModule,
     BoardGamesModule,
     UsersModule,
@@ -100,6 +92,8 @@ export function tokenGetter(request?: HttpRequest<any>) {
     EventsService,
     {provide: LOCALE_ID, useValue: 'cs-CZ'},
     {provide: HTTP_INTERCEPTORS, useClass: JsonDateInterceptor, multi: true}
+  ],
+  exports: [
   ],
   bootstrap: [AppComponent]
 })
