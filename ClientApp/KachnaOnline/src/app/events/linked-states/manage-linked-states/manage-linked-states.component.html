@@ -39,8 +39,12 @@ Author: David Chocholatý
       </thead>
       <tbody *ngIf="eventsService.eventDetail.linkedStatesDtos.length > 0" >
       <tr *ngFor="let linkedState of eventsService.eventDetail.linkedStatesDtos">
-        <td (click)="openClubStateDetail(linkedState)">{{linkedState.start}}</td>
-        <td (click)="openClubStateDetail(linkedState)">{{linkedState.plannedEnd}}</td>
+        <td (click)="openClubStateDetail(linkedState)">
+          {{linkedState.start.getDate()}}. {{linkedState.start.getMonth()}}. {{linkedState.start.getFullYear()}} {{linkedState.start.getHours()}}:{{linkedState.start.getMinutes()}}
+        </td>
+        <td (click)="openClubStateDetail(linkedState)">
+          {{linkedState.plannedEnd.getDate()}}. {{linkedState.plannedEnd.getMonth()}}. {{linkedState.plannedEnd.getFullYear()}} {{linkedState.plannedEnd.getHours()}}:{{linkedState.plannedEnd.getMinutes()}}
+        </td>
         <td (click)="openClubStateDetail(linkedState)">{{linkedState.state}}</td>
         <td>
           <div class="row">
