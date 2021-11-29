@@ -19,7 +19,9 @@ Author: David Chocholatý
         Kachna je zavřená.
       </ng-container>
     </div>
+
     <a href="#" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k nám?</a>
+    <a href="#" class="state-details ml-4" *ngIf="authenticationService.isLoggedOut()">Stát se členem klubu</a>
   </div>
 
   <app-bar-details *ngIf="state.state==ST.OpenBar" [state]="state"></app-bar-details>
@@ -32,10 +34,6 @@ Author: David Chocholatý
 
 <app-upcoming-openings *ngIf="state && state.state==ST.Closed"></app-upcoming-openings>
 <app-repeating-states></app-repeating-states>
-
-<button type="button" class="btn btn-primary btn-block" *ngIf="authenticationService.isLoggedOut()">Stát se členem
-  klubu
-</button>
 
 <app-events-overview></app-events-overview>
 

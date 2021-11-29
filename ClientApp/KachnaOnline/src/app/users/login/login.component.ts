@@ -26,9 +26,9 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.authenticationService.logIn();
-
-    let returnAddress = localStorage.getItem(environment.returnAddressStorageName);
-    this.router.navigate( (returnAddress != null) ? [returnAddress] : ['.']).then();
+    this.authenticationService.logIn().finally(() => {
+      let returnAddress = localStorage.getItem(environment.returnAddressStorageName);
+      this.router.navigate((returnAddress != null) ? [returnAddress] : ['.']).then();
+    });
   }
 }
