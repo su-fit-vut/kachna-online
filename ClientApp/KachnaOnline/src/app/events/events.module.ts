@@ -19,6 +19,8 @@ import { ConflictingStatesComponent } from './linked-states/conflicting-states/c
 import { ComponentsModule } from "../shared/components/components.module";
 import { EditEventsComponent } from './edit-events/edit-events.component';
 import { NextEventsComponent } from './next-events/next-events.component';
+import { StateLocPipe } from "../shared/pipes/state-loc.pipe";
+import { PipesModule } from "../shared/pipes/pipes.module";
 
 
 @NgModule({
@@ -35,12 +37,14 @@ import { NextEventsComponent } from './next-events/next-events.component';
     EditEventsComponent,
     NextEventsComponent,
   ],
-    imports: [
-        CommonModule,
-        EventsRoutingModule,
-        NgbModule,
-        FormsModule,
-        ComponentsModule,
-    ]
+  imports: [
+    CommonModule,
+    EventsRoutingModule,
+    NgbModule,
+    FormsModule,
+    ComponentsModule,
+    PipesModule
+  ]
 })
-export class EventsModule { }
+export class EventsModule {
+}

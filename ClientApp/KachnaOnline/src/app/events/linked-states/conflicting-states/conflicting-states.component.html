@@ -49,7 +49,7 @@ Author: David Chocholatý
         <td (click)="openClubStateDetail(conflictingState)">
           {{conflictingState.plannedEnd | date:'d. M. yyyy HH:mm'}}
         </td>
-        <td (click)="openClubStateDetail(conflictingState)">{{conflictingState.state}}</td>
+        <td (click)="openClubStateDetail(conflictingState)">{{conflictingState.state | stateLoc}}</td>
         <td>
           <button type="button" class="btn mr-1 btn-primary"
                   (click)="onLinkConflictingClubState(conflictingState)">
