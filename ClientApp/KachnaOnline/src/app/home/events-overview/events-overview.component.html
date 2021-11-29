@@ -1,0 +1,70 @@
+<div class="text-center mb-2">
+  <h2>Plán akcí a otevírání klubu</h2>
+</div>
+
+<div class="d-flex justify-content-center mb-1">
+  <button class="btn btn-sm btn-primary" (click)="changeMonth(-1)">&lt;</button>
+  <span
+    class="d-inline-block h4 pl-3 pr-3 mb-0">{{currentMonth.getMonth() | monthLoc}} {{currentMonth.getFullYear()}}</span>
+  <button class="btn btn-sm btn-primary" (click)="changeMonth(1)">&gt;</button>
+</div>
+<div class="d-flex justify-content-center align-items-baseline mb-3">
+  <input type="checkbox" id="showPast" class="mr-1" [checked]="showPast" (change)="this.updateAll($event)"/>
+  <label for="showPast">Zobrazit proběhlé</label>
+</div>
+
+<div class="row">
+  <div class="col-sm-6">
+    <h4 class="text-center">Akce Studentské unie</h4>
+    <ng-container *ngIf="shownEvents.length > 0; else noEvents">
+      <div *ngFor="let e of shownEvents" class="pb-2">
+        <h5 class="border-bottom d-inline-block">{{e.title}}</h5><br>
+        <ng-container *ngIf="e.multipleDays; then oneDay else moreDays"></ng-container>
+        <br>
+        <ng-container *ngIf="e.place">
+          místo konání:
+          <ng-container *ngIf="e.placeUrl == null; else placeWithUrl">{{e.place}}</ng-container>
+          <ng-template #placeWithUrl><a href="{{e.placeUrl}}">{{e.place}}</a></ng-template>
+        </ng-container>
+
+        <ng-container *ngIf="e.stateTypes != null && e.stateTypes.length > 0">
+          v rámci akce bude otevřen také klub
+          <ng-container *ngFor="let s of e.stateTypes; last as isLast; first as isFirst">
+            <ng-container *ngIf="isFirst && isLast">({{s}})</ng-container>
+            <ng-container *ngIf="isFirst && !isLast">({{s}},&nbsp;</ng-container>
+            <ng-container *ngIf="!isFirst && isLast">{{s}})</ng-container>
+            <ng-container *ngIf="!isFirst && !isLast">{{s}},&nbsp;</ng-container>
+          </ng-container>
+        </ng-container>
+
+        <ng-template #oneDay>{{e.from | date:'d. MM.'}} od {{e.from | date:'HH:mm'}}
+          do {{e.to | date:'HH:mm'}}</ng-template>
+        <ng-template #moreDays>
+          {{e.from | date:'d. M.'}} až {{e.to | date:'d. M.'}}
+        </ng-template>
+      </div>
+    </ng-container>
+    <ng-template #noEvents><h5 class="text-muted text-center">V tomto měsíci nejsou naplánované žádné akce.</h5>
+    </ng-template>
+  </div>
+  <div class="col-sm-6">
+    <h4 class="text-center">Otevírání klubu</h4>
+    <ng-container *ngIf="shownStates.length > 0; else noStates">
+      <table class="table">
+        <tbody>
+        <tr *ngFor="let s of shownStates" class="pb-2">
+          <td style="width: 20%">{{s.from | date:'d. M.'}}</td>
+          <td style="width: 40%">{{s.from | date:'HH:mm'}}–{{s.to | date:'HH:mm'}}</td>
+          <td style="width: 40%">{{s.type | stateLoc}}</td>
+        </tr>
+        </tbody>
+      </table>
+
+
+    </ng-container>
+    <ng-template #noStates><h5 class="text-muted text-center">V tomto měsíci nejsou naplánované žádné otvíračky.</h5>
+    </ng-template>
+  </div>
+</div>
+
+

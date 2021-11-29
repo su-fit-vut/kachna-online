@@ -41,6 +41,8 @@ import { BarDetailsComponent } from './home/bar-details/bar-details.component';
 import { PrestigeTableComponent } from './home/bar-details/prestige-table/prestige-table.component';
 import { UpcomingOpeningsComponent } from './home/upcoming-openings/upcoming-openings.component';
 import { JsonDateInterceptor } from "./shared/interceptors/json-date.interceptor";
+import { EventsOverviewComponent } from './home/events-overview/events-overview.component';
+import { MonthLocPipe } from "./shared/pipes/month-loc.pipe";
 
 registerLocaleData(localeCs);
 
@@ -74,9 +76,11 @@ export function tokenGetter(request?: HttpRequest<any>) {
     BarDetailsComponent,
     TimeStrPipe,
     DayLocPipe,
+    MonthLocPipe,
     StateLocPipe,
     PrestigeTableComponent,
     UpcomingOpeningsComponent,
+    EventsOverviewComponent,
   ],
   imports: [
     ComponentsModule,
