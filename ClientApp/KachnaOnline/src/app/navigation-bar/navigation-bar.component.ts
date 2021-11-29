@@ -18,21 +18,28 @@ export class NavigationBarComponent implements OnInit {
     public authenticationService: AuthenticationService,
     public boardGamesService: BoardGamesService,
     public router: Router
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }
 
   navigateToCurrentReservations(): void {
     this.isMenuCollapsed = true;
-    this.boardGamesService.saveManagerFilter(ReservationState.Current);
-    this.router.navigate(['/board-games/manager/reservations']).then();
+    // Force re-load of the page
+    this.router.navigate(['/']).then(() => {
+      this.boardGamesService.saveManagerFilter(ReservationState.Current);
+      this.router.navigate(['/board-games/manager/reservations']).then();
+    })
   }
 
   navigateToAllReservations(): void {
     this.isMenuCollapsed = true;
-    this.boardGamesService.saveManagerFilter(undefined);
-    this.router.navigate(['/board-games/manager/reservations']).then();
+    // Force re-load of the page
+    this.router.navigate(['']).then(() => {
+      this.boardGamesService.saveManagerFilter(undefined);
+      this.router.navigate(['/board-games/manager/reservations']).then();
+    })
   }
 
   public isMenuCollapsed = true;
