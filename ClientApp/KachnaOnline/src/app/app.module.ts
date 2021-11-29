@@ -78,7 +78,13 @@ export function tokenGetter(request?: HttpRequest<any>) {
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(), // TODO: Change options?
+    ToastrModule.forRoot({
+      maxOpened: 5, // Remaining toasts are queued.
+      preventDuplicates: true,
+      countDuplicates: true,
+      resetTimeoutOnDuplicate: true,
+      timeOut: 3000, // In milliseconds.
+    }),
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
