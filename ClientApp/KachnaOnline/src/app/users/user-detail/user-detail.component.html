@@ -1,0 +1,51 @@
+<!--
+user-detail.component.html
+Author: David Chocholatý
+-->
+
+
+<div class="jumbotron py-1">
+  <h1 class="display-5 text-center">Detail uživatele</h1>
+</div>
+<div class="container">
+  <h3 class="mb-1">
+      {{userDetail.name}} ({{userDetail.nickname}})
+  </h3>
+  <div class="list-group">
+    <div class="list-group-item">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">E-mail</h5>
+      </div>
+      <div class="container row">
+        <p>{{userDetail.email}}</p>
+      </div>
+    </div>
+    <div class="list-group-item flex-fill" *ngIf="userDetail.activeRoles">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">Role</h5>
+      </div>
+      <div class="container">
+        <div class="row" *ngFor="let userRole of userDetail.activeRoles">
+          {{userRole}}
+        </div>
+      </div>
+    </div>
+    <div *ngIf="authenticationService.isAdmin()" class="list-group-item justify-content-between">
+      <ul class="list-group list-group-horizontal justify-content-between">
+        <li class="list-group-item border-0">
+          <button class="btn btn-secondary" (click)="onModifyButtonClicked()"
+                  data-toggle="modal" data-target="#exampleModal"
+                  data-backdrop="static" data-keyboard="false">
+            Upravit uživatele
+          </button>
+        </li>
+
+        <li class="list-group-item border-0">
+          <button class="btn btn-secondary" (click)="onManageUserRolesClicked()">
+            Spravovat role uživatele
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

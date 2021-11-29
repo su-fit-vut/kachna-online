@@ -9,6 +9,10 @@ import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { UserLoggedInGuard } from "./user-logged-in.guard";
 import { UsersListComponent } from "./users-list/users-list.component";
 import { AdminGuard } from "./admin.guard";
+import { UserDetailComponent } from "./user-detail/user-detail.component";
+import { CurrentEventsComponent } from "../events/current-events/current-events.component";
+import { environment } from "../../environments/environment";
+import { ManageUserRolesComponent } from "./user-detail/manage-user-roles/manage-user-roles.component";
 
 const routes: Routes = [
   /* Route order
@@ -24,6 +28,26 @@ The order of routes is important because the Router uses a first-match wins stra
     path: 'users',
     component: UsersListComponent,
     canActivate: [AdminGuard],
+  },
+  {
+    path: 'users/:userId',
+    pathMatch: 'full',
+    component: UserDetailComponent,
+    canActivate: [AdminGuard],
+    data: {
+      title: `${environment.siteName} | Detail uživatele`,
+      description: 'Detail uživatele',
+    }
+  },
+  {
+    path: 'users/:userId/roles',
+    pathMatch: 'full',
+    component: ManageUserRolesComponent,
+    canActivate: [AdminGuard],
+    data: {
+      title: `${environment.siteName} | Správá rolí uživatele`,
+      description: 'Správa rolí uživatele',
+    }
   },
 ];
 

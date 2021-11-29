@@ -17,6 +17,7 @@ import { KisTokenContent } from "../../models/users/auth/kis/kis-token-content.m
 import { KisLoggedInUserInformation } from "../../models/users/kis-logged-in-user-information.model";
 import { KisRefreshTokenResponse } from "../../models/users/auth/kis/kis-refresh-token-response.model";
 import { throwError } from "rxjs";
+import { Event } from "../../models/events/event.model";
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
 const USERS_API = `${environment.baseApiUrl}/users`;
@@ -42,6 +43,7 @@ export class AuthenticationService {
   user: User = new User();
   usersList: UserDetail[] = [];
   shownUsersList: UserDetail[] = [];
+  public userDetail: UserDetail = new UserDetail();
 
   getSessionIdFromKisEduId() {
     let targetLocation = this.location.prepareExternalUrl("/login");
@@ -343,11 +345,20 @@ export class AuthenticationService {
         this.user.nickname = userDetail.nickname;
       }).catch((err) => {
       console.log(err);
-      this.toastr.error("Přezdívku nebylo možné aktualizovat.", "Správa účtu");
+      this.toastr.error("Nebylo možné aktualizovat data o uživateli aktualizovat.", "Správa účtu");
     });
   }
 
   getLocalUserInformationRequest () {
     return this.http.get<UserDetail>(`${USERS_API}/me/`);
+  }
+
+  getUserDetailRequest(userId: number) {
+    return this.http.get<UserDetail>(`${USERS_API}/${userId}`);
+  }
+
+  removeUserRoleRequest(userId: number, userRole: string) {
+    let params = new HttpParams().set("state", false);
+    return this.http.put(`${USERS_API}/${userId}/roles/${userRole}/assignment`, "", { params: params });
   }
 }

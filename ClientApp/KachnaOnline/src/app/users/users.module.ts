@@ -10,18 +10,26 @@ import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { FormsModule, NgForm } from "@angular/forms";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { LoginComponent } from "./login/login.component";
+import { UserDetailComponent } from './user-detail/user-detail.component';
+import { ManageUserRolesComponent } from './user-detail/manage-user-roles/manage-user-roles.component';
+import { ComponentsModule } from "../shared/components/components.module";
+import { UserRoleComponent } from './user-detail/manage-user-roles/user-role/user-role.component';
 
 @NgModule({
   declarations: [
     UsersListComponent,
     UserProfileComponent,
     LoginComponent,
+    UserDetailComponent,
+    ManageUserRolesComponent,
+    UserRoleComponent,
   ],
   imports: [
     CommonModule,
     UsersRoutingModule,
     FormsModule,
     NgbModule,
+    ComponentsModule,
   ]
 })
 export class UsersModule { }

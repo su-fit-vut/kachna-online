@@ -1,0 +1,83 @@
+<!--
+manage-user-roles.component.html
+Author: David Chocholatý
+-->
+
+<div class="jumbotron py-1">
+  <h1 class="display-5 text-center">Správa rolí</h1>
+</div>
+
+<div class="d-flex flex-wrap justify-content-between">
+  <div class="row">
+    <div class="mr-4 mt-3">
+      <app-back-arrow targetRoute=".."></app-back-arrow>
+    </div>
+    <div class="mr-4 mt-3">
+      <button type="button" class="btn mr-1 btn-secondary" (click)="onAddRoleClicked()">
+        Přidat roli
+      </button>
+    </div>
+
+    <button type="button" class="btn btn-secondary dropdown-toggle" id="categoryDropdown"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kategorie
+    </button>
+    <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+      <form>
+        <ul class="list-group">
+          <app-category " [category]="category"
+                        (categoryDisabled)="onCategoryDisabled($event)"
+                        (categoryEnabled)="onCategoryEnabled($event)"
+                        [startingValue]="initiallyEnabled.indexOf(category.id) > -1"></app-category>
+        </ul>
+      </form>
+    </div>
+  </div>
+</div>
+<hr/>
+
+<div class="container">
+  <div class="row">
+    <table class="table table-stripped">
+      <thead class="thead-light">
+      <tr>
+        <th>Název role</th>
+        <th>Operace</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="userDetail.activeRoles.length > 0" >
+      <tr *ngFor="let userRole of userDetail.activeRoles">
+        <td>
+          {{userRole}}
+        </td>
+        <td>
+          <div class="row">
+            <button type="button" class="btn mr-1 btn-primary btn-danger float-right "
+                    (click)="onRemoveUserRole(userRole)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+              Odebrat
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div *ngIf="userDetail.activeRoles.length == 0" class="mb-5 d-flex justify-content-center">
+      <h5 class="text-secondary ">Uživatel nemá žádné role.</h5>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex flex-wrap justify-content-between" *ngIf="userDetail.activeRoles.length > 0" >
+  <div class="row">
+    <div class="mr-4 ">
+      <button type="button" class="btn mr-1 btn-danger" (click)="onRemoveAllUserRoles()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+        Odebrat všechny role
+      </button>
+    </div>
+  </div>
+</div>
