@@ -8,6 +8,7 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Event } from "../../models/events/event.model";
 import { ClubState } from "../../models/states/club-state.model";
+import { formatDate } from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class EventsService {
   constructor(
     private http: HttpClient,
     private toastr: ToastrService,
-    ) { }
+  ) {
+  }
 
   eventDetail: Event = new Event();
   eventsList: Event[] = [];
@@ -61,7 +63,7 @@ export class EventsService {
 
   getEvent(eventId: number, withLinkedStates: boolean = false): Observable<Event> {
     let params = new HttpParams().set('withLinkedStates', withLinkedStates);
-    return this.http.get<Event>(`${this.EventsUrl}/${eventId}`, { params });
+    return this.http.get<Event>(`${this.EventsUrl}/${eventId}`, {params});
   }
 
   /**
@@ -73,9 +75,9 @@ export class EventsService {
 
   refreshCurrentEvents() {
     this.getCurrentEvents().toPromise()
-        .then((res) => {
-          this.eventsList = res as Event[];
-        }).catch((error: any) => {
+      .then((res) => {
+        this.eventsList = res as Event[];
+      }).catch((error: any) => {
       console.log(error);
       this.toastr.error("Nepodařilo se načíst aktuální akce.", "Načtení akcí");
       return;
@@ -132,6 +134,12 @@ export class EventsService {
     this.getEvent(eventId, withLinkedStates).subscribe(
       res => {
         this.eventDetail = res as Event;
+        this.eventDetail.from = new Date(this.eventDetail.from);
+        this.eventDetail.to = new Date(this.eventDetail.to);
+        this.eventDetail.linkedStatesDtos.forEach(linkedState => {
+          linkedState.start = new Date(linkedState.start);
+          linkedState.plannedEnd = new Date(linkedState.plannedEnd);
+        });
       },
       err => {
         console.log(err);
@@ -150,9 +158,9 @@ export class EventsService {
         this.refreshLinkedStatesList(this.eventDetail.id);
         this.toastr.success("Odebrání připojeného stavu proběhlo úspěšně.", "Odebrání připojených stavů");
       }).catch((error: any) => {
-        this.toastr.error("Odebrání připojeného stavu selhalo.", "Obebrání připojených stavů");
-        return throwError(error);
-      });
+      this.toastr.error("Odebrání připojeného stavu selhalo.", "Obebrání připojených stavů");
+      return throwError(error);
+    });
   }
 
   unlinkLinkedStateRequest(linkedStateId: number) {
@@ -185,15 +193,15 @@ export class EventsService {
   linkAllConflictingStates(conflictingStatesIds: number[]) {
     if (confirm(`Opravdu si přejete přidat všechny existující stavy k akci ${this.eventDetail.name}?`)) {
       this.linkAllConflictingStatesRequest(conflictingStatesIds).toPromise()
-          .then(() => {
-            this.refreshLinkedStatesList(this.eventDetail.id);
-            this.refreshConflictingStatesList(this.eventDetail.id);
-            this.toastr.success("Přidání všech existujících stavů proběhlo úspěšně.", "Přidání existujících stavů");
-          }).catch((error: any) => {
-            console.log(error);
-            this.toastr.error("Přidání všech existujících stavů selhalo.", "Přidání existujících stavů");
-            return;
-          }
+        .then(() => {
+          this.refreshLinkedStatesList(this.eventDetail.id);
+          this.refreshConflictingStatesList(this.eventDetail.id);
+          this.toastr.success("Přidání všech existujících stavů proběhlo úspěšně.", "Přidání existujících stavů");
+        }).catch((error: any) => {
+          console.log(error);
+          this.toastr.error("Přidání všech existujících stavů selhalo.", "Přidání existujících stavů");
+          return;
+        }
       );
     }
   }
@@ -202,16 +210,16 @@ export class EventsService {
     return this.http.post(`${this.EventsUrl}/${this.eventDetail.id}/linkedStates`, {"plannedStateIds": conflictingStatesIds});
   }
 
-  linkConflictingState(conflictingStateId: number){
+  linkConflictingState(conflictingStateId: number) {
     this.linkConflictingStateRequest(conflictingStateId).toPromise()
-        .then(() => {
-          this.refreshLinkedStatesList(this.eventDetail.id);
-          this.refreshConflictingStatesList(this.eventDetail.id);
-          this.toastr.success("Přidání existujícího stavu proběhlo úspěšně.", "Přidání existujících stavů");
-        }).catch((error: any) => {
-          console.log(error);
-          this.toastr.error("Přidání existujícího stavu selhalo.", "Přidání existujících stavů");
-        }
+      .then(() => {
+        this.refreshLinkedStatesList(this.eventDetail.id);
+        this.refreshConflictingStatesList(this.eventDetail.id);
+        this.toastr.success("Přidání existujícího stavu proběhlo úspěšně.", "Přidání existujících stavů");
+      }).catch((error: any) => {
+        console.log(error);
+        this.toastr.error("Přidání existujícího stavu selhalo.", "Přidání existujících stavů");
+      }
     );
   }
 
@@ -227,19 +235,23 @@ export class EventsService {
 
   getConflictingStatesForEvent(eventId: number) {
     this.getConflictingStatesForEventRequest(eventId).toPromise()
-        .then((res: ClubState[]) => {
-          for (let conflictingState of res) {
-            if (!this.eventDetail.linkedPlannedStateIds.includes(conflictingState.id)
-                && new Date(conflictingState.plannedEnd).getTime() > Date.now()) {
-              this.conflictingStatesList.push(conflictingState);
-            }
+      .then((res: ClubState[]) => {
+        for (let conflictingState of res) {
+          if (!this.eventDetail.linkedPlannedStateIds.includes(conflictingState.id)
+            && new Date(conflictingState.plannedEnd).getTime() > Date.now()) {
+            this.conflictingStatesList.push(conflictingState);
           }
-          this.shownConflictingStatesList = this.conflictingStatesList;
-          this.filterConflictingStates(this.unlinkedOnly);
-        }).catch((error: any) => {
-          console.log(error);
-          this.toastr.error(`Načtení všech možných existujících stavů pro event ${this.eventDetail.name} selhalo.`, "Načtení existujících stavů");
         }
+        this.conflictingStatesList.forEach(conflictingState => {
+          conflictingState.start = new Date(conflictingState.start);
+          conflictingState.plannedEnd = new Date(conflictingState.plannedEnd);
+        });
+        this.shownConflictingStatesList = this.conflictingStatesList;
+        this.filterConflictingStates(this.unlinkedOnly);
+      }).catch((error: any) => {
+        console.log(error);
+        this.toastr.error(`Načtení všech možných existujících stavů pro event ${this.eventDetail.name} selhalo.`, "Načtení existujících stavů");
+      }
     );
   }
 
@@ -282,8 +294,14 @@ export class EventsService {
 
   refreshNextEvents() {
     this.getNextEvents().toPromise()
-      .then((res) => {
-        this.eventsList = res as Event[];
+      .then((res: Event[]) => {
+        res.forEach(event => {
+          event.from = new Date(event.from);
+          event.to = new Date(event.to);
+        });
+        this.eventsList = res;
+
+
       }).catch((error: any) => {
       console.log(error);
       this.toastr.error("Nepodařilo se načíst nejbližší akce.", "Načtení akcí");
@@ -335,5 +353,13 @@ export class EventsService {
       conflictingState => {
         return (unlinkedOnly) ? conflictingState.eventId == null : true;
       });
+  }
+
+  getFormattedFromDate(format: string = "d. M. y HH:MM") {
+    return formatDate(this.eventDetail.from, format, "cs-CZ")
+  }
+
+  getFormattedToDate(format: string = "d. M. y HH:MM") {
+    return formatDate(this.eventDetail.to, format, "cs-CZ")
   }
 }
