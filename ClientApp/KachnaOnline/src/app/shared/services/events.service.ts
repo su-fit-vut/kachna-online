@@ -76,10 +76,6 @@ export class EventsService {
   refreshCurrentEvents() {
     this.getCurrentEvents().toPromise()
       .then((res: Event[]) => {
-        res.forEach(event => {
-          event.from = new Date(event.from);
-          event.to = new Date(event.to);
-        });
         this.eventsList = res;
       }).catch((error: any) => {
       console.log(error);
@@ -103,10 +99,6 @@ export class EventsService {
   refreshEventsList() {
     this.getFromToEvents().toPromise()
       .then((res: Event[]) => {
-        res.forEach(event => {
-          event.from = new Date(event.from);
-          event.to = new Date(event.to);
-        });
         this.eventsList = res;
       }).catch((error: any) => {
       console.log(error);
@@ -142,12 +134,6 @@ export class EventsService {
     this.getEvent(eventId, withLinkedStates).subscribe(
       res => {
         this.eventDetail = res as Event;
-        this.eventDetail.from = new Date(this.eventDetail.from);
-        this.eventDetail.to = new Date(this.eventDetail.to);
-        this.eventDetail.linkedStatesDtos.forEach(linkedState => {
-          linkedState.start = new Date(linkedState.start);
-          linkedState.plannedEnd = new Date(linkedState.plannedEnd);
-        });
       },
       err => {
         console.log(err);
@@ -250,14 +236,10 @@ export class EventsService {
           }
 
           if (!this.eventDetail.linkedPlannedStateIds.includes(conflictingState.id)
-            && new Date(conflictingState.start).getTime() > Date.now() + (3600 * 1000)) { // TODO: +1 hour because of timezone. Fix properly.
+            && conflictingState.start.getTime() > Date.now() + (3600 * 1000)) { // TODO: +1 hour because of timezone. Fix properly.
             this.conflictingStatesList.push(conflictingState);
           }
         }
-        this.conflictingStatesList.forEach(conflictingState => {
-          conflictingState.start = new Date(conflictingState.start);
-          conflictingState.plannedEnd = new Date(conflictingState.plannedEnd);
-        });
         this.shownConflictingStatesList = this.conflictingStatesList;
         this.filterConflictingStates(this.unlinkedOnly);
       }).catch((error: any) => {
@@ -296,7 +278,6 @@ export class EventsService {
     this.eventsBackRoute = "..";
   }
 
-
   /**
    * Gets next events as a list of events.
    */
@@ -307,10 +288,6 @@ export class EventsService {
   refreshNextEvents() {
     this.getNextEvents().toPromise()
       .then((res: Event[]) => {
-        res.forEach(event => {
-          event.from = new Date(event.from);
-          event.to = new Date(event.to);
-        });
         this.eventsList = res;
       }).catch((error: any) => {
       console.log(error);
