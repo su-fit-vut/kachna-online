@@ -1,1 +1,43 @@
-<p>manager-board-games works!</p>
+<!--
+manager-board-games.component.html
+Author: František Nečas
+-->
+<div class="d-flex justify-content-between align-items-center">
+  <h1>Správa her</h1>
+  <button type="button" class="btn btn-primary btn-lg font-weight-bold" routerLink="create">Přidat</button>
+</div>
+
+
+<input class="form-control mt-3" type="text" [ngModel]="searchModel" [ngbTypeahead]="search"
+       (selectItem)="selectItem($event)" placeholder="Vyhledávání"/>
+<div class="d-flex flex-wrap">
+  <div class="mr-4 mt-3">
+    <app-category-selector (categoryAdded)="onCategoryAdded($event)"
+                           (categoryRemoved)="onCategoryRemoved($event)"
+                           [initiallyEnabled]="categoryIds"></app-category-selector>
+  </div>
+  <div class="mt-3">
+    <app-togglable-button [startingValue]="availableOnly !== undefined" [text]="'Pouze dostupné'"
+                          (valueChanged)="onAvailabilityUpdate($event)"></app-togglable-button>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table mt-3">
+    <thead>
+    <tr>
+      <th scope="col">Jméno</th>
+      <th scope="col" class="d-none d-lg-table-cell">Min. hráčů</th>
+      <th scope="col" class="d-none d-lg-table-cell">Max. hráčů</th>
+      <th scope="col">Dostupné</th>
+      <th scope="col" class="d-none d-sm-table-cell">V klubu</th>
+      <th scope="col" class="d-none d-sm-table-cell">Nedostupné</th>
+      <th scope="col">Viditelné</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr app-manager-table-item *ngFor="let game of shownGames" (boardGameClicked)="onBoardGameClicked($event)"
+        [game]="game"></tr>
+    </tbody>
+  </table>
+</div>

@@ -34,6 +34,11 @@ import { CategoryCreateComponent } from './manager/categories/category-create/ca
 import { CategoryTableItemComponent } from './manager/categories/category-table-item/category-table-item.component';
 import { ManagerBoardGamesComponent } from './manager/manager-board-games/manager-board-games.component';
 import { ColorPickerModule } from "ngx-color-picker";
+import { BoardGameUpdateComponent } from './manager/manager-board-games/board-game-update/board-game-update.component';
+import { BoardGameCreateComponent } from './manager/manager-board-games/board-game-create/board-game-create.component';
+import { BoardGameTableItemComponent } from './manager/manager-board-games/board-game-table-item/board-game-table-item.component';
+import { BoardGameCreateFormComponent } from './manager/manager-board-games/board-game-create-form/board-game-create-form.component';
+import { ManagerTableItemComponent } from './manager/manager-board-games/manager-table-item/manager-table-item.component';
 
 
 @NgModule({
@@ -63,6 +68,11 @@ import { ColorPickerModule } from "ngx-color-picker";
     CategoryCreateComponent,
     CategoryTableItemComponent,
     ManagerBoardGamesComponent,
+    BoardGameUpdateComponent,
+    BoardGameCreateComponent,
+    BoardGameTableItemComponent,
+    BoardGameCreateFormComponent,
+    ManagerTableItemComponent,
   ],
   imports: [
     CommonModule,

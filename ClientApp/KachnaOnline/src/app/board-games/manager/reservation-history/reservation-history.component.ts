@@ -7,6 +7,7 @@ import { BoardGamesService } from "../../../shared/services/board-games.service"
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { formatDate } from "@angular/common";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-reservation-history',
@@ -25,6 +26,7 @@ export class ReservationHistoryComponent implements OnInit {
     [ReservationEventType.Returned, "Převzato zpět"]
   ])
   events: ReservationItemEvent[] = [];
+  routeSub: Subscription;
 
   constructor(private boardGamesService: BoardGamesService, private route: ActivatedRoute,
               private toastrService: ToastrService, private router: Router) { }
@@ -42,7 +44,7 @@ export class ReservationHistoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.routeSub = this.route.params.subscribe(params => {
       this.boardGamesService.getReservationItemHistory(params['id'], params['itemId']).subscribe(events => {
         this.events = events;
       }, err => {
@@ -51,6 +53,10 @@ export class ReservationHistoryComponent implements OnInit {
         this.router.navigate(['..'], {relativeTo: this.route}).then();
       })
     })
+  }
+
+  ngOnDestroy(): void {
+    this.routeSub.unsubscribe();
   }
 
 }

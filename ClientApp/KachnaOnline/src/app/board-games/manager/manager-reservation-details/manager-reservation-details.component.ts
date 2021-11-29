@@ -11,6 +11,7 @@ import { FormControl } from "@angular/forms";
 import { formatDate } from "@angular/common";
 import { ReservationEventType } from "../../../models/board-games/reservation-item-event.model";
 import { BoardGamesStoreService } from "../../../shared/services/board-games-store.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-manager-reservation-details',
@@ -23,23 +24,28 @@ export class ManagerReservationDetailsComponent implements OnInit {
   noteInternalForm: FormControl = new FormControl('');
   formattedDate: string;
   reservationId: number;
+  routeSub: Subscription
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               private router: Router, private route: ActivatedRoute, private storeService: BoardGamesStoreService) {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.routeSub = this.route.params.subscribe(params => {
       this.reservationId = params['id'];
       this.fetchReservation();
     })
+  }
+
+  ngOnDestroy(): void {
+    this.routeSub.unsubscribe();
   }
 
   fetchReservation(): void {
     this.boardGamesService.getReservation(this.reservationId).subscribe(reservation => {
         this.reservation = reservation;
         this.items = reservation.items;
-        this.noteInternalForm.setValue(this.reservation.noteUser);
+        this.noteInternalForm.setValue(this.reservation.noteInternal);
         this.formattedDate = formatDate(this.reservation.madeOn, "d. M. y", "cs-CZ");
       },
       err => {
