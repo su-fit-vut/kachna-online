@@ -10,6 +10,7 @@ import { ReservationItem, ReservationItemState } from "../../../models/board-gam
 import { FormControl } from "@angular/forms";
 import { formatDate } from "@angular/common";
 import { ReservationEventType } from "../../../models/board-games/reservation-item-event.model";
+import { BoardGamesStoreService } from "../../../shared/services/board-games-store.service";
 
 @Component({
   selector: 'app-manager-reservation-details',
@@ -24,7 +25,7 @@ export class ManagerReservationDetailsComponent implements OnInit {
   reservationId: number;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
-              private router: Router, private route: ActivatedRoute) {
+              private router: Router, private route: ActivatedRoute, private storeService: BoardGamesStoreService) {
   }
 
   ngOnInit(): void {
@@ -63,7 +64,7 @@ export class ManagerReservationDetailsComponent implements OnInit {
   }
 
   routeToBoardGame(item: ReservationItem): void {
-    this.boardGamesService.saveBackRoute(this.router.url);
+    this.storeService.saveBackRoute(this.router.url);
     this.router.navigate([`/board-games/${item.boardGame.id}`]).then();
   }
 

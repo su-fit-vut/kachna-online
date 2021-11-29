@@ -7,6 +7,7 @@ import { FormControl } from "@angular/forms";
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 import { ActivatedRoute, Router } from "@angular/router";
+import { BoardGamesStoreService } from "../../../shared/services/board-games-store.service";
 
 @Component({
   selector: 'app-manager-reservations',
@@ -26,11 +27,12 @@ export class ManagerReservationsComponent implements OnInit {
   assignedFilter: boolean = false;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
-              private router: Router, private activatedRoute: ActivatedRoute) {
+              private router: Router, private activatedRoute: ActivatedRoute,
+              private storeService: BoardGamesStoreService) {
   }
 
   ngOnInit(): void {
-    [this.reservationFilter, this.assignedFilter] = this.boardGamesService.getManagerFilter();
+    [this.reservationFilter, this.assignedFilter] = this.storeService.getManagerFilter();
     let formValue = this.filterKeys.find(k => k[1] == this.reservationFilter);
     this.reservationFilterForm.reset(formValue ? formValue[0] : "---");
 
@@ -43,7 +45,7 @@ export class ManagerReservationsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.boardGamesService.saveManagerFilter(this.reservationFilter, this.assignedFilter);
+    this.storeService.saveManagerFilter(this.reservationFilter, this.assignedFilter);
   }
 
   fetchReservations(): void {

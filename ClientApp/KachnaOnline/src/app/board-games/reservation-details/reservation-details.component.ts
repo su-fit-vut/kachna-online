@@ -10,6 +10,7 @@ import { Reservation } from "../../models/board-games/reservation.model";
 import { FormControl } from "@angular/forms";
 import { formatDate } from "@angular/common";
 import { ReservationItem } from "../../models/board-games/reservation-item.model";
+import { BoardGamesStoreService } from "../../shared/services/board-games-store.service";
 
 @Component({
   selector: 'app-reservation-details',
@@ -24,7 +25,7 @@ export class ReservationDetailsComponent implements OnInit {
   reservationId: number;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
-              private router: Router, private route: ActivatedRoute) {
+              private router: Router, private route: ActivatedRoute, private storeService: BoardGamesStoreService) {
   }
 
   ngOnInit(): void {
@@ -78,7 +79,7 @@ export class ReservationDetailsComponent implements OnInit {
   }
 
   routeToBoardGame(item: ReservationItem): void {
-    this.boardGamesService.saveBackRoute(this.router.url);
+    this.storeService.saveBackRoute(this.router.url);
     this.router.navigate([`/board-games/${item.boardGame.id}`]).then();
   }
 }

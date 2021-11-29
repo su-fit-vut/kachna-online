@@ -8,6 +8,7 @@ import { ToastrService } from "ngx-toastr";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { HttpStatusCode } from "@angular/common/http";
+import { BoardGamesStoreService } from "../../shared/services/board-games-store.service";
 
 @Component({
   selector: 'app-reserve',
@@ -20,11 +21,11 @@ export class ReservationCreationComponent implements OnInit {
   noteForm = new FormControl('');
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
-              private router: Router) {
+              private router: Router, private storeService: BoardGamesStoreService) {
   }
 
   ngOnInit(): void {
-    this.currentReservation = this.boardGamesService.getBoardGamePageState()[3];
+    this.currentReservation = this.storeService.getBoardGamePageState()[3];
     this.boardGamesService.getBoardGames([], undefined, undefined).subscribe(
       games => {
         for (let gameSet of games) {
@@ -60,7 +61,7 @@ export class ReservationCreationComponent implements OnInit {
     this.boardGamesService.reserve(this.currentReservation, this.noteForm.value).subscribe(
       _ => {
         // Reset reservation and redirect
-        this.boardGamesService.resetSavedReservation();
+        this.storeService.resetSavedReservation();
         this.toastrService.success("Rezervace byla vytvořena.")
         this.router.navigate(["/board-games/reservations"]).then();
       },

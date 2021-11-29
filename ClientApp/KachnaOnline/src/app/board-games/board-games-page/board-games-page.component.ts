@@ -11,6 +11,7 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { FormControl } from "@angular/forms";
 import { BoardGameCategory } from "../../models/board-games/board-game-category.model";
 import { AuthenticationService } from "../../shared/services/authentication.service";
+import { BoardGamesStoreService } from "../../shared/services/board-games-store.service";
 
 @Component({
   selector: 'app-board-games-page',
@@ -35,18 +36,18 @@ export class BoardGamesPageComponent implements OnInit {
   shownGames: BoardGame[] = [];
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
-              public authenticationService: AuthenticationService) {
+              public authenticationService: AuthenticationService, public storeService: BoardGamesStoreService) {
   }
 
   ngOnInit(): void {
     [this.players, this.availableOnly, this.categoryIds, this.currentReservation] =
-      this.boardGamesService.getBoardGamePageState();
+      this.storeService.getBoardGamePageState();
     // Fetch all games right away to reduce the number of requests.
     this.fetchGames([], true);
   }
 
   ngOnDestroy(): void {
-    this.boardGamesService.saveBoardGamePageState(this.players, this.availableOnly,
+    this.storeService.saveBoardGamePageState(this.players, this.availableOnly,
       this.categoryIds, this.currentReservation);
   }
 

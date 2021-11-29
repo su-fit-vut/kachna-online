@@ -7,6 +7,7 @@ import { BoardGamesService } from "../../shared/services/board-games.service";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 import { BoardGame } from "../../models/board-games/board-game.model";
+import { BoardGamesStoreService } from "../../shared/services/board-games-store.service";
 
 @Component({
   selector: 'app-board-game-details',
@@ -20,15 +21,15 @@ export class BoardGameDetailsComponent implements OnInit {
   currentReservation: Map<number, number>;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute, private storeService: BoardGamesStoreService) {
   }
 
   ngOnInit(): void {
-    this.backRoute = this.boardGamesService.getBackRoute();
+    this.backRoute = this.storeService.getBackRoute();
     this.routeSub = this.route.params.subscribe(params => {
       this.boardGamesService.getBoardGame(params['id']).subscribe(game => {
           this.boardGame = game;
-          this.currentReservation = this.boardGamesService.getBoardGamePageState()[3]
+          this.currentReservation = this.storeService.getBoardGamePageState()[3]
         },
         err => {
           console.log(err);
@@ -38,7 +39,7 @@ export class BoardGameDetailsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.boardGamesService.resetBackRoute();
+    this.storeService.resetBackRoute();
     this.routeSub.unsubscribe();
   }
 
