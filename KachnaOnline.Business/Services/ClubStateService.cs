@@ -760,7 +760,7 @@ namespace KachnaOnline.Business.Services
             var startDate = (modification.Start ?? modifiedStateEntity.Start).RoundToMinutes();
             var endDate = (modification.PlannedEnd ?? modifiedStateEntity.PlannedEnd).RoundToMinutes();
 
-            if (startDate < now)
+            if (modification.Start.HasValue && startDate < now)
                 throw new InvalidOperationException("Cannot change the start date of a state to the past.");
 
             if (endDate <= startDate)
@@ -769,8 +769,8 @@ namespace KachnaOnline.Business.Services
                     "The new end date and time would be before the new start date and time.");
             }
 
-            // At this point this is true: startDate >= now && endDate > startDate
-            // so we can safely assume that endDate > now
+            if (endDate <= now)
+                throw new InvalidOperationException("The new end date would be in the past.");
 
             // If we're changing the planned start, check if there isn't a previous state linked to this one
             // If there is, change its NextStateId to null
@@ -833,6 +833,9 @@ namespace KachnaOnline.Business.Services
                     var overlappingIds = new List<int>();
                     await foreach (var overlappingStateEntity in overlappingStateEntities)
                     {
+                        if (overlappingStateEntity.Id == modifiedStateEntity.Id)
+                            continue;
+
                         // If one of the 'overlapping' states actually begins at the exact same time when the planned state ends
                         // it will be the modified state's new following state
                         if (overlappingStateEntity.Start == endDate)
@@ -853,12 +856,16 @@ namespace KachnaOnline.Business.Services
                     }
 
                     var previousStateEntity = await _stateRepository.GetCurrent(startDate, true);
-                    if (previousStateEntity != null)
+                    if (previousStateEntity != null && previousStateEntity.Id != modifiedStateEntity.Id)
                     {
                         previousStateId = previousStateEntity.NextPlannedStateId = modifiedStateEntity.Id;
                         previousStatePlannedEnd = previousStateEntity.PlannedEnd = startDate;
                     }
                 }
+
+                // Save the new details
+                modifiedStateEntity.Start = startDate;
+                modifiedStateEntity.PlannedEnd = endDate;
 
                 try
                 {
