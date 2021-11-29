@@ -117,6 +117,34 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
+        /// Returns an item of a reservation with the given ID.
+        /// </summary>
+        /// <param name="id">ID of the reservation which the item is in.</param>
+        /// <param name="itemId">ID of the item to return.</param>
+        /// <response code="200">The reservation item.</response>
+        /// <response code="403">The user is not a board games manager and the reservation belongs to another user.</response>
+        /// <response code="404">No such reservation item exists.</response>
+        [HttpGet("{id}/{itemId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ReservationItemDto>> GetReservationItem(int id, int itemId)
+        {
+            try
+            {
+                return await _facade.GetReservationItem(this.User, id, itemId);
+            }
+            catch (NotABoardGamesManagerException)
+            {
+                return this.ForbiddenProblem("The reservation belongs to another user.");
+            }
+            catch (ReservationNotFoundException)
+            {
+                return this.NotFoundProblem("The specified reservation does not exist.");
+            }
+        }
+
+        /// <summary>
         /// Creates a new reservation.
         /// </summary>
         /// <param name="creationDto">A model describing the new reservation.</param>

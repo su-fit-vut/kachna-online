@@ -331,6 +331,32 @@ namespace KachnaOnline.Business.Facades
         }
 
         /// <summary>
+        /// Returns a single item of a reservation.
+        /// </summary>
+        /// <param name="user">Currently authenticated user.</param>
+        /// <param name="reservationId">ID of the reservation which the item is in.</param>
+        /// <param name="itemId">ID of the item to return.</param>
+        /// <returns>Reservation item with ID <paramref name="itemId"/>.</returns>
+        /// <exception cref="NotABoardGamesManagerException">Thrown when <paramref name="user"/> is not a board games
+        /// manager and the reservation is owned by someone else.</exception>
+        /// <exception cref="ReservationNotFoundException">When a reservation with <paramref name="reservationId"/>
+        /// and item with ID <paramref name="itemId"/> does not exist.</exception>
+        public async Task<ReservationItemDto> GetReservationItem(ClaimsPrincipal user, int reservationId, int itemId)
+        {
+            var reservation = await _boardGamesService.GetReservation(reservationId);
+            if (!user.IsInRole(AuthConstants.BoardGamesManager) &&
+                reservation.MadeById != int.Parse(user.FindFirstValue(IdentityConstants.IdClaim)))
+                throw new NotABoardGamesManagerException();
+            var item = await _boardGamesService.GetReservationItem(itemId);
+            if (item.ReservationId != reservationId)
+                throw new ReservationNotFoundException();
+            var itemDto = _mapper.Map<ReservationItemDto>(item);
+            itemDto.AssignedTo =
+                await this.MakeMadeByDto(await _boardGamesService.GetReservationItemAssignee(itemDto.Id));
+            return itemDto;
+        }
+
+        /// <summary>
         /// Updates user note in a reservation.
         /// </summary>
         /// <param name="id">ID of the reservation to update.</param>
