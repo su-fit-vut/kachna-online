@@ -3,12 +3,12 @@
 
 import { Injectable } from '@angular/core';
 import { environment } from "../../../environments/environment";
-import { HttpClient, HttpParams, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { forkJoin, Observable } from "rxjs";
 import { BoardGame } from "../../models/board-games/board-game.model";
 import { BoardGameCategory } from "../../models/board-games/board-game-category.model";
 import { Reservation, ReservationState } from "../../models/board-games/reservation.model";
-import { ReservationEventType } from "../../models/board-games/reservation-item-event.model";
+import { ReservationEventType, ReservationItemEvent } from "../../models/board-games/reservation-item-event.model";
 
 enum ApiPaths {
   Categories = '/categories',
@@ -254,7 +254,7 @@ export class BoardGamesService {
    */
   setReservationUserNote(reservationId: number, newNote: string): Observable<any> {
     return this.http.put<any>(`${this.ReservationsUrl}/${reservationId}${ReservationApiPaths.Note}`,
-      {noteUser: newNote});
+      JSON.stringify(newNote), {headers: new HttpHeaders({'Content-Type': 'application/json'})});
   }
 
   /**
@@ -264,7 +264,7 @@ export class BoardGamesService {
    */
   setReservationInternalNote(reservationId: number, newNote: string): Observable<any> {
     return this.http.put<any>(`${this.ReservationsUrl}/${reservationId}${ReservationApiPaths.NoteInternal}`,
-      {noteInternal: newNote});
+      JSON.stringify(newNote), {headers: new HttpHeaders({'Content-Type': 'application/json'})});
   }
 
   /**
@@ -277,5 +277,15 @@ export class BoardGamesService {
     let params = new HttpParams().set("type", type);
     return this.http.post<any>(`${this.ReservationsUrl}/${reservationId}/${itemId}${ReservationApiPaths.Events}`,
       {}, {params: params});
+  }
+
+  /**
+   * Returns an observable of an item history of a reservation.
+   * @param reservationId ID of the reservation the item is in.
+   * @param itemId ID of the item to get the history of.
+   */
+  getReservationItemHistory(reservationId: number, itemId: number): Observable<ReservationItemEvent[]> {
+    return this.http.get<ReservationItemEvent[]>(
+      `${this.ReservationsUrl}/${reservationId}/${itemId}${ReservationApiPaths.Events}`);
   }
 }

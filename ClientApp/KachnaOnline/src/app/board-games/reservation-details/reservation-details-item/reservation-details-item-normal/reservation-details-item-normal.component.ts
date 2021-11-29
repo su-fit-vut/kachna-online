@@ -1,11 +1,10 @@
 // reservation-details-item-normal.component.ts
 // Author: František Nečas
 
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ReservationDetailsItemComponent } from "../reservation-details-item.component";
 import { BoardGamesService } from "../../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
-import { ReservationItem } from "../../../../models/board-games/reservation-item.model";
 
 @Component({
   selector: '[app-reservation-details-item-normal]',

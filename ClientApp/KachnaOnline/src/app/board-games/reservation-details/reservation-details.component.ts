@@ -1,7 +1,7 @@
 // reservation-details.component.ts
 // Author: František Nečas
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { BoardGamesService } from "../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -21,6 +21,7 @@ export class ReservationDetailsComponent implements OnInit {
   items: ReservationItem[];
   noteForm: FormControl = new FormControl('');
   formattedDate: string;
+  reservationId: number;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               private router: Router, private route: ActivatedRoute) {
@@ -28,23 +29,29 @@ export class ReservationDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.boardGamesService.getReservation(params['id']).subscribe(reservation => {
-          this.reservation = reservation;
-          this.items = reservation.items;
-          this.noteForm.setValue(this.reservation.noteUser);
-          this.formattedDate = formatDate(this.reservation.madeOn, "d. M. y", "cs-CZ");
-        },
-        err => {
-          console.log(err);
-          if (err.status == HttpStatusCode.Unauthorized || err.status == HttpStatusCode.Forbidden) {
-            this.toastrService.error("Zdá se, že tato rezervace není tvoje nebo nejsi přihlášen*a.");
-          } else {
-            this.toastrService.error("Načtení rezervace se nezdařilo.")
-          }
-          this.router.navigate(['..'], {relativeTo: this.route}).then()
-
-        })
+      this.reservationId = params['id'];
+      this.fetchReservation();
     })
+  }
+
+  fetchReservation(): void {
+    this.boardGamesService.getReservation(this.reservationId).subscribe(reservation => {
+        this.reservation = reservation;
+        this.items = reservation.items;
+        this.noteForm.setValue(this.reservation.noteUser);
+        this.formattedDate = formatDate(this.reservation.madeOn, "d. M. y", "cs-CZ");
+      },
+      err => {
+        console.log(err);
+        if (err.status == HttpStatusCode.Unauthorized || err.status == HttpStatusCode.Forbidden) {
+          this.toastrService.error("Zdá se, že tato rezervace není tvoje nebo nejsi přihlášen*a.");
+        } else {
+          this.toastrService.error("Načtení rezervace se nezdařilo.")
+        }
+        this.router.navigate(['..'], {relativeTo: this.route}).then()
+
+      })
+
   }
 
   updateNote(): void {

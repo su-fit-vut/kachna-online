@@ -7,10 +7,20 @@ Author: František Nečas
 <td>{{formattedExpiration}}</td>
 <td>{{item.assignedTo?.name}}</td>
 <td>
-  <button type="button" class="btn btn-danger" *ngIf="item.state == itemState.New" (click)="$event.stopPropagation(); cancelReservation()">
-    Zrušit
-  </button>
-  <button type="button" class="btn btn-primary" *ngIf="item.state == itemState.HandedOver" (click)="$event.stopPropagation(); requestExtension()">
-    Prodloužit
-  </button>
+  <ng-container *ngIf="!managerView">
+    <button type="button" class="btn btn-danger" *ngIf="item.state == itemState.New"
+            (click)="$event.stopPropagation(); cancelReservation()">
+      Zrušit
+    </button>
+    <button type="button" class="btn btn-primary" *ngIf="item.state == itemState.HandedOver"
+            (click)="$event.stopPropagation(); requestExtension()">
+      Prodloužit
+    </button>
+  </ng-container>
+  <ng-container *ngIf="managerView">
+    <app-manager-button-cluster [item]="item" [lastEvent]="lastEvent" (assign)="assign()" (handOver)="handOver()"
+                                (cancel)="cancelReservation()" (extend)="extend()"
+                                (refuseExtension)="refuseExtension()"
+                                (returned)="return()"></app-manager-button-cluster>
+  </ng-container>
 </td>

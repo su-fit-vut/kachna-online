@@ -6,7 +6,7 @@ import { ReservationItem, ReservationItemState } from "../../../models/board-gam
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 import { formatDate } from "@angular/common";
-import { ReservationEventType } from "../../../models/board-games/reservation-item-event.model";
+import { ReservationEventType, ReservationItemEvent } from "../../../models/board-games/reservation-item-event.model";
 import { HttpStatusCode } from "@angular/common/http";
 
 @Component({
@@ -17,7 +17,11 @@ import { HttpStatusCode } from "@angular/common/http";
 export class ReservationDetailsItemComponent implements OnInit {
   @Input() reservationId: number;
   @Input() item: ReservationItem;
+  @Input() managerView: boolean = false;
   @Output() reservationItemClicked: EventEmitter<ReservationItem> = new EventEmitter();
+  @Output() stateChanged: EventEmitter<ReservationItem> = new EventEmitter();
+  lastEvent: ReservationItemEvent;
+
   formattedExpiration: string;
   formattedStates: Map<string, string> = new Map([
     ["New", "Nová"],
@@ -36,10 +40,21 @@ export class ReservationDetailsItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fetchLastEvent();
     if (!this.item.expiresOn) {
       this.formattedExpiration = "";
     } else {
       this.formattedExpiration = formatDate(this.item.expiresOn, "d. M. y", "cs-CZ");
+    }
+  }
+
+  fetchLastEvent(): void {
+    if (this.managerView) {
+      this.boardGamesService.getReservationItemHistory(this.reservationId, this.item.id).subscribe(history => {
+        if (history.length > 0) {
+          this.lastEvent = history[0];
+        }
+      })
     }
   }
 
@@ -70,5 +85,71 @@ export class ReservationDetailsItemComponent implements OnInit {
           this.toastrService.error("Zaslání žádosti o prodloužení selhalo.");
         }
     })
+  }
+
+  assign(): void {
+    this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
+      ReservationEventType.Assigned).subscribe(_ => {
+        this.item.state = ReservationItemState.Assigned;
+        this.stateChanged.emit(this.item);
+        this.toastrService.success("Hra byla přiřazena.");
+      },
+      err => {
+        console.log(err);
+        this.toastrService.error("Přiřazení se nezdařilo nezdařilo.");
+      }
+    )
+  }
+
+  handOver(): void {
+    this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
+      ReservationEventType.HandedOver).subscribe(_ => {
+        this.stateChanged.emit(this.item);
+        this.toastrService.success("Hra byla předána.");
+      },
+      err => {
+        console.log(err);
+        this.toastrService.error("Předání slehalo.");
+      }
+    )
+  }
+
+  extend(): void {
+    this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
+      ReservationEventType.ExtensionGranted).subscribe(_ => {
+        this.stateChanged.emit(this.item);
+        this.toastrService.success("Rezervace byla prodloužena.");
+      },
+      err => {
+        console.log(err);
+        this.toastrService.error("Prodloužení selhalo.");
+      }
+    )
+  }
+
+  refuseExtension(): void {
+    this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
+      ReservationEventType.ExtensionRefused).subscribe(_ => {
+        this.stateChanged.emit(this.item);
+        this.toastrService.success("Prodloužení bylo zamítnuto.");
+      },
+      err => {
+        console.log(err);
+        this.toastrService.error("Zamítnutí prodloužení selhalo.");
+      }
+    )
+  }
+
+  return(): void {
+    this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
+      ReservationEventType.Returned).subscribe(_ => {
+        this.item.state = ReservationItemState.Done;
+        this.toastrService.success("Hra byla úspěšně navrácena.");
+      },
+      err => {
+        console.log(err);
+        this.toastrService.error("Navrácení hry se nezdařilo.");
+      }
+    )
   }
 }
