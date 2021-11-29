@@ -7,6 +7,7 @@ import { ToastrService } from "ngx-toastr";
 import { Reservation, ReservationState } from "../../models/board-games/reservation.model";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { BoardGamesStoreService } from "../../shared/services/board-games-store.service";
 
 @Component({
   selector: 'app-reservations',
@@ -24,11 +25,12 @@ export class ReservationsComponent implements OnInit {
   reservationFilter: ReservationState | undefined = undefined;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
-              private router: Router, private activatedRoute: ActivatedRoute) {
+              private router: Router, private activatedRoute: ActivatedRoute,
+              private storeService: BoardGamesStoreService) {
   }
 
   ngOnInit(): void {
-    this.reservationFilter = this.boardGamesService.getReservationFilter();
+    this.reservationFilter = this.storeService.getReservationFilter();
     let formValue = this.filterKeys.find(k => k[1] == this.reservationFilter);
     this.reservationFilterForm.reset(formValue ? formValue[0] : "---");
 
@@ -62,7 +64,7 @@ export class ReservationsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.boardGamesService.saveReservationFilter(this.reservationFilter);
+    this.storeService.saveReservationFilter(this.reservationFilter);
   }
 
   navigateToReservation(reservation: Reservation): void {
