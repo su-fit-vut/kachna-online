@@ -35,7 +35,7 @@ export class StatesService {
   }
 
   getMonth(month: Date, peekNextMonth: boolean = true): Observable<ClubState[]> {
-    let firstDay = new Date(month.getFullYear(), month.getMonth(), month.getDay(), 0, 0, 0);
+    let firstDay = new Date(month.getFullYear(), month.getMonth(), month.getDate(), 0, 0, 0);
     firstDay.setDate(1);
     let lastDay;
     if (peekNextMonth) {

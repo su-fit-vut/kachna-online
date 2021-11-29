@@ -54,7 +54,7 @@ export class EventsService {
   }
 
   getMonthEvents(month: Date, peekNextMonth: boolean = true): Observable<Event[]> {
-    let firstDay = new Date(month.getFullYear(), month.getMonth(), month.getDay());
+    let firstDay = new Date(month.getFullYear(), month.getMonth(), month.getDate());
     firstDay.setDate(1);
     let lastDay;
     if (peekNextMonth) {
