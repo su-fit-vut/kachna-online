@@ -3,9 +3,7 @@ user-profile.component.html
 Author: David Chocholatý
 -->
 
-<div class="jumbotron py-1">
-  <h1 class="display-5 text-center">Můj profil</h1>
-</div>
+<h1>Můj profil</h1>
 
 <div class="container">
   <form novalidate autocomplete="off" #form="ngForm" (submit)="onSaveChanges(form)">
@@ -14,7 +12,8 @@ Author: David Chocholatý
     <div class="form-group row">
       <label for="staticName" class="col-sm-2 col-form-label">Jméno</label>
       <div class="col-sm-10">
-        <input #name="ngModel" [(ngModel)]="authenticationService.user.name" class="form-control-plaintext" id="staticName" name="name" placeholder="Jméno"
+        <input #name="ngModel" [(ngModel)]="authenticationService.user.name" class="form-control-plaintext"
+               id="staticName" name="name" placeholder="Jméno"
                readonly type="text">
       </div>
     </div>
@@ -22,7 +21,8 @@ Author: David Chocholatý
     <div class="form-group row">
       <label for="staticEmail" class="col-sm-2 col-form-label">E-mail</label>
       <div class="col-sm-10">
-        <input #email="ngModel" [(ngModel)]="authenticationService.user.email" class="form-control-plaintext" id="staticEmail" name="email" placeholder="E-mail"
+        <input #email="ngModel" [(ngModel)]="authenticationService.user.email" class="form-control-plaintext"
+               id="staticEmail" name="email" placeholder="E-mail"
                readonly type="text">
       </div>
     </div>
@@ -30,32 +30,38 @@ Author: David Chocholatý
     <div class="form-group row">
       <label for="nickname" class="col-sm-3 col-form-label">Přezdívka</label>
       <div class="col-sm-9">
-        <input #nickname="ngModel" [(ngModel)]="authenticationService.user.nickname" [class.invalid]="nickname.invalid" class="form-control" id="nickname" name="nickname" placeholder="Přezdívka"
-               type="text" maxlength="128" > <!--  FIXME: What is the max length? -->
+        <input #nickname="ngModel" [(ngModel)]="authenticationService.user.nickname" [class.invalid]="nickname.invalid"
+               class="form-control" id="nickname" name="nickname" placeholder="Přezdívka"
+               type="text" maxlength="128"> <!--  FIXME: What is the max length? -->
       </div>
     </div>
 
     <div class="form-group row">
       <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="gamificationCheckbox" name="gamification" #gamification="ngModel" [(ngModel)]="authenticationService.user.gamificationConsent">
+        <input type="checkbox" class="custom-control-input" id="gamificationCheckbox" name="gamification"
+               #gamification="ngModel" [(ngModel)]="authenticationService.user.gamificationConsent">
         <label class="custom-control-label" for="gamificationCheckbox">Souhlas s gamifikací</label>
       </div>
       <div class="ml-2">
         <button
           type="button" class="btn"
-          triggers="click hover focus" [autoClose]="true" [closeDelay]="500"  [ngbTooltip]="gamificationConsentTooltipText"
+          triggers="click hover focus" [autoClose]="true" [closeDelay]="500"
+          [ngbTooltip]="gamificationConsentTooltipText"
           #tooltip3="ngbTooltip"
         > <!-- FIXME: Add actual tooltip message. -->
-          <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+               class="bi bi-question-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-            <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+            <path
+              d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
           </svg>
         </button>
       </div>
     </div>
 
     <div class="form-group">
-      <button type="button" class="btn btn-outline-secondary dropdown dropdown-toggle" (click)="collapse.toggle()" [attr.aria-expanded]="!isCardInfoCollapsed"
+      <button type="button" class="btn btn-outline-secondary dropdown dropdown-toggle" (click)="collapse.toggle()"
+              [attr.aria-expanded]="!isCardInfoCollapsed"
               aria-controls="collapseExample">
         Nastavení karty
       </button>
@@ -64,8 +70,10 @@ Author: David Chocholatý
         <div class="form-group row">
           <label for="card" class="col-sm-3 col-form-label">Kód karty</label>
           <div class="col-sm-8">
-            <input #card="ngModel" [(ngModel)]="authenticationService.user.cardCode" [class.invalid]="card.invalid" class="form-control" id="card" name="card" placeholder="Kód karty"
-                   type="text" maxlength="5" pattern="[A-Z]{5}"> <!--  FIXME: Are there any other requirements for the card number except for maxlength? -->
+            <input #card="ngModel" [(ngModel)]="authenticationService.user.cardCode" [class.invalid]="card.invalid"
+                   class="form-control" id="card" name="card" placeholder="Kód karty"
+                   type="text" maxlength="5" pattern="[A-Z]{5}">
+            <!--  FIXME: Are there any other requirements for the card number except for maxlength? -->
           </div>
           <div class="col-sm-1">
             <button
@@ -73,9 +81,11 @@ Author: David Chocholatý
               triggers="click hover focus" [autoClose]="true" [closeDelay]="500" [ngbTooltip]="cardCodeTooltipText"
               #tooltip="ngbTooltip"
             > <!-- FIXME: Add actual tooltip message. -->
-              <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                   class="bi bi-question-circle" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                <path
+                  d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
               </svg>
             </button>
           </div>

@@ -7,6 +7,7 @@ import { AuthenticationService } from "../../../shared/services/authentication.s
 import { ActivatedRoute } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { RoleTypes } from "../../../models/users/auth/role-types.model";
+import { forkJoin, Observable } from "rxjs";
 
 @Component({
   selector: 'app-manage-user-roles',
@@ -33,7 +34,7 @@ export class ManageUserRolesComponent implements OnInit {
 
   getUserDetailData(userId: number) {
     this.authenticationService.getUserDetailRequest(userId).toPromise()
-      .then( (userDetail: UserDetail) => {
+      .then((userDetail: UserDetail) => {
         this.userDetail = userDetail;
       }).catch((err) => {
       console.log(err);
@@ -42,9 +43,14 @@ export class ManageUserRolesComponent implements OnInit {
   }
 
   onRemoveUserRole(userRole: string) {
+    if (userRole == "Admin" && this.userDetail.id == this.authenticationService.user.id) {
+      this.toastr.error("Nemůžete si odebrat vlastní administrátorskou roli.", "Správa uživatelů");
+      return;
+    }
+
     this.authenticationService.removeUserRoleRequest(this.userDetail.id, userRole).toPromise()
-      .then( () => {
-        this.toastr.success("Role úspěšně odebrána.", "Správa uživatelů");
+      .then(() => {
+        this.toastr.success("Nastaveno vynucené zakázání role.", "Správa uživatelů");
 
         this.route.paramMap.subscribe(params => {
           let userId = Number(params.get('userId'));
@@ -52,27 +58,41 @@ export class ManageUserRolesComponent implements OnInit {
         });
       }).catch((err) => {
       console.log(err);
-      this.toastr.error("Nepodařilo se odebrat roli.", "Správa uživatelů");
+      this.toastr.error("Nepodařilo se nastavit zakázání role.", "Správa uživatelů");
     });
   }
 
   onRemoveAllUserRoles() {
+    let requests: Observable<any>[] = [];
+
     for (let userRole of this.userDetail.activeRoles) {
-      this.authenticationService.removeUserRoleRequest(this.userDetail.id, userRole).toPromise()
-        .then( () => {
-        }).catch((err) => {
+      if (userRole == "Admin" && this.userDetail.id == this.authenticationService.user.id) {
+        continue;
+      }
+
+      let req = this.authenticationService.removeUserRoleRequest(this.userDetail.id, userRole);
+      requests.push(req);
+
+      req.toPromise().catch((err) => {
         console.log(err);
-        this.toastr.error("Nepodařilo se odebrat roli.", "Správa uživatelů");
+        this.toastr.error("Nepodařilo se nastavit zakázání role.", "Správa uživatelů");
       });
     }
 
-    this.toastr.success("Všechny Role úspěšně odebrány.", "Správa uživatelů");
+    forkJoin(requests).subscribe(_ => {
+      this.toastr.success("Nastaveno vynucené zakázání pro všechny role.", "Správa uživatelů");
+
+      this.route.paramMap.subscribe(params => {
+        let userId = Number(params.get('userId'));
+        this.getUserDetailData(userId);
+      });
+    });
   }
 
   onUserRoleEnabled($event: string) {
     this.authenticationService.addUserRoleRequest(this.userDetail.id, $event).toPromise()
-      .then( () => {
-        this.toastr.success("Role úspěšně přidána.", "Správa uživatelů");
+      .then(() => {
+        this.toastr.success("Role byla vynuceně přidána.", "Správa uživatelů");
 
         this.route.paramMap.subscribe(params => {
           let userId = Number(params.get('userId'));
@@ -80,7 +100,7 @@ export class ManageUserRolesComponent implements OnInit {
         });
       }).catch((err) => {
       console.log(err);
-      this.toastr.error("Nepodařilo se přidat roli.", "Správa uživatelů");
+      this.toastr.error("Nepodařilo se vynuceně přidat roli.", "Správa uživatelů");
     });
 
   }
@@ -91,8 +111,8 @@ export class ManageUserRolesComponent implements OnInit {
 
   onResetRolesToKisRoles(userRole: string) {
     this.authenticationService.resetUserRoleRequest(this.userDetail.id, userRole).toPromise()
-      .then( () => {
-        this.toastr.success("Role úspěšně resetová.", "Správa uživatelů");
+      .then(() => {
+        this.toastr.success("Role úspěšně resetována, při příštím přihlášení uživatele bude namapována podle KIS.", "Správa uživatelů");
         this.route.paramMap.subscribe(params => {
           let userId = Number(params.get('userId'));
           this.getUserDetailData(userId);

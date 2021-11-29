@@ -89,7 +89,7 @@ export class AuthenticationService {
     return Math.floor((this.localTokenContent.exp * 1000 - Date.now()) * 0.8);
   }
 
-  private handleAccessTokens(res: AccessTokens) : Promise<any> {
+  private handleAccessTokens(res: AccessTokens): Promise<any> {
     localStorage.setItem(environment.accessTokenStorageName, res.accessToken);
     localStorage.setItem(environment.kisAccessTokenStorageName, res.kisAccessToken);
 
@@ -241,6 +241,7 @@ export class AuthenticationService {
     this.user.cardCode = this.kisLoggedInUserInformation.pin;
     this.user.gamificationConsent = this.kisLoggedInUserInformation.gamification_consent;
     this.user.prestige = this.kisLoggedInUserInformation.prestige;
+    this.user.id = this.kisLoggedInUserInformation.id;
   }
 
   /**
@@ -325,13 +326,13 @@ export class AuthenticationService {
 
   userInfoSaved() {
     this.updateNicknameRequest().toPromise()
-      .then( _ => {
+      .then(_ => {
         this.toastr.success("Přezdívka úspěšně aktualizována.", "Správa účtu");
         this.updateLocalUserInformation();
       }).catch((err) => {
-        console.log(err);
-        this.toastr.error("Přezdívku nebylo možné aktualizovat.", "Správa účtu");
-      });
+      console.log(err);
+      this.toastr.error("Přezdívku nebylo možné aktualizovat.", "Správa účtu");
+    });
   }
 
   updateNicknameRequest() {
@@ -341,7 +342,7 @@ export class AuthenticationService {
 
   updateLocalUserInformation() {
     this.getLocalUserInformationRequest().toPromise()
-      .then( (userDetail: UserDetail) => {
+      .then((userDetail: UserDetail) => {
         this.user.nickname = userDetail.nickname;
       }).catch((err) => {
       console.log(err);
@@ -349,7 +350,7 @@ export class AuthenticationService {
     });
   }
 
-  getLocalUserInformationRequest () {
+  getLocalUserInformationRequest() {
     return this.http.get<UserDetail>(`${USERS_API}/me/`);
   }
 
@@ -359,12 +360,12 @@ export class AuthenticationService {
 
   removeUserRoleRequest(userId: number, userRole: string) {
     let params = new HttpParams().set("state", false);
-    return this.http.put(`${USERS_API}/${userId}/roles/${userRole}/assignment`, "", { params: params });
+    return this.http.put(`${USERS_API}/${userId}/roles/${userRole}/assignment`, "", {params: params});
   }
 
   addUserRoleRequest(userId: number, userRole: string) {
     let params = new HttpParams().set("state", true);
-    return this.http.put(`${USERS_API}/${userId}/roles/${userRole}/assignment`, "", { params: params });
+    return this.http.put(`${USERS_API}/${userId}/roles/${userRole}/assignment`, "", {params: params});
   }
 
   resetUserRoleRequest(userId: number, userRole: string) {

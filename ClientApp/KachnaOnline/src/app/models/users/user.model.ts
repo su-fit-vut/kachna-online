@@ -2,6 +2,7 @@
 // Author: David Chocholatý
 
 export class User {
+  id: number = -1;
   name: string = "";
   email: string = "";
   nickname: string = "";
