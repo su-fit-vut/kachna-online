@@ -361,4 +361,13 @@ export class AuthenticationService {
     let params = new HttpParams().set("state", false);
     return this.http.put(`${USERS_API}/${userId}/roles/${userRole}/assignment`, "", { params: params });
   }
+
+  addUserRoleRequest(userId: number, userRole: string) {
+    let params = new HttpParams().set("state", true);
+    return this.http.put(`${USERS_API}/${userId}/roles/${userRole}/assignment`, "", { params: params });
+  }
+
+  resetUserRoleRequest(userId: number, userRole: string) {
+    return this.http.delete(`${USERS_API}/${userId}/roles/${userRole}/assignment`);
+  }
 }

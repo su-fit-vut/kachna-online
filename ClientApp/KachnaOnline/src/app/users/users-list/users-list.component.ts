@@ -31,7 +31,7 @@ export class UsersListComponent implements OnInit {
     this.router.navigate([`/users/${user.id}`]).then();
   }
 
-  onModifyUser(user: UserDetail) {
-    this.router.navigate([`/users/${user.id}/edit`]).then();
+  onModifyUserRoles(user: UserDetail) {
+    this.router.navigate([`/users/${user.id}/roles`]).then();
   }
 }

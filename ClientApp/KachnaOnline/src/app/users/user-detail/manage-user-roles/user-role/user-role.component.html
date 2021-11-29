@@ -1,1 +1,8 @@
-<p>user-role works!</p>
+<li class="list-group-item" (click)="$event.stopPropagation()">
+  <div class="form-check">
+    <input (change)="onCheckboxChange($event)" class="form-check-input checkbox" type="checkbox" id="categoryCheck{{userRole}}"
+           [checked]="startingValue">
+    <label class="form-check-label ml-3" for="categoryCheck{{userRole}}"
+           >{{userRole}}</label>
+  </div>
+</li>

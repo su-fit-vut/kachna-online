@@ -7,10 +7,22 @@ Author: David Chocholatý
 <div class="jumbotron py-1">
   <h1 class="display-5 text-center">Detail uživatele</h1>
 </div>
+
+<div class="d-flex flex-wrap justify-content-between">
+  <div class="row justify-content-between">
+    <div class="mr-4 mt-3">
+      <app-back-arrow targetRoute=".."></app-back-arrow>
+    </div>
+    <div class="mr-4 mt-3">
+      <h3 class="mb-1">
+        {{userDetail.name}} ({{userDetail.nickname}})
+      </h3>
+    </div>
+  </div>
+</div>
+<hr/>
+
 <div class="container">
-  <h3 class="mb-1">
-      {{userDetail.name}} ({{userDetail.nickname}})
-  </h3>
   <div class="list-group">
     <div class="list-group-item">
       <div class="d-flex w-100 justify-content-between">
@@ -32,14 +44,6 @@ Author: David Chocholatý
     </div>
     <div *ngIf="authenticationService.isAdmin()" class="list-group-item justify-content-between">
       <ul class="list-group list-group-horizontal justify-content-between">
-        <li class="list-group-item border-0">
-          <button class="btn btn-secondary" (click)="onModifyButtonClicked()"
-                  data-toggle="modal" data-target="#exampleModal"
-                  data-backdrop="static" data-keyboard="false">
-            Upravit uživatele
-          </button>
-        </li>
-
         <li class="list-group-item border-0">
           <button class="btn btn-secondary" (click)="onManageUserRolesClicked()">
             Spravovat role uživatele
