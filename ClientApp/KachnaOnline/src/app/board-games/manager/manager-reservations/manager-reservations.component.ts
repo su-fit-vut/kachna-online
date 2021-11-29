@@ -62,6 +62,7 @@ export class ManagerReservationsComponent implements OnInit {
       }, err => {
         console.log(err);
         this.toastrService.error("Načtení všech rezervací selhalo.");
+        this.router.navigate(['..'], {relativeTo: this.activatedRoute}).then();
       });
     }
   }

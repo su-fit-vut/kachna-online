@@ -163,12 +163,55 @@ export class BoardGamesService {
     return this.http.get<BoardGame>(`${this.BoardGamesUrl}/${id}`);
   }
 
+  // Categories
+
   /**
    * Returns an observable array of categories.
    */
   getCategories(): Observable<BoardGameCategory[]> {
     let url = this.CategoriesUrl;
     return this.http.get<BoardGameCategory[]>(url);
+  }
+
+  /**
+   * Returns a category with the given ID.
+   * @param id ID of the category to return.
+   */
+  getCategory(id: number): Observable<BoardGameCategory> {
+    return this.http.get<BoardGameCategory>(`${this.CategoriesUrl}/${id}`);
+  }
+
+  /**
+   * Creates a new category and returns it as an observable.
+   * @param name Name of the category
+   * @param hex RGB color of the category
+   */
+  createCategory(name: string, hex: string): Observable<BoardGameCategory> {
+    if (hex[0] == '#') {
+      hex = hex.slice(1);
+    }
+    return this.http.post<BoardGameCategory>(this.CategoriesUrl, {name: name, colourHex: hex});
+  }
+
+  /**
+   * Updates an existing category.
+   * @param id ID of the category to update.
+   * @param name New name of the category
+   * @param hex New RGB color of the category
+   */
+  updateCategory(id: number, name: string, hex: string): Observable<BoardGameCategory> {
+    if (hex[0] == '#') {
+      hex = hex.slice(1);
+    }
+    return this.http.put<BoardGameCategory>(`${this.CategoriesUrl}/${id}`, {name: name, colourHex: hex})
+  }
+
+  /**
+   * Deletes a category
+   * @param id ID of the category to delete.
+   */
+  deleteCategory(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.CategoriesUrl}/${id}`);
   }
 
   // Reservations

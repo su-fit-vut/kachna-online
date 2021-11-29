@@ -28,7 +28,7 @@ Author: František Nečas
   <hr/>
   <div class="form-group">
     <label for="internalNote">Interní Poznámka</label>
-    <textarea class="form-control" id="internalNote" rows="2" [formControl]="noteInternalForm"
+    <textarea class="form-control" id="internalNote" rows="2" [formControl]="noteInternalForm" maxlength="1024"
               placeholder="Tuto poznámku vidí jen ostatní správci."></textarea>
   </div>
   <button type="button" class="btn btn-primary" (click)="updateNote()">Uložit interní poznámku</button>

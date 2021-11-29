@@ -28,6 +28,12 @@ import { ReservationItemsComponent } from './reservation-details/reservation-ite
 import { ManagerReservationDetailsComponent } from './manager/manager-reservation-details/manager-reservation-details.component';
 import { ManagerButtonClusterComponent } from './reservation-details/reservation-details-item/manager-button-cluster/manager-button-cluster.component';
 import { ReservationHistoryComponent } from './manager/reservation-history/reservation-history.component';
+import { CategoriesComponent } from './manager/categories/categories.component';
+import { CategoryUpdateComponent } from './manager/categories/category-update/category-update.component';
+import { CategoryCreateComponent } from './manager/categories/category-create/category-create.component';
+import { CategoryTableItemComponent } from './manager/categories/category-table-item/category-table-item.component';
+import { ManagerBoardGamesComponent } from './manager/manager-board-games/manager-board-games.component';
+import { ColorPickerModule } from "ngx-color-picker";
 
 
 @NgModule({
@@ -52,6 +58,11 @@ import { ReservationHistoryComponent } from './manager/reservation-history/reser
     ManagerReservationDetailsComponent,
     ManagerButtonClusterComponent,
     ReservationHistoryComponent,
+    CategoriesComponent,
+    CategoryUpdateComponent,
+    CategoryCreateComponent,
+    CategoryTableItemComponent,
+    ManagerBoardGamesComponent,
   ],
   imports: [
     CommonModule,
@@ -59,7 +70,8 @@ import { ReservationHistoryComponent } from './manager/reservation-history/reser
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
-    ComponentsModule
+    ComponentsModule,
+    ColorPickerModule
   ]
 })
 export class BoardGamesModule {
