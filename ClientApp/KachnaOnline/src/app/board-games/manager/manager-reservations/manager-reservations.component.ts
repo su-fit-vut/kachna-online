@@ -18,10 +18,10 @@ import { Subscription } from "rxjs";
 export class ManagerReservationsComponent implements OnInit {
   reservations: Reservation[]
   filterKeys: [string, ReservationState][] = [
-    ["Nově přidané", ReservationState.New],
-    ["Právě běžící", ReservationState.Current],
-    ["Platnost vypršela", ReservationState.Expired],
-    ["Dokončené", ReservationState.Done]
+    ["Pouze nově přidané", ReservationState.New],
+    ["Pouze právě běžící", ReservationState.Current],
+    ["Pouze po skončení platnosti", ReservationState.Expired],
+    ["Pouze dokončené", ReservationState.Done]
   ]
   reservationFilterForm = new FormControl("---");
   reservationFilter: ReservationState | undefined = undefined;
