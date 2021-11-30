@@ -21,7 +21,7 @@ export class NavigationBarComponent implements OnInit {
     public boardGamesService: BoardGamesService,
     public stateService: StatesService,
     public router: Router,
-    public storeService: BoardGamesStoreService
+    public storeService: BoardGamesStoreService,
   ) {}
 
   public isMenuCollapsed = true;
