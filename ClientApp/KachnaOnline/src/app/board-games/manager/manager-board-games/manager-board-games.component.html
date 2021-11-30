@@ -36,8 +36,8 @@ Author: František Nečas
     </tr>
     </thead>
     <tbody>
-    <tr app-manager-table-item *ngFor="let game of shownGames" (boardGameClicked)="onBoardGameClicked($event)"
-        [game]="game"></tr>
+    <tr class="clickable" app-manager-table-item *ngFor="let game of shownGames"
+        (boardGameClicked)="onBoardGameClicked($event)" [game]="game"></tr>
     </tbody>
   </table>
 </div>
