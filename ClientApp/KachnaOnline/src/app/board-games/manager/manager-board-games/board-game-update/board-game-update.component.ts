@@ -21,7 +21,8 @@ export class BoardGameUpdateComponent implements OnInit {
   game: BoardGame
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
-              private activatedRoute: ActivatedRoute, private imageUploadService: ImageUploadService) { }
+              private activatedRoute: ActivatedRoute, private imageUploadService: ImageUploadService) {
+  }
 
   ngOnInit(): void {
     this.routeSub = this.activatedRoute.params.subscribe(params => {
@@ -48,26 +49,47 @@ export class BoardGameUpdateComponent implements OnInit {
   }
 
   updateGame(form: FormGroup): void {
-    // FIXME: Use dirty flag to determine whether only /stock endpoint is not sufficient.
-    let image = form.value['image'];
-    delete form.value['category'];
-    delete form.value['image'];
-    if (image && image['file']) {
-      this.imageUploadService.postFile(image['file']).subscribe(data => {
-        form.patchValue({imageUrl: data.url});
-        this.putGame(form.value);
-      }, err => {
-        if (err.status == HttpStatusCode.Conflict) {
-          form.patchValue({imageUrl: err.error.url});
+    // Check if only stock was changed.
+    let changedProperties = [];
+    for (let control in form.controls) {
+      if (form.controls[control]?.dirty) {
+        changedProperties.push(control)
+      }
+    }
+
+    // Category is always set since the options are loaded asynchronously and the value must be set
+    // manually by us. Check if it changed.
+    let nonStockProperties = changedProperties.filter(p => p != 'category' && p != 'inStock' && p != 'visible' &&
+      p != 'unavailable');
+    if (nonStockProperties.length > 0 || form.value['categoryId'] != this.game.category.id) {
+      let image = form.value['image'];
+      delete form.value['category'];
+      delete form.value['image'];
+      if (image && image['file']) {
+        this.imageUploadService.postFile(image['file']).subscribe(data => {
+          form.patchValue({imageUrl: data.url});
           this.putGame(form.value);
-        } else {
-          this.toastrService.error("Nepodařilo se nahrát obrázek na server.");
-        }
-      })
+        }, err => {
+          if (err.status == HttpStatusCode.Conflict) {
+            form.patchValue({imageUrl: err.error.url});
+            this.putGame(form.value);
+          } else {
+            this.toastrService.error("Nepodařilo se nahrát obrázek na server.");
+          }
+        })
+      } else {
+        form.patchValue({imageUrl: this.game.imageUrl});
+        this.putGame(form.value)
+      }
     } else {
-      form.patchValue({imageUrl: this.game.imageUrl});
-      this.putGame(form.value)
+      // Stock update is sufficient.
+      this.boardGamesService.updateBoardGameStock(this.game.id, form.value['inStock'], form.value['unavailable'],
+        form.value['visible']).subscribe(_ => {
+          this.toastrService.success("Hra aktualizována.");
+      }, err => {
+          console.log(err);
+          this.toastrService.error("Nepodařilo se aktualizovat počty hry.");
+      });
     }
   }
-
 }
