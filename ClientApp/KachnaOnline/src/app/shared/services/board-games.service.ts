@@ -93,6 +93,18 @@ export class BoardGamesService {
     return this.http.put<any>(`${this.BoardGamesUrl}/${id}`, game);
   }
 
+  /**
+   *
+   * @param id
+   * @param inStock
+   * @param unavailable
+   * @param visible
+   */
+  updateBoardGameStock(id: number, inStock: number, unavailable: number, visible: boolean): Observable<any> {
+    return this.http.put<any>(`${this.BoardGamesUrl}/${id}/stock`, {inStock: inStock,
+      unavailable: unavailable, visible: visible});
+  }
+
   // Categories
 
   /**
