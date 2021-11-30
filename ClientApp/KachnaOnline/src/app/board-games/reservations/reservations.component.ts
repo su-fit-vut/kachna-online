@@ -17,9 +17,9 @@ import { BoardGamesStoreService } from "../../shared/services/board-games-store.
 export class ReservationsComponent implements OnInit {
   reservations: Reservation[]
   filterKeys: [string, ReservationState][] = [
-    ["Právě běžící", ReservationState.Current],
-    ["Platnost vypršela", ReservationState.Expired],
-    ["Dokončené", ReservationState.Done]
+    ["Pouze právě běžící", ReservationState.Current],
+    ["Pouze po skončení platnosti", ReservationState.Expired],
+    ["Pouze dokončené", ReservationState.Done]
   ]
   reservationFilterForm = new FormControl("---");
   reservationFilter: ReservationState | undefined = undefined;

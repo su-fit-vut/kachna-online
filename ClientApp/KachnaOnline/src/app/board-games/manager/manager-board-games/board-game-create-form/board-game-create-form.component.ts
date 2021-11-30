@@ -61,7 +61,6 @@ export class BoardGameCreateFormComponent implements OnInit {
         defaultReservationDays: this.startingState.defaultReservationDays
       })
     }
-    console.log(this.form.value)
   }
 
   ngOnInit(): void {

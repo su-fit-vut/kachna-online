@@ -11,10 +11,10 @@ Author: František Nečas
       <select class="form-control input ml-3 w-auto" id="reservationState" [formControl]="reservationFilterForm">
         <option>---</option>
         <!-- FIXME: possibly a bug in angular, with dynamic generation using ngFor, the form is not correctly set -->
-        <option>Nově přidané</option>
-        <option>Právě běžící</option>
-        <option>Platnost vypršela</option>
-        <option>Dokončené</option>
+        <option>Pouze nově přidané</option>
+        <option>Pouze právě běžící</option>
+        <option>Pouze po skončení platnosti</option>
+        <option>Pouze dokončené</option>
       </select>
     </div>
     <app-togglable-button [text]="'Pouze mně přiřazené'" (valueChanged)="onButtonToggle($event)"
