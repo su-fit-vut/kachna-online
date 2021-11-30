@@ -15,7 +15,7 @@ Author: David Chocholatý
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let eventDetail of eventsService.eventsList">
+  <tr *ngFor="let eventDetail of eventsService.eventsList" class="clickable">
     <td (click)="openEventDetail(eventDetail)">{{eventDetail.name}}</td>
     <td (click)="openEventDetail(eventDetail)">
       {{eventDetail.from | date:'d. M. yyyy HH:mm'}}

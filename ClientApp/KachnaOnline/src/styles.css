@@ -30,3 +30,8 @@ input.invalid {
 .link-no-style {
   color: inherit;
 }
+
+.clickable:hover {
+  cursor: pointer;
+  background-color: #fafafa;
+}

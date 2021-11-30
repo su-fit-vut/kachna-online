@@ -3,7 +3,7 @@ categories.component.html
 Author: František Nečas
 -->
 <div class="d-flex justify-content-between align-items-center">
-  <h1>Kategorie her</h1>
+  <h1>Správa kategorií</h1>
   <button type="button" class="btn btn-primary btn-lg font-weight-bold" routerLink="create">Přidat</button>
 </div>
 
@@ -17,7 +17,7 @@ Author: František Nečas
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let category of categories" app-category-table-item [category]="category"
+    <tr *ngFor="let category of categories" app-category-table-item [category]="category" class="clickable"
         [gameCount]="boardGameCounts.get(category.id) || 0" (categoryClicked)="routeToCategory($event)"></tr>
     </tbody>
   </table>
