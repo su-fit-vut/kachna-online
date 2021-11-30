@@ -58,7 +58,8 @@ export class ReservationDetailsItemComponent implements OnInit {
       },
       err => {
         console.log(err);
-        this.toastrService.error("Zrušení se nezdařilo.");
+        this.toastrService.error("Zrušení rezervace se nezdařilo. Zkus obnovit stránku, zda tvoji " +
+          "rezervaci již nezačal řešit správce.");
       }
     )
   }
@@ -88,7 +89,7 @@ export class ReservationDetailsItemComponent implements OnInit {
       },
       err => {
         console.log(err);
-        this.toastrService.error("Předání slehalo.");
+        this.toastrService.error("Předání selhalo.");
       }
     )
   }

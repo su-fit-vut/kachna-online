@@ -58,7 +58,7 @@ export class ReservationsComponent implements OnInit {
       },
       err => {
         console.log(err);
-        this.toastrService.error("Načtení rezervací se nezdařilo.");
+        this.toastrService.error("Načtení rezervací se nezdařilo. Jsi přihlášen*a?");
       }
     )
   }

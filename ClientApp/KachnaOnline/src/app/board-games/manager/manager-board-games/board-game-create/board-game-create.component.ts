@@ -28,7 +28,11 @@ export class BoardGameCreateComponent implements OnInit {
       this.router.navigate([`../${game.id}`], {relativeTo: this.activatedRouter}).then();
     }, err => {
       console.log(err);
-      this.toastrService.error("Přidání deskové hry selhalo.");
+      if (err.status == HttpStatusCode.UnprocessableEntity) {
+        this.toastrService.error("Přidání deskové hry selhalo. Minimální počet hráčů nesmí být vyšší než " +
+          "maximální.")
+      }
+      this.toastrService.error("Přidání deskové hry selhalo. Nechybí ve formuláři nějaká informace?");
     })
   }
 

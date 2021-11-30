@@ -57,7 +57,7 @@ export class CategoryUpdateComponent implements OnInit {
       this.fetchCategory(this.category.id);
     }, err => {
       console.log(err);
-      this.toastrService.error("Úprava kategorie selhala.");
+      this.toastrService.error("Úprava kategorie selhala. Je barva ve formátu #000000?");
     })
   }
 

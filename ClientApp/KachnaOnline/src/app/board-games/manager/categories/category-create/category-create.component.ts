@@ -32,7 +32,7 @@ export class CategoryCreateComponent implements OnInit {
       this.router.navigate([`../${category.id}`], {relativeTo: this.activatedRoute}).then();
     }, err => {
       console.log(err);
-      this.toastrService.error("Přidání kategorie se nezdařila.");
+      this.toastrService.error("Přidání kategorie se nezdařilo. Je barva ve formátu #000000?");
     })
   }
 
