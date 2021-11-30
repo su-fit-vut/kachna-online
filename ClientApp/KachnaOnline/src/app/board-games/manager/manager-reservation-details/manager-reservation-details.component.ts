@@ -50,9 +50,8 @@ export class ManagerReservationDetailsComponent implements OnInit {
       },
       err => {
         console.log(err);
-        this.toastrService.error("Načtení rezervace se nezdařilo.")
+        this.toastrService.error("Načtení rezervace se nezdařilo. Jsi přihlášen*a?")
         this.router.navigate(['..'], {relativeTo: this.route}).then()
-        this.router.navigate(['..'], {relativeTo: this.route}).then();
       })
   }
 
