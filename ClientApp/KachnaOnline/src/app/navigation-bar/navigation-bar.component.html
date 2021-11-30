@@ -99,11 +99,14 @@ Author: David Chocholatý
         </li>
 
         <li class="nav-item align-self-xl-center align-self-lg-center mr-xl-3 mr-lg-3 mt-xl-0 mt-lg-0 mt-3" ngbDropdown>
-          <div class="btn-group mr-3 btn-block">
+          <button type="button" *ngIf="authenticationService.isLoggedOut()" class="btn btn-secondary text-nowrap btn-block d-xl-block d-lg-block d-md-block d-sm-block d-none" style="text-align:left"
+                  routerLink="board-games" (click)="isMenuCollapsed = true">Deskovky
+          </button>
+          <div class="btn-group mr-3 btn-block" *ngIf="authenticationService.isLoggedIn()">
             <button type="button" class="btn btn-secondary text-nowrap btn-block d-xl-block d-lg-block d-md-block d-sm-block d-none" style="text-align:left"
                     routerLink="board-games" (click)="isMenuCollapsed = true">Deskovky
             </button>
-            <button *ngIf="authenticationService.isLoggedIn()" type="button"
+            <button type="button"
                     class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right d-xl-block d-lg-block d-md-block d-sm-block d-none"
                     ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                     data-reference="parent">
