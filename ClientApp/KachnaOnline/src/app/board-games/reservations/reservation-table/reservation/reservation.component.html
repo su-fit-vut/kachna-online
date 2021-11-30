@@ -3,7 +3,15 @@ reservation.component.html
 Author: František Nečas
 -->
 <td class="align-middle">{{formattedDate}}</td>
-<td class="d-none d-sm-table-cell align-middle">{{reservation?.madeBy?.name}}</td>
+<td class="d-none d-sm-table-cell my-auto align-middle" *ngIf="!managerView">
+  <p>{{formattedNote}}</p>
+  <button type="button" class="btn btn-outline-secondary mt-1 note-button" *ngIf="noteTooLong" [ngbPopover]="reservation.noteUser"
+          (click)="$event.stopPropagation();"
+          popoverTitle="Poznámka" placement="right">
+    Celá poznámka
+  </button>
+</td>
+<td class="d-none d-sm-table-cell align-middle" *ngIf="managerView">{{reservation?.madeBy?.name}}</td>
 <td class="align-middle">
   <ul class="list-group">
     <li *ngFor="let assigned of assignedUsers" class="list-group-item">{{assigned}}</li>
