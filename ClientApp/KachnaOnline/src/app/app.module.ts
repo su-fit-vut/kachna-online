@@ -35,6 +35,8 @@ import { UpcomingOpeningsComponent } from './home/upcoming-openings/upcoming-ope
 import { JsonDateInterceptor } from "./shared/interceptors/json-date.interceptor";
 import { EventsOverviewComponent } from './home/events-overview/events-overview.component';
 import { PipesModule } from "./shared/pipes/pipes.module";
+import { LoadingSpinnerComponent } from './navigation-bar/loading-spinner/loading-spinner.component';
+import { LoadingInterceptor } from "./shared/interceptors/loading.interceptor";
 
 registerLocaleData(localeCs);
 
@@ -64,6 +66,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     PrestigeTableComponent,
     UpcomingOpeningsComponent,
     EventsOverviewComponent,
+    LoadingSpinnerComponent,
   ],
   imports: [
     ComponentsModule,
@@ -97,7 +100,8 @@ export function tokenGetter(request?: HttpRequest<any>) {
   providers: [
     EventsService,
     {provide: LOCALE_ID, useValue: 'cs-CZ'},
-    {provide: HTTP_INTERCEPTORS, useClass: JsonDateInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: JsonDateInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi:true}
   ],
   exports: [
   ],
