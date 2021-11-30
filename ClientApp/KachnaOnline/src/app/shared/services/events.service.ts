@@ -351,11 +351,11 @@ export class EventsService {
       });
   }
 
-  getFormattedFromDate(format: string = "d. M. y HH:MM") {
+  getFormattedFromDate(format: string = "d. M. yyyy HH:mm") {
     return formatDate(this.eventDetail.from, format, "cs-CZ")
   }
 
-  getFormattedToDate(format: string = "d. M. y HH:MM") {
+  getFormattedToDate(format: string = "d. M. yyyy HH:mm") {
     return formatDate(this.eventDetail.to, format, "cs-CZ")
   }
 }

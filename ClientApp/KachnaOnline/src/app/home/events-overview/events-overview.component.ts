@@ -79,7 +79,8 @@ export class EventsOverviewComponent implements OnInit {
         from: e.from,
         to: e.to,
         id: e.id,
-        imageUrl: e.imageUrl,
+        imageUrl: e.imageUrl == "" ? null : e.imageUrl,
+        url: e.url == "" ? null : e.url,
         title: e.name,
         shortDescription: e.shortDescription,
         stateTypes: null,
@@ -157,7 +158,8 @@ class EventItem {
   placeUrl: string | null;
   stateTypes: string[] | null;
   shortDescription: string;
-  imageUrl: string;
+  imageUrl: string | null;
+  url : string | null;
   multipleDays: boolean;
 }
 

@@ -54,6 +54,15 @@ export class PlanStateComponent implements OnInit {
     });
   }
 
+  private dateTimeToString(date: NgbDateStruct, time: NgbTimeStruct) : string {
+    let dateObj = this.nativeDateAdapter.toModel(date);
+    dateObj?.setTime(dateObj?.getTime() - dateObj?.getTimezoneOffset());
+    dateObj?.setHours(time.hour);
+    dateObj?.setMinutes(time.minute);
+    dateObj?.setSeconds(0);
+    return dateObj?.toISOString() ?? "";
+  }
+
   onSubmit(): void {
     let dto = new StateModification();
     const val = this.mainForm.value;
@@ -75,8 +84,8 @@ export class PlanStateComponent implements OnInit {
         startTime = {hour: new Date().getHours(), minute: new Date().getMinutes(), second: 0};
       }
 
-      dto.start = `${startDate.year}.${startDate.month}.${startDate.day}T${startTime.hour}:${startTime.minute}:00`;
-      dto.plannedEnd = `${endDate.year}.${endDate.month}.${endDate.day}T${endTime.hour}:${endTime.minute}:00`;
+      dto.start = this.dateTimeToString(startDate, startTime);
+      dto.plannedEnd = this.dateTimeToString(endDate, endTime);
       dto.state = val.stateType;
 
       this.stateService.planNew(dto).subscribe(_ => this.done()); // TODO
@@ -84,7 +93,7 @@ export class PlanStateComponent implements OnInit {
       let endDate: NgbDateStruct = val.plannedEndDate;
       let endTime: NgbTimeStruct = val.plannedEndTime;
 
-      dto.plannedEnd = `${endDate.year}.${endDate.month}.${endDate.day}T${endTime.hour}:${endTime.minute}:00`;
+      dto.plannedEnd = this.dateTimeToString(endDate, endTime);
       dto.madeById = null; // TODO
 
       this.stateService.modifyCurrent(dto).subscribe(_ => this.done()); // TODO
