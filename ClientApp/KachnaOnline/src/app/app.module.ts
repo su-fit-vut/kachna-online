@@ -37,6 +37,7 @@ import { EventsOverviewComponent } from './home/events-overview/events-overview.
 import { PipesModule } from "./shared/pipes/pipes.module";
 import { LoadingSpinnerComponent } from './navigation-bar/loading-spinner/loading-spinner.component';
 import { LoadingInterceptor } from "./shared/interceptors/loading.interceptor";
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 registerLocaleData(localeCs);
 
@@ -96,6 +97,12 @@ export function tokenGetter(request?: HttpRequest<any>) {
       },
     }),
     AppRoutingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [
     EventsService,
