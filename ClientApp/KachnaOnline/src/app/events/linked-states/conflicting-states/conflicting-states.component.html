@@ -31,7 +31,7 @@ Author: David Chocholatý
   </div>
 
   <div class="row">
-    <table class="table table-stripped">
+    <table class="table table-stripped" *ngIf="eventsService.shownConflictingStatesList.length > 0">
       <thead class="thead-light">
       <tr>
         <th>Trvání od</th>
@@ -40,7 +40,7 @@ Author: David Chocholatý
         <th>Operace</th>
       </tr>
       </thead>
-      <tbody *ngIf="eventsService.shownConflictingStatesList.length > 0">
+      <tbody>
       <tr *ngFor="let conflictingState of eventsService.shownConflictingStatesList">
 
         <td (click)="openClubStateDetail(conflictingState)">
