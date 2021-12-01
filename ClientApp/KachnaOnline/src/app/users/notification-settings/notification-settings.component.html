@@ -1,0 +1,28 @@
+<!--
+notification-settings.component.html
+Author: František Nečas
+-->
+
+<h1>Nastavení push notifikací</h1>
+
+<div *ngIf="subscription === null">
+  <div class="d-flex">
+    <h3>Notifikace nejsou povoleny</h3>
+    <button type="button" class="btn btn-primary mx-2" (click)="subscribe()">Povolit</button>
+  </div>
+</div>
+
+<div *ngIf="subscription !== null">
+  <div class="d-flex">
+    <h3>Notifikace jsou povoleny</h3>
+    <button type="button" class="btn btn-danger mx-2" (click)="unsubscribe()">Zakázat</button>
+  </div>
+  <h4>Nastavení jednotlivých upozornění</h4>
+  <app-togglable-button [startingValue]="configuration.stateChangesEnabled" (valueChanged)="onStateEnableChange($event)"
+                        text="Otvírání klubu" class="m-2"></app-togglable-button>
+
+  <app-togglable-button *ngIf="auth.isLoggedIn()" [startingValue]="configuration.boardGamesEnabled"
+                        (valueChanged)="onBoardGameEnableChange($event)" text="Upozornění na konec rezervace">
+  </app-togglable-button>
+  <p *ngIf="!auth.isLoggedIn()">Po přihlášení bude možné nastavit další možnosti notifikací.</p>
+</div>

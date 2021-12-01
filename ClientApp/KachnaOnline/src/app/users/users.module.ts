@@ -14,6 +14,7 @@ import { UserDetailComponent } from './user-detail/user-detail.component';
 import { ManageUserRolesComponent } from './user-detail/manage-user-roles/manage-user-roles.component';
 import { ComponentsModule } from "../shared/components/components.module";
 import { UserRoleComponent } from './user-detail/manage-user-roles/user-role/user-role.component';
+import { NotificationSettingsComponent } from './notification-settings/notification-settings.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { UserRoleComponent } from './user-detail/manage-user-roles/user-role/use
     UserDetailComponent,
     ManageUserRolesComponent,
     UserRoleComponent,
+    NotificationSettingsComponent,
   ],
   imports: [
     CommonModule,
