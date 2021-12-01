@@ -208,7 +208,6 @@ namespace KachnaOnline.Business.Services
 
             _mapper.Map(modifiedEvent, eventEntity);
             try {
-                await this.SetLinkedPlannedStatesForEvent(eventId, modifiedEvent.LinkedPlannedStateIds);
                 await _unitOfWork.SaveChanges();
             }
             catch (Exception exception)

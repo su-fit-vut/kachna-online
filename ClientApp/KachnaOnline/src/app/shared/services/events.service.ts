@@ -93,12 +93,12 @@ export class EventsService {
     });
   }
 
-  planEventRequest() {
-    return this.http.post(this.EventsUrl, this.eventDetail);
+  planEventRequest(eventData: Event): Observable<any> {
+    return this.http.post(this.EventsUrl, eventData);
   }
 
-  modifyEventRequest() {
-    return this.http.put(`${this.EventsUrl}/${this.eventDetail.id}`, this.eventDetail);
+  modifyEventRequest(eventData: Event): Observable<any> {
+    return this.http.put(`${this.EventsUrl}/${this.eventDetail.id}`, eventData);
   }
 
   removeEventRequest(eventId: number): Observable<any> {

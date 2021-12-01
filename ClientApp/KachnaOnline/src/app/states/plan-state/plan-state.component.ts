@@ -104,5 +104,4 @@ export class PlanStateComponent implements OnInit {
     this.mainForm.reset();
     this.router.navigate(["/"]).finally();
   }
-
 }

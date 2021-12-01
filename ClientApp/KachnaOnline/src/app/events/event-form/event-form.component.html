@@ -3,31 +3,31 @@ event-form.component.html
 Author: David Chocholatý
 -->
 
-<form novalidate autocomplete="off" #form="ngForm" (submit)="onSubmit(form)">
-  <input type="hidden" name="id" [value]="eventsService.eventDetail.id" />
+<form novalidate autocomplete="off" [formGroup]="mainForm" (ngSubmit)="onSubmit()">
+  <input type="hidden" id="id" class="form-control" formControlName="id">
 
   <div class="form-group">
     <div class="form-row">
       <label class="mr-1">Název</label>
       <div style="color: grey;">(povinné)</div>
     </div>
-    <input class="form-control form-control-lg" placeholder="Název akce" name="name"
-    #name="ngModel" [(ngModel)]="eventsService.eventDetail.name"
-    required maxlength="128" [class.invalid]="name.invalid && name.touched">
+    <input class="form-control form-control-lg" placeholder="Název akce" id="name"
+    formControlName="name"
+    required maxlength="128">
   </div>
 
   <div class="form-row">
     <div class="form-group col-md-6">
       <label>Místo konání</label>
       <input class="form-control form-control-lg" placeholder="Místo konání akce" name="place"
-      #place="ngModel" [(ngModel)]="eventsService.eventDetail.place"
+             formControlName="place"
       maxlength="256">
     </div>
 
     <div class="form-group col-md-6">
       <label>URL místa konání</label>
       <input class="form-control form-control-lg" placeholder="URL místa konání akce" name="placeUrl"
-      #placeUrl="ngModel" [(ngModel)]="eventsService.eventDetail.placeUrl"
+             formControlName="placeUrl"
       maxlength="512">
     </div>
   </div>
@@ -35,7 +35,7 @@ Author: David Chocholatý
   <div class="form-group">
     <label>URL obrázku</label>
     <input class="form-control form-control-lg" placeholder="URL obrázku akce" name="imageUrl"
-    #imageUrl="ngModel" [(ngModel)]="eventsService.eventDetail.imageUrl"
+           formControlName="imageUrl"
     maxlength="512">
   </div>
 
@@ -45,50 +45,66 @@ Author: David Chocholatý
       <div style="color: grey;">(povinné)</div>
     </div>
     <textarea class="form-control form-control-lg" placeholder="Krátký popis akce" name="shortDescription"
-    #shortDescription="ngModel" [(ngModel)]="eventsService.eventDetail.shortDescription"
-    required maxlength="512" [class.invalid]="shortDescription.invalid && shortDescription.touched"></textarea>
+              formControlName="shortDescription"
+    required maxlength="512"></textarea>
   </div>
 
   <div class="form-group">
     <label>Podrobný popis</label>
     <textarea class="form-control form-control-lg" placeholder="Podrobný popis akce" name="fullDescription"
-    #fullDescription="ngModel" [(ngModel)]="eventsService.eventDetail.fullDescription"></textarea>
+              formControlName="fullDescription"
+    ></textarea>
   </div>
 
   <div class="form-group">
     <label>URL</label>
     <input class="form-control form-control-lg" placeholder="URL akce" name="url"
-    #url="ngModel" [(ngModel)]="eventsService.eventDetail.url"
+           formControlName="url"
     maxlength="512">
   </div>
 
-  <div class="form-row">
-    <div class="form-group col-md-6">
+  <div class="form-row justify-content-between">
+    <div class="form-group d-flex align-items-center">
       <div class="form-row">
         <label class="mr-1">Trvání od</label>
         <div style="color: grey;">(povinné)</div>
       </div>
-      <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání akce od" name="from"
-      #from="ngModel" [ngModel]="eventsService.eventDetail.from | date:'yyyy-MM-ddTHH:mm'"
-             (ngModelChange)="eventsService.eventDetail.from = $event"
-      required [class.invalid]="from.invalid && from.touched">
+
+      <div class="input-group mx-3">
+        <input class="form-control" (click)="fromDate.open()" type="text" ngbDatepicker
+               #fromDate="ngbDatepicker" id="fromDate" formControlName="fromDate"
+               placeholder="dd. MM. yyyy" autocomplete="false"/>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="fromDate.toggle()" type="button"><i
+            class="far fa-calendar"></i></button>
+        </div>
+      </div>
+
+      <ngb-timepicker formControlName="fromTime"></ngb-timepicker>
     </div>
 
-    <div class="form-group col-md-6">
+    <div class="form-group d-flex align-items-center">
       <div class="form-row">
         <label class="mr-1">Trvání do</label>
         <div style="color: grey;">(povinné)</div>
       </div>
-      <input type="datetime-local" class="form-control form-control-lg" placeholder="Trvání akce do" name="to"
-      #to="ngModel" [ngModel]="eventsService.eventDetail.to | date:'yyyy-MM-ddTHH:mm'"
-             (ngModelChange)="eventsService.eventDetail.to = $event"
-      required [class.invalid]="to.invalid && to.touched">
+      <div class="input-group mx-3">
+        <input class="form-control" (click)="toDate.open()" type="text" ngbDatepicker
+               #toDate="ngbDatepicker" id="toDate" formControlName="toDate"
+               placeholder="dd. MM. yyyy" autocomplete="false"/>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" (click)="toDate.toggle()" type="button"><i
+            class="far fa-calendar"></i></button>
+        </div>
+      </div>
+
+      <ngb-timepicker formControlName="toTime"></ngb-timepicker>
     </div>
   </div>
 
   <div class="form-row d-flex flex-wrap justify-content-between">
     <div class="form-group mr-4 mt-3">
-      <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="form.invalid">Potvrdit</button>
+      <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="mainForm.invalid">{{submitText}}</button>
     </div>
     <div class="form-group mr-4 mt-3" *ngIf="editMode">
       <button class="btn btn-info btn-lg btn-block" type="button" (click)="onManageLinkedStatesClicked()">
@@ -96,7 +112,7 @@ Author: David Chocholatý
       </button>
     </div>
     <div class="form-group mt-3">
-      <button class="btn btn-info btn-lg btn-block" type="button" (click)="clearForm(form)">Smazat</button>
+      <button class="btn btn-info btn-lg btn-block" type="button" (click)="mainForm.reset()">Smazat</button>
     </div>
   </div>
 </form>
