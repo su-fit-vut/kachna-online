@@ -111,7 +111,7 @@ Author: David Chocholatý
         Spravovat připojené stavy klubu
       </button>
     </div>
-    <div class="form-group mt-3">
+    <div class="form-group mt-3" *ngIf="editMode">
       <button class="btn btn-info btn-lg btn-block" type="button" (click)="mainForm.reset()">Smazat</button>
     </div>
   </div>
