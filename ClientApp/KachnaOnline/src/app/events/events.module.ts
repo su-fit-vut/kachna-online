@@ -12,7 +12,7 @@ import { EventDetailComponent } from "./event-detail/event-detail.component";
 import { CurrentEventsComponent } from "./current-events/current-events.component";
 import { PlanEventsComponent } from "./plan-events/plan-events.component";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { LinkedStatesComponent } from './linked-states/linked-states.component';
 import { ManageLinkedStatesComponent } from './linked-states/manage-linked-states/manage-linked-states.component';
 import { ConflictingStatesComponent } from './linked-states/conflicting-states/conflicting-states.component';
@@ -37,14 +37,15 @@ import { PipesModule } from "../shared/pipes/pipes.module";
     EditEventsComponent,
     NextEventsComponent,
   ],
-  imports: [
-    CommonModule,
-    EventsRoutingModule,
-    NgbModule,
-    FormsModule,
-    ComponentsModule,
-    PipesModule
-  ]
+    imports: [
+        CommonModule,
+        EventsRoutingModule,
+        NgbModule,
+        FormsModule,
+        ComponentsModule,
+        PipesModule,
+        ReactiveFormsModule
+    ]
 })
 export class EventsModule {
 }
