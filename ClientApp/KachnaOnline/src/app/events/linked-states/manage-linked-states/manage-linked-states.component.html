@@ -26,7 +26,7 @@ Author: David Chocholatý
 
 <div class="container">
   <div class="row">
-    <table class="table table-stripped">
+    <table class="table table-stripped" *ngIf="eventsService.eventDetail.linkedStatesDtos.length > 0">
       <thead class="thead-light">
       <tr>
         <th>Trvání od</th>
@@ -35,7 +35,7 @@ Author: David Chocholatý
         <th>Operace</th>
       </tr>
       </thead>
-      <tbody *ngIf="eventsService.eventDetail.linkedStatesDtos.length > 0">
+      <tbody>
       <tr *ngFor="let linkedState of eventsService.eventDetail.linkedStatesDtos">
         <td (click)="openClubStateDetail(linkedState)">
           {{linkedState.start | date:'d. M. yyyy HH:mm'}}

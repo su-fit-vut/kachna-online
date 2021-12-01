@@ -5,7 +5,7 @@ Author: David Chocholatý
 
 <h1>Nejbližší akce</h1>
 
-<table class="table table-stripped">
+<table class="table table-stripped" *ngIf="eventsService.eventsList.length > 0">
   <thead class="thead-light">
   <tr>
     <th>Jméno</th>
@@ -40,3 +40,7 @@ Author: David Chocholatý
   </tr>
   </tbody>
 </table>
+
+<div *ngIf="eventsService.eventsList.length == 0" class="mb-5 d-flex justify-content-center">
+  <h5 class="text-secondary ">Momentálně nejsou naplánovány žádné akce.</h5>
+</div>
