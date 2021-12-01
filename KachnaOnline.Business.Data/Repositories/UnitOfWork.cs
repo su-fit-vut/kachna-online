@@ -23,6 +23,7 @@ namespace KachnaOnline.Business.Data.Repositories
         public IPlannedStatesRepository PlannedStates => _plannedStates ??= new PlannedStatesRepository(_dbContext);
 
         private IRepeatingStatesRepository _repeatingStates;
+
         public IRepeatingStatesRepository RepeatingStates =>
             _repeatingStates ??= new RepeatingStatesRepository(_dbContext);
 
@@ -30,6 +31,7 @@ namespace KachnaOnline.Business.Data.Repositories
         public IBoardGamesRepository BoardGames => _boardGames ??= new BoardGamesRepository(_dbContext);
 
         private IBoardGameCategoriesRepository _boardGameCategories;
+
         public IBoardGameCategoriesRepository BoardGamesCategories =>
             _boardGameCategories ??= new BoardGameCategoriesRepository(_dbContext);
 
@@ -40,12 +42,19 @@ namespace KachnaOnline.Business.Data.Repositories
         public IReservationRepository Reservations => _reservations ??= new ReservationRepository(_dbContext);
 
         public IReservationItemRepository _reservationItems;
+
         public IReservationItemRepository ReservationItems =>
             _reservationItems ??= new ReservationItemRepository(_dbContext);
 
         public IReservationItemEventRepository _reservationItemEvents;
+
         public IReservationItemEventRepository ReservationItemEvents =>
             _reservationItemEvents ??= new ReservationItemEventRepository(_dbContext);
+
+        public IPushSubscriptionsRepository _pushSubscriptions;
+
+        public IPushSubscriptionsRepository PushSubscriptions =>
+            _pushSubscriptions ??= new PushSubscriptionsRepository(_dbContext);
 
         private IDbContextTransaction _transaction;
 
