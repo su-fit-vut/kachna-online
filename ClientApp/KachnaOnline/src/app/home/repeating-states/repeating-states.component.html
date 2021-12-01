@@ -19,11 +19,12 @@
           <th>
             <span class="font-weight-bold pr-4" *ngIf="i == 0">{{day.day | dayLoc}}</span>
           </th>
-          <td>
+          <td [class.color-bar]="state.type == 'OpenBar'" [class.color-chillzone]="state.type == 'OpenChillzone'">
             {{state.from | timeStr}}–{{state.to | timeStr}}
           </td>
           <td>
-            <span class="pl-2">{{state.type | stateLoc}}</span>
+            <span class="pl-2" [class.color-bar]="state.type == 'OpenBar'"
+                  [class.color-chillzone]="state.type == 'OpenChillzone'">{{state.type | stateLoc}}</span>
           </td>
         </tr>
       </ng-container>

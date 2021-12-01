@@ -7,7 +7,7 @@ import { ClubStateTypes } from "../../models/states/club-state-types.model";
 @Component({
   selector: 'app-repeating-states',
   templateUrl: './repeating-states.component.html',
-  styleUrls: ['./repeating-states.component.css']
+  styleUrls: ['./repeating-states.component.css', '../home.component.css']
 })
 export class RepeatingStatesComponent implements OnInit {
   constructor(public service: RepeatingStatesService) { }

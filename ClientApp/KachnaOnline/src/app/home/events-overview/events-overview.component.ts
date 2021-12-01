@@ -10,7 +10,7 @@ import { endWith } from "rxjs/operators";
 @Component({
   selector: 'app-events-overview',
   templateUrl: './events-overview.component.html',
-  styleUrls: ['./events-overview.component.css']
+  styleUrls: ['./events-overview.component.css', '../home.component.css']
 })
 export class EventsOverviewComponent implements OnInit {
 

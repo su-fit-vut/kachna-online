@@ -3,11 +3,23 @@
 </div>
 
 <div class="d-flex justify-content-center mb-1">
-  <button class="btn btn-sm btn-primary" (click)="changeMonth(-1)"><i class="fas fa-caret-left"></i></button>
-  <span
-    class="d-inline-block h4 pl-3 pr-3 mb-0">{{currentMonth.getMonth() | monthLoc}} {{currentMonth.getFullYear()}}</span>
-  <button class="btn btn-sm btn-primary" (click)="changeMonth(1)"><i class="fas fa-caret-right"></i></button>
+
+  <div>
+    <button class="btn btn-sm btn-primary float-right" (click)="changeMonth(-1)"><i class="fas fa-caret-left"></i>
+    </button>
+  </div>
+
+  <div class="text-center" style="width: 15em;">
+    <span class="d-inline-block h4 pl-3 pr-3 mb-0">
+      {{currentMonth.getMonth() | monthLoc}} {{currentMonth.getFullYear()}}</span>
+  </div>
+
+  <div>
+    <button class="btn btn-sm btn-primary" (click)="changeMonth(1)"><i class="fas fa-caret-right"></i></button>
+  </div>
+
 </div>
+
 <div class="d-flex justify-content-center align-items-baseline mb-3">
   <input type="checkbox" id="showPast" class="mr-1" [checked]="showPast" (change)="this.updateAll($event)"/>
   <label for="showPast">Zobrazit proběhlé</label>
@@ -24,7 +36,8 @@
                [routerLink]="['/events', e.id]">{{e.title}}</a>
 
             <a class="d-inline-block text-decoration-none" *ngIf="e.url != null"
-               href="{{e.url}}">web události <span><i style="vertical-align: 1px" class="fas fa-external-link-alt small pl-1"></i></span></a>
+               href="{{e.url}}">web události <span><i style="vertical-align: 1px"
+                                                      class="fas fa-external-link-alt small pl-1"></i></span></a>
             <br>
 
             <ng-container *ngIf="e.multipleDays; then oneDay else moreDays"></ng-container>
@@ -70,10 +83,13 @@
     <ng-container *ngIf="shownStates.length > 0; else noStates">
       <table class="table">
         <tbody>
-        <tr *ngFor="let s of shownStates" class="pb-2">
+        <tr *ngFor="let s of shownStates" class="pb-2"
+            [class.table-bar]="s.type == 'OpenBar'">
           <td style="width: 20%">{{s.from | date:'d. M.'}}</td>
-          <td style="width: 40%">{{s.from | date:'HH:mm'}}–{{s.to | date:'HH:mm'}}</td>
-          <td style="width: 40%">{{s.type | stateLoc}}</td>
+          <td style="width: 40%" [class.color-chillzone]="s.type == 'OpenChillzone'"
+              [class.color-bar]="s.type == 'OpenBar'">{{s.from | date:'HH:mm'}}–{{s.to | date:'HH:mm'}}</td>
+          <td style="width: 40%" [class.color-chillzone]="s.type == 'OpenChillzone'"
+              [class.color-bar]="s.type == 'OpenBar'">{{s.type | stateLoc}}</td>
         </tr>
         </tbody>
       </table>
