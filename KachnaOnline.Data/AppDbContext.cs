@@ -4,6 +4,7 @@
 using KachnaOnline.Data.Entities.BoardGames;
 using KachnaOnline.Data.Entities.ClubStates;
 using KachnaOnline.Data.Entities.Events;
+using KachnaOnline.Data.Entities.PushSubscriptions;
 using KachnaOnline.Data.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,6 +54,20 @@ namespace KachnaOnline.Data
             builder.Entity<Role>()
                 .HasIndex(e => e.Name)
                 .IsUnique();
+
+            // Push notifications
+            builder.Entity<PushSubscription>()
+                .HasOne(e => e.MadeBy)
+                .WithMany(e => e.PushSubscriptions)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<PushSubscription>()
+                .HasMany(e => e.Keys)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<PushSubscriptionKey>()
+                .HasKey(e => new { e.Endpoint, e.KeyType });
 
             // Club states
             builder.Entity<RepeatingState>()

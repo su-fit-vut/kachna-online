@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using KachnaOnline.Data.Entities.BoardGames;
+using KachnaOnline.Data.Entities.PushSubscriptions;
 
 namespace KachnaOnline.Data.Entities.Users
 {
@@ -31,5 +32,6 @@ namespace KachnaOnline.Data.Entities.Users
         // Navigation properties
         public virtual ICollection<UserRole> Roles { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }
+        public virtual ICollection<PushSubscription> PushSubscriptions { get; set; }
     }
 }
