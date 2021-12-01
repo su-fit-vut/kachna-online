@@ -119,10 +119,12 @@ export class EventFormComponent implements OnInit {
   }
 
   modifyEvent(eventData: Event) {
+    let eventId = eventData.id;
     this.eventsService.modifyEventRequest(eventData).subscribe(
       res => {
         this.eventsService.refreshEventsList();
         this.toastr.success('Akce úspěšně upravena.', 'Upravit akci');
+        this.router.navigate([`/events/${eventId}`]).then();
       },
       err => {
         console.log(err);

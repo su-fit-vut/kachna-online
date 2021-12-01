@@ -3,7 +3,14 @@ edit-events.component.html
 Author: David Chocholatý
 -->
 
-<h1>Upravit akci</h1>
+<div class="container row">
+  <div class="mr-4 mt-3">
+    <app-back-arrow targetRoute=".."></app-back-arrow>
+  </div>
+  <div class="mr-4 mt-3">
+    <h1>Upravit akci</h1>
+  </div>
+</div>
 
 <div class="container">
   <app-event-form [editMode]="true"></app-event-form>
