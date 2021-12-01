@@ -77,6 +77,7 @@ namespace KachnaOnline.Business.Extensions
             services.AddScoped<ClubInfoFacade>();
             services.AddScoped<ClubStateFacade>();
             services.AddScoped<RepeatingStatesFacade>();
+            services.AddScoped<PushSubscriptionsFacade>();
             services.AddScoped<BoardGamesFacade>();
             services.AddScoped<EventsFacade>();
             services.AddScoped<UserFacade>();
