@@ -15,6 +15,7 @@ using KachnaOnline.Business.Services.StatePlanning.TransitionHandlers;
 using KachnaOnline.Business.Services.BoardGamesNotifications;
 using KachnaOnline.Business.Services.BoardGamesNotifications.Abstractions;
 using KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHandlers;
+using Lib.Net.Http.WebPush;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,7 +27,7 @@ namespace KachnaOnline.Business.Extensions
         {
             // Add AutoMapper and load mapping profiles from this assembly.
             services.AddAutoMapper(typeof(UserMappings), typeof(KisMappings), typeof(BoardGamesMappings),
-                typeof(EventMappings));
+                typeof(EventMappings), typeof(PushSubscriptionMappings));
 
             // Add KIS HTTP client factory.
             var kisOptions = configuration.GetSection("Kis").Get<KisOptions>();
@@ -52,9 +53,13 @@ namespace KachnaOnline.Business.Extensions
             // Add HTTP context accessor.
             services.AddHttpContextAccessor();
 
+            // Add push notification service
+            services.AddScoped<PushServiceClient>();
+
             // Add notification service
             services.AddTransient<IBoardGamesNotificationHandler, DiscordBoardGamesNotificationHandler>();
             services.AddTransient<IBoardGamesNotificationHandler, MailBoardGamesNotificationHandler>();
+            services.AddTransient<IBoardGamesNotificationHandler, PushBoardGamesNotificationHandler>();
             services.AddScoped<IBoardGamesNotificationService, BoardGamesNotificationService>();
             services.AddHostedService<BoardGamesNotificationBackgroundService>();
 
@@ -62,6 +67,7 @@ namespace KachnaOnline.Business.Extensions
             services.AddTransient<IStateTransitionHandler, SaveEndedDateTimeTransitionHandler>();
             services.AddTransient<IStateTransitionHandler, SuDiscordTransitionHandler>();
             services.AddTransient<IStateTransitionHandler, FitwideDiscordTransitionHandler>();
+            services.AddTransient<IStateTransitionHandler, PushTransitionHandler>();
             services.AddScoped<IStateTransitionService, StateTransitionService>();
             services.AddSingleton<IStatePlannerService, StatePlannerService>();
             services.AddHostedService<StatePlannerBackgroundService>();
@@ -72,6 +78,7 @@ namespace KachnaOnline.Business.Extensions
             services.AddScoped<IClubStateService, ClubStateService>();
             services.AddScoped<IBoardGamesService, BoardGamesService>();
             services.AddScoped<IEventsService, EventsService>();
+            services.AddScoped<IPushSubscriptionsService, PushSubscriptionsService>();
 
             // Add facades.
             services.AddScoped<ClubInfoFacade>();

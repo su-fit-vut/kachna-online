@@ -53,6 +53,7 @@ namespace KachnaOnline.App
             services.Configure<JwtOptions>(this.Configuration.GetSection("Jwt"));
             services.Configure<ClubStateOptions>(this.Configuration.GetSection("States"));
             services.Configure<BoardGamesOptions>(this.Configuration.GetSection("BoardGames"));
+            services.Configure<PushOptions>(this.Configuration.GetSection("Push"));
             services.Configure<MailOptions>(this.Configuration.GetSection("Mail"));
             services.Configure<EventsOptions>(this.Configuration.GetSection("Events"));
 
