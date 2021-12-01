@@ -13,12 +13,21 @@ import { UserDetailComponent } from "./user-detail/user-detail.component";
 import { CurrentEventsComponent } from "../events/current-events/current-events.component";
 import { environment } from "../../environments/environment";
 import { ManageUserRolesComponent } from "./user-detail/manage-user-roles/manage-user-roles.component";
+import { NotificationSettingsComponent } from "./notification-settings/notification-settings.component";
 
 const routes: Routes = [
   /* Route order
 The order of routes is important because the Router uses a first-match wins strategy when matching routes, so more specific routes should be placed above less specific routes. List routes with a static path first, followed by an empty path route, which matches the default route. The wildcard route comes last because it matches every URL and the Router selects it only if no other routes match first.
 */
   { path: 'login', component: LoginComponent },
+  {
+    path: 'notifications',
+    component: NotificationSettingsComponent,
+    data: {
+      title: `${environment.siteName} | Nastavení notifikací`,
+      description: 'Nastavení push notifikací'
+    }
+  },
   {
     path: 'user-profile',
     component: UserProfileComponent,
