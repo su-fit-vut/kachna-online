@@ -8,13 +8,20 @@ Author: František Nečas
   <div class="form-group">
     <label for="bg-name">Jméno</label>
     <input id="bg-name" type="text" class="form-control" minlength="1" maxlength="256" formControlName="name" required/>
-    <label for="bg-cat">Kategorie</label>
-    <select id="bg-cat" class="form-control" (change)="categoryChanged($event)"
-            formControlName="category" required>
-      <option>---</option>
-      <option *ngFor="let category of categories"
-              [ngStyle]="{'color': '#' + category.colourHex}">{{category.name}}</option>
-    </select>
+
+    <div class="d-flex mt-2 align-items-center">
+      <label class="mr-2">Kategorie</label>
+      <div ngbDropdown class="d-inline-block">
+        <button type="button" class="btn btn-outline-primary" id="dropdownCategory"
+                ngbDropdownToggle>{{category}}</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownCategory">
+          <button type="button" *ngIf="!startingState" (click)="categoryChanged('---')" ngbDropdownItem>---</button>
+          <button type="button" *ngFor="let cat of categories" ngbDropdownItem
+                  (click)="categoryChanged(cat.name)"
+                  [ngStyle]="{'color': '#' + cat.colourHex}">{{cat.name}}</button>
+        </div>
+      </div>
+    </div>
     <label for="bg-description">Popis</label>
     <textarea id="bg-description" class="form-control" formControlName="description"></textarea>
     <label for="file">Obrázek<a *ngIf="image" href="{{image}}">, současný obrázek</a></label>
