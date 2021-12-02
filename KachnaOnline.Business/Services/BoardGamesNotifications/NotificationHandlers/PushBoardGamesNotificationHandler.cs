@@ -1,6 +1,7 @@
 // PushBoardGamesNotificationHandler.cs
 // Author: František Nečas
 
+using System;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Configuration;
 using KachnaOnline.Business.Exceptions.BoardGames;
@@ -60,11 +61,18 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
                 var expiration = item.ExpiresOn.Value;
                 var subscriptions =
                     await _pushSubscriptionsService.GetUserBoardGamesEnabledSubscriptions(reservation.MadeById);
-                var message = $"Tvá výpůjčka deskové hry {game.Name} vyprší, konkrétně {expiration:dd. MM. yyyy}. " +
-                              $"Domluv se s někým z SU na vrácení, nebo požádej o prodloužení.";
+                var message = $"Tvá výpůjčka hry {game.Name} vyprší {expiration:dd. MM.}. " +
+                              $"Domluv se s někým z SU na vrácení nebo požádej o prodloužení.";
                 foreach (var subscription in subscriptions)
                 {
-                    await this.SendNotification(subscription, "Blízký konec platnosti rezervace", message);
+                    try
+                    {
+                        await this.SendNotification(subscription, "Blíží se konec výpůjční doby deskovky", message);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "Cannot send a push notification.");
+                    }
                 }
             }
             catch (ReservationNotFoundException)
@@ -95,11 +103,11 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
                 var reservation = await _boardGamesService.GetReservation(item.ReservationId);
                 var subscriptions =
                     await _pushSubscriptionsService.GetUserBoardGamesEnabledSubscriptions(reservation.MadeById);
-                var message = $"Tvá výpůjčka deskové hry {game.Name} vypršela. " +
-                              $"Domluv se s někým z SU na vrácení, nebo požádej o prodloužení.";
+                var message = $"Tvá výpůjčka hry {game.Name} vypršela. " +
+                              $"Domluv se s někým z SU na vrácení nebo požádej o prodloužení.";
                 foreach (var subscription in subscriptions)
                 {
-                    await this.SendNotification(subscription, "Konec platnosti rezervace", message);
+                    await this.SendNotification(subscription, "Výpůjční doba deskovky vypršela", message);
                 }
             }
             catch (ReservationNotFoundException)
