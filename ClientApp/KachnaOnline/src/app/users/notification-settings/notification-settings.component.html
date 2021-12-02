@@ -19,9 +19,9 @@ Author: František Nečas
   </div>
   <h4>Nastavení jednotlivých upozornění</h4>
   <app-togglable-button [startingValue]="configuration.stateChangesEnabled" (valueChanged)="onStateEnableChange($event)"
-                        text="Otvírání klubu" class="m-2"></app-togglable-button>
+                        text="Otvírání klubu" class="mr-2"></app-togglable-button>
 
-  <app-togglable-button *ngIf="auth.isLoggedIn()" [startingValue]="configuration.boardGamesEnabled"
+  <app-togglable-button *ngIf="auth.isLoggedIn()" [startingValue]="configuration.boardGamesEnabled ?? false"
                         (valueChanged)="onBoardGameEnableChange($event)" text="Upozornění na konec rezervace">
   </app-togglable-button>
   <p *ngIf="!auth.isLoggedIn()">Po přihlášení bude možné nastavit další možnosti notifikací.</p>

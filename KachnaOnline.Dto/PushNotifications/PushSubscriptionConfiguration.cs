@@ -16,6 +16,6 @@ namespace KachnaOnline.Dto.PushNotifications
         /// <summary>
         /// Whether notifications about board games reservations are enabled.
         /// </summary>
-        public bool BoardGamesEnabled { get; set; } = false;
+        public bool? BoardGamesEnabled { get; set; }
     }
 }
