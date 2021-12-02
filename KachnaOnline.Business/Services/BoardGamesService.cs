@@ -289,16 +289,16 @@ namespace KachnaOnline.Business.Services
         /// <param name="item">Reservation item to update.</param>
         private async Task UpdateReservationItemState(ReservationItem item)
         {
-            var now = DateTime.Now;
-            if ((item.ExpiresOn ?? now) < now)
+            var lastEvent =
+                _mapper.Map<ReservationItemEvent>(await _reservationItemEventRepository.GetLatestEvent(item.Id));
+            if (lastEvent is not null)
             {
-                item.State = ReservationItemState.Expired;
-            }
-            else
-            {
-                var lastEvent =
-                    _mapper.Map<ReservationItemEvent>(await _reservationItemEventRepository.GetLatestEvent(item.Id));
-                if (lastEvent is not null)
+                var now = DateTime.Now;
+                if (lastEvent.NewState != ReservationItemState.Done && (item.ExpiresOn ?? now) < now)
+                {
+                    item.State = ReservationItemState.Expired;
+                }
+                else
                 {
                     item.State = lastEvent.NewState;
                 }
