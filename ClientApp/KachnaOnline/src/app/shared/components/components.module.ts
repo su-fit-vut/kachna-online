@@ -5,6 +5,9 @@ import { RouterModule } from "@angular/router";
 import { TogglableButtonComponent } from "./togglable-button/togglable-button.component";
 import { NumberSelectionComponent } from "./number-selection/number-selection.component";
 import { ReactiveFormsModule } from "@angular/forms";
+import { UserSearchComponent } from './user-search/user-search.component';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { FormsModule } from "@angular/forms";
 
 
 @NgModule({
@@ -12,16 +15,21 @@ import { ReactiveFormsModule } from "@angular/forms";
     BackArrowComponent,
     TogglableButtonComponent,
     NumberSelectionComponent,
+    UserSearchComponent,
   ],
   imports: [
     RouterModule,
     CommonModule,
     ReactiveFormsModule,
+    NgbModule,
+    FormsModule
   ],
   exports: [
     BackArrowComponent,
     TogglableButtonComponent,
     NumberSelectionComponent,
+    UserSearchComponent,
   ]
 })
-export class ComponentsModule { }
+export class ComponentsModule {
+}

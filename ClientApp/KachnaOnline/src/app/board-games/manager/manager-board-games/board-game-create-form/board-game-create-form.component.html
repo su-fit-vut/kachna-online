@@ -3,7 +3,6 @@ board-game-create-form.component.html
 Author: František Nečas
 -->
 
-<!-- FIXME: add owner selection once a component for it is implemented -->
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="bg-name">Jméno</label>
@@ -24,6 +23,12 @@ Author: František Nečas
     </div>
     <label for="bg-description">Popis</label>
     <textarea id="bg-description" class="form-control" formControlName="description"></textarea>
+    <!-- Owner can be set only on creation. -->
+    <app-user-search label="Majitel" (userSelected)="userSelected($event)" *ngIf="!startingState"></app-user-search>
+    <ng-container *ngIf="startingState">
+      <label for="bg-owner">Majitel</label>
+      <input id="bg-owner" type="text" class="form-control" [value]="this.startingState?.owner?.name" disabled>
+    </ng-container>
     <label for="file">Obrázek<a *ngIf="image" href="{{image}}">, současný obrázek</a></label>
     <input class="form-control" type="file" id="file" accept=".jpg,.jpeg" (change)="imageChanged($event)">
   </div>

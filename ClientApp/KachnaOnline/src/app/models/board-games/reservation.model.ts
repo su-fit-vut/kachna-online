@@ -1,7 +1,7 @@
 // reservation.model.ts
 // Author: František Nečas
 
-import { MadeByUser } from "../users/made-by-user-model";
+import { MadeByUser } from "../users/made-by-user.model";
 import { ReservationItem } from "./reservation-item.model";
 
 /**
