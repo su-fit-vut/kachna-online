@@ -67,7 +67,7 @@ namespace KachnaOnline.Business.Extensions
             services.AddTransient<IStateTransitionHandler, SaveEndedDateTimeTransitionHandler>();
             services.AddTransient<IStateTransitionHandler, SuDiscordTransitionHandler>();
             services.AddTransient<IStateTransitionHandler, FitwideDiscordTransitionHandler>();
-            services.AddTransient<IStateTransitionHandler, PushTransitionHandler>();
+            services.AddTransient<IStateTransitionHandler, PushNotificationTransitionHandler>();
             services.AddScoped<IStateTransitionService, StateTransitionService>();
             services.AddSingleton<IStatePlannerService, StatePlannerService>();
             services.AddHostedService<StatePlannerBackgroundService>();
