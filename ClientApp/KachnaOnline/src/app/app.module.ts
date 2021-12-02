@@ -38,6 +38,7 @@ import { PipesModule } from "./shared/pipes/pipes.module";
 import { LoadingSpinnerComponent } from './navigation-bar/loading-spinner/loading-spinner.component';
 import { LoadingInterceptor } from "./shared/interceptors/loading.interceptor";
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { CurrentOfferComponent } from './home/current-offer/current-offer.component';
 
 registerLocaleData(localeCs);
 
@@ -68,6 +69,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     UpcomingOpeningsComponent,
     EventsOverviewComponent,
     LoadingSpinnerComponent,
+    CurrentOfferComponent,
   ],
   imports: [
     ComponentsModule,

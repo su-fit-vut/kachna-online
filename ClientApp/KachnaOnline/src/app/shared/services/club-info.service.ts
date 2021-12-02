@@ -20,11 +20,11 @@ export class ClubInfoService {
   }
 
   getTodayLeaderboard(): Observable<PrestigeLeaderboardItem[]> {
-    return this.http.get<any>(`${this.ClubInfoUrl}/leaderboard/today`);
+    return this.http.get<PrestigeLeaderboardItem[]>(`${this.ClubInfoUrl}/leaderboard/today`);
   }
 
   getSemesterLeaderboard(): Observable<PrestigeLeaderboardItem[]> {
-    return this.http.get<any>(`${this.ClubInfoUrl}/leaderboard/semester`);
+    return this.http.get<PrestigeLeaderboardItem[]>(`${this.ClubInfoUrl}/leaderboard/semester`);
   }
 
 }

@@ -1,5 +1,5 @@
 <div class="state-details text-center">
-  Zavíráme ve <span class="font-weight-bold">{{state.plannedEnd | date:'HH:mm'}}</span>.
+  Zavíráme <span class="font-weight-bold">{{state.plannedEnd | timeLocative}}</span>.
 </div>
 
 <div class="border-bottom pb-2 mb-2 text-center">
@@ -22,7 +22,7 @@
   <div #currentOffer="ngbCollapse" [(ngbCollapse)]="currentOfferCollapsed">
     <div class="card">
       <div class="card-body">
-        You can collapse this card by clicking Toggle
+        <app-current-offer></app-current-offer>
       </div>
     </div>
   </div>

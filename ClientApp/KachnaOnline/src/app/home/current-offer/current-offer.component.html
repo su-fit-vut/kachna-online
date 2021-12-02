@@ -1,0 +1,42 @@
+<!-- Error -->
+<h5 class="text-muted text-center" *ngIf="hasError">Nepodařilo se načíst nabídku.</h5>
+
+<!-- Loading -->
+<h5 class="text-muted text-center" *ngIf="!loaded && !hasError">načítám...</h5>
+
+<!-- Taps -->
+<h4 *ngIf="hasTaps">Aktuálně na čepu</h4>
+<div *ngIf="hasTaps" class="row row-cols-2 row-cols-md-4 justify-content-center">
+  <div *ngFor="let tap of taps" class="col mb-3">
+    <div class="card h-100">
+      <img [src]="tap.imageUrl" style="max-width: 80px;" class="card-img-top mx-auto my-2" alt="{{tap.name}}">
+      <div class="card-body p-1">
+        <h5 class="card-title">{{tap.name}}</h5>
+      </div>
+      <div class="card-footer font-weight-bolder">
+        {{tap.price}} Kč
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Other products -->
+<ng-container *ngIf="hasProducts">
+  <ng-container *ngFor="let category of categories">
+    <h4>{{category}}</h4>
+    <div class="row justify-content-center">
+      <div *ngFor="let product of products[category]" class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+        <div class="card h-100">
+          <img [src]="product.imageUrl" style="max-width: 80px;" class="card-img-top mx-auto my-2"
+               alt="{{product.name}}">
+          <div class="card-body p-1">
+            <h5 class="card-title">{{product.name}}</h5>
+          </div>
+          <div class="card-footer font-weight-bolder">
+            {{product.price}} Kč
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
