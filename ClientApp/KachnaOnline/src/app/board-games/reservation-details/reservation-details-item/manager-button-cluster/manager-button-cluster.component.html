@@ -3,7 +3,8 @@ manager-button-cluster.component.html
 Author: František Nečas
 -->
 <div class="d-flex flex-wrap">
-  <button type="button" class="btn btn-danger m-1" *ngIf="item.state == itemState.New || item.state == itemState.Assigned"
+  <button type="button" class="btn btn-danger m-1"
+          *ngIf="item.state == itemState.New || item.state == itemState.Assigned"
           (click)="$event.stopPropagation(); cancel.emit(item)">
     Zrušit
   </button>
@@ -11,7 +12,8 @@ Author: František Nečas
           (click)="$event.stopPropagation(); handOver.emit(item)">
     Předat
   </button>
-  <button type="button" class="btn btn-success m-1" *ngIf="item.state == itemState.HandedOver"
+  <button type="button" class="btn btn-success m-1"
+          *ngIf="item.state == itemState.HandedOver || item.state == itemState.Expired"
           (click)="$event.stopPropagation(); extend.emit(item)">
     Prodloužit
   </button>
@@ -20,7 +22,8 @@ Author: František Nečas
           (click)="$event.stopPropagation(); refuseExtension.emit(item)">
     Zamítnout prodloužení
   </button>
-  <button type="button" class="btn btn-success m-1" *ngIf="item.state == itemState.HandedOver"
+  <button type="button" class="btn btn-success m-1"
+          *ngIf="item.state == itemState.HandedOver || item.state == itemState.Expired"
           (click)="$event.stopPropagation(); returned.emit(item)">
     Převzít zpět
   </button>
