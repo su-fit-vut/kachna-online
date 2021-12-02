@@ -16,7 +16,7 @@ import { AccessTokens } from "../../models/users/auth/access-tokens.model";
 import { KisTokenContent } from "../../models/users/auth/kis/kis-token-content.model";
 import { KisLoggedInUserInformation } from "../../models/users/kis-logged-in-user-information.model";
 import { KisRefreshTokenResponse } from "../../models/users/auth/kis/kis-refresh-token-response.model";
-import { throwError } from "rxjs";
+import { Observable, throwError } from "rxjs";
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
 const USERS_API = `${environment.baseApiUrl}/users`;
@@ -321,6 +321,11 @@ export class AuthenticationService {
 
   getUsersRequest() {
     return this.http.get<UserDetail[]>(`${environment.baseApiUrl}/users`);
+  }
+
+  getFilteredUsers(filter: string): Observable<UserDetail[]> {
+    let params = new HttpParams().set('filter', filter);
+    return this.http.get<UserDetail[]>(`${environment.baseApiUrl}/users`, {params: params});
   }
 
   userInfoSaved() {

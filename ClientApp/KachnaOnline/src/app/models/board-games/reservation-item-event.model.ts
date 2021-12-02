@@ -4,7 +4,7 @@
 /**
  * Represents a type of action with a reservation item.
  */
-import { MadeByUser } from "../users/made-by-user-model";
+import { MadeByUser } from "../users/made-by-user.model";
 
 export enum ReservationEventType {
   Created = "Created",

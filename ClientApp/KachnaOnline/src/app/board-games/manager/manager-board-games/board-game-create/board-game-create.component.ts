@@ -41,7 +41,7 @@ export class BoardGameCreateComponent implements OnInit {
     let image = form.value['image'];
     delete form.value['category'];
     delete form.value['image'];
-    if (image) {
+    if (image && image.file) {
       this.imageUploadService.postFile(image['file']).subscribe(data => {
         form.patchValue({imageUrl: data.url});
         this.postGame(form.value);

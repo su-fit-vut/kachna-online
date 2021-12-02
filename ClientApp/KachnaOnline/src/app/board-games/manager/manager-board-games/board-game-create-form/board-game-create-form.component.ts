@@ -7,6 +7,8 @@ import { BoardGame } from "../../../../models/board-games/board-game.model";
 import { ToastrService } from "ngx-toastr";
 import { BoardGamesService } from "../../../../shared/services/board-games.service";
 import { BoardGameCategory } from "../../../../models/board-games/board-game-category.model";
+import { UserDetail } from "../../../../models/users/user.model";
+import { MadeByUser } from "../../../../models/users/made-by-user.model";
 
 @Component({
   selector: 'app-board-game-create-form',
@@ -96,6 +98,10 @@ export class BoardGameCreateFormComponent implements OnInit {
 
   imageChanged(event: any): void {
     this.form.patchValue({image: {file: event.target.files.item(0)}});
+  }
+
+  userSelected(event: UserDetail): void {
+    this.form.patchValue({ownerId: event.id});
   }
 
   categoryChanged(event: string): void {

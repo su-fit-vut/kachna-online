@@ -1,0 +1,10 @@
+<!--
+user-search.component.html
+Author: František Nečas
+-->
+<div class="form-group">
+  <label for="user-typeahead">{{label}}</label>
+  <input id="user-typeahead" type="text" class="form-control" [(ngModel)]="model" [class.is-invalid]="searchFailed"
+         (selectItem)="itemSelected($event)" [inputFormatter]="formatter" [resultFormatter]="formatter"
+         [ngbTypeahead]="search" placeholder="Vyhledávač uživatelů" [editable]="false"/>
+</div>

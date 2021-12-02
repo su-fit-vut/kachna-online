@@ -2,7 +2,7 @@
 // Author: František Nečas
 
 import { BoardGameCategory } from "./board-game-category.model";
-import { MadeByUser } from "../users/made-by-user-model";
+import { MadeByUser } from "../users/made-by-user.model";
 
 /**
  * Model of a board game as returned by the backend to a regular user.
