@@ -9,7 +9,8 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbCalendar, NgbDateNativeAdapter, NgbDateStruct, NgbTimeStruct } from "@ng-bootstrap/ng-bootstrap";
 import { throwError } from "rxjs";
-import { ClubState } from "../../models/states/club-state.model";
+import { HttpStatusCode } from "@angular/common/http";
+import { ImageUploadService } from "../../shared/services/image-upload.service";
 
 @Component({
   selector: 'app-event-form',
@@ -25,6 +26,7 @@ export class EventFormComponent implements OnInit {
     private toastr: ToastrService,
     private route: ActivatedRoute,
     private router: Router,
+    private imageUploadService: ImageUploadService,
     ) { }
 
   mainForm = new FormGroup({
@@ -33,6 +35,9 @@ export class EventFormComponent implements OnInit {
     shortDescription: new FormControl(""),
     fullDescription: new FormControl(""),
     imageUrl: new FormControl(""),
+    image: new FormGroup({
+      file: new FormControl(undefined),
+    }),
     place: new FormControl(""),
     placeUrl: new FormControl(""),
     url: new FormControl(""),
@@ -45,6 +50,7 @@ export class EventFormComponent implements OnInit {
   @Input() editMode: boolean = false;
   jumbotronText: string = "Naplánovat akci";
   submitText: string = "Přidat akci";
+  image: string = "";
 
   ngOnInit(): void {
     if (this.editMode) {
@@ -82,6 +88,9 @@ export class EventFormComponent implements OnInit {
     }
   }
 
+  ngOnChanges() {
+  }
+
   onSubmit() {
     let eventData = new Event();
     const formVal = this.mainForm.value;
@@ -91,16 +100,49 @@ export class EventFormComponent implements OnInit {
     eventData.placeUrl = formVal.placeUrl;
     eventData.shortDescription = formVal.shortDescription;
     eventData.fullDescription = formVal.fullDescription;
-    eventData.imageUrl = formVal.imageUrl;
     eventData.url = formVal.url;
     eventData.from = new Date(this.dateTimeToString(formVal.fromDate, formVal.fromTime));
     eventData. to = new Date(this.dateTimeToString(formVal.toDate, formVal.toTime));
 
-    if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
-      this.modifyEvent(eventData);
-    }
-    else {
-      this.planEvent(eventData);
+    // Process image.
+    let image = this.mainForm.value['image'];
+    delete this.mainForm.value['image'];
+    if (image) {
+      this.imageUploadService.postFile(image['file']).subscribe(data => {
+        this.mainForm.patchValue({imageUrl: data.url});
+        eventData.imageUrl = this.mainForm.value.imageUrl;
+
+        if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
+          this.modifyEvent(eventData);
+        }
+        else {
+          this.planEvent(eventData);
+        }
+      }, err => {
+        if (err.status == HttpStatusCode.Conflict) {
+          this.mainForm.patchValue({imageUrl: err.error.url});
+          eventData.imageUrl = this.mainForm.value.imageUrl;
+
+          if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
+            this.modifyEvent(eventData);
+          }
+          else {
+            this.planEvent(eventData);
+          }
+        } else {
+          this.toastr.error("Nepodařilo se nahrát obrázek na server.");
+        }
+      })
+    } else {
+      this.mainForm.patchValue({imageUrl: null});
+      eventData.imageUrl = this.mainForm.value.imageUrl;
+
+      if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
+        this.modifyEvent(eventData);
+      }
+      else {
+        this.planEvent(eventData);
+      }
     }
   }
 
@@ -152,5 +194,9 @@ export class EventFormComponent implements OnInit {
     dateObj?.setMinutes(time.minute);
     dateObj?.setSeconds(0);
     return dateObj?.toISOString() ?? "";
+  }
+
+  imageChanged(event: any): void {
+    this.mainForm.patchValue({image: {file: event.target.files.item(0)}});
   }
 }
