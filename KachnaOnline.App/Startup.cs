@@ -1,20 +1,18 @@
 // Startup.cs
 // Author: Ondřej Ondryáš
 
-using System;
 using System.Linq;
 using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Configuration;
 using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Data.Extensions;
-using KachnaOnline.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -106,6 +104,17 @@ namespace KachnaOnline.App
         /// </param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    RequestPath = "/kachna",
+                    FileProvider =
+                        new PhysicalFileProvider(System.IO.Path.Combine(env.ContentRootPath,
+                            "../ClientApp/KachnaOnline/dist/KachnaOnline"))
+                });
+            }
+
             app.UsePathBase("/kachna/api");
 
             if (env.IsDevelopment())
@@ -148,6 +157,10 @@ namespace KachnaOnline.App
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapFallbackToFile("/kachna/index.html");
+                }
             });
         }
     }
