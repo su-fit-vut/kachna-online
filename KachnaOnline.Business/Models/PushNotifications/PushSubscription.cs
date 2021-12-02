@@ -8,7 +8,7 @@ namespace KachnaOnline.Business.Models.PushNotifications
     /// <summary>
     /// Represents a push subscription.
     /// </summary>
-    public class PushSubscription: Lib.Net.Http.WebPush.PushSubscription
+    public class PushSubscription : Lib.Net.Http.WebPush.PushSubscription
     {
         /// <summary>
         /// ID of the user who made the subscription if it was made by a user.
@@ -18,7 +18,7 @@ namespace KachnaOnline.Business.Models.PushNotifications
         /// <summary>
         /// Whether board games reservation subscriptions are enabled.
         /// </summary>
-        public bool BoardGamesEnabled { get; set; }
+        public bool? BoardGamesEnabled { get; set; }
 
         /// <summary>
         /// Whether state changes notifications are enabled.

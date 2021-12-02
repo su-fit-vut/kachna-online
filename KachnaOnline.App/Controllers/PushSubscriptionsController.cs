@@ -51,7 +51,8 @@ namespace KachnaOnline.App.Controllers
         [HttpPut("subscriptions")]
         public async Task<IActionResult> Subscribe(PushSubscriptionDto subscription)
         {
-            if ((!this.User.Identity?.IsAuthenticated ?? false) && subscription.Configuration.BoardGamesEnabled)
+            if ((!this.User.Identity?.IsAuthenticated ?? false) &&
+                (subscription.Configuration.BoardGamesEnabled ?? false))
             {
                 return this.UnauthorizedProblem(
                     "Board games reservation subscriptions can only be enabled by an authenticated user.");

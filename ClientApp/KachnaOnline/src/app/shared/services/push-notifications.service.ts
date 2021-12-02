@@ -1,11 +1,12 @@
 // push-notification-service.ts
 // Author: František Nečas
 
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { environment } from "../../../environments/environment";
-import { PushConfiguration } from "../../models/users/push-configuration.model";
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {environment} from "../../../environments/environment";
+import {PushConfiguration} from "../../models/users/push-configuration.model";
+import {AuthenticationService} from "./authentication.service";
 
 enum ApiPaths {
   PublicKey = "/publicKey",
@@ -18,7 +19,8 @@ enum ApiPaths {
 export class PushNotificationsService {
   readonly PushUrl = environment.baseApiUrl + '/push';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthenticationService) {
+  }
 
   getPublicKey(): Observable<any> {
     const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
@@ -26,10 +28,14 @@ export class PushNotificationsService {
       headers: headers,
       responseType: 'text'
     }
-    return this.http.get<any>(`${this.PushUrl}${ApiPaths.PublicKey}` , requestOptions);
+    return this.http.get<any>(`${this.PushUrl}${ApiPaths.PublicKey}`, requestOptions);
   }
 
   subscribe(subscription: PushSubscription, configuration: PushConfiguration): Observable<any> {
+    if (!this.authService.isLoggedIn()) {
+      delete configuration.boardGamesEnabled;
+    }
+
     return this.http.put(`${this.PushUrl}${ApiPaths.Subscriptions}`,
       {subscription: subscription, configuration: configuration});
   }

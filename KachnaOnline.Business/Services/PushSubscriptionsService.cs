@@ -49,6 +49,7 @@ namespace KachnaOnline.Business.Services
                         KeyValue = value
                     });
                 }
+
                 await _pushSubscriptions.Add(entity);
             }
             else
@@ -57,7 +58,12 @@ namespace KachnaOnline.Business.Services
                 {
                     sub.MadeById = subscription.MadeById;
                 }
-                sub.BoardGamesEnabled = subscription.BoardGamesEnabled;
+
+                if (subscription.BoardGamesEnabled.HasValue)
+                {
+                    sub.BoardGamesEnabled = subscription.BoardGamesEnabled.Value;
+                }
+
                 sub.StateChangesEnabled = subscription.StateChangesEnabled;
                 // Also update keys
                 foreach (var (key, value) in subscription.Keys)
@@ -143,6 +149,7 @@ namespace KachnaOnline.Business.Services
                 this.MapKeys(model, subscription);
                 subscriptions.Add(model);
             }
+
             return subscriptions;
         }
 
