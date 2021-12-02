@@ -16,16 +16,17 @@ export class IEnvironment implements IEnvironmentParams {
 
   // Global constants.
   public siteName: string = 'Kachna Online';
-  public accessTokenStorageName: string = 'accessToken';
-  public kisAccessTokenStorageName: string = 'kisAccessToken';
-  public kisRefreshTokenStorageName: string = 'kisRefreshToken';
-  public userDataStorageName: string = 'userData';
-  public returnAddressStorageName: string = 'returnAddress';
-  public localTokenContentStorageName: string = 'localTokenContent';
-  public kisTokenContentStorageName: string = 'kisTokenContent';
-  public kisLoggedInUserInformationStorageName: string = 'kisLoggedInUserInformationStorageName';
+  public readonly accessTokenStorageName: string = 'accessToken';
+  public readonly kisAccessTokenStorageName: string = 'kisAccessToken';
+  public readonly kisRefreshTokenStorageName: string = 'kisRefreshToken';
+  public readonly userDataStorageName: string = 'userData';
+  public readonly returnAddressStorageName: string = 'returnAddress';
+  public readonly localTokenContentStorageName: string = 'localTokenContent';
+  public readonly kisTokenContentStorageName: string = 'kisTokenContent';
+  public readonly kisLoggedInUserInformationStorageName: string = 'kisLoggedInUserInformationStorageName';
   public kisApiUrl: string = 'https://su-int.fit.vutbr.cz/kis/api';
   public kisApiUrlDomain: string = 'su-int.fit.vutbr.cz';
+  public readonly datePattern: string = "^(?:(?:(?:0?[1-9]|1\\d|2[0-8]). ?(?:0?[1-9]|1[0-2])|(?:29|30). ?(?:0?[13-9]|1[0-2])|31. ?(?:0?[13578]|1[02])). ?\\d{4}|29. ?0?2. ?(?:\\d\\d(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00))$";
 
   /**
    * Change default values based on environment settings.

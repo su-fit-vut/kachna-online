@@ -24,7 +24,7 @@ export class BoardGameCreateComponent implements OnInit {
 
   postGame(data: object): void {
     this.boardGamesService.createBoardGame(data).subscribe(game => {
-      this.toastrService.success("Hra byla přidána")
+      this.toastrService.success("Hra byla přidána.")
       this.router.navigate([`../${game.id}`], {relativeTo: this.activatedRouter}).then();
     }, err => {
       console.log(err);
