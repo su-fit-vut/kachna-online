@@ -36,7 +36,7 @@ export class PlanStateComponent implements OnInit {
   ngOnInit(): void {
     this.planningNew = this.route.snapshot.data.planningNew ?? true;
     this.stateService.getCurrent().subscribe(currentState => {
-      if (!this.planningNew) {
+      if (!this.planningNew && currentState.state != ClubStateTypes.Closed) {
         this.mainForm.controls.plannedEndDate.setValue(this.nativeDateAdapter.fromModel(currentState.plannedEnd));
         this.mainForm.controls.plannedEndTime.setValue({
           hour: currentState.plannedEnd.getHours(),
@@ -56,10 +56,10 @@ export class PlanStateComponent implements OnInit {
 
   private dateTimeToString(date: NgbDateStruct, time: NgbTimeStruct) : string {
     let dateObj = this.nativeDateAdapter.toModel(date);
-    dateObj?.setTime(dateObj?.getTime() - dateObj?.getTimezoneOffset());
     dateObj?.setHours(time.hour);
     dateObj?.setMinutes(time.minute);
     dateObj?.setSeconds(0);
+    dateObj?.setTime(dateObj?.getTime() - dateObj?.getTimezoneOffset() * 60000);
     return dateObj?.toISOString() ?? "";
   }
 
