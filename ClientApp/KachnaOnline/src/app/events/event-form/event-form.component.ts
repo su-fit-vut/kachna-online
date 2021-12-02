@@ -29,7 +29,7 @@ export class EventFormComponent implements OnInit {
     private imageUploadService: ImageUploadService,
     ) { }
 
-  mainForm = new FormGroup({
+  form = new FormGroup({
     id: new FormControl(-1),
     name: new FormControl(""),
     shortDescription: new FormControl(""),
@@ -60,21 +60,21 @@ export class EventFormComponent implements OnInit {
         let eventId = Number(params.get('eventId'));
         this.eventsService.getEventRequest(eventId, true).toPromise()
           .then((edittedEvent: Event) => {
-            this.mainForm.controls.id.setValue(edittedEvent.id);
-            this.mainForm.controls.name.setValue(edittedEvent.name);
-            this.mainForm.controls.shortDescription.setValue(edittedEvent.shortDescription);
-            this.mainForm.controls.fullDescription.setValue(edittedEvent.fullDescription);
-            this.mainForm.controls.imageUrl.setValue(edittedEvent.imageUrl);
-            this.mainForm.controls.place.setValue(edittedEvent.place);
-            this.mainForm.controls.placeUrl.setValue(edittedEvent.placeUrl);
-            this.mainForm.controls.url.setValue(edittedEvent.url);
-            this.mainForm.controls.fromDate.setValue(this.nativeDateAdapter.fromModel(edittedEvent.from));
-            this.mainForm.controls.fromTime.setValue({
+            this.form.controls.id.setValue(edittedEvent.id);
+            this.form.controls.name.setValue(edittedEvent.name);
+            this.form.controls.shortDescription.setValue(edittedEvent.shortDescription);
+            this.form.controls.fullDescription.setValue(edittedEvent.fullDescription);
+            this.form.controls.imageUrl.setValue(edittedEvent.imageUrl);
+            this.form.controls.place.setValue(edittedEvent.place);
+            this.form.controls.placeUrl.setValue(edittedEvent.placeUrl);
+            this.form.controls.url.setValue(edittedEvent.url);
+            this.form.controls.fromDate.setValue(this.nativeDateAdapter.fromModel(edittedEvent.from));
+            this.form.controls.fromTime.setValue({
               hour: edittedEvent.from.getHours(),
               minute: edittedEvent.from.getMinutes(),
             });
-            this.mainForm.controls.toDate.setValue(this.nativeDateAdapter.fromModel(edittedEvent.to));
-            this.mainForm.controls.toTime.setValue({
+            this.form.controls.toDate.setValue(this.nativeDateAdapter.fromModel(edittedEvent.to));
+            this.form.controls.toTime.setValue({
               hour: edittedEvent.to.getHours(),
               minute: edittedEvent.to.getMinutes(),
             });
@@ -93,7 +93,7 @@ export class EventFormComponent implements OnInit {
 
   onSubmit() {
     let eventData = new Event();
-    const formVal = this.mainForm.value;
+    const formVal = this.form.value;
     eventData.id = formVal.id;
     eventData.name = formVal.name;
     eventData.place = formVal.place;
@@ -101,16 +101,18 @@ export class EventFormComponent implements OnInit {
     eventData.shortDescription = formVal.shortDescription;
     eventData.fullDescription = formVal.fullDescription;
     eventData.url = formVal.url;
+
+    // Process time.
     eventData.from = new Date(this.dateTimeToString(formVal.fromDate, formVal.fromTime));
     eventData. to = new Date(this.dateTimeToString(formVal.toDate, formVal.toTime));
 
     // Process image.
-    let image = this.mainForm.value['image'];
-    delete this.mainForm.value['image'];
-    if (image) {
+    let image = this.form.value['image'];
+    delete this.form.value['image'];
+    if (image.file) {
       this.imageUploadService.postFile(image['file']).subscribe(data => {
-        this.mainForm.patchValue({imageUrl: data.url});
-        eventData.imageUrl = this.mainForm.value.imageUrl;
+        this.form.patchValue({imageUrl: data.url});
+        eventData.imageUrl = this.form.value.imageUrl;
 
         if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
           this.modifyEvent(eventData);
@@ -120,8 +122,8 @@ export class EventFormComponent implements OnInit {
         }
       }, err => {
         if (err.status == HttpStatusCode.Conflict) {
-          this.mainForm.patchValue({imageUrl: err.error.url});
-          eventData.imageUrl = this.mainForm.value.imageUrl;
+          this.form.patchValue({imageUrl: err.error.url});
+          eventData.imageUrl = this.form.value.imageUrl;
 
           if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
             this.modifyEvent(eventData);
@@ -134,8 +136,8 @@ export class EventFormComponent implements OnInit {
         }
       })
     } else {
-      this.mainForm.patchValue({imageUrl: null});
-      eventData.imageUrl = this.mainForm.value.imageUrl;
+      this.form.patchValue({imageUrl: null});
+      eventData.imageUrl = this.form.value.imageUrl;
 
       if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
         this.modifyEvent(eventData);
@@ -149,7 +151,7 @@ export class EventFormComponent implements OnInit {
   planEvent(eventData: Event) {
     this.eventsService.planEventRequest(eventData).subscribe(
       res => {
-        this.mainForm.reset();
+        this.form.reset();
         this.eventsService.refreshEventsList();
         this.toastr.success('Akce úspěšně naplánována.', 'Naplánovat akci');
       },
@@ -197,6 +199,6 @@ export class EventFormComponent implements OnInit {
   }
 
   imageChanged(event: any): void {
-    this.mainForm.patchValue({image: {file: event.target.files.item(0)}});
+    this.form.patchValue({image: {file: event.target.files.item(0)}});
   }
 }

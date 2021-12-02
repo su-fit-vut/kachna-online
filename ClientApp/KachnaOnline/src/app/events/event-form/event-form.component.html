@@ -3,7 +3,7 @@ event-form.component.html
 Author: David Chocholatý
 -->
 
-<form novalidate autocomplete="off" [formGroup]="mainForm" (ngSubmit)="onSubmit()">
+<form novalidate autocomplete="off" [formGroup]="form" (ngSubmit)="onSubmit()">
   <input type="hidden" id="id" class="form-control" formControlName="id">
 
   <div class="form-group">
@@ -13,7 +13,7 @@ Author: David Chocholatý
     </div>
     <input class="form-control form-control-lg" placeholder="Název akce" id="name"
     formControlName="name"
-    required maxlength="128">
+    required maxlength="128" [class.is-invalid]="!form.value.name">
   </div>
 
   <div class="form-row">
@@ -44,7 +44,7 @@ Author: David Chocholatý
     </div>
     <textarea class="form-control form-control-lg" placeholder="Krátký popis akce" name="shortDescription"
               formControlName="shortDescription"
-    required maxlength="512"></textarea>
+              required maxlength="512" [class.is-invalid]="!form.value.shortDescription"></textarea>
   </div>
 
   <div class="form-group">
@@ -69,16 +69,18 @@ Author: David Chocholatý
       </div>
 
       <div class="input-group mx-3">
-        <input class="form-control" (click)="fromDate.open()" type="text" ngbDatepicker
+        <input class="form-control" [minDate]="calendar.getToday()" (click)="fromDate.open()" type="text" ngbDatepicker
                #fromDate="ngbDatepicker" id="fromDate" formControlName="fromDate"
-               placeholder="dd. MM. yyyy" autocomplete="false"/>
+               placeholder="dd. MM. yyyy" autocomplete="false" required
+               [class.is-invalid]="!form.value.fromDate"
+               />
         <div class="input-group-append">
           <button class="btn btn-outline-secondary calendar" (click)="fromDate.toggle()" type="button"><i
             class="far fa-calendar"></i></button>
         </div>
       </div>
 
-      <ngb-timepicker formControlName="fromTime"></ngb-timepicker>
+      <ngb-timepicker formControlName="fromTime" required [class.is-invalid]="!form.value.fromTime || form.value.fromTime.invalid"></ngb-timepicker>
     </div>
 
     <div class="form-group d-flex align-items-center">
@@ -87,22 +89,23 @@ Author: David Chocholatý
         <div style="color: grey;">(povinné)</div>
       </div>
       <div class="input-group mx-3">
-        <input class="form-control" (click)="toDate.open()" type="text" ngbDatepicker
+        <input class="form-control" [minDate]="calendar.getToday()" (click)="toDate.open()" type="text" ngbDatepicker
                #toDate="ngbDatepicker" id="toDate" formControlName="toDate"
-               placeholder="dd. MM. yyyy" autocomplete="false"/>
+               placeholder="dd. MM. yyyy" autocomplete="false" required
+               [class.is-invalid]="!form.value.toDate"/>
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" (click)="toDate.toggle()" type="button"><i
             class="far fa-calendar"></i></button>
         </div>
       </div>
 
-      <ngb-timepicker formControlName="toTime"></ngb-timepicker>
+      <ngb-timepicker formControlName="toTime" required [class.is-invalid]="!form.value.toTime"></ngb-timepicker>
     </div>
   </div>
 
   <div class="form-row d-flex flex-wrap justify-content-between">
     <div class="form-group mr-4 mt-3">
-      <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="mainForm.invalid">{{submitText}}</button>
+      <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="form.invalid">{{submitText}}</button>
     </div>
     <div class="form-group mr-4 mt-3" *ngIf="editMode">
       <button class="btn btn-info btn-lg btn-block" type="button" (click)="onManageLinkedStatesClicked()">
@@ -110,7 +113,7 @@ Author: David Chocholatý
       </button>
     </div>
     <div class="form-group mt-3" *ngIf="editMode">
-      <button class="btn btn-info btn-lg btn-block" type="button" (click)="mainForm.reset()">Smazat</button>
+      <button class="btn btn-info btn-lg btn-block" type="button" (click)="form.reset()">Smazat</button>
     </div>
   </div>
 </form>
