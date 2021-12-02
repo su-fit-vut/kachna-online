@@ -16,7 +16,7 @@ import { BoardGameCategory } from "../../../../models/board-games/board-game-cat
 export class BoardGameCreateFormComponent implements OnInit {
   @Input() submitButtonText: string;
   // Current data for update.
-  @Input() startingState: BoardGame | undefined = undefined;
+  @Input() startingState: BoardGame;
   @Output() formSubmitted: EventEmitter<FormGroup> = new EventEmitter();
   categories: BoardGameCategory[] = []
 
@@ -39,6 +39,7 @@ export class BoardGameCreateFormComponent implements OnInit {
     defaultReservationDays: new FormControl(undefined),
   })
   image: string = "";
+  category: string = "";
 
   constructor(private toastrService: ToastrService, private boardGamesService: BoardGamesService) {
   }
@@ -60,14 +61,15 @@ export class BoardGameCreateFormComponent implements OnInit {
         visible: this.startingState.visible,
         defaultReservationDays: this.startingState.defaultReservationDays
       })
+      this.category = this.startingState.category.name;
+    } else {
+      this.category = "---";
     }
   }
 
   ngOnInit(): void {
     this.boardGamesService.getCategories().subscribe(categories => {
       this.categories = categories;
-      this.form.patchValue({category: this.startingState?.category});
-      this.form.get('category')?.markAsDirty();
     }, err => {
       console.log(err);
       this.toastrService.error("Načtení kategorií selhalo.");
@@ -96,9 +98,10 @@ export class BoardGameCreateFormComponent implements OnInit {
     this.form.patchValue({image: {file: event.target.files.item(0)}});
   }
 
-  categoryChanged(event: any): void {
+  categoryChanged(event: string): void {
     for (let category of this.categories) {
-      if (category.name == event.target.value) {
+      if (category.name == event) {
+        this.category = category.name;
         this.form.patchValue({categoryId: category.id});
         return
       }
