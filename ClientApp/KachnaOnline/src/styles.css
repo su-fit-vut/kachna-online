@@ -35,3 +35,15 @@ input.invalid {
   cursor: pointer;
   background-color: #fafafa;
 }
+
+table thead tr th {
+  font-weight: 600;
+}
+
+.color-chillzone {
+  color: #063f61;
+}
+
+.color-bar {
+  color: #561303;
+}

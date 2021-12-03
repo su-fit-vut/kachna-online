@@ -20,7 +20,8 @@ export class StatesService {
   constructor(
     private http: HttpClient,
     private toastrService: ToastrService,
-  ) {}
+  ) {
+  }
 
   get(id: number): Observable<ClubState> {
     return this.http.get<ClubState>(`${this.StatesUrl}/${id}`);
@@ -59,13 +60,22 @@ export class StatesService {
   }
 
   closeCurrent(): Observable<any> {
-    return this.http.delete(`${this.StatesUrl}/current`).pipe(tap(_ => this.getCurrent()));
+    return this.http.delete(`${this.StatesUrl}/current`).pipe(
+      catchError((err: HttpErrorResponse, x) => this.handleDeleteError(err, true, x)),
+      tap(_ => this.getCurrent()));
+  }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.StatesUrl}/${id}`).pipe(
+      catchError((err: HttpErrorResponse, x) => this.handleDeleteError(err, false, x)),
+      tap(_ => this.getCurrent()),
+      tap(_ => this.toastrService.success("Naplánovaný stav byl odstraněn.", "Odstranění stavu")));
   }
 
   planNew(newState: StateModification): Observable<any> {
     delete newState.madeById;
     return this.http.post(`${this.StatesUrl}`, newState)
-      .pipe(catchError((err: HttpErrorResponse, _) => this.handlePostError(err)),
+      .pipe(catchError((err: HttpErrorResponse, x) => this.handlePostError(err, x)),
         tap(_ => this.toastrService.success("Stav byl naplánován.", "Změna stavu klubu")));
   }
 
@@ -74,11 +84,33 @@ export class StatesService {
     delete modification.start;
 
     return this.http.patch(`${this.StatesUrl}/current`, modification)
-      .pipe(catchError((err: HttpErrorResponse, _) => this.handlePatchError(err, true)),
+      .pipe(catchError((err: HttpErrorResponse, x) => this.handlePatchError(err, true, x)),
         tap(_ => this.toastrService.success("Aktuální stav byl upraven.", "Změna stavu klubu")));
   }
 
-  private handlePostError(err: HttpErrorResponse): Observable<any> {
+  modify(id: number, modification: StateModification): Observable<any> {
+    delete modification.state;
+
+    return this.http.patch(`${this.StatesUrl}/${id}`, modification)
+      .pipe(catchError((err: HttpErrorResponse, x) => this.handlePatchError(err, true, x)),
+        tap(_ => this.toastrService.success("Stav byl upraven.", "Změna stavu klubu")));
+  }
+
+  private handleDeleteError(err: HttpErrorResponse, current: boolean, x: Observable<any>): Observable<any> {
+    const title = current ? "Ukončení stavu" : "Odstranění stavu";
+
+    if (err.status === 0) {
+      this.toastrService.error("Nepodařilo se odeslat požadavek.", title);
+    } else if (err.status === 404) {
+      this.toastrService.error(current ? "Kachna je už zavřená." : "Cílový stav neexistuje.", title);
+    } else if (err.status == 409) {
+      this.toastrService.error("Cílový stav už začal, není možné jej odstranit.", title);
+    }
+
+    return of();
+  }
+
+  private handlePostError(err: HttpErrorResponse, x: Observable<any>): Observable<any> {
     if (err.status === 0) {
       this.toastrService.error("Nepodařilo se odeslat požadavek.", "Změna stavu klubu");
     } else if (err.status === 400) {
@@ -89,11 +121,10 @@ export class StatesService {
       this.toastrService.error("Změněný stav by zasahoval do už existujícího naplánovaného stavu.", "Změna stavu klubu");
     }
 
-    // TODO: return something that gives more information about what happened to the component
     return of();
   }
 
-  private handlePatchError(err: HttpErrorResponse, current: boolean): Observable<any> {
+  private handlePatchError(err: HttpErrorResponse, current: boolean, x: Observable<any>): Observable<any> {
     if (err.status === 0) {
       this.toastrService.error("Nepodařilo se odeslat požadavek.", "Změna stavu klubu");
     } else if (err.status === 400) {
@@ -111,7 +142,6 @@ export class StatesService {
       this.toastrService.error("Cílový uživatel neexistuje.", "Změna stavu klubu");
     }
 
-    // TODO: return something that gives more information about what happened to the component
     return of();
   }
 }

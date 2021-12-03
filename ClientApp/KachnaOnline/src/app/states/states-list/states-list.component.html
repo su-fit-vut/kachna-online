@@ -1,0 +1,66 @@
+<h1>Historie a plán stavů</h1>
+<app-month-selection (monthChange)="monthChanged($event)" [justifyCenter]="false"></app-month-selection>
+<div class="mb-2">
+  <app-togglable-button text="Řadit od nejbližšího" (valueChanged)="sort($event)"
+                        [startingValue]="true"></app-togglable-button>
+</div>
+
+<h4 class="text-muted" *ngIf="hasError">Nepodařilo se načíst seznam stavů</h4>
+<h4 class="text-muted" *ngIf="!loaded">Načítám seznam stavů...</h4>
+
+<ng-container *ngIf="loaded && !hasError">
+  <h4 class="text-muted" *ngIf="states.length == 0 && isInFuture">V tomto měsíci nejsou naplánované žádné změny stavu
+    klubu.</h4>
+  <h4 class="text-muted" *ngIf="states.length == 0 && !isInFuture">V tomto měsíci neproběhly žádné změny stavu
+    klubu.</h4>
+
+  <div class="table-responsive-md" *ngIf="states.length != 0">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Stav</th>
+        <th scope="col" colspan="2">Start</th>
+        <th scope="col" colspan="2">Plánovaný konec</th>
+        <th scope="col" colspan="2">Skutečný konec</th>
+        <th scope="col">Vytvořil</th>
+        <th scope="col"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let state of states">
+        <td [class.color-bar]="state.state == 'OpenBar'" [class.color-chillzone]="state.state == 'OpenChillzone'">
+          {{state.state | stateLoc}}
+        </td>
+        <td class="text-nowrap">{{state.start | date:'d. M.'}}</td>
+        <td class="font-weight-bold">{{state.start | date:'HH:mm'}}</td>
+        <td class="text-nowrap">{{state.plannedEnd | date:'d. M.'}}</td>
+        <td class="font-weight-bold">{{state.plannedEnd | date:'HH:mm'}}</td>
+
+        <ng-container *ngIf="state.actualEnd == null; else ended">
+          <td>–</td>
+          <td></td>
+          <td>{{state.madeByUser.name}}</td>
+          <td>
+            <div class="d-flex flex-nowrap justify-content-end">
+              <button class="btn btn-outline-primary mr-2 text-nowrap" [routerLink]="['/states', state.id]">
+                <i class="far fa-edit"></i>&nbsp;Upravit
+              </button>
+              <button class="btn btn-outline-danger text-nowrap" *ngIf="state.start.getTime() > now.getTime()"
+                      (click)="deleteState(state)">
+                <i class="far fa-trash-alt"></i>&nbsp;Zrušit plánovaný stav
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-template #ended>
+          <td class="text-nowrap">{{state.actualEnd | date: 'd. M.'}}</td>
+          <td class="font-weight-bold">{{state.actualEnd | date: 'HH:mm'}}</td>
+          <td>{{state.madeByUser.name}}</td>
+          <td></td>
+        </ng-template>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>

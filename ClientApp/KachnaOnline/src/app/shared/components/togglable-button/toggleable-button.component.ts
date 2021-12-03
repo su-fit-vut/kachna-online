@@ -13,7 +13,10 @@ export class ToggleableButtonComponent implements OnInit {
   @Input() startingValue: boolean = false
   @Output() valueChanged: EventEmitter<boolean> = new EventEmitter()
 
+  id: string;
+
   constructor() {
+    this.id = "toggle_" + Math.floor(Math.random() * 1000);
   }
 
   ngOnInit(): void {
