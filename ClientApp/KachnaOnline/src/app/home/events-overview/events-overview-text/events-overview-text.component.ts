@@ -1,3 +1,6 @@
+// events-overview-text.component.ts
+// Author: Ondřej Ondryáš
+
 import { Component, OnInit } from '@angular/core';
 import { EventsService } from "../../../shared/services/events.service";
 import { StatesService } from "../../../shared/services/states.service";
