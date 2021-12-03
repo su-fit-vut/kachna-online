@@ -174,7 +174,7 @@ export class AuthenticationService {
     }
   }
 
-  private decodeKisToken() {
+  decodeKisToken() {
     let token = this.getKisAccessToken();
     if (token != null) {
       this.kisTokenContent = this.jwtHelper.decodeToken(token) as KisTokenContent;
@@ -230,10 +230,10 @@ export class AuthenticationService {
     return this.user.name;
   }
 
-  private assignDataFromLocalTokenContent() {
+  assignDataFromLocalTokenContent() {
   }
 
-  private assignDataFromKisUserInformation() {
+  assignDataFromKisUserInformation() {
     this.user.nickname = (this.user.nickname) ? this.user.nickname : this.kisLoggedInUserInformation.nickname;
     this.user.name = this.kisLoggedInUserInformation.name;
     this.user.email = this.kisLoggedInUserInformation.email;
@@ -285,7 +285,7 @@ export class AuthenticationService {
   /**
    * Stores user data to the storage.
    */
-  private storeUserDataToStorage() {
+  storeUserDataToStorage() {
     if (this.isLoggedIn()) {
       localStorage.setItem(environment.userDataStorageName, JSON.stringify(this.user));
     }
@@ -337,6 +337,7 @@ export class AuthenticationService {
       console.log(err);
       this.toastr.error("Přezdívku nebylo možné aktualizovat.", "Správa účtu");
     });
+    this.changeGamificationConsent(this.user.gamificationConsent);
   }
 
   updateNicknameRequest() {
@@ -404,8 +405,8 @@ export class AuthenticationService {
   }
 
   changeGamificationConsent(gamificationConsent: boolean) {
-    this.http.put<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/${this.user.id}/gamification_consent`,
-      gamificationConsent, { headers: new HttpHeaders({'Content-Type': 'text/plain'})}).toPromise()
+    this.http.put<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me/gamification_consent`,
+      gamificationConsent).toPromise()
       .then( (res: KisLoggedInUserInformation) => {
         this.kisLoggedInUserInformation = res;
         localStorage.setItem(environment.kisLoggedInUserInformationStorageName, JSON.stringify(this.kisLoggedInUserInformation));

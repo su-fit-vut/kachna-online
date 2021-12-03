@@ -46,6 +46,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import { EventsOverviewCalendarComponent } from "./home/events-overview/events-overview-calendar/events-overview-calendar.component";
 import { StateModalComponent } from './home/events-overview/state-modal/state-modal.component';
+import { KisTokenExpiredInterceptor } from "./shared/interceptors/kis-token-expired.interceptor";
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -127,7 +128,8 @@ export function tokenGetter(request?: HttpRequest<any>) {
     EventsService,
     {provide: LOCALE_ID, useValue: 'cs-CZ'},
     {provide: HTTP_INTERCEPTORS, useClass: JsonDateInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi:true}
+    {provide: HTTP_INTERCEPTORS, useClass: KisTokenExpiredInterceptor, multi:true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi:true},
   ],
   exports: [
   ],
