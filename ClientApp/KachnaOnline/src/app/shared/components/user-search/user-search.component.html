@@ -4,7 +4,14 @@ Author: František Nečas
 -->
 <div class="form-group">
   <label for="user-typeahead">{{label}}</label>
-  <input id="user-typeahead" type="text" class="form-control" [(ngModel)]="model" [class.is-invalid]="searchFailed"
+  <input id="user-typeahead" type="text" class="form-control" [(ngModel)]="model"
+         [class.is-invalid]="searchFailed || noUsersFound"
          (selectItem)="itemSelected($event)" [inputFormatter]="formatter" [resultFormatter]="formatter"
          [ngbTypeahead]="search" placeholder="Vyhledávač uživatelů" [editable]="false"/>
+  <div id="user-typeahead-feedback" class="invalid-feedback">
+    <ng-container *ngIf="searchFailed">Při vyhledávání nastala chyba</ng-container>
+    <ng-container *ngIf="noUsersFound">Dotazu neodpovídá žádný uživatel (aby se zde objevil, musí se alespoň
+      jednou přihlásit do Kachna Online)
+    </ng-container>
+  </div>
 </div>

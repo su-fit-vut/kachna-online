@@ -18,6 +18,7 @@ export class UserSearchComponent implements OnInit {
   model: UserDetail[]
   searching: boolean;
   searchFailed: boolean;
+  noUsersFound: boolean;
 
   constructor(private authService: AuthenticationService) {
   }
@@ -42,17 +43,21 @@ export class UserSearchComponent implements OnInit {
     text$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      tap(() => this.searching = true),
+      tap(() => {
+        this.searching = true;
+        this.noUsersFound = false;
+      }),
       switchMap(term =>
-        term.length < 2 ? [] :
-        this.authService.getFilteredUsers(term).pipe(
-          tap(() => this.searchFailed = false),
-          map(x => x.slice(0, 10)),
-          catchError(e => {
-            this.searchFailed = true;
-            return of([]);
-          })
-        )),
+        term.length < 3 ? [] :
+          this.authService.getFilteredUsers(term).pipe(
+            tap(() => this.searchFailed = false),
+            map(x => x.slice(0, 10)),
+            catchError(e => {
+              this.searchFailed = true;
+              return of([]);
+            }),
+            tap(res => this.noUsersFound = res.length == 0)
+          )),
       tap(() => this.searching = false)
     )
 }
