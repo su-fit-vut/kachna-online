@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PlanStateComponent } from "./plan-state/plan-state.component";
 import { environment } from "../../environments/environment";
+import { StatesManagerGuard } from "./states-manager.guard";
 
 const routes: Routes = [
   {
@@ -10,6 +11,7 @@ const routes: Routes = [
       {
         path: 'change',
         component: PlanStateComponent,
+        canActivate: [StatesManagerGuard],
         data: {
           title: `${environment.siteName} | Změnit stav`,
           description: "Plánování stavu klubu",
@@ -19,6 +21,7 @@ const routes: Routes = [
       {
         path: 'plan',
         component: PlanStateComponent,
+        canActivate: [StatesManagerGuard],
         data: {
           title: `${environment.siteName} | Naplánovat stav`,
           description: "Plánování stavu klubu",
