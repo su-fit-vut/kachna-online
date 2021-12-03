@@ -4,9 +4,9 @@
     <div class="col-12 col-sm-6 text-center">
       <h2>Plán akcí a otevírání klubu</h2>
     </div>
-    <div class="col-3">
+    <div class="col-3 p-0">
       <div class="d-none d-sm-flex justify-content-end">
-        <ng-toggle [(ngModel)]="toggleModel.value" (valueChange)="onViewChange($event)">
+        <ng-toggle [(ngModel)]="toggleModel.value" (valueChange)="onViewChange($event)" class="border-secondary">
           <ng-template ngToggleLabel forLabel="on">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
                  class="bi bi-calendar-date" viewBox="0 0 16 16">
@@ -34,7 +34,7 @@
 </div>
 <div class="d-none d-sm-block">
   <ng-container *ngIf="toggleModel.value">
-    <!-- TODO: calendar -->
+    <app-events-overview-calendar></app-events-overview-calendar>
   </ng-container>
   <ng-container *ngIf="!toggleModel.value">
     <app-events-overview-text></app-events-overview-text>

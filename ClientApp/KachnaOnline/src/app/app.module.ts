@@ -41,6 +41,15 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { CurrentOfferComponent } from './home/current-offer/current-offer.component';
 import { NgToggleModule } from "@nth-cloud/ng-toggle";
 import { EventsOverviewTextComponent } from './home/events-overview/events-overview-text/events-overview-text.component';
+import { FullCalendarModule } from "@fullcalendar/angular";
+import dayGridPlugin from '@fullcalendar/daygrid';
+import bootstrapPlugin from '@fullcalendar/bootstrap';
+import { EventsOverviewCalendarComponent } from "./home/events-overview/events-overview-calendar/events-overview-calendar.component";
+
+FullCalendarModule.registerPlugins([
+  dayGridPlugin,
+  bootstrapPlugin,
+])
 
 registerLocaleData(localeCs);
 
@@ -73,6 +82,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     LoadingSpinnerComponent,
     CurrentOfferComponent,
     EventsOverviewTextComponent,
+    EventsOverviewCalendarComponent,
   ],
   imports: [
     ComponentsModule,
@@ -88,6 +98,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     ReactiveFormsModule,
     BrowserAnimationsModule,
     NgToggleModule,
+    FullCalendarModule,
     ToastrModule.forRoot({
       maxOpened: 5, // Remaining toasts are queued.
       preventDuplicates: true,
