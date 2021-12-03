@@ -2,10 +2,13 @@
 manager-reservations.component.html
 Author: František Nečas
 -->
-<h1>Uživatelské rezervace</h1>
+<div class="d-flex justify-content-between align-items-center">
+  <h1>Uživatelské rezervace</h1>
+  <button type="button" class="btn btn-success btn-lg align-self-start" (click)="addNewReservation()">Vytvořit</button>
+</div>
 
 <form>
-  <div class="d-flex">
+  <div class="d-flex flex-wrap mb-3">
     <div class="form-group form-inline">
       <label for="reservationState">Stav rezervace</label>
       <select class="form-control input ml-3 w-auto" id="reservationState" [formControl]="reservationFilterForm">
@@ -17,8 +20,8 @@ Author: František Nečas
         <option>Pouze dokončené</option>
       </select>
     </div>
-    <app-togglable-button [text]="'Pouze mně přiřazené'" (valueChanged)="onButtonToggle($event)"
-                          [startingValue]="assignedFilter" class="ml-2"></app-togglable-button>
+    <app-togglable-button [text]="'Pouze mně přiřazené'" (valueChanged)="onButtonToggle($event)" class="pl-2"
+                          [startingValue]="assignedFilter"></app-togglable-button>
   </div>
 </form>
 <app-reservation-table (reservationClicked)="navigateToReservation($event)" [managerView]="true"

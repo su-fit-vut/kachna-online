@@ -55,13 +55,9 @@ Author: František Nečas
   <h3 class="text-secondary">Žádnou takovou hru bohužel nemáme :-(</h3>
 </div>
 <div class="bottom-right" *ngIf="currentReservation.size > 0">
-  <button *ngIf="mode == pageMode.Normal" type="button" class="btn btn-success btn-lg"
+  <button *ngIf="mode == pageMode.Normal || mode == pageMode.ManagerReservation" type="button" class="btn btn-success btn-lg"
           routerLink="reserve">Dokončit rezervaci</button>
   <button *ngIf="mode == pageMode.AddingGames" type="button" class="btn btn-success btn-lg" (click)="addToReservation()">
     Přidat do rezervace
   </button>
-  <button *ngIf="mode == pageMode.ManagerReservation" type="button" class="btn btn-success btn-lg">
-    Dokončit rezervaci
-  </button>
-
 </div>

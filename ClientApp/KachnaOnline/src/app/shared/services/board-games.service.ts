@@ -173,6 +173,21 @@ export class BoardGamesService {
     return this.http.post<Reservation>(this.ReservationsUrl, newReservation);
   }
 
+  /**
+   * Creates a reservation for a user.
+   * @param toReserve Map of game IDs to the count to reserve.
+   * @param noteInternal Internal note to save along the reservation.
+   * @param userId ID of the user to reserve for.
+   */
+  reserveForUser(toReserve: Map<number, number>, noteInternal: string, userId: number): Observable<Reservation> {
+    let ids: number[] = [];
+    for (let [game, count] of toReserve) {
+      ids = ids.concat(Array(count).fill(game));
+    }
+    let newReservation = {noteInternal: noteInternal, boardGameIds: ids};
+    return this.http.post<Reservation>(`${this.ReservationsUrl}/madeFor/${userId}`, newReservation);
+  }
+
   addToReservation(reservationId: number, toReserve: Map<number, number>): Observable<any> {
     let ids: number[] = [];
     for (let [game, count] of toReserve) {

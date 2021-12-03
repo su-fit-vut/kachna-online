@@ -90,7 +90,7 @@ export class ManagerReservationDetailsComponent implements OnInit {
   }
 
   canBeAssigned(): boolean {
-    return this.items.find(i => !i.assignedTo) !== undefined;
+    return this.items.find(i => !i.assignedTo && i.state != ReservationItemState.Cancelled) !== undefined;
   }
 
   canBeHandedOver(): boolean {

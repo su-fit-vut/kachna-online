@@ -7,7 +7,7 @@ import { FormControl } from "@angular/forms";
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { BoardGamesStoreService } from "../../../shared/services/board-games-store.service";
+import { BoardGamePageState, BoardGamesStoreService } from "../../../shared/services/board-games-store.service";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -78,6 +78,11 @@ export class ManagerReservationsComponent implements OnInit {
         this.router.navigate(['..'], {relativeTo: this.activatedRoute}).then();
       });
     }
+  }
+
+  addNewReservation(): void {
+    this.storeService.setPageMode(BoardGamePageState.ManagerReservation);
+    this.router.navigate(['/board-games']).then();
   }
 
   onButtonToggle(newAssignedFilter: boolean): void {

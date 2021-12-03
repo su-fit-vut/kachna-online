@@ -150,6 +150,7 @@ export class BoardGamesPageComponent implements OnInit {
     let id = this.storeService.getReservationId();
     this.boardGamesService.addToReservation(id, this.currentReservation).subscribe(_ => {
       this.toastrService.success("Hry byly přidány.");
+      this.storeService.resetSavedReservation();
       this.storeService.setPageMode(BoardGamePageState.Normal);
       this.router.navigate([`/board-games/manager/reservations/${id}`]).then();
     }, err => {
