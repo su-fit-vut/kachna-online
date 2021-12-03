@@ -109,9 +109,7 @@ namespace KachnaOnline.App
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     RequestPath = "/kachna",
-                    FileProvider =
-                        new PhysicalFileProvider(System.IO.Path.Combine(env.ContentRootPath,
-                            "../ClientApp/KachnaOnline/dist/KachnaOnline"))
+                    FileProvider = new PhysicalFileProvider(env.WebRootPath)
                 });
             }
 
@@ -159,7 +157,7 @@ namespace KachnaOnline.App
                 endpoints.MapControllers();
                 if (env.IsDevelopment())
                 {
-                    endpoints.MapFallbackToFile("/kachna/index.html");
+                    endpoints.MapFallbackToFile("index.html");
                 }
             });
         }
