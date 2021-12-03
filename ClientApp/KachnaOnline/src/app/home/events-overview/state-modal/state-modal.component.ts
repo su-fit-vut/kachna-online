@@ -13,7 +13,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 })
 export class StateModalComponent implements OnInit {
   @Input() state: ClubState;
-
+  heading = "";
   constructor(public activeModal: NgbActiveModal) { }
 
   public get clubState(): typeof ClubStateTypes {
@@ -21,6 +21,17 @@ export class StateModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    switch (this.state.state) {
+      case ClubStateTypes.OpenBar:
+        this.heading = "Otvíračka s barem";
+        break;
+      case ClubStateTypes.OpenChillzone:
+        this.heading = "Chillzóna";
+        break;
+      case ClubStateTypes.Private:
+        this.heading = "Soukromá akce";
+        break;
+    }
   }
 
 }

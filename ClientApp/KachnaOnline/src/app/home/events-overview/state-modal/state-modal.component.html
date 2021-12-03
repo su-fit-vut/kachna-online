@@ -4,8 +4,7 @@ Author: František Nečas
 -->
 <div class="modal-header">
   <h4
-    class="modal-title">{{state.state == clubState.OpenBar ? "Otvíračka s baren" :
-    (state.state == clubState.OpenChillzone ? "Chillzóna" : "")}} {{state.start | date:'d. M.'}}</h4>
+    class="modal-title">{{heading}} {{state.start | date:'d. M.'}}</h4>
 
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>

@@ -2,7 +2,7 @@
 // Author: František Nečas
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Calendar, CalendarOptions, EventClickArg, FullCalendarComponent } from "@fullcalendar/angular";
+import { CalendarOptions, EventClickArg, FullCalendarComponent } from "@fullcalendar/angular";
 import { StatesService } from "../../../shared/services/states.service";
 import { EventsService } from "../../../shared/services/events.service";
 import { ClubStateTypes } from "../../../models/states/club-state-types.model";
@@ -82,6 +82,9 @@ export class EventsOverviewCalendarComponent implements OnInit {
           title = "Chillzóna";
         } else if (state.state == ClubStateTypes.OpenBar) {
           title = "Bar";
+        } else if (state.state == ClubStateTypes.Private) {
+          title = "Soukromá akce";
+          color = "#6500F2";
         }
         api.addEvent({
           id: `${this.statePrefix}${state.id}`,
