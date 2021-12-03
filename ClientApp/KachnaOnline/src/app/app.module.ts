@@ -39,6 +39,7 @@ import { LoadingSpinnerComponent } from './navigation-bar/loading-spinner/loadin
 import { LoadingInterceptor } from "./shared/interceptors/loading.interceptor";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { CurrentOfferComponent } from './home/current-offer/current-offer.component';
+import { KisTokenExpiredInterceptor } from "./shared/interceptors/kis-token-expired.interceptor";
 
 registerLocaleData(localeCs);
 
@@ -110,7 +111,8 @@ export function tokenGetter(request?: HttpRequest<any>) {
     EventsService,
     {provide: LOCALE_ID, useValue: 'cs-CZ'},
     {provide: HTTP_INTERCEPTORS, useClass: JsonDateInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi:true}
+    {provide: HTTP_INTERCEPTORS, useClass: KisTokenExpiredInterceptor, multi:true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi:true},
   ],
   exports: [
   ],
