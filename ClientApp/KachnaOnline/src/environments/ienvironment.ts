@@ -24,6 +24,7 @@ export class IEnvironment implements IEnvironmentParams {
   public readonly localTokenContentStorageName: string = 'localTokenContent';
   public readonly kisTokenContentStorageName: string = 'kisTokenContent';
   public readonly kisLoggedInUserInformationStorageName: string = 'kisLoggedInUserInformationStorageName';
+  public readonly homePageViewStorageName: string ='homePageViewStorageName';
   public kisApiUrl: string = 'https://su-int.fit.vutbr.cz/kis/api';
   public kisApiUrlDomain: string = 'su-int.fit.vutbr.cz';
   public readonly datePattern: string = "^(?:(?:(?:0?[1-9]|1\\d|2[0-8]). ?(?:0?[1-9]|1[0-2])|(?:29|30). ?(?:0?[13-9]|1[0-2])|31. ?(?:0?[13578]|1[02])). ?\\d{4}|29. ?0?2. ?(?:\\d\\d(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00))$";

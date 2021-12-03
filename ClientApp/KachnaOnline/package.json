@@ -23,6 +23,7 @@
     "@angular/service-worker": "~12.2.0",
     "@auth0/angular-jwt": "^5.0.2",
     "@ng-bootstrap/ng-bootstrap": "^10.0.0",
+    "@nth-cloud/ng-toggle": "^8.0.2",
     "bootstrap": "^4.5.0",
     "ngx-color-picker": "^11.0.0",
     "ngx-toastr": "^14.2.1",

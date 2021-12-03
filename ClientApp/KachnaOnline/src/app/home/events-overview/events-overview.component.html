@@ -1,104 +1,44 @@
-<div class="text-center mb-2">
-  <h2>Plán akcí a otevírání klubu</h2>
-</div>
-
-<div class="d-flex justify-content-center mb-1">
-
-  <div>
-    <button class="btn btn-sm btn-primary float-right" (click)="changeMonth(-1)"><i class="fas fa-caret-left"></i>
-    </button>
-  </div>
-
-  <div class="text-center" style="width: 15em;">
-    <span class="d-inline-block h4 pl-3 pr-3 mb-0">
-      {{currentMonth.getMonth() | monthLoc}} {{currentMonth.getFullYear()}}</span>
-  </div>
-
-  <div>
-    <button class="btn btn-sm btn-primary" (click)="changeMonth(1)"><i class="fas fa-caret-right"></i></button>
-  </div>
-
-</div>
-
-<div class="d-flex justify-content-center align-items-baseline mb-3">
-  <input type="checkbox" id="showPast" class="mr-1" [checked]="showPast" (change)="this.updateAll($event)"/>
-  <label for="showPast">Zobrazit proběhlé</label>
-</div>
-
-<div class="row">
-  <div class="col-sm-6">
-    <h4 class="text-center">Akce Studentské unie</h4>
-    <ng-container *ngIf="shownEvents.length > 0; else noEvents">
-      <div *ngFor="let e of shownEvents" class="pb-3 container">
-        <div class="row">
-          <div class="col pr-lg-1">
-            <a class="border-bottom d-inline-block h5 text-decoration-none" [class.mr-2]="e.url != null"
-               [routerLink]="['/events', e.id]">{{e.title}}</a>
-
-            <a class="d-inline-block text-decoration-none" *ngIf="e.url != null"
-               href="{{e.url}}">web události <span><i style="vertical-align: 1px"
-                                                      class="fas fa-external-link-alt small pl-1"></i></span></a>
-            <br>
-
-            <ng-container *ngIf="e.multipleDays; then oneDay else moreDays"></ng-container>
-            <br>
-            <ng-container *ngIf="e.place">
-              místo konání:
-              <ng-container *ngIf="e.placeUrl == null; else placeWithUrl">{{e.place}}</ng-container>
-              <ng-template #placeWithUrl><a href="{{e.placeUrl}}">{{e.place}}</a></ng-template>
-            </ng-container>
-
-            <ng-container *ngIf="e.stateTypes != null && e.stateTypes.length > 0">
-              v rámci akce bude otevřen také klub
-              <ng-container *ngFor="let s of e.stateTypes; last as isLast; first as isFirst">
-                <ng-container *ngIf="isFirst && isLast">({{s}})</ng-container>
-                <ng-container *ngIf="isFirst && !isLast">({{s}},&nbsp;</ng-container>
-                <ng-container *ngIf="!isFirst && isLast">{{s}})</ng-container>
-                <ng-container *ngIf="!isFirst && !isLast">{{s}},&nbsp;</ng-container>
-              </ng-container>
-            </ng-container>
-
-            <ng-template #oneDay>{{e.from | date:'d. MM.'}} od {{e.from | date:'HH:mm'}}
-              do {{e.to | date:'HH:mm'}}</ng-template>
-            <ng-template #moreDays>
-              {{e.from | date:'d. M.'}} až {{e.to | date:'d. M.'}}
-            </ng-template>
-
-            <div>
-              {{e.shortDescription}}
-            </div>
-          </div>
-          <div class="col-lg-5 col-sm-12 d-none d-sm-block pl-lg-1" *ngIf="e.imageUrl != null">
-            <img src="{{e.imageUrl}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
-          </div>
-        </div>
-
+<div class="container">
+  <div class="mb-2 row">
+    <div class="col-3"></div>
+    <div class="col-12 col-sm-6 text-center">
+      <h2>Plán akcí a otevírání klubu</h2>
+    </div>
+    <div class="col-3">
+      <div class="d-none d-sm-flex justify-content-end">
+        <ng-toggle [(ngModel)]="toggleModel.value" (valueChange)="onViewChange($event)">
+          <ng-template ngToggleLabel forLabel="on">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                 class="bi bi-calendar-date" viewBox="0 0 16 16">
+              <path
+                d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"/>
+              <path
+                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+            </svg>
+          </ng-template>
+          <ng-template ngToggleLabel forLabel="off">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-list"
+                 viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+          </ng-template>
+        </ng-toggle>
       </div>
-    </ng-container>
-    <ng-template #noEvents><h5 class="text-muted text-center">V tomto měsíci nejsou naplánované žádné akce.</h5>
-    </ng-template>
+    </div>
   </div>
-  <div class="col-sm-6">
-    <h4 class="text-center">Otevírání klubu</h4>
-    <ng-container *ngIf="shownStates.length > 0; else noStates">
-      <table class="table">
-        <tbody>
-        <tr *ngFor="let s of shownStates" class="pb-2"
-            [class.table-bar]="s.type == 'OpenBar'">
-          <td style="width: 20%">{{s.from | date:'d. M.'}}</td>
-          <td style="width: 40%" [class.color-chillzone]="s.type == 'OpenChillzone'"
-              [class.color-bar]="s.type == 'OpenBar'">{{s.from | date:'HH:mm'}}–{{s.to | date:'HH:mm'}}</td>
-          <td style="width: 40%" [class.color-chillzone]="s.type == 'OpenChillzone'"
-              [class.color-bar]="s.type == 'OpenBar'">{{s.type | stateLoc}}</td>
-        </tr>
-        </tbody>
-      </table>
+</div>
 
-
-    </ng-container>
-    <ng-template #noStates><h5 class="text-muted text-center">V tomto měsíci nejsou naplánované žádné otvíračky.</h5>
-    </ng-template>
-  </div>
+<div class="d-block d-sm-none">
+  <app-events-overview-text></app-events-overview-text>
+</div>
+<div class="d-none d-sm-block">
+  <ng-container *ngIf="toggleModel.value">
+    <!-- TODO: calendar -->
+  </ng-container>
+  <ng-container *ngIf="!toggleModel.value">
+    <app-events-overview-text></app-events-overview-text>
+  </ng-container>
 </div>
 
 

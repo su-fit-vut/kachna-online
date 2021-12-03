@@ -39,6 +39,8 @@ import { LoadingSpinnerComponent } from './navigation-bar/loading-spinner/loadin
 import { LoadingInterceptor } from "./shared/interceptors/loading.interceptor";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { CurrentOfferComponent } from './home/current-offer/current-offer.component';
+import { NgToggleModule } from "@nth-cloud/ng-toggle";
+import { EventsOverviewTextComponent } from './home/events-overview/events-overview-text/events-overview-text.component';
 
 registerLocaleData(localeCs);
 
@@ -70,6 +72,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     EventsOverviewComponent,
     LoadingSpinnerComponent,
     CurrentOfferComponent,
+    EventsOverviewTextComponent,
   ],
   imports: [
     ComponentsModule,
@@ -84,6 +87,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    NgToggleModule,
     ToastrModule.forRoot({
       maxOpened: 5, // Remaining toasts are queued.
       preventDuplicates: true,
