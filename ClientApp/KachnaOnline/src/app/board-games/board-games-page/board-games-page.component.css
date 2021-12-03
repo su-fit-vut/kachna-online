@@ -3,7 +3,7 @@ board-games-page.component.css
 Author: František Nečas
  */
 
-#reserveBtn {
+.bottom-right {
   position: -webkit-sticky;
   position: sticky;
   bottom: 20px;

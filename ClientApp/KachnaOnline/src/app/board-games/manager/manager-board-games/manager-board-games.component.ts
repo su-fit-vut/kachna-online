@@ -19,10 +19,10 @@ import { AuthenticationService } from "../../../shared/services/authentication.s
 export class ManagerBoardGamesComponent extends BoardGamesPageComponent {
   boardGames: BoardGame[]
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute,
+  constructor(router: Router, private activatedRoute: ActivatedRoute,
               boardGamesService: BoardGamesService, storeService: BoardGamesStoreService,
               toastrService: ToastrService, authenticationService: AuthenticationService) {
-    super(boardGamesService, toastrService, authenticationService, storeService);
+    super(boardGamesService, toastrService, authenticationService, storeService, router);
   }
 
   ngOnInit(): void {

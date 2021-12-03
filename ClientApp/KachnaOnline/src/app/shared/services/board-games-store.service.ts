@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ReservationState } from "../../models/board-games/reservation.model";
 
+/**
+ * Defines behaviour of the board games overview page.
+ */
+export enum BoardGamePageState {
+  Normal, // Regular user creating a reservation.
+  ManagerReservation, // Manager is creating a reservation for a user.
+  AddingGames // Manager is adding games to an existing reservation.
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,6 +19,7 @@ export class BoardGamesStoreService {
   availableOnly: boolean | undefined;
   categoryIds: number[] = [];
   currentReservation: Map<number, number> = new Map();
+  pageMode: BoardGamePageState = BoardGamePageState.Normal;
 
   // Reservation filter storage
   reservationFilter: ReservationState | undefined = undefined;
@@ -20,6 +30,9 @@ export class BoardGamesStoreService {
 
   // Board game details page route storage
   backRoute: string = "..";
+
+  // ID of the reservation we are adding items to
+  reservationId: number;
 
   constructor() {
   }
@@ -37,6 +50,36 @@ export class BoardGamesStoreService {
     this.availableOnly = availableOnly;
     this.categoryIds = categoryIds;
     this.currentReservation = currentReservation;
+  }
+
+  /**
+   * Sets a mode to use in the future on the board games page.
+   * @param mode The mode to use.
+   */
+  setPageMode(mode: BoardGamePageState): void {
+    this.pageMode = mode;
+  }
+
+  /**
+   * Returns the previously saved page mode (or the default normal mode).
+   */
+  getPageMode(): BoardGamePageState {
+    return this.pageMode;
+  }
+
+  /**
+   * Save reservation ID to return to once items are added.
+   * @param id ID of the reservation to add items to and then return to.
+   */
+  saveReservationId(id: number): void {
+    this.reservationId = id;
+  }
+
+  /**
+   * Returns the previously save reservation ID.
+   */
+  getReservationId(): number {
+    return this.reservationId;
   }
 
   /**
