@@ -5,6 +5,9 @@ import { ClubStateTypes } from "../../models/states/club-state-types.model";
 import { NgbDateStruct, NgbTimeStruct } from "@ng-bootstrap/ng-bootstrap";
 import { AuthenticationService } from "../../shared/services/authentication.service";
 import { ToastrService } from "ngx-toastr";
+import { environment } from "../../../environments/environment";
+import { ActivatedRoute, Params, Router } from "@angular/router";
+import { KisLoggedInUserInformation } from "../../models/users/kis-logged-in-user-information.model";
 
 @Component({
   selector: 'app-registration',
@@ -15,6 +18,8 @@ export class RegistrationComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private toastr: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   form = new FormGroup({
@@ -22,25 +27,15 @@ export class RegistrationComponent implements OnInit {
     gamificationConsent: new FormControl(true),
   });
   gamificationConsentTooltipText: string = "Informace o souhlasu s gamifikací."; // TODO: Add actual tooltip text.
-
+  sessionId: string;
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe((params: Params) => {
+      this.sessionId = params.session;
+    });
   }
 
   onSubmit() {
-    /*
-    let data = new StateModification(); // FIXME: Registration model? Or just simple object?
-    const formValues = this.form.value;
-
-    data.consent = formValues.consent;
-    data.gamification_consent = formValues.gamification_consent;
-
-    this.authenticationService.register(data).toPromise()
-      .then(res => {
-        this.toastr.success("Registrace proběhla úspěšně.", "Registrace uživatele");
-      }).catch(err => {
-      this.toastr.error("Registrace selhala.", "Registrace uživatele");
-    }); // TODO
-     */
+    this.authenticationService.register(this.sessionId).then();
   }
 }
