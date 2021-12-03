@@ -1,0 +1,43 @@
+<h1>Stát se členem klubu</h1>
+
+<p>
+  Informační text o registraci a statusu sympatizujícího člena SU. <!-- TODO: Add actual registration text. -->
+</p>
+
+<div class="row">
+  <form [formGroup]="form" autocomplete="off" novalidate class="col-xl-6" (ngSubmit)="onSubmit()">
+
+    <div class="form-group ml-1">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="sympathizingMemberConsent" formControlName="sympathizingMemberConsent" required>
+        <label class="form-check-label" for="sympathizingMemberConsent">
+          Chci se stát sympatizujícím členem SU
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group row ml-1 align-items-center">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="gamificationConsent" formControlName="gamificationConsent" checked>
+        <label class="form-check-label" for="gamificationConsent">
+          Souhlasím s gamifikací
+        </label>
+      </div>
+
+      <div class="ml-1">
+        <button
+          type="button" class="btn"
+          triggers="click hover focus" [autoClose]="true" [closeDelay]="500"
+          [ngbTooltip]="gamificationConsentTooltipText"
+          #tooltip3="ngbTooltip"
+        > <!-- FIXME: Add actual tooltip message. -->
+          <i class="far fa-question-circle"></i>
+        </button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit" [disabled]="form.invalid">
+      <ng-container >Stát se členem klubu</ng-container>
+    </button>
+  </form>
+</div>

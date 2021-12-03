@@ -21,7 +21,7 @@ Author: David Chocholatý
     </div>
 
     <a href="#" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k nám?</a>
-    <a href="#" class="state-details ml-4" *ngIf="authenticationService.isLoggedOut()">Stát se členem klubu</a>
+    <a routerLink="registration" class="state-details ml-4" *ngIf="authenticationService.isLoggedOut()">Stát se členem klubu</a>
   </div>
 
   <app-bar-details *ngIf="state.state==ST.OpenBar" [state]="state"></app-bar-details>

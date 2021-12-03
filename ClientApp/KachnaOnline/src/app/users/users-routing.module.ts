@@ -14,6 +14,7 @@ import { CurrentEventsComponent } from "../events/current-events/current-events.
 import { environment } from "../../environments/environment";
 import { ManageUserRolesComponent } from "./user-detail/manage-user-roles/manage-user-roles.component";
 import { NotificationSettingsComponent } from "./notification-settings/notification-settings.component";
+import { RegistrationComponent } from "./registration/registration.component";
 
 const routes: Routes = [
   /* Route order
@@ -37,6 +38,10 @@ The order of routes is important because the Router uses a first-match wins stra
     path: 'users',
     component: UsersListComponent,
     canActivate: [AdminGuard],
+  },
+  {
+    path: 'registration',
+    component: RegistrationComponent,
   },
   {
     path: 'users/:userId',
