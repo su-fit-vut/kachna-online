@@ -44,8 +44,8 @@ export class AuthenticationService {
   shownUsersList: UserDetail[] = [];
   public userDetail: UserDetail = new UserDetail();
 
-  getSessionIdFromKisEduId() {
-    let targetLocation = this.location.prepareExternalUrl("/login");
+  getSessionIdFromKisEduId(redirectTo: string = "login") {
+    let targetLocation = this.location.prepareExternalUrl(redirectTo);
     let params = new HttpParams().set('redirect', `${window.location.origin}${targetLocation}`)
 
     this.http.get<KisEduIdResponse>(`${environment.kisApiUrl}/auth/eduid`, {params: params}).toPromise()
@@ -376,7 +376,47 @@ export class AuthenticationService {
     return this.http.delete(`${USERS_API}/${userId}/roles/${userRole}/assignment`);
   }
 
-  register(newUserData: any) { // FIXME: Imlement and resolve login.
+  register(sessionId: string): Promise<any> {
+    let params = new HttpParams().set('session', sessionId);
+    return this.http.post<KisRefreshTokenResponse>(`${environment.kisApiUrl}/auth/eduid/register`, "",{params: params}).toPromise()
+      .then((res) => {
+        localStorage.setItem(environment.kisAccessTokenStorageName, res.auth_token);
+        localStorage.setItem(environment.kisRefreshTokenStorageName, res.refresh_token);
+        this.decodeKisToken();
+        this.getInformationAboutUser().then();
+        this.toastr.success("Registrace proběhla úspěšně.", "Registrace uživatele");
+        this.router.navigate(['user-profile']).then();
+        return;
+      }).catch((error) => {
+        if (error.error.detail == "User is already registered") {
+          this.logIn().then(_ => {
+            this.router.navigate(['user-profile']).then();
+            return;
+          }).catch(err => {
 
+          })
+        } else {
+          this.toastr.error("Registrace selhalaaa.", "Registrace uživatele");
+          return throwError(error);
+        }
+        return;
+      });
+  }
+
+  changeGamificationConsent(gamificationConsent: boolean) {
+    this.http.put<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/${this.user.id}/gamification_consent`,
+      gamificationConsent, { headers: new HttpHeaders({'Content-Type': 'text/plain'})}).toPromise()
+      .then( (res: KisLoggedInUserInformation) => {
+        this.kisLoggedInUserInformation = res;
+        localStorage.setItem(environment.kisLoggedInUserInformationStorageName, JSON.stringify(this.kisLoggedInUserInformation));
+
+        this.assignDataFromKisUserInformation();
+        this.assignDataFromLocalTokenContent();
+        this.storeUserDataToStorage();
+        this.toastr.success("Změna souhlasu s gamifikací proběhla úspěšně.", "Změna uživatelských údajů");
+      }).catch((error: any) => {
+        throwError(error);
+        this.toastr.error("Změna souhlasu s gamifikací selhala.", "Změna uživatelských údajů");
+    });
   }
 }

@@ -17,7 +17,6 @@ import { formatDate } from "@angular/common";
 export class EventDetailComponent implements OnInit {
   event: Event = new Event();
   activateEditEventModal: boolean = false;
-  formattedDate: string = "";
 
   constructor(
     public eventsService: EventsService,
