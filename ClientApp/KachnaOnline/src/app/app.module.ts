@@ -45,6 +45,7 @@ import { FullCalendarModule } from "@fullcalendar/angular";
 import dayGridPlugin from '@fullcalendar/daygrid';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import { EventsOverviewCalendarComponent } from "./home/events-overview/events-overview-calendar/events-overview-calendar.component";
+import { StateModalComponent } from './home/events-overview/state-modal/state-modal.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -83,6 +84,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     CurrentOfferComponent,
     EventsOverviewTextComponent,
     EventsOverviewCalendarComponent,
+    StateModalComponent,
   ],
   imports: [
     ComponentsModule,

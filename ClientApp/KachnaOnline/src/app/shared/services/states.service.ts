@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpParams } from "@angular/common/http";
 import { ToastrService } from "ngx-toastr";
 import { Observable, of } from "rxjs";
 import { environment } from "../../../environments/environment";
@@ -49,6 +49,13 @@ export class StatesService {
     firstDay.setTime(firstDay.getTime() - firstDay.getTimezoneOffset() * 60000);
     lastDay.setTime(lastDay.getTime() - lastDay.getTimezoneOffset() * 60000);
     return this.http.get<ClubState[]>(`${this.StatesUrl}?from=${firstDay.toISOString()}&to=${lastDay.toISOString()}`);
+  }
+
+  getBetween(start: Date, end:Date): Observable<ClubState[]> {
+    let params = new HttpParams();
+    params = params.set('from', start.toISOString());
+    params = params.set('to', end.toISOString());
+    return this.http.get<ClubState[]>(`${this.StatesUrl}`, {params: params});
   }
 
   closeCurrent(): Observable<any> {

@@ -70,6 +70,10 @@ export class EventsService {
     return this.getEventsInInterval(firstDay.toISOString(), lastDay.toISOString());
   }
 
+  getBetween(start: Date, end: Date): Observable<Event[]> {
+    return this.getEventsInInterval(start.toISOString(), end.toISOString());
+  }
+
   getEventRequest(eventId: number, withLinkedStates: boolean = false): Observable<Event> {
     let params = new HttpParams().set('withLinkedStates', withLinkedStates);
     return this.http.get<Event>(`${this.EventsUrl}/${eventId}`, {params});

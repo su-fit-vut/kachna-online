@@ -1,6 +1,7 @@
+// events-overview.component.ts
+// Authors: František Nečas, Ondřej Ondryáš
+
 import { Component, OnInit } from '@angular/core';
-import { EventsService } from "../../shared/services/events.service";
-import { StatesService } from "../../shared/services/states.service";
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
 import { environment } from "../../../environments/environment";
 
@@ -11,7 +12,7 @@ import { environment } from "../../../environments/environment";
 })
 export class EventsOverviewComponent implements OnInit {
 
-  constructor(private eventsService: EventsService, private stateService: StatesService) {
+  constructor() {
   }
 
   toggleModel: any = {
@@ -31,8 +32,6 @@ export class EventsOverviewComponent implements OnInit {
   onViewChange(newValue: boolean): void {
     localStorage.setItem(environment.homePageViewStorageName, `${newValue}`);
   }
-
-
 }
 
 export class EventItem {

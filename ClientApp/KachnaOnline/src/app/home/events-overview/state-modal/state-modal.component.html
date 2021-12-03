@@ -1,0 +1,21 @@
+<!--
+state-modal.component.ts
+Author: František Nečas
+-->
+<div class="modal-header">
+  <h4
+    class="modal-title">{{state.state == clubState.OpenBar ? "Otvíračka s baren" :
+    (state.state == clubState.OpenChillzone ? "Chillzóna" : "")}}</h4>
+
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <h4>Otevřeno od {{state.start | date:'d. M. y HH:mm'}} do {{state.plannedEnd | date:'d. M. y HH:mm'}}</h4>
+  <h5>Otevírá {{state.madeByUser.name}}</h5>
+  <div *ngIf="state.note">
+    <h6>Poznámka</h6>
+    <p>{{state.note}}</p>
+  </div>
+</div>
