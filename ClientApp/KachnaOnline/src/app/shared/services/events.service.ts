@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 import { Event } from "../../models/events/event.model";
 import { ClubState } from "../../models/states/club-state.model";
 import { formatDate } from "@angular/common";
+import { EventModification } from "../../models/events/event-modification.model";
 
 @Injectable({
   providedIn: 'root'
@@ -97,11 +98,11 @@ export class EventsService {
     });
   }
 
-  planEventRequest(eventData: Event): Observable<any> {
+  planEventRequest(eventData: EventModification): Observable<any> {
     return this.http.post(this.EventsUrl, eventData);
   }
 
-  modifyEventRequest(eventData: Event): Observable<any> {
+  modifyEventRequest(eventData: EventModification): Observable<any> {
     return this.http.put(`${this.EventsUrl}/${this.eventDetail.id}`, eventData);
   }
 
