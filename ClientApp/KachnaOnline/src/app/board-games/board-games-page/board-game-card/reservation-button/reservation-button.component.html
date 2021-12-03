@@ -13,7 +13,8 @@ Author: František Nečas
       Rezervovat
     </button>
     <div *ngIf="currentValue" class="btn-group expand" role="group">
-      <button type="button" class="btn btn-outline-success" [ngStyle]="styles" disabled>Zarezervováno {{currentValue}}ks
+      <button type="button" class="btn btn-outline-success" [ngStyle]="styles" disabled>
+        Zarezervováno {{currentValue}} ks
       </button>
       <button *ngIf="currentValue < available" type="button" class="btn btn-success btn-sm" [ngStyle]="styles"
               (click)="reservedIncrement()">+

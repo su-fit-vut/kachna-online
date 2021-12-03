@@ -2,7 +2,7 @@
 reservation-creation.component.html
 Author: František Nečas
 -->
-<div class="d-flex">
+<div class="d-flex" xmlns="http://www.w3.org/1999/html">
   <app-back-arrow targetRoute=".."></app-back-arrow>
   <h2>Dokončit rezervaci</h2>
 </div>
@@ -15,10 +15,17 @@ Author: František Nečas
   </tbody>
 </table>
 <form>
-  <div class="form-group">
+  <div class="form-group" *ngIf="pageMode == mode.Normal">
     <label for="userNote">Poznámka</label>
     <textarea class="form-control" id="userNote" rows="2" [formControl]="noteForm" maxlength="1024"
               placeholder="Můžeš například zmínit, kdy si chceš hry vyzvednout"></textarea>
+  </div>
+  <app-user-search label="Pro uživatele" (userSelected)="userSelected($event)"
+                   *ngIf="pageMode == mode.ManagerReservation"></app-user-search>
+  <div class="form-group" *ngIf="pageMode == mode.ManagerReservation">
+    <label for="internalNote">Interní poznámka</label>
+    <textarea class="form-control" id="internalNote" rows="2" [formControl]="noteForm" maxlength="1024"
+              placeholder="Tuto poznámku uvidí jen ostatní správci"></textarea>
   </div>
   <button type="button" class="btn btn-lg btn-success" *ngIf="currentReservation.size > 0" (click)="reserve()">
     Zarezervovat

@@ -128,7 +128,7 @@ export class BoardGamesStoreService {
    * Resets the currently saved reservation.
    */
   resetSavedReservation(): void {
-    this.currentReservation = new Map();
+    this.currentReservation.clear();
   }
 
   /**

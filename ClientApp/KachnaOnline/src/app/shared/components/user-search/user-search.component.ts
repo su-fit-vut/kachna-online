@@ -29,7 +29,14 @@ export class UserSearchComponent implements OnInit {
     this.userSelected.emit(event.item);
   }
 
-  formatter = (x: {name: string}) => x.name;
+  formatter = (x: UserDetail) => {
+    let result = `${x.name} (`
+    if (x.nickname) {
+      result += `${x.nickname}, `
+    }
+    result += `${x.email})`;
+    return result;
+  };
 
   search = (text$: Observable<string>) =>
     text$.pipe(
