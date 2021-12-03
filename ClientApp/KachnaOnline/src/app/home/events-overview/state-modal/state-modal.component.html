@@ -5,17 +5,16 @@ Author: František Nečas
 <div class="modal-header">
   <h4
     class="modal-title">{{state.state == clubState.OpenBar ? "Otvíračka s baren" :
-    (state.state == clubState.OpenChillzone ? "Chillzóna" : "")}}</h4>
+    (state.state == clubState.OpenChillzone ? "Chillzóna" : "")}} {{state.start | date:'d. M.'}}</h4>
 
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
-  <h4>{{state.start | date:'d.M'}}</h4>
   <p>Od: {{state.start | date:'HH:mm'}}</p>
   <p>Do: {{state.plannedEnd | date:'HH:mm'}}</p>
-  <h5>Otevírá {{state.madeByUser.name}}</h5>
+  <p>Otevírá {{state.madeByUser.name}}</p>
   <div *ngIf="state.note">
     <h6>Poznámka</h6>
     <p>{{state.note}}</p>
