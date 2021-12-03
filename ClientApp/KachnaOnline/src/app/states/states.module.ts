@@ -6,17 +6,23 @@ import { PlanStateComponent } from './plan-state/plan-state.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { NgbDateNativeAdapter, NgbDateParserFormatter, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { CustomDateParserFormatter } from "./local-date-parser-formatter";
+import { StatesListComponent } from './states-list/states-list.component';
+import { ComponentsModule } from "../shared/components/components.module";
+import { PipesModule } from "../shared/pipes/pipes.module";
 
 
 @NgModule({
   declarations: [
-    PlanStateComponent
+    PlanStateComponent,
+    StatesListComponent,
   ],
   imports: [
     CommonModule,
     StatesRoutingModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    ComponentsModule,
+    PipesModule
   ],
   providers: [
     {provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter},

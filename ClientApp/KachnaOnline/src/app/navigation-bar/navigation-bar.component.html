@@ -55,7 +55,7 @@ Author: David Chocholatý
               <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="/states/plan" routerLinkActive="active" ngbDropdownItem>
                 Naplánovat budoucí stav
               </button>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" href="#" ngbDropdownItem>Plán stavů
+              <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="/states/history" ngbDropdownItem>Plán stavů
               </button>
               <button (click)="isMenuCollapsed = true; this.closeCurrentState()"
                       [disabled]="stateService.currentState == undefined || stateService.currentState.state == 'Closed'"
