@@ -1,0 +1,12 @@
+<!--
+togglable-button.component.html
+Author: Ondřej Ondryáš
+-->
+
+<div class="d-flex flex-column h-100 justify-content-center">
+  <div class="custom-control custom-switch">
+    <input type="checkbox" class="custom-control-input" id="toggle" #toggleEl (change)="onChange(toggleEl.checked)"
+           [checked]="startingValue">
+    <label class="custom-control-label" for="toggle">{{text}}</label>
+  </div>
+</div>

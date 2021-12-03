@@ -1,25 +1,25 @@
 // togglable-button.component.ts
-// Author: František Nečas
+// Author: František Nečas, Ondřej Ondryáš
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-togglable-button',
-  templateUrl: './togglable-button.component.html',
-  styleUrls: ['./togglable-button.component.css']
+  templateUrl: './toggleable-button.component.html',
+  styleUrls: ['./toggleable-button.component.css']
 })
-export class TogglableButtonComponent implements OnInit {
+export class ToggleableButtonComponent implements OnInit {
   @Input() text: string = "";
   @Input() startingValue: boolean = false
   @Output() valueChanged: EventEmitter<boolean> = new EventEmitter()
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
 
-  toggleValue() {
-    this.startingValue = !this.startingValue;
-    this.valueChanged.emit(this.startingValue);
+  onChange(isChecked: boolean) {
+    this.valueChanged.emit(isChecked);
   }
 }

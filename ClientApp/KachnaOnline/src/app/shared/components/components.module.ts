@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BackArrowComponent } from "./back-arrow/back-arrow.component";
 import { RouterModule } from "@angular/router";
-import { TogglableButtonComponent } from "./togglable-button/togglable-button.component";
+import { ToggleableButtonComponent } from "./togglable-button/toggleable-button.component";
 import { NumberSelectionComponent } from "./number-selection/number-selection.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { UserSearchComponent } from './user-search/user-search.component';
@@ -13,7 +13,7 @@ import { FormsModule } from "@angular/forms";
 @NgModule({
   declarations: [
     BackArrowComponent,
-    TogglableButtonComponent,
+    ToggleableButtonComponent,
     NumberSelectionComponent,
     UserSearchComponent,
   ],
@@ -26,7 +26,7 @@ import { FormsModule } from "@angular/forms";
   ],
   exports: [
     BackArrowComponent,
-    TogglableButtonComponent,
+    ToggleableButtonComponent,
     NumberSelectionComponent,
     UserSearchComponent,
   ]

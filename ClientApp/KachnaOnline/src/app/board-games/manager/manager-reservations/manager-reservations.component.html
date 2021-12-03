@@ -9,7 +9,7 @@ Author: František Nečas
 
 <form>
   <div class="d-flex flex-wrap mb-3">
-    <div class="form-group form-inline">
+    <div class="form-group form-inline mb-0">
       <label for="reservationState">Stav rezervace</label>
       <select class="form-control input ml-3 w-auto" id="reservationState" [formControl]="reservationFilterForm">
         <option>---</option>
@@ -20,6 +20,7 @@ Author: František Nečas
         <option>Pouze dokončené</option>
       </select>
     </div>
+
     <app-togglable-button [text]="'Pouze mně přiřazené'" (valueChanged)="onButtonToggle($event)" class="pl-2"
                           [startingValue]="assignedFilter"></app-togglable-button>
   </div>
