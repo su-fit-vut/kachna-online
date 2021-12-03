@@ -7,7 +7,7 @@ import { BoardGamesService } from "../shared/services/board-games.service";
 import { ReservationState } from "../models/board-games/reservation.model";
 import { Router } from "@angular/router";
 import { StatesService } from "../shared/services/states.service";
-import { BoardGamesStoreService } from "../shared/services/board-games-store.service";
+import { BoardGamePageState, BoardGamesStoreService } from "../shared/services/board-games-store.service";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -39,6 +39,12 @@ export class NavigationBarComponent implements OnInit {
     this.isMenuCollapsed = true;
     this.storeService.saveManagerFilter(undefined);
     this.router.navigate(['/board-games/manager/reservations']).then();
+  }
+
+  reserveForUser(): void {
+    this.isMenuCollapsed = true;
+    this.storeService.setPageMode(BoardGamePageState.ManagerReservation);
+    this.router.navigate(['/board-games']).then();
   }
 
   closeCurrentState(): void {

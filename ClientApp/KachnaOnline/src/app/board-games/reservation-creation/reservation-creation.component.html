@@ -27,9 +27,11 @@ Author: František Nečas
     <textarea class="form-control" id="internalNote" rows="2" [formControl]="noteForm" maxlength="1024"
               placeholder="Tuto poznámku uvidí jen ostatní správci"></textarea>
   </div>
-  <button type="button" class="btn btn-lg btn-success" *ngIf="currentReservation.size > 0" (click)="reserve()">
+  <button type="button" class="btn btn-lg btn-success"
+          *ngIf="currentReservation.size > 0 && (pageMode == mode.Normal || forUser)" (click)="reserve()">
     Zarezervovat
   </button>
-  <button type="button" class="btn btn-lg btn-success" *ngIf="currentReservation.size == 0" disabled>Zarezervovat
+  <button type="button" class="btn btn-lg btn-success"
+          *ngIf="currentReservation.size == 0 || (pageMode != mode.Normal && !forUser)" disabled>Zarezervovat
   </button>
 </form>

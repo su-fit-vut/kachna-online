@@ -140,6 +140,10 @@ Author: David Chocholatý
               <button class="dropdown-item" routerLinkActive="active" (click)="navigateToAllReservations()"
                       *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Historie rezervací
               </button>
+              <button class="dropdown-item" routerLinkActive="active" (click)="reserveForUser()"
+                      *ngIf="authenticationService.isBoardGamesManager()" ngbDropdownItem>Zarezervovat pro uživatele
+
+              </button>
               <button class="dropdown-item" routerLink="board-games/manager/games" routerLinkActive="active"
                       (click)="isMenuCollapsed = true" *ngIf="authenticationService.isBoardGamesManager()"
                       ngbDropdownItem>Správa her
