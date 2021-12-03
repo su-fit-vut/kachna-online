@@ -94,6 +94,7 @@ export class EventFormComponent implements OnInit {
   onSubmit() {
     let eventData = new Event();
     const formVal = this.form.value;
+
     eventData.id = formVal.id;
     eventData.name = formVal.name;
     eventData.place = formVal.place;
@@ -104,7 +105,10 @@ export class EventFormComponent implements OnInit {
 
     // Process time.
     eventData.from = new Date(this.dateTimeToString(formVal.fromDate, formVal.fromTime));
-    eventData. to = new Date(this.dateTimeToString(formVal.toDate, formVal.toTime));
+    eventData.to = new Date(this.dateTimeToString(formVal.toDate, formVal.toTime));
+    if (!this.verifyDates(eventData)) {
+      return;
+    }
 
     // Process image.
     let image = this.form.value['image'];
@@ -146,6 +150,23 @@ export class EventFormComponent implements OnInit {
         this.planEvent(eventData);
       }
     }
+  }
+
+  private verifyDates(eventData: Event) {
+    if (eventData.from.getTime() < Date.now()) {
+      this.toastr.error("Akce nemůže začínat v minulosti. Upravte termín počátku akce.", "Plánování akce")
+      return false;
+    }
+    if (eventData.to.getTime() < Date.now()) {
+      this.toastr.error("Akce nemůže končit v minulosti. Upravte termín konce akce.", "Plánování akce")
+      return false;
+    }
+    if (eventData.from >= eventData.to) {
+      this.toastr.error("Akce nemůže začínat po jejím konci. Upravte termín počátku nebo konce akce.", "Plánování akce")
+      return false;
+    }
+
+    return true;
   }
 
   planEvent(eventData: Event) {
