@@ -375,4 +375,8 @@ export class AuthenticationService {
   resetUserRoleRequest(userId: number, userRole: string) {
     return this.http.delete(`${USERS_API}/${userId}/roles/${userRole}/assignment`);
   }
+
+  register(newUserData: any) { // FIXME: Imlement and resolve login.
+
+  }
 }
