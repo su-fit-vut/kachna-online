@@ -29,7 +29,7 @@ export class NotificationSettingsComponent implements OnInit {
           }, err => {
             if (err.status != HttpStatusCode.NotFound) {
               console.log(err);
-              this.toastrService.error("Načtení současného nastavení se nezdařilo");
+              this.toastrService.error("Načtení současného nastavení se nezdařilo.");
             }
           })
         }
@@ -90,7 +90,7 @@ export class NotificationSettingsComponent implements OnInit {
   updateBackendSettings() {
     if (this.subscription) {
       this.pushService.subscribe(this.subscription, this.configuration).subscribe(_ => {
-        this.toastrService.success("Preference pro push notifikace aktualizovány");
+        this.toastrService.success("Preference pro push notifikace aktualizovány.");
       }, err => {
         console.log(err);
         this.toastrService.error("Aktualizace preferencí se nezdařila.")
