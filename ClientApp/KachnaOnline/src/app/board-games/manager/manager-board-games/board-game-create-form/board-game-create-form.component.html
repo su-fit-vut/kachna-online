@@ -11,10 +11,9 @@ Author: František Nečas
     <div class="d-flex mt-2 align-items-center">
       <label class="mr-2">Kategorie</label>
       <div ngbDropdown class="d-inline-block">
-        <button type="button" class="btn btn-outline-primary" id="dropdownCategory"
+        <button type="button" class="btn btn-outline-primary" id="dropdownCategory" style="min-width: 5em;"
                 ngbDropdownToggle>{{category}}</button>
         <div ngbDropdownMenu aria-labelledby="dropdownCategory">
-          <button type="button" *ngIf="!startingState" (click)="categoryChanged('---')" ngbDropdownItem>---</button>
           <button type="button" *ngFor="let cat of categories" ngbDropdownItem
                   (click)="categoryChanged(cat.name)"
                   [ngStyle]="{'color': '#' + cat.colourHex}">{{cat.name}}</button>
