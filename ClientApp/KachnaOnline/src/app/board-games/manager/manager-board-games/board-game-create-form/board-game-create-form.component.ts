@@ -59,6 +59,7 @@ export class BoardGameCreateFormComponent implements OnInit {
         category: this.startingState.category.name,
         categoryId: this.startingState.category.id,
         noteInternal: this.startingState.noteInternal,
+        ownerId: this.startingState.owner.id,
         unavailable: this.startingState.unavailable,
         visible: this.startingState.visible,
         defaultReservationDays: this.startingState.defaultReservationDays
