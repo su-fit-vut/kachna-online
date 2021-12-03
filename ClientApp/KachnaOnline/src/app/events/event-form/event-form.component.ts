@@ -11,6 +11,7 @@ import { NgbCalendar, NgbDateNativeAdapter, NgbDateStruct, NgbTimeStruct } from 
 import { throwError } from "rxjs";
 import { HttpStatusCode } from "@angular/common/http";
 import { ImageUploadService } from "../../shared/services/image-upload.service";
+import { EventModification } from "../../models/events/event-modification.model";
 
 @Component({
   selector: 'app-event-form',
@@ -92,7 +93,7 @@ export class EventFormComponent implements OnInit {
   }
 
   onSubmit() {
-    let eventData = new Event();
+    let eventData = new EventModification();
     const formVal = this.form.value;
 
     eventData.id = formVal.id;
@@ -103,12 +104,14 @@ export class EventFormComponent implements OnInit {
     eventData.fullDescription = formVal.fullDescription;
     eventData.url = formVal.url;
 
-    // Process time.
-    eventData.from = new Date(this.dateTimeToString(formVal.fromDate, formVal.fromTime));
-    eventData.to = new Date(this.dateTimeToString(formVal.toDate, formVal.toTime));
-    if (!this.verifyDates(eventData)) {
+    // Process date and time values.
+    const from = this.joinDateTime(formVal.fromDate, formVal.fromTime);
+    const to =  this.joinDateTime(formVal.toDate, formVal.toTime);
+    if (!this.verifyDates(from, to)) {
       return;
     }
+    eventData.from = this.dateTimeToString(formVal.fromDate, formVal.fromTime);
+    eventData.to = this.dateTimeToString(formVal.toDate, formVal.toTime);
 
     // Process image.
     let image = this.form.value['image'];
@@ -152,16 +155,28 @@ export class EventFormComponent implements OnInit {
     }
   }
 
-  private verifyDates(eventData: Event) {
-    if (eventData.from.getTime() < Date.now()) {
+  private joinDateTime(date: NgbDateStruct, time: NgbTimeStruct) : Date | null {
+    let dateObj = this.nativeDateAdapter.toModel(date);
+    dateObj?.setHours(time.hour);
+    dateObj?.setMinutes(time.minute);
+    dateObj?.setSeconds(0);
+    return dateObj;
+  }
+
+  private verifyDates(from: Date | null, to: Date | null): boolean {
+    if (!from || !to) {
+      this.toastr.error("Akce musí mít nastavený počátek i konec akce.", "Plánování akce")
+      return false;
+    }
+    if (from.getTime() < Date.now()) {
       this.toastr.error("Akce nemůže začínat v minulosti. Upravte termín počátku akce.", "Plánování akce")
       return false;
     }
-    if (eventData.to.getTime() < Date.now()) {
+    if (from.getTime() < Date.now()) {
       this.toastr.error("Akce nemůže končit v minulosti. Upravte termín konce akce.", "Plánování akce")
       return false;
     }
-    if (eventData.from >= eventData.to) {
+    if (from >= to) {
       this.toastr.error("Akce nemůže začínat po jejím konci. Upravte termín počátku nebo konce akce.", "Plánování akce")
       return false;
     }
@@ -169,7 +184,7 @@ export class EventFormComponent implements OnInit {
     return true;
   }
 
-  planEvent(eventData: Event) {
+  planEvent(eventData: EventModification) {
     this.eventsService.planEventRequest(eventData).subscribe(
       res => {
         this.form.reset();
@@ -183,7 +198,7 @@ export class EventFormComponent implements OnInit {
     );
   }
 
-  modifyEvent(eventData: Event) {
+  modifyEvent(eventData: EventModification) {
     let eventId = eventData.id;
     this.eventsService.modifyEventRequest(eventData).subscribe(
       res => {
