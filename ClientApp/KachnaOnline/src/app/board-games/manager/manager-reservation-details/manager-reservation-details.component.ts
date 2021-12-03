@@ -10,7 +10,7 @@ import { ReservationItem, ReservationItemState } from "../../../models/board-gam
 import { FormControl } from "@angular/forms";
 import { formatDate } from "@angular/common";
 import { ReservationEventType } from "../../../models/board-games/reservation-item-event.model";
-import { BoardGamesStoreService } from "../../../shared/services/board-games-store.service";
+import { BoardGamePageState, BoardGamesStoreService } from "../../../shared/services/board-games-store.service";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -81,6 +81,12 @@ export class ManagerReservationDetailsComponent implements OnInit {
         console.log(err);
         this.toastrService.error("Nastavení poznámky selhalo (možná je příliš dlouhá?).");
       })
+  }
+
+  addGames() {
+    this.storeService.setPageMode(BoardGamePageState.AddingGames);
+    this.storeService.saveReservationId(this.reservationId);
+    this.router.navigate(['/board-games']).then();
   }
 
   canBeAssigned(): boolean {

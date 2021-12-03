@@ -173,6 +173,14 @@ export class BoardGamesService {
     return this.http.post<Reservation>(this.ReservationsUrl, newReservation);
   }
 
+  addToReservation(reservationId: number, toReserve: Map<number, number>): Observable<any> {
+    let ids: number[] = [];
+    for (let [game, count] of toReserve) {
+      ids = ids.concat(Array(count).fill(game));
+    }
+    return this.http.post(`${this.ReservationsUrl}/${reservationId}/items`, ids);
+  }
+
   /**
    * Returns a list of reservations of the currently signed-in user.
    * @param state Overall state of the reservation to filter by. Undefined for all reservations.

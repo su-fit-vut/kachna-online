@@ -6,7 +6,10 @@ Author: František Nečas
   <app-back-arrow targetRoute=".."></app-back-arrow>
   <h2>Rezervace uživatele {{reservation?.madeBy?.name}}</h2>
 </div>
-<h4>Vytvořena {{formattedDate}}</h4>
+<div class="d-flex justify-content-between align-items-center">
+  <h4>Vytvořena {{formattedDate}}</h4>
+  <button type="button" class="btn btn-lg btn-success mb-2" (click)="addGames()">Přidat hry</button>
+</div>
 
 <app-reservation-items [items]="items" [reservation]="reservation" (itemStateUpdated)="fetchItem($event)"
                        (reservationItemClicked)="routeToBoardGame($event)" [managerView]="true"></app-reservation-items>
@@ -16,8 +19,10 @@ Author: František Nečas
   </button>
   <button type="button" class="btn btn-success mx-1" *ngIf="canBeHandedOver()" (click)="handOverAll()">Předat vše
   </button>
-  <button type="button" class="btn btn-success mx-1" *ngIf="canBeReturned()" (click)="returnAll()">Převzít zpět vše</button>
-  <button type="button" class="btn btn-success mx-1" *ngIf="canBeExtended()" (click)="extendAll()">Prodloužit vše</button>
+  <button type="button" class="btn btn-success mx-1" *ngIf="canBeReturned()" (click)="returnAll()">Převzít zpět vše
+  </button>
+  <button type="button" class="btn btn-success mx-1" *ngIf="canBeExtended()" (click)="extendAll()">Prodloužit vše
+  </button>
 </div>
 
 <form class="mt-2">

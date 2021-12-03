@@ -8,10 +8,10 @@ import { BoardGame } from "../../models/board-games/board-game.model";
 import { BoardGamesService } from "../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import { FormControl } from "@angular/forms";
-import { BoardGameCategory } from "../../models/board-games/board-game-category.model";
 import { AuthenticationService } from "../../shared/services/authentication.service";
-import { BoardGamesStoreService } from "../../shared/services/board-games-store.service";
+import { BoardGamePageState, BoardGamesStoreService } from "../../shared/services/board-games-store.service";
+import { Router } from "@angular/router";
+import { HttpStatusCode } from "@angular/common/http";
 
 @Component({
   selector: 'app-board-games-page',
@@ -25,6 +25,7 @@ export class BoardGamesPageComponent implements OnInit {
   availableOnly: boolean | undefined;
   categoryIds: number[] = [];
 
+  mode: BoardGamePageState;
   currentReservation: Map<number, number> = new Map();
 
   // In order for filtering to fully function, 3 arrays of games are required, all of them are subsets
@@ -36,12 +37,18 @@ export class BoardGamesPageComponent implements OnInit {
   shownGames: BoardGame[] = [];
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
-              public authenticationService: AuthenticationService, public storeService: BoardGamesStoreService) {
+              public authenticationService: AuthenticationService, public storeService: BoardGamesStoreService,
+              public router: Router) {
+  }
+
+  public get pageMode(): typeof BoardGamePageState {
+    return BoardGamePageState;
   }
 
   ngOnInit(): void {
     [this.players, this.availableOnly, this.categoryIds, this.currentReservation] =
       this.storeService.getBoardGamePageState();
+    this.mode = this.storeService.getPageMode();
     // Fetch all games right away to reduce the number of requests.
     this.fetchGames([], true);
   }
@@ -137,5 +144,28 @@ export class BoardGamesPageComponent implements OnInit {
     } else {
       this.currentReservation.set(game.id, game.toReserve);
     }
+  }
+
+  addToReservation(): void {
+    let id = this.storeService.getReservationId();
+    this.boardGamesService.addToReservation(id, this.currentReservation).subscribe(_ => {
+      this.toastrService.success("Hry byly přidány.");
+      this.storeService.setPageMode(BoardGamePageState.Normal);
+      this.router.navigate([`/board-games/manager/reservations/${id}`]).then();
+    }, err => {
+      console.log(err);
+      if (err.status == HttpStatusCode.Conflict) {
+        // Show the board game which is not available anymore
+        this.boardGamesService.getBoardGame(err.error).subscribe(game => {
+          this.toastrService.error(`Hra ${game.name} již byla zarezervována jiným uživatelem.`);
+        })
+      }
+    })
+  }
+
+  resetMode(): void {
+    this.mode = BoardGamePageState.Normal;
+    this.storeService.setPageMode(this.mode);
+    this.currentReservation.clear();
   }
 }
