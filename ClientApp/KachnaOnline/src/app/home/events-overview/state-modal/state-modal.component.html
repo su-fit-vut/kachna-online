@@ -12,7 +12,9 @@ Author: František Nečas
   </button>
 </div>
 <div class="modal-body">
-  <h4>Otevřeno od {{state.start | date:'d. M. y HH:mm'}} do {{state.plannedEnd | date:'d. M. y HH:mm'}}</h4>
+  <h4>{{state.start | date:'d.M'}}</h4>
+  <p>Od: {{state.start | date:'HH:mm'}}</p>
+  <p>Do: {{state.plannedEnd | date:'HH:mm'}}</p>
   <h5>Otevírá {{state.madeByUser.name}}</h5>
   <div *ngIf="state.note">
     <h6>Poznámka</h6>
