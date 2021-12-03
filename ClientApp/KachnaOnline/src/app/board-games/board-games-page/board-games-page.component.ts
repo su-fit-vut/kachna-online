@@ -2,7 +2,7 @@
 // Author: František Nečas
 
 import { Component, OnInit } from '@angular/core';
-import { Observable, OperatorFunction } from "rxjs";
+import { Observable, OperatorFunction, Subscription } from "rxjs";
 import { distinctUntilChanged, map } from "rxjs/operators";
 import { BoardGame } from "../../models/board-games/board-game.model";
 import { BoardGamesService } from "../../shared/services/board-games.service";
@@ -10,7 +10,7 @@ import { ToastrService } from "ngx-toastr";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { AuthenticationService } from "../../shared/services/authentication.service";
 import { BoardGamePageState, BoardGamesStoreService } from "../../shared/services/board-games-store.service";
-import { Router } from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
 import { HttpStatusCode } from "@angular/common/http";
 
 @Component({
@@ -36,6 +36,9 @@ export class BoardGamesPageComponent implements OnInit {
   filteredGames: BoardGame[] = [];
   shownGames: BoardGame[] = [];
 
+  // Subscribe to changes of modes from the navbar.
+  reloadSubscription: Subscription;
+
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               public authenticationService: AuthenticationService, public storeService: BoardGamesStoreService,
               public router: Router) {
@@ -46,6 +49,11 @@ export class BoardGamesPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.reloadSubscription = this.router.events.subscribe((e: any) => {
+      if (e instanceof NavigationEnd) {
+        this.mode = this.storeService.getPageMode();
+      }
+    });
     [this.players, this.availableOnly, this.categoryIds, this.currentReservation] =
       this.storeService.getBoardGamePageState();
     this.mode = this.storeService.getPageMode();
