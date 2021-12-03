@@ -79,10 +79,15 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<IEnumerable<string>> GetRoles();
 
         /// <summary>
-        /// Returns all users.
+        /// Returns all users or users filtered by the specified string.
         /// </summary>
-        /// <returns>An enumerable of all users.</returns>
-        Task<IEnumerable<User>> GetUsers();
+        /// <remarks>
+        /// A user matches the filter if their name or nickname contains the filter or if their e-mail begins
+        /// with the filter. The matching is case-insensitive.
+        /// </remarks>
+        /// <param name="filter">If not null, only users matching the filter will be returned.</param>
+        /// <returns>An enumerable of all (or filtered) users.</returns>
+        Task<IEnumerable<User>> GetUsers(string filter);
 
         /// <summary>
         /// Assigns a role to a user manually.

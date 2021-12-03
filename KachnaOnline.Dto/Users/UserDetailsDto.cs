@@ -6,12 +6,6 @@ namespace KachnaOnline.Dto.Users
     public class UserDetailsDto : UserDto
     {
         /// <summary>
-        /// Email of the user.
-        /// </summary>
-        /// <example>foo@bar.cz</example>
-        public string Email { get; set; }
-
-        /// <summary>
         /// Optional Discord ID of the user.
         /// </summary>
         /// <example>4378291</example>

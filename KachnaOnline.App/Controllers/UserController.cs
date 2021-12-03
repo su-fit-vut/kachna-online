@@ -33,13 +33,33 @@ namespace KachnaOnline.App.Controllers
         /// <summary>
         /// Returns a list of all users.
         /// </summary>
+        /// <remarks>
+        /// This endpoint may be used by administrators and board games managers. Administrators may list all users and
+        /// get detailed information about the users (UserDetailsDto). Board games managers must specify a filter that
+        /// is at least 3 characters long and they only get basic details of the users (UserDto).
+        ///
+        /// Whitespaces at the start and the end of the filter are trimmed.
+        /// </remarks>
         /// <response code="200">The list of users.</response>
+        /// <response code="400">The given filter has an effective value shorter than 3 characters.</response>
+        /// <response code="403">This user cannot perform this operation. Required roles: Admin (can fetch all users) or BoardGamesManager (must use a filter).</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Roles = AuthConstants.Admin)]
-        public async Task<ActionResult<List<UserDto>>> GetUsers()
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(AuthConstants.AdminOrBoardGamesManagerPolicy)]
+        public async Task<ActionResult<List<UserDto>>> GetUsers(string filter)
         {
-            return await _facade.GetUsers();
+            var isAdmin = this.User.IsInRole(AuthConstants.Admin);
+            var isFilterShort = filter?.Length < 3;
+
+            if ((string.IsNullOrEmpty(filter) || isFilterShort) && !isAdmin)
+                return this.ForbiddenProblem("Only administrators may fetch the full list of users.");
+
+            if (isFilterShort)
+                return this.BadRequestProblem("When specifying a filter, it must be at least 3 characters long.");
+
+            return await _facade.GetUsers(filter, isAdmin);
         }
 
         /// <summary>
@@ -83,7 +103,9 @@ namespace KachnaOnline.App.Controllers
         /// <response code="204">The Discord ID has been set.</response>
         [HttpPut("me/discordID")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> SetUserDiscordId([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] ulong? discordId)
+        public async Task<IActionResult> SetUserDiscordId(
+            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)]
+            ulong? discordId)
         {
             var id = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
             await _facade.SetDiscordId(id, discordId);
@@ -98,7 +120,9 @@ namespace KachnaOnline.App.Controllers
         /// <response code="204">The nickname has been set.</response>
         [HttpPut("me/nickname")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> SetUserNickname([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] string nickname)
+        public async Task<IActionResult> SetUserNickname(
+            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)]
+            string nickname)
         {
             var id = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
             await _facade.SetNickname(id, nickname);

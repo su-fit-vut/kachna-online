@@ -138,13 +138,13 @@ namespace KachnaOnline.Business.Services
         private async Task<LoginResult> LoginIdentity(KisIdentity kisIdentity)
         {
             if (kisIdentity is null)
-                return new LoginResult() { HasError = true };
+                return new LoginResult() {HasError = true};
             if (kisIdentity.UserData is null)
-                return new LoginResult() { UserFound = false };
+                return new LoginResult() {UserFound = false};
 
             var userEntity = await this.SynchronizeUser(kisIdentity);
             if (userEntity is null)
-                return new LoginResult() { HasError = true };
+                return new LoginResult() {HasError = true};
 
             var token = this.MakeJwt(kisIdentity,
                 userEntity.Roles
@@ -154,7 +154,7 @@ namespace KachnaOnline.Business.Services
                     .Where(r => r != null)
                     .ToArray());
 
-            return new LoginResult() { UserFound = true, AccessToken = token, KisAccessToken = kisIdentity.AuthToken };
+            return new LoginResult() {UserFound = true, AccessToken = token, KisAccessToken = kisIdentity.AuthToken};
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace KachnaOnline.Business.Services
         /// <seealso cref="MapRoles"/>
         private async Task<UserEntity> SynchronizeUser(KisIdentity kisIdentity)
         {
-            if (kisIdentity is null or { UserData: null })
+            if (kisIdentity is null or {UserData: null})
                 return null;
 
             var kisData = kisIdentity.UserData;
@@ -289,7 +289,7 @@ namespace KachnaOnline.Business.Services
                 if (existingAssociation is null)
                 {
                     // The user doesn't have the role they should have
-                    userEntity.Roles.Add(new UserRoleEntity { RoleId = role.Id });
+                    userEntity.Roles.Add(new UserRoleEntity {RoleId = role.Id});
                     _logger.LogInformation("Adding role {RoleName} to user {UserId} (based on a KIS mapping).",
                         role.Name, userEntity.Id);
                 }
@@ -321,9 +321,12 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers(string filter)
         {
-            var users = await _userRepository.All().ToListAsync();
+            var users = filter is null
+                ? await _userRepository.All().ToListAsync()
+                : await _userRepository.GetFiltered(filter);
+
             return _mapper.Map<IEnumerable<User>>(users);
         }
 

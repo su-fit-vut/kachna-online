@@ -88,6 +88,8 @@ namespace KachnaOnline.App
                 options.AddPolicy(AuthConstants.AnyManagerPolicy, policy =>
                     policy.RequireRole(AuthConstants.Admin, AuthConstants.EventsManager, AuthConstants.StatesManager,
                         AuthConstants.BoardGamesManager));
+                options.AddPolicy(AuthConstants.AdminOrBoardGamesManagerPolicy, policy =>
+                    policy.RequireRole(AuthConstants.Admin, AuthConstants.BoardGamesManager));
             });
 
             // Add OpenAPI document service.

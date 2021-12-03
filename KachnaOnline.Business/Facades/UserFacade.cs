@@ -45,12 +45,13 @@ namespace KachnaOnline.Business.Facades
         /// Returns a list of all users with their roles.
         /// </summary>
         /// <returns>An enumerable of all <see cref="UserDto"/>.</returns>
-        public async Task<List<UserDto>> GetUsers()
+        public async Task<List<UserDto>> GetUsers(string filter, bool showDetails)
         {
             var users = new List<UserDto>();
-            foreach (var user in await _userService.GetUsers())
+            foreach (var user in await _userService.GetUsers(filter))
             {
-                users.Add(await this.MapUser(user));
+                var dto = showDetails ? await this.MapUser(user) : _mapper.Map<UserDto>(user);
+                users.Add(dto);
             }
 
             return users;

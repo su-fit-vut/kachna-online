@@ -1,6 +1,9 @@
 // UserRepository.cs
 // Author: Ondřej Ondryáš
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
@@ -24,6 +27,17 @@ namespace KachnaOnline.Business.Data.Repositories
                 .Include(e => e.Roles)
                 .ThenInclude(e => e.AssignedByUser)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<User>> GetFiltered(string filter)
+        {
+            filter = filter.ToLower(CultureInfo.GetCultureInfo("cs-CZ"));
+
+            return await Set
+                .Where(e => e.Name.ToLower().Contains(filter)
+                            || e.Nickname.ToLower().Contains(filter)
+                            || e.Email.ToLower().StartsWith(filter))
+                .ToListAsync();
         }
     }
 }

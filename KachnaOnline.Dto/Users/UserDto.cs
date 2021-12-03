@@ -30,5 +30,11 @@ namespace KachnaOnline.Dto.Users
         /// <example>Fifinas</example>
         [StringLength(128)]
         public string Nickname { get; set; }
+
+        /// <summary>
+        /// Email of the user.
+        /// </summary>
+        /// <example>foo@bar.cz</example>
+        public string Email { get; set; }
     }
 }

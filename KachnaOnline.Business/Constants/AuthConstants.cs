@@ -18,6 +18,8 @@ namespace KachnaOnline.Business.Constants
         public const string Admin = "Admin";
 
         // Name of policy that allows access to any kind of manager or administrator.
-        public const string AnyManagerPolicy = "AnyManager";
+        public const string AnyManagerPolicy = nameof(AnyManagerPolicy);
+
+        public const string AdminOrBoardGamesManagerPolicy = nameof(AdminOrBoardGamesManagerPolicy);
     }
 }
