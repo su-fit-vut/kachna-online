@@ -2,7 +2,7 @@
 // Author: František Nečas
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CalendarOptions, EventClickArg, FullCalendarComponent } from "@fullcalendar/angular";
+import { Calendar, CalendarOptions, EventClickArg, FullCalendarComponent } from "@fullcalendar/angular";
 import { StatesService } from "../../../shared/services/states.service";
 import { EventsService } from "../../../shared/services/events.service";
 import { ClubStateTypes } from "../../../models/states/club-state-types.model";
@@ -10,6 +10,8 @@ import { ToastrService } from "ngx-toastr";
 import { Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { StateModalComponent } from "../state-modal/state-modal.component";
+import { LoaderService } from "../../../shared/services/loader.service";
+import { forkJoin } from "rxjs";
 
 @Component({
   selector: 'app-events-overview-calendar',
@@ -26,33 +28,53 @@ export class EventsOverviewCalendarComponent implements OnInit {
       right: 'prev,next'
     },
     initialView: 'dayGridMonth',
+    dayMaxEvents: true,
     weekends: true,
     locale: 'cs-CZ',
     themeSystem: 'bootstrap',
     datesSet: this.onDateChange.bind(this),
     displayEventEnd: true,
     editable: true, // this adds cursor pointer
-    eventClick: this.eventClick.bind(this)
+    eventClick: this.eventClick.bind(this),
+    moreLinkContent: function(arg) {
+      let text = `+${arg.num} další`;
+      if (arg.num > 4) {
+        text += 'ch';
+      }
+      return {html: `<p>${text}</p>`}
+    }
   }
 
   private statePrefix = "state-"
   private eventPrefix = "event-";
 
   constructor(private statesService: StatesService, private eventsService: EventsService,
-              private toastrService: ToastrService, private router: Router, private modalService: NgbModal) { }
+              private toastrService: ToastrService, private router: Router, private modalService: NgbModal,
+              private loaderService: LoaderService) {
+  }
 
   ngOnInit(): void {
   }
 
-  onDateChange(dateInfo: {start: Date, end: Date}): void {
+  onDateChange(dateInfo: { start: Date, end: Date }): void {
     this.updateCalendar(dateInfo.start, dateInfo.end);
   }
 
   updateCalendar(start: Date, end: Date): void {
-    let api = this.calendarComponent.getApi();
-    api.removeAllEvents();
-    this.statesService.getBetween(start, end).subscribe(states => {
-      for (let state of states) {
+    forkJoin([this.eventsService.getBetween(start, end), this.statesService.getBetween(start, end)]).subscribe(data => {
+      let api = this.calendarComponent.getApi();
+      api.removeAllEvents();
+      for (let event of data[0]) {
+        api.addEvent({
+          id: `${this.eventPrefix}${event.id}`,
+          title: event.name,
+          start: event.from,
+          end: event.to,
+          display: 'block',
+          color: "#D5384A"
+        })
+      }
+      for (let state of data[1]) {
         let title = "";
         let color = "#2A72FF";
         if (state.state == ClubStateTypes.OpenChillzone) {
@@ -72,21 +94,8 @@ export class EventsOverviewCalendarComponent implements OnInit {
       }
     }, err => {
       console.log(err);
-      this.toastrService.error("Nepodařilo se načíst stavy klubu pro tento měsíc.");
-    })
-
-    this.eventsService.getBetween(start, end).subscribe(events => {
-      for (let event of events) {
-        api.addEvent({
-          id: `${this.eventPrefix}${event.id}`,
-          title: event.name,
-          start: event.from,
-          end: event.to,
-          display: 'block',
-          color: "#D5384A"
-        })
-      }
-    })
+      this.toastrService.error("Načtení kalendáře selhalo.");
+    });
   }
 
   eventClick(clickInfo: EventClickArg) {
