@@ -61,6 +61,7 @@ namespace KachnaOnline.Business.Services.Push
                 string.IsNullOrEmpty(_options.CurrentValue.PrivateKey) || !_subjectValid)
             {
                 _logger.LogWarning("VAPID keys or subject are not set up correctly, not sending push notification.");
+                return;
             }
 
             PushMessage notification = new AngularPushNotification
