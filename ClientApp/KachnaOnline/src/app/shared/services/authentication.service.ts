@@ -6,7 +6,7 @@ import { KisEduIdResponse } from '../../models/users/auth/kis/kis-eduid-response
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HTTP_INTERCEPTORS, HttpInterceptor, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { LocalTokenContent } from "../../models/users/auth/local-token-content.model";
@@ -379,7 +379,7 @@ export class AuthenticationService {
 
   register(sessionId: string): Promise<any> {
     let params = new HttpParams().set('session', sessionId);
-    return this.http.post<KisRefreshTokenResponse>(`${environment.kisApiUrl}/auth/eduid/register`, "",{params: params}).toPromise()
+    return this.http.post<KisRefreshTokenResponse>(`${environment.kisApiUrl}/auth/eduid/register`, "", {params: params}).toPromise()
       .then((res) => {
         localStorage.setItem(environment.kisAccessTokenStorageName, res.auth_token);
         localStorage.setItem(environment.kisRefreshTokenStorageName, res.refresh_token);
@@ -393,11 +393,12 @@ export class AuthenticationService {
           this.logIn().then(_ => {
             this.router.navigate(['user-profile']).then();
             return;
-          }).catch(err => {
-
+          }).catch(_ => {
+            this.toastr.error("Nastala neočekávaná chyba. Zkuste celým procesem projít znovu.",
+              "Registrace uživatele");
           })
         } else {
-          this.toastr.error("Registrace selhalaaa.", "Registrace uživatele");
+          this.toastr.error("Registrace selhala.", "Registrace uživatele");
           return throwError(error);
         }
         return;
@@ -407,7 +408,7 @@ export class AuthenticationService {
   changeGamificationConsent(gamificationConsent: boolean) {
     this.http.put<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me/gamification_consent`,
       gamificationConsent).toPromise()
-      .then( (res: KisLoggedInUserInformation) => {
+      .then((res: KisLoggedInUserInformation) => {
         this.kisLoggedInUserInformation = res;
         localStorage.setItem(environment.kisLoggedInUserInformationStorageName, JSON.stringify(this.kisLoggedInUserInformation));
 
@@ -416,8 +417,8 @@ export class AuthenticationService {
         this.storeUserDataToStorage();
         this.toastr.success("Změna souhlasu s gamifikací proběhla úspěšně.", "Změna uživatelských údajů");
       }).catch((error: any) => {
-        throwError(error);
-        this.toastr.error("Změna souhlasu s gamifikací selhala.", "Změna uživatelských údajů");
+      throwError(error);
+      this.toastr.error("Změna souhlasu s gamifikací selhala.", "Změna uživatelských údajů");
     });
   }
 }

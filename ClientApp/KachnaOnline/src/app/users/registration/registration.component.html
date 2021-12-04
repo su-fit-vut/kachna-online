@@ -1,43 +1,68 @@
 <h1>Stát se členem klubu</h1>
 
-<p>
-  Informační text o registraci a statusu sympatizujícího člena SU. <!-- TODO: Add actual registration text. -->
+<p class="text-justify">
+  Občerstvení a další služby v&nbsp;klubu U&nbsp;Kachničky poskytuje SU FIT pouze členům klubu. Být členem
+  klubu znamená být <em>sympatizujícím členem</em> Studentské unie FIT VUT v&nbsp;Brně.
 </p>
 
-<div class="row">
-  <form [formGroup]="form" autocomplete="off" novalidate class="col-xl-6" (ngSubmit)="onSubmit()">
+<p class="text-justify">
+  Sympatizujícím členem se může stát libovolná fyzické osoba mj. registrací v&nbsp;informačním systému SU, kterou je
+  možné dokončit tlačítkem níže. Sympatizující členství v&nbsp;SU se řídí
+  <a href="https://drive.google.com/file/d/17KnKr-80zZrBEBzMj_dPM6BMheVrEAab/view">stanovami spolku</a>.
+  Registrací vyjadřuješ zájem účastnit se aktivit provozovaných SU. Sympatizující člen musí
+  alespoň jednou ročně uhradit členský příspěvek v libovolné výši, tj. minimálně 1 Kč. To je možné provést například
+  při nákupu občerstvení v&nbsp;klubu.
+</p>
 
-    <div class="form-group ml-1">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="sympathizingMemberConsent" formControlName="sympathizingMemberConsent" required>
-        <label class="form-check-label" for="sympathizingMemberConsent">
-          Chci se stát sympatizujícím členem SU
-        </label>
-      </div>
+<p class="text-justify">
+  Občerstvení je v&nbsp;klubu prodáváno v&nbsp;souladu se stanovami neziskově, za účelem podpory seznamování a
+  komunikace studentů.
+</p>
+
+<p class="text-justify">
+  Abychom ti mohli prodat občerstvení, musíš se identifikovat čipovou kartou (např. ISIC) přiřazenou ke svému účtu.
+  Po potvrzení registrace tlačítkem níže se dostaneš na stránku <em>Můj profil</em>. U&nbsp;baru požádej člena SU
+  o&nbsp;spárování karty, dostaneš krátký kód, který vyplníš v&nbsp;sekci <em>Nastavení karty</em> na této stránce.
+</p>
+
+<form [formGroup]="form" autocomplete="off" novalidate (ngSubmit)="onSubmit()">
+  <div class="form-group ml-1">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="sympathizingMemberConsent"
+             formControlName="sympathizingMemberConsent" required>
+      <label class="form-check-label" for="sympathizingMemberConsent">
+        Chci se stát sympatizujícím členem Studentské unie FIT VUT v&nbsp;Brně podle stanov
+      </label>
+    </div>
+  </div>
+
+  <div class="form-group row ml-1 align-items-center">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="gamificationConsent"
+             formControlName="gamificationConsent" checked>
+      <label class="form-check-label" for="gamificationConsent">
+        Souhlasím s gamifikací
+      </label>
     </div>
 
-    <div class="form-group row ml-1 align-items-center">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="gamificationConsent" formControlName="gamificationConsent" checked>
-        <label class="form-check-label" for="gamificationConsent">
-          Souhlasím s gamifikací
-        </label>
-      </div>
-
-      <div class="ml-1">
-        <button
-          type="button" class="btn"
-          triggers="click hover focus" [autoClose]="true" [closeDelay]="500"
-          [ngbTooltip]="gamificationConsentTooltipText"
-          #tooltip3="ngbTooltip"
-        > <!-- FIXME: Add actual tooltip message. -->
-          <i class="far fa-question-circle"></i>
-        </button>
-      </div>
+    <div class="ml-1">
+      <button
+        type="button" class="btn"
+        triggers="click hover focus" [autoClose]="true" [closeDelay]="500"
+        [ngbTooltip]="'Členové klubu jsou ohodnocování virtuálními body, tzv. prestiží, za jejich účast na aktivitách ' +
+         'a akcích SU a za poskytování členských příspěvků. Pro sbírání těchto bodů při nakupování občerstvení v klubu ' +
+         'je nutné udělit souhlas.'"
+        #tooltip3="ngbTooltip">
+        <i class="far fa-question-circle"></i>
+      </button>
     </div>
+  </div>
 
-    <button class="btn btn-primary" type="submit" [disabled]="form.invalid">
-      <ng-container >Stát se členem klubu</ng-container>
-    </button>
-  </form>
-</div>
+  <button class="btn btn-primary" type="submit" [disabled]="form.invalid">
+    Stát se členem klubu
+  </button>
+
+  <button class="btn btn-outline-danger ml-2" routerLink="/">
+    Zrušit registraci
+  </button>
+</form>

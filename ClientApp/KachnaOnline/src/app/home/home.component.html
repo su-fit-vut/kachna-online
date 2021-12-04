@@ -20,8 +20,8 @@ Author: David Chocholatý
       </ng-container>
     </div>
 
-    <a href="#" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k nám?</a>
-    <a (click)="authenticationService.getSessionIdFromKisEduId('registration')" class="state-details ml-4" *ngIf="authenticationService.isLoggedOut()">Stát se členem klubu</a>
+    <a href="javascript:void(0)" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k nám?</a>
+    <a href="javascript:void(0)" (click)="authenticationService.getSessionIdFromKisEduId('registration')" class="state-details ml-4" *ngIf="authenticationService.isLoggedOut()">Stát se členem klubu</a>
   </div>
 
   <app-bar-details *ngIf="state.state==ST.OpenBar" [state]="state"></app-bar-details>
