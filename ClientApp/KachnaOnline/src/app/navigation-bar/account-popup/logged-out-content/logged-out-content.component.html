@@ -1,26 +1,16 @@
 <!--
 logged-out-content.component.html
-Author: David Chocholatý
+Author: David Chocholatý, Ondřej Ondryáš
 -->
 
-<div class="card">
-  <div class="card-header">
-    Nejste přihlášen/a.
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">
-      <button class="btn btn-secondary btn-block" (click)="clickLogInButton()">Přihlásit se</button>
-    </li>
-    <li class="list-group-item">
-      <button class="btn btn-secondary btn-block" type="button" (click)="authenticationService.getSessionIdFromKisEduId('registration')">
-        <ul style="list-style: none;" class="list-group list-group-flush">
-          <li>Zaregistrovat se</li>
-          <li class="text-muted">(Stát se členem klubu)</li>
-        </ul>
-      </button>
-    </li>
-    <li class="list-group-item">
-      <button class="btn btn-secondary btn-block" routerLink="/notifications">Push notifikace</button>
-    </li>
-  </ul>
-</div>
+<h6 class="border-bottom pb-2 mb-2">
+  Nejste přihlášen/a.
+</h6>
+
+<button class="btn btn-outline-success btn-block" (click)="clickLogInButton()">Přihlásit se</button>
+<button class="btn btn-outline-dark btn-block" type="button"
+        (click)="authenticationService.getSessionIdFromKisEduId('registration')">
+  Zaregistrovat se<br>
+  <span class="small">(Stát se členem klubu)</span>
+</button>
+<button class="btn btn-outline-dark btn-block" routerLink="/notifications">Nastavit push notifikace</button>

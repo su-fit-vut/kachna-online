@@ -1,28 +1,16 @@
 <!--
 logged-in-content.component.html
-Author: David Chocholatý
+Author: David Chocholatý, Ondřej Ondryáš
 -->
 
-<div class="card border-0">
-  <div class="card-header">
+<div class="border-bottom pb-2 mb-2">
+  <h6 class="font-weight-bold">
     {{authenticationService.getUserName()}}
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item ">Prestiž: {{authenticationService.user.prestige}}</li>
-    <li class="list-group-item border-0">
-      <button class="btn btn-secondary btn-block" routerLink="/user-profile" routerLinkActive="true">Můj profil</button>
-    </li>
-    <li class="list-group-item border-0">
-      <button class="btn btn-secondary btn-block" (click)="clickChangeCard()">Změna karty</button>
-    </li>
-    <li class="list-group-item border-0">
-      <button class="btn btn-secondary btn-block" routerLink="/board-games/reservations">Moje rezervace</button>
-    </li>
-    <li class="list-group-item border-0">
-      <button class="btn btn-secondary btn-block" routerLink="/notifications">Push notifikace</button>
-    </li>
-    <li class="list-group-item border-0">
-      <button class="btn btn-danger btn-block" (click)="clickLogOutButton()">Odhlásit se</button>
-    </li>
-  </ul>
+  </h6>
+  Prestiž: {{authenticationService.user.prestige}}
 </div>
+
+<button class="btn btn-outline-dark btn-block" routerLink="/user-profile" routerLinkActive="true">Můj profil</button>
+<button class="btn btn-outline-dark btn-block" routerLink="/board-games/reservations">Moje rezervace</button>
+<button class="btn btn-outline-dark btn-block" routerLink="/notifications">Nastavit push notifikace</button>
+<button class="btn btn-outline-danger btn-block" (click)="clickLogOutButton()">Odhlásit se</button>

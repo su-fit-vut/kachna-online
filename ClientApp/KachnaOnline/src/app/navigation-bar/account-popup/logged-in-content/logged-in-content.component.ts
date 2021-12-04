@@ -20,10 +20,6 @@ export class LoggedInContentComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  clickChangeCard() {
-
-  }
-
   clickLogOutButton() {
     this.authenticationService.logOut();
     window.location.reload();
