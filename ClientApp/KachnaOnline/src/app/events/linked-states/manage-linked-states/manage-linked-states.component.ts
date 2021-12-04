@@ -44,7 +44,7 @@ export class ManageLinkedStatesComponent implements OnInit {
   }
 
   onPlanNewClubStateClicked() {
-    this.router.navigate([`/states/plan`]).then(() => null);
+    this.router.navigate([`/states/plan`], {state: {event: this.eventsService.eventDetail}}).then(() => null);
   }
 
   onAddFromExistingClubStates() {

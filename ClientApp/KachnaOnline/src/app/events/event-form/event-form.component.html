@@ -100,15 +100,16 @@ Author: David Chocholatý
 
   <div class="d-flex flex-wrap justify-content-between">
     <div class="form-group mr-4 mt-3">
-      <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="form.invalid">{{submitText}}</button>
+      <button class="btn btn-primary btn-block" type="submit" [disabled]="form.invalid">{{submitText}}</button>
     </div>
     <div class="form-group mr-4 mt-3" *ngIf="editMode">
-      <button class="btn btn-info btn-lg btn-block" type="button" (click)="onManageLinkedStatesClicked()">
-        Spravovat připojené stavy klubu
+      <button class="btn btn-outline-primary btn-block" type="button" (click)="onManageLinkedStatesClicked()">
+        Spravovat stavy klubu navázané k&nbsp;této akci
       </button>
     </div>
     <div class="form-group mt-3" *ngIf="editMode">
-      <button class="btn btn-info btn-lg btn-block" type="button" (click)="form.reset()">Smazat</button>
+      <button class="btn btn-outline-danger btn-block" type="button" (click)="form.reset()">
+        <i class="fas fa-trash-alt"></i>&nbsp;Zrušit tuto akci</button>
     </div>
   </div>
 </form>

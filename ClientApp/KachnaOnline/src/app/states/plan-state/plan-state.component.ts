@@ -13,6 +13,8 @@ import { NgbCalendar, NgbDateNativeAdapter, NgbDateStruct, NgbTimeStruct } from 
 import { StateModification } from "../../models/states/state-modification.model";
 import { ClubState } from "../../models/states/club-state.model";
 import { DateUtils } from "../../shared/utils/date-utils";
+import { Event } from "../../models/events/event.model";
+import { EventsService } from "../../shared/services/events.service";
 
 enum Mode {
   ModifyCurrent,
@@ -74,12 +76,32 @@ export class PlanStateComponent implements OnInit {
   mode: Mode;
   referenceState: ClubState;
 
-  constructor(public stateService: StatesService,
-              public calendar: NgbCalendar,
+  navigationEvent: Event;
+
+  constructor(private stateService: StatesService,
+              private eventsService: EventsService,
+              private calendar: NgbCalendar,
               private nativeDateAdapter: NgbDateNativeAdapter,
               private route: ActivatedRoute,
               private router: Router,
               private fb: FormBuilder) {
+    this.navigationEvent = this.router.getCurrentNavigation()?.extras?.state?.event;
+  }
+
+  patchForm(start: Date, end: Date) {
+    this.mainForm.patchValue({
+      startDate: this.nativeDateAdapter.fromModel(start),
+      startTime: {
+        hour: start.getHours(),
+        minute: start.getMinutes()
+      },
+
+      plannedEndDate: this.nativeDateAdapter.fromModel(end),
+      plannedEndTime: {
+        hour: end.getHours(),
+        minute: end.getMinutes()
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -91,22 +113,18 @@ export class PlanStateComponent implements OnInit {
       }
 
       if (this.mode != Mode.CreateCurrent && this.mode != Mode.CreatePlanned && state.state != ClubStateTypes.Closed) {
+        this.patchForm(state.start, state.plannedEnd);
         this.mainForm.patchValue({
-          startDate: this.nativeDateAdapter.fromModel(state.start),
-          startTime: {
-            hour: state.start.getHours(),
-            minute: state.start.getMinutes()
-          },
-
-          plannedEndDate: this.nativeDateAdapter.fromModel(state.plannedEnd),
-          plannedEndTime: {
-            hour: state.plannedEnd.getHours(),
-            minute: state.plannedEnd.getMinutes()
-          },
-
           noteInternal: state.noteInternal,
-          note: state.note
+          notePublic: state.note
         });
+      }
+
+      if (this.mode == Mode.CreatePlanned) {
+        if (this.navigationEvent) {
+          this.patchForm(this.navigationEvent.from, this.navigationEvent.to);
+          this.mainForm.controls.notePublic.setValue("Otevřeno v rámci akce " + this.navigationEvent.name);
+        }
       }
 
       if (this.mode == Mode.ModifyPlanned) {
@@ -170,7 +188,10 @@ export class PlanStateComponent implements OnInit {
       dto.plannedEnd = DateUtils.dateTimeToString(endDate, endTime, this.nativeDateAdapter);
       dto.state = val.stateType;
 
-      this.stateService.planNew(dto).subscribe(_ => this.done()); // TODO
+      this.stateService.planNew(dto).subscribe(res => {
+        this.linkEvent(res.newState.id);
+        this.done();
+      }); // TODO
     } else {
       // Calling a *Modify* endpoint
 
@@ -186,9 +207,9 @@ export class PlanStateComponent implements OnInit {
       dto.madeById = null; // TODO
 
       if (this.editingId != null) {
-        this.stateService.modify(this.editingId, dto).subscribe(_ => this.done()); // TODO
+        this.stateService.modify(this.editingId, dto).subscribe(res => this.done()); // TODO
       } else {
-        this.stateService.modifyCurrent(dto).subscribe(_ => this.done()); // TODO
+        this.stateService.modifyCurrent(dto).subscribe(res => this.done()); // TODO
       }
     }
   }
@@ -200,6 +221,12 @@ export class PlanStateComponent implements OnInit {
       this.router.navigate(["/states/history"]).finally();
     } else {
       this.router.navigate(["/"]).finally();
+    }
+  }
+
+  linkEvent(stateId: number) {
+    if (this.navigationEvent) {
+      this.eventsService.linkConflictingState(stateId);
     }
   }
 }

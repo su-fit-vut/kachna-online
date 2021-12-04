@@ -3,24 +3,15 @@ conflicting-states.component.html
 Author: David Chocholatý
 -->
 
-<h1>Přidat existující stav klubu</h1>
+<app-back-arrow heading="Spojit akci s existujícím stavem klubu"></app-back-arrow>
 
 <div class="d-flex flex-wrap justify-content-between">
-  <div class="row">
-    <div class="mr-4 mt-3">
-      <app-back-arrow targetRoute="../linked-states"></app-back-arrow>
-    </div>
-    <div class="mr-4 mt-3">
-      <app-togglable-button [startingValue]="eventsService.unlinkedOnly !== undefined"
-                            [text]="'Pouze volné stavy klubu'"
-                            (valueChanged)="onUnlinkedOnlyChange($event)"></app-togglable-button>
-    </div>
-  </div>
-  <div class="mt-3">
-    <button type="button" class="btn mr-1 btn-secondary" (click)="onPlanNewClubStateClicked()">
-      Naplánovat nový stav klubu
-    </button>
-  </div>
+  <app-togglable-button [startingValue]="eventsService.unlinkedOnly !== undefined"
+                        [text]="'Pouze volné stavy klubu'"
+                        (valueChanged)="onUnlinkedOnlyChange($event)"></app-togglable-button>
+  <button type="button" class="btn mr-1 btn-secondary" (click)="onPlanNewClubStateClicked()">
+    Naplánovat nový stav klubu
+  </button>
 </div>
 <hr/>
 
