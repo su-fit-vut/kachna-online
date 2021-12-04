@@ -8,6 +8,8 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { UserSearchComponent } from './user-search/user-search.component';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
+import { MonthSelectionComponent } from './month-selection/month-selection.component';
+import { PipesModule } from "../pipes/pipes.module";
 
 
 @NgModule({
@@ -16,20 +18,23 @@ import { FormsModule } from "@angular/forms";
     ToggleableButtonComponent,
     NumberSelectionComponent,
     UserSearchComponent,
+    MonthSelectionComponent,
   ],
   imports: [
     RouterModule,
     CommonModule,
     ReactiveFormsModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    PipesModule
   ],
-  exports: [
-    BackArrowComponent,
-    ToggleableButtonComponent,
-    NumberSelectionComponent,
-    UserSearchComponent,
-  ]
+    exports: [
+        BackArrowComponent,
+        ToggleableButtonComponent,
+        NumberSelectionComponent,
+        UserSearchComponent,
+        MonthSelectionComponent,
+    ]
 })
 export class ComponentsModule {
 }

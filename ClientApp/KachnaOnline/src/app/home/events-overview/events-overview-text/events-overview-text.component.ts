@@ -23,28 +23,24 @@ export class EventsOverviewTextComponent implements OnInit {
   shownEvents: EventItem[] = [];
   shownStates: StateItem[] = [];
 
-  currentMonth: Date;
   showPast: boolean = false;
 
   constructor(private eventsService: EventsService, private stateService: StatesService) {
   }
 
   ngOnInit(): void {
-    this.currentMonth = new Date();
-    this.changeMonth(0);
+    this.monthChanged(new Date());
   }
 
-  changeMonth(delta: number) {
-    this.currentMonth.setMonth(this.currentMonth.getMonth() + delta);
-
+  monthChanged(month: Date) {
     let now = new Date();
-    if ((this.currentMonth.getMonth() < now.getMonth() && this.currentMonth.getFullYear() == now.getFullYear())
-      || this.currentMonth.getFullYear() < now.getFullYear()) {
+    if ((month.getMonth() < now.getMonth() && month.getFullYear() == now.getFullYear())
+      || month.getFullYear() < now.getFullYear()) {
       this.showPast = true;
     }
 
-    this.eventsService.getMonthEvents(this.currentMonth, false).subscribe(res => this.makeEvents(res));
-    this.stateService.getMonth(this.currentMonth, false).subscribe(res => this.makeStates(res));
+    this.eventsService.getMonthEvents(month, false).subscribe(res => this.makeEvents(res));
+    this.stateService.getMonth(month, false).subscribe(res => this.makeStates(res));
   }
 
   makeEvents(eventModels: Event[]): void {

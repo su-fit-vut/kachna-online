@@ -1,0 +1,15 @@
+<div class="d-flex {{justifyCenter ? 'justify-content-center' : ''}} mb-1">
+  <div>
+    <button class="btn btn-sm btn-primary float-right" (click)="changeMonth(-1)"><i class="fas fa-caret-left"></i>
+    </button>
+  </div>
+
+  <div class="text-center" style="width: 15em;">
+    <span class="d-inline-block h4 pl-3 pr-3 mb-0">
+      {{month.getMonth() | monthLoc}} {{month.getFullYear()}}</span>
+  </div>
+
+  <div>
+    <button class="btn btn-sm btn-primary" (click)="changeMonth(1)"><i class="fas fa-caret-right"></i></button>
+  </div>
+</div>
