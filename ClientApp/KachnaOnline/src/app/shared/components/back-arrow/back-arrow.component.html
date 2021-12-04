@@ -1,8 +1,25 @@
 <!--
 back-arrow-component.html
-Author: František Nečas
+Author: František Nečas, Ondřej Ondryáš
 -->
 
-<a class="link" routerLink="{{targetRoute}}">
-  <i class="fas fa-chevron-circle-left"></i>
-</a>
+<div class="mb-2 d-flex align-items-center" *ngIf="heading; else link">
+  <ng-container *ngTemplateOutlet="link"></ng-container>
+
+  <ng-container [ngSwitch]="headingSize">
+    <h1 *ngSwitchCase="1" class="mb-0">{{heading}}</h1>
+    <h2 *ngSwitchCase="2" class="mb-0">{{heading}}</h2>
+    <h3 *ngSwitchCase="3" class="mb-0">{{heading}}</h3>
+    <h4 *ngSwitchCase="4" class="mb-0">{{heading}}</h4>
+  </ng-container>
+</div>
+
+<ng-template #link>
+  <a class="link" routerLink="{{targetRoute}}" *ngIf="targetRoute">
+    <i class="fas fa-chevron-circle-left"></i>
+  </a>
+
+  <a class="link" href="javascript:void(0)" onclick="window.history.back()" *ngIf="!targetRoute">
+    <i class="fas fa-chevron-circle-left"></i>
+  </a>
+</ng-template>

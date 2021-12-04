@@ -3,9 +3,9 @@ event-detail.component.html
 Author: David Chocholatý
 -->
 
-<h1>Detail akce</h1>
+<app-back-arrow heading="Detail akce"></app-back-arrow>
 
-<div class="container" *ngIf="eventsService.eventDetail.name">
+<ng-container *ngIf="eventsService.eventDetail?.name">
   <h3 *ngIf="!eventsService.eventDetail.url" class="mb-1">{{eventsService.eventDetail.name}}</h3>
   <h3 *ngIf="eventsService.eventDetail.url" class="mb-1">
     <a [href]="eventsService.eventDetail.url">
@@ -43,7 +43,7 @@ Author: David Chocholatý
         </div>
         <div class="col-md-4" *ngIf="eventsService.eventDetail.imageUrl">
           <img src="{{eventsService.eventDetail.imageUrl}}"
-               class="card-img img-fluid rounded" alt="Obrázek akce" />
+               class="card-img img-fluid rounded" alt="Obrázek akce"/>
         </div>
       </div>
     </div>
@@ -82,4 +82,4 @@ Author: David Chocholatý
       </ul>
     </div>
   </div>
-</div>
+</ng-container>

@@ -2,14 +2,12 @@
 reservation-history.component.html
 Author: František Nečas
 -->
-<div class="d-flex">
-  <app-back-arrow targetRoute=".."></app-back-arrow>
-  <h2>Historie rezervace</h2>
-</div>
+
+<app-back-arrow targetRoute=".." heading="Historie rezervace"></app-back-arrow>
 
 <!-- The table on mobile would look weird, list it -->
 <div class="d-block d-sm-none">
-  <hr />
+  <hr/>
   <div *ngFor="let event of events">
     <h5 class="mt-4" [ngClass]="{
       'text-success': event.type == eventType.Created || event.type == eventType.Returned

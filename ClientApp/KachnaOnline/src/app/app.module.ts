@@ -35,7 +35,7 @@ import { UpcomingOpeningsComponent } from './home/upcoming-openings/upcoming-ope
 import { JsonDateInterceptor } from "./shared/interceptors/json-date.interceptor";
 import { EventsOverviewComponent } from './home/events-overview/events-overview.component';
 import { PipesModule } from "./shared/pipes/pipes.module";
-import { LoadingSpinnerComponent } from './shared/componenets/loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { LoadingInterceptor } from "./shared/interceptors/loading.interceptor";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { CurrentOfferComponent } from './home/current-offer/current-offer.component';
