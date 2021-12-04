@@ -16,7 +16,7 @@ Author: František Nečas
         <h4 [ngStyle]="{'color': '#' + boardGame.category.colourHex}">{{boardGame.category.name}}</h4>
       </div>
       <div class="col" *ngIf="boardGame.playersMin || boardGame.playersMax">
-        <p>{{boardGame.playersMin}} - {{boardGame.playersMax}} hráčů</p>
+        <p>{{boardGame.playersMin}}–{{boardGame.playersMax}} hráčů</p>
       </div>
       <div class="col">
         <p>Celkem v klubu: {{boardGame.inStock}} ks</p>
