@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
-import { FormControl, FormGroup } from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import { StatesService } from "../../shared/services/states.service";
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
 import { NgbCalendar, NgbDateNativeAdapter, NgbDateStruct, NgbTimeStruct } from "@ng-bootstrap/ng-bootstrap";
@@ -21,19 +27,44 @@ enum Mode {
   styleUrls: ['./plan-state.component.css']
 })
 export class PlanStateComponent implements OnInit {
+  dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    let end = this.nativeDateAdapter.toModel(control.get('plannedEndDate')?.value);
+    let endTime = control.get('plannedEndTime')?.value;
+    if (!end || !endTime) {
+      return {endNotSet: true};
+    }
+
+    end.setHours(endTime?.hour, endTime?.minute, 0);
+    if (this.mode == Mode.CreateCurrent || this.mode == Mode.ModifyCurrent) {
+      // Does not require start date, only check that it ends in the future.
+      return end > new Date() ? null : {endInPast: true};
+    } else {
+      let start = this.nativeDateAdapter.toModel(control.get('startDate')?.value);
+      let startTime = control.get('startTime')?.value;
+      if (!start || !startTime) {
+        return {startNotSet: true};
+      }
+      start.setHours(startTime?.hour, startTime?.minute, 0);
+      if (start < new Date()) {
+        return {startInPast: true};
+      }
+      return start < end ? null : {invalidDateRange: true};
+    }
+  }
+
 
   ST = ClubStateTypes;
   M = Mode;
 
-  mainForm = new FormGroup({
-    stateType: new FormControl(ClubStateTypes.OpenChillzone),
-    startDate: new FormControl(this.calendar.getToday()),
-    startTime: new FormControl({hour: new Date().getHours(), minute: new Date().getMinutes()}),
-    plannedEndDate: new FormControl(this.calendar.getToday()),
-    plannedEndTime: new FormControl({hour: new Date().getHours() + 1, minute: new Date().getMinutes()}),
-    noteInternal: new FormControl(''),
-    notePublic: new FormControl('')
-  });
+  mainForm = this.fb.group({
+    stateType: [ClubStateTypes.OpenChillzone, Validators.required],
+    startDate: [this.calendar.getToday()],
+    startTime: [{hour: new Date().getHours(), minute: new Date().getMinutes()}],
+    plannedEndDate: [this.calendar.getToday(), Validators.required],
+    plannedEndTime: [{hour: new Date().getHours() + 1, minute: new Date().getMinutes()}, Validators.required],
+    noteInternal: [''],
+    notePublic: [''],
+  }, {validators: [this.dateRangeValidator]})
 
   editingId: number;
   mode: Mode;
@@ -43,7 +74,8 @@ export class PlanStateComponent implements OnInit {
               public calendar: NgbCalendar,
               private nativeDateAdapter: NgbDateNativeAdapter,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private fb: FormBuilder) {
   }
 
   ngOnInit(): void {

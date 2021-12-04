@@ -25,6 +25,8 @@
 
       <div class="input-group mx-3">
         <input class="form-control" (click)="startDate.open()" type="text" ngbDatepicker
+               [ngClass]="{'is-invalid': mainForm.errors?.startNotSet || mainForm.errors?.invalidDateRange ||
+                  mainForm.errors?.startInPast}"
                #startDate="ngbDatepicker" id="startDate" formControlName="startDate"
                placeholder="dd. MM. yyyy" autocomplete="false"/>
         <div class="input-group-append">
@@ -36,11 +38,21 @@
       <ngb-timepicker formControlName="startTime"></ngb-timepicker>
     </div>
 
+    <!-- The date/time selector would not play well with invalid-feedback class -->
+    <div class="text-danger"
+         *ngIf="(mode == M.CreatePlanned || mode == M.ModifyPlanned) &&
+         (mainForm.errors?.startNotSet || mainForm.errors?.invalidDateRange || mainForm.errors?.startInPast)">
+      <div *ngIf="mainForm.errors?.startInPast">Začátek musí být plánován v budoucnu</div>
+      <div *ngIf="mainForm.errors?.startNotSet">Musí být naplánován začátek</div>
+      <div *ngIf="mainForm.errors?.invalidDateRange">Stav musí končit později než začíná</div>
+    </div>
+
     <div class="form-group d-flex align-items-center">
       <label for="plannedEndDate" class="text-nowrap">Konec stavu:</label>
 
       <div class="input-group mx-3">
         <input class="form-control" (click)="plannedEndDate.open()" type="text" ngbDatepicker
+               [ngClass]="{'is-invalid': mainForm.errors?.endInPast || mainForm.errors?.endNotSet}"
                #plannedEndDate="ngbDatepicker" id="plannedEndDate" formControlName="plannedEndDate"
                placeholder="dd. MM. yyyy" autocomplete="false"/>
         <div class="input-group-append">
@@ -50,6 +62,11 @@
       </div>
 
       <ngb-timepicker formControlName="plannedEndTime"></ngb-timepicker>
+    </div>
+    <!-- The date/time selector would not play well with invalid-feedback class -->
+    <div class="text-danger mt-0 mb-2" *ngIf="mainForm.errors?.endInPast || mainForm.errors?.endNotSet">
+      <div *ngIf="mainForm.errors?.endInPast">Není možné plánovat do minulosti</div>
+      <div *ngIf="mainForm.errors?.endNotSet">Musí být nastaveno čas a datum konce</div>
     </div>
 
     <div class="form-group" *ngIf="mode == M.CreateCurrent">
@@ -66,7 +83,7 @@
       <textarea class="form-control" id="notePublic" formControlName="notePublic"></textarea>
     </div>
 
-    <button class="btn btn-primary" type="submit">
+    <button class="btn btn-primary" type="submit" [disabled]="!mainForm.valid">
       {{mode == M.CreateCurrent ? 'Nastavit aktuální stav' : (mode == M.CreatePlanned ? 'Naplánovat stav' : 'Upravit stav')}}
     </button>
   </form>
