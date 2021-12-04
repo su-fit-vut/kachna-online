@@ -5,88 +5,77 @@ Author: David Chocholatý
 
 <h1>Můj profil</h1>
 
-<div class="container">
-  <form novalidate autocomplete="off" #form="ngForm" (submit)="onSaveChanges(form)">
-    <!--<input type="hidden" name="id" [value]="userService.userDetail.id" /> --> <!-- FIXME: Is there any ID? -->
-
-    <div class="form-group row">
-      <label for="staticName" class="col-sm-2 col-form-label">Jméno</label>
-      <div class="col-sm-10">
-        <input #name="ngModel" [(ngModel)]="authenticationService.user.name" class="form-control-plaintext"
-               id="staticName" name="name" placeholder="Jméno"
-               readonly type="text">
+<div class="row">
+  <div class="col-xl-6">
+    <form novalidate autocomplete="off" #form="ngForm" (submit)="onSaveChanges(form)">
+      <div class="form-group form-row">
+        <label for="staticName" class="col-2 col-form-label">Jméno</label>
+        <div class="col-10">
+          <input #name="ngModel" [(ngModel)]="authenticationService.user.name" class="form-control-plaintext"
+                 id="staticName" name="name" placeholder="Jméno"
+                 readonly type="text">
+        </div>
       </div>
-    </div>
 
-    <div class="form-group row">
-      <label for="staticEmail" class="col-sm-2 col-form-label">E-mail</label>
-      <div class="col-sm-10">
-        <input #email="ngModel" [(ngModel)]="authenticationService.user.email" class="form-control-plaintext"
-               id="staticEmail" name="email" placeholder="E-mail"
-               readonly type="text">
+      <div class="form-group form-row">
+        <label for="staticEmail" class="col-2 col-form-label">E-mail</label>
+        <div class="col-10">
+          <input #email="ngModel" [(ngModel)]="authenticationService.user.email" class="form-control-plaintext"
+                 id="staticEmail" name="email" placeholder="E-mail"
+                 readonly type="text">
+        </div>
       </div>
-    </div>
 
-    <div class="form-group row">
-      <label for="nickname" class="col-sm-3 col-form-label">Přezdívka</label>
-      <div class="col-sm-9">
-        <input #nickname="ngModel" [(ngModel)]="authenticationService.user.nickname" [class.invalid]="nickname.invalid"
-               class="form-control" id="nickname" name="nickname" placeholder="Přezdívka"
-               type="text" maxlength="128"> <!--  FIXME: What is the max length? -->
+      <div class="form-group form-row">
+        <label for="nickname" class="col-2 col-form-label">Přezdívka</label>
+        <div class="col-10">
+          <input #nickname="ngModel" [(ngModel)]="authenticationService.user.nickname"
+                 [class.invalid]="nickname.invalid"
+                 class="form-control" id="nickname" name="nickname" placeholder="Přezdívka"
+                 type="text" maxlength="128"> <!--  FIXME: What is the max length? -->
+        </div>
       </div>
-    </div>
 
-    <div class="form-group row">
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="gamificationCheckbox" name="gamification"
-               #gamification="ngModel" [(ngModel)]="authenticationService.user.gamificationConsent">
-        <label class="custom-control-label" for="gamificationCheckbox">Souhlas s gamifikací</label>
-      </div>
-      <div class="ml-2">
-        <button
-          type="button" class="btn"
-          triggers="click hover focus" [autoClose]="true" [closeDelay]="500"
-          [ngbTooltip]="gamificationConsentTooltipText"
-          #tooltip3="ngbTooltip"
-        > <!-- FIXME: Add actual tooltip message. -->
-          <i class="far fa-question-circle"></i>
-        </button>
-      </div>
-    </div>
+      <div class="form-group">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="gamificationCheckbox" name="gamification"
+                 #gamification="ngModel" [(ngModel)]="authenticationService.user.gamificationConsent">
+          <label class="form-check-label" for="gamificationCheckbox">Souhlas s gamifikací</label>
 
-    <div class="form-group">
-      <button type="button" class="btn btn-outline-secondary dropdown dropdown-toggle" (click)="collapse.toggle()"
+          <button class="btn p-0 ml-3" type="button" triggers="click hover focus" [autoClose]="true" [closeDelay]="500"
+                  [ngbTooltip]="gamificationConsentTooltipText" #tooltip3="ngbTooltip">
+            <i class="far fa-question-circle"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+      <button type="button" class="btn btn-outline-secondary dropdown dropdown-toggle mb-2" (click)="collapse.toggle()"
               [attr.aria-expanded]="!isCardInfoCollapsed"
               aria-controls="collapseExample">
         Nastavení karty
       </button>
-      <div class="dropdown-item" #collapse="ngbCollapse" [(ngbCollapse)]="isCardInfoCollapsed">
 
-        <div class="form-group row">
-          <label for="card" class="col-sm-3 col-form-label">Přiřazovací kód karty</label>
-          <div class="col-sm-8">
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="isCardInfoCollapsed">
+        <div class="form-group form-row">
+          <label for="card" class="col-3 col-form-label">Přiřazovací kód karty</label>
+          <div class="col-9 d-flex flex-nowrap flex-row align-content-center">
             <input #card="ngModel" [(ngModel)]="authenticationService.user.cardCode" [class.invalid]="card.invalid"
                    class="form-control" id="card" name="card" placeholder="Kód karty"
                    type="text" maxlength="5" pattern="[A-Z]{5}">
-            <!--  FIXME: Are there any other requirements for the card number except for maxlength? -->
-          </div>
-          <div class="col-sm-1">
+
             <button
-              type="button" class="btn"
+              type="button" class="btn p-0 ml-3"
               triggers="click hover focus" [autoClose]="true" [closeDelay]="500" [ngbTooltip]="cardCodeTooltipText"
-              #tooltip="ngbTooltip"
-            > <!-- FIXME: Add actual tooltip message. -->
+              #tooltip="ngbTooltip">
               <i class="far fa-question-circle"></i>
             </button>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group col-md-4">
-        <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="form.invalid">Uložit změny</button>
       </div>
-    </div>
-  </form>
+
+      <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Uložit změny</button>
+    </form>
+  </div>
 </div>
