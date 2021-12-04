@@ -34,24 +34,28 @@ export class PlanStateComponent implements OnInit {
       return {endNotSet: true};
     }
 
+    let now = new Date();
+    now.setSeconds(0, 0);
+
     end.setHours(endTime?.hour, endTime?.minute, 0);
     if (this.mode == Mode.CreateCurrent || this.mode == Mode.ModifyCurrent) {
       // Does not require start date, only check that it ends in the future.
-      return end > new Date() ? null : {endInPast: true};
+      return end > now ? null : {endInPast: true};
     } else {
       let start = this.nativeDateAdapter.toModel(control.get('startDate')?.value);
       let startTime = control.get('startTime')?.value;
       if (!start || !startTime) {
         return {startNotSet: true};
       }
-      start.setHours(startTime?.hour, startTime?.minute, 0);
-      if (start < new Date()) {
+
+      start.setHours(startTime?.hour, startTime?.minute, 0, 0);
+      if (start < now) {
         return {startInPast: true};
       }
+
       return start < end ? null : {invalidDateRange: true};
     }
   }
-
 
   ST = ClubStateTypes;
   M = Mode;
@@ -88,20 +92,20 @@ export class PlanStateComponent implements OnInit {
 
       if (this.mode != Mode.CreateCurrent && this.mode != Mode.CreatePlanned && state.state != ClubStateTypes.Closed) {
         this.mainForm.patchValue({
-            startDate: this.nativeDateAdapter.fromModel(state.start),
-            startTime: {
-                hour: state.start.getHours(),
-                minute: state.start.getMinutes()
-            },
+          startDate: this.nativeDateAdapter.fromModel(state.start),
+          startTime: {
+            hour: state.start.getHours(),
+            minute: state.start.getMinutes()
+          },
 
-            plannedEndDate: this.nativeDateAdapter.fromModel(state.plannedEnd),
-            plannedEndTime: {
-                hour: state.plannedEnd.getHours(),
-                minute: state.plannedEnd.getMinutes()
-            },
+          plannedEndDate: this.nativeDateAdapter.fromModel(state.plannedEnd),
+          plannedEndTime: {
+            hour: state.plannedEnd.getHours(),
+            minute: state.plannedEnd.getMinutes()
+          },
 
-            noteInternal: state.noteInternal,
-            note: state.note
+          noteInternal: state.noteInternal,
+          note: state.note
         });
       }
 
