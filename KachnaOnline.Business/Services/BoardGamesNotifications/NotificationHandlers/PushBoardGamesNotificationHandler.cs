@@ -22,7 +22,7 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
 
         public PushBoardGamesNotificationHandler(IOptionsMonitor<PushOptions> pushOptions, PushServiceClient pushClient,
             IBoardGamesService boardGamesService, IPushSubscriptionsService pushSubscriptionsService,
-            ILogger<PushBoardGamesNotificationHandler> logger) : base(pushOptions, pushClient)
+            ILogger<PushBoardGamesNotificationHandler> logger) : base(pushOptions, pushClient, logger)
         {
             _boardGamesService = boardGamesService;
             _pushSubscriptionsService = pushSubscriptionsService;

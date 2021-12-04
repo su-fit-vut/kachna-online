@@ -30,11 +30,25 @@ namespace KachnaOnline.Business.Facades
         }
 
         /// <summary>
+        /// Checks whether VAPID keys required for push notifications are present.
+        /// </summary>
+        /// <exception cref="KeysNotAvailableException">When they are not.</exception>
+        private void CheckVapidKeys()
+        {
+            if (string.IsNullOrEmpty(_pushOptions.CurrentValue.PrivateKey) ||
+                string.IsNullOrEmpty(_pushOptions.CurrentValue.PublicKey))
+            {
+                throw new KeysNotAvailableException();
+            }
+        }
+
+        /// <summary>
         /// Returns a public VAPID key.
         /// </summary>
         /// <returns>The public VAPID key.</returns>
         public string GetPublicKey()
         {
+            this.CheckVapidKeys();
             return _pushOptions.CurrentValue.PublicKey;
         }
 
@@ -46,6 +60,7 @@ namespace KachnaOnline.Business.Facades
         /// <exception cref="PushNotificationManipulationFailedException">When the subscription failed.</exception>
         public async Task Subscribe(ClaimsPrincipal user, PushSubscriptionDto subscription)
         {
+            this.CheckVapidKeys();
             var subscriptionModel = _mapper.Map<PushSubscription>(subscription);
             try
             {
@@ -55,6 +70,7 @@ namespace KachnaOnline.Business.Facades
             {
                 subscriptionModel.MadeById = null;
             }
+
             await _pushSubscriptionsService.CreateOrUpdateSubscription(subscriptionModel);
         }
 
@@ -64,6 +80,7 @@ namespace KachnaOnline.Business.Facades
         /// <param name="endpoint">Endpoint to stop sending push notifications to.</param>
         public async Task Unsubscribe(string endpoint)
         {
+            this.CheckVapidKeys();
             await _pushSubscriptionsService.DeletePushSubscription(endpoint);
         }
 
@@ -74,6 +91,7 @@ namespace KachnaOnline.Business.Facades
         /// <returns>The configuration of the <paramref name="endpoint"/>. Null if no configuration is present.</returns>
         public async Task<PushSubscriptionConfiguration> GetSubscription(string endpoint)
         {
+            this.CheckVapidKeys();
             var subscription = await _pushSubscriptionsService.GetPushSubscription(endpoint);
             if (subscription == null)
             {
