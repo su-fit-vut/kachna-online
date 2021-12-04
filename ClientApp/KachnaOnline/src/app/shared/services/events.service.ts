@@ -93,7 +93,7 @@ export class EventsService {
         this.eventsList = res;
       }).catch((error: any) => {
       console.log(error);
-      this.toastr.error("Nepodařilo se načíst aktuální akce.", "Načtení akcí");
+      this.toastr.error("Nepodařilo se načíst akce.", "Akce");
       return;
     });
   }
@@ -116,7 +116,7 @@ export class EventsService {
         this.eventsList = res;
       }).catch((error: any) => {
       console.log(error);
-      this.toastr.error("Nepodařilo se načíst akce.", "Načtení akcí");
+      this.toastr.error("Nepodařilo se načíst akce.", "Akce");
       return;
     });
   }
@@ -134,11 +134,11 @@ export class EventsService {
       this.removeEventRequest(this.eventDetail.id).subscribe(
         res => {
           this.refreshEventsList();
-          this.toastr.success('Akce úspěšně zrušena.', 'Zrušení akce');
+          this.toastr.success("Akce úspěšně zrušena.", "Zrušení akce");
         },
         err => {
           console.log(err)
-          this.toastr.error('Akci se nepovedlo zrušit.', 'Zrušení akce');
+          this.toastr.error("Akci se nepovedlo zrušit.", "Zrušení akce");
         }
       );
     }
@@ -150,8 +150,11 @@ export class EventsService {
         this.eventDetail = res as Event;
       },
       err => {
-        console.log(err);
-        this.toastr.error(`Nepodařilo se načíst akci s ID ${eventId}.`, "Načtení akcí");
+        if (err.status && err.status === 404) {
+          this.toastr.error("Hledaná akce neexistuje.", "Akce");
+        } else {
+          this.toastr.error("Nepodařilo se načíst informace o požadované akci.", "Akce");
+        }
       }
     );
   }
@@ -164,9 +167,9 @@ export class EventsService {
     this.unlinkLinkedStateRequest(linkedStateId).toPromise()
       .then(() => {
         this.refreshLinkedStatesList(this.eventDetail.id);
-        this.toastr.success("Odebrání připojeného stavu proběhlo úspěšně.", "Odebrání připojených stavů");
+        this.toastr.success("Odpojení navázaného stavu proběhlo úspěšně.", "Odpojení navázaných stavů");
       }).catch((error: any) => {
-      this.toastr.error("Odebrání připojeného stavu selhalo.", "Obebrání připojených stavů");
+      this.toastr.error("Odpojení navázaného stavu selhalo.", "Odpojení navázaných stavů");
       return throwError(error);
     });
   }
@@ -176,14 +179,14 @@ export class EventsService {
   }
 
   unlinkAllLinkedStates() {
-    if (confirm(`Opravdu si přejete odebrat všechny připojené stavy z akce ${this.eventDetail.name}?`)) {
+    if (confirm(`Opravdu si přejete odpojit od akce ${this.eventDetail.name} všechny stavy, které jsou k ní nyní navázány? Tato operace dané stavy nezruší.`)) {
       this.unlinkAllLinkedStatesRequest().toPromise()
         .then(() => {
           this.refreshLinkedStatesList(this.eventDetail.id);
-          this.toastr.success("Odebrání všech připojených stavů proběhlo úspěšně.", "Odebrání připojených stavů");
+          this.toastr.success("Odpojení navázaných stavů proběhlo úspěšně.", "Odpojení navázaných stavů");
         }).catch((error: any) => {
           console.log(error);
-          this.toastr.error("Odebrání všech připojených stavů selhalo.", "Odebrání připojených stavů");
+          this.toastr.error("Odpojení navázaných stavů selhalo.", "Odpojení navázaných stavů");
           return;
         }
       );
@@ -199,15 +202,15 @@ export class EventsService {
   }
 
   linkAllConflictingStates(conflictingStatesIds: number[]) {
-    if (confirm(`Opravdu si přejete přidat všechny existující stavy k akci ${this.eventDetail.name}?`)) {
+    if (confirm(`Opravdu si přejete navázat k akci ${this.eventDetail.name} všechny stavy, které jsou v jejím průběhu naplánovány?`)) {
       this.linkAllConflictingStatesRequest(conflictingStatesIds).toPromise()
         .then(() => {
           this.refreshLinkedStatesList(this.eventDetail.id);
           this.refreshConflictingStatesList(this.eventDetail.id);
-          this.toastr.success("Přidání všech existujících stavů proběhlo úspěšně.", "Přidání existujících stavů");
+          this.toastr.success("Navázání všech stavů proběhlo úspěšně.", "Navázání stavů k akci");
         }).catch((error: any) => {
           console.log(error);
-          this.toastr.error("Přidání všech existujících stavů selhalo.", "Přidání existujících stavů");
+          this.toastr.error("Navázání všech stavů selhalo.", "Navázání stavů k akci");
           return;
         }
       );
@@ -223,10 +226,10 @@ export class EventsService {
       .then(() => {
         this.refreshLinkedStatesList(this.eventDetail.id);
         this.refreshConflictingStatesList(this.eventDetail.id);
-        this.toastr.success("Přidání existujícího stavu proběhlo úspěšně.", "Přidání existujících stavů");
+        this.toastr.success("Navázání stavu proběhlo úspěšně.", "Navázání stavu k akci");
       }).catch((error: any) => {
         console.log(error);
-        this.toastr.error("Přidání existujícího stavu selhalo.", "Přidání existujících stavů");
+        this.toastr.error("Navázání stavu selhalo.", "Navázání stavu k akci");
       }
     );
   }
@@ -258,7 +261,7 @@ export class EventsService {
         this.filterConflictingStates(this.unlinkedOnly);
       }).catch((error: any) => {
         console.log(error);
-        this.toastr.error(`Načtení všech možných existujících stavů pro event ${this.eventDetail.name} selhalo.`, "Načtení existujících stavů");
+        this.toastr.error(`Načtení stavů, které jsou naplánované v termínu akce ${this.eventDetail.name}, selhalo.`, "Akce");
       }
     );
   }
@@ -330,7 +333,7 @@ export class EventsService {
       .then(() => {
         this.linkConflictingState(conflictingState.id);
       }).catch((error: any) => {
-      this.toastr.error("Odebrání připojeného stavu selhalo.", "Obebrání připojených stavů");
+      this.toastr.error("Přepojování stavu selhalo.", "Navázání stavu k akci");
       return throwError(error);
     });
   }
@@ -342,7 +345,7 @@ export class EventsService {
           this.linkConflictingState(conflictingState.id);
         }).catch((error: any) => {
           console.log(error);
-          this.toastr.error("Odebrání připojených stavů selhalo.", "Odebrání připojených stavů");
+          this.toastr.error("Přepojování stavů k jiné akci selhalo.", "Navázání stavů k akci");
           return;
         }
       );
