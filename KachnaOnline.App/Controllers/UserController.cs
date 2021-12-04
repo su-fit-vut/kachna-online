@@ -121,7 +121,7 @@ namespace KachnaOnline.App.Controllers
         [HttpPut("me/nickname")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> SetUserNickname(
-            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)]
+            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] [StringLength(128)]
             string nickname)
         {
             var id = int.Parse(this.User.FindFirstValue(IdentityConstants.IdClaim));
@@ -149,7 +149,8 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [Authorize(Roles = AuthConstants.Admin)]
-        public async Task<IActionResult> AssignRole(int id, string roleName, [Required] [FromQuery] bool state)
+        public async Task<IActionResult> AssignRole(int id, [StringLength(64)] string roleName,
+            [Required] [FromQuery] bool state)
         {
             try
             {
@@ -194,7 +195,7 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = AuthConstants.Admin)]
-        public async Task<IActionResult> ResetRole(int id, string roleName)
+        public async Task<IActionResult> ResetRole(int id, [StringLength(64)] string roleName)
         {
             try
             {
