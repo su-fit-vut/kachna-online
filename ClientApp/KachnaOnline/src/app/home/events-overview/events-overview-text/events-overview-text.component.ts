@@ -14,7 +14,7 @@ import { EventItem, StateItem } from "../events-overview.component";
 @Component({
   selector: 'app-events-overview-text',
   templateUrl: './events-overview-text.component.html',
-  styleUrls: ['./events-overview-text.component.css']
+  styleUrls: ['./events-overview-text.component.css', '../../home.component.css']
 })
 export class EventsOverviewTextComponent implements OnInit {
   events: EventItem[] = [];
