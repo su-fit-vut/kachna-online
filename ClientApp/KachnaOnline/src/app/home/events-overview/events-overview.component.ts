@@ -15,22 +15,20 @@ export class EventsOverviewComponent implements OnInit {
   constructor() {
   }
 
-  toggleModel: any = {
-    disabled: false,
-    value: null
-  }
+  calendarView: boolean = true;
 
   ngOnInit(): void {
     let openView = localStorage.getItem(environment.homePageViewStorageName);
     if (openView === null) {
-      this.toggleModel.value = true;
+      this.calendarView = true;
     } else {
-      this.toggleModel.value = JSON.parse(openView) === true;
+      this.calendarView = JSON.parse(openView) === true;
     }
   }
 
-  onViewChange(newValue: boolean): void {
-    localStorage.setItem(environment.homePageViewStorageName, `${newValue}`);
+  setCalendarView(enabled: boolean): void {
+    localStorage.setItem(environment.homePageViewStorageName, `${enabled}`);
+    this.calendarView = enabled;
   }
 }
 
