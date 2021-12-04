@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace KachnaOnline.Dto.ClubStates
 {
@@ -9,13 +10,13 @@ namespace KachnaOnline.Dto.ClubStates
     {
         /// <summary>
         /// The ID of the new 'made by' user for the repeating state and its planned states that haven't started yet.
-        /// Set to null not to modify this property. 
+        /// Set to null not to modify this property.
         /// </summary>
         public int? MadeById { get; set; }
 
         /// <summary>
         /// The new state type for the repeating state and its planned states that haven't started yet.
-        /// Set to null not to modify this property. 
+        /// Set to null not to modify this property.
         /// </summary>
         public StateType? State { get; set; }
 
@@ -31,6 +32,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// Set to an empty string to remove the note.
         /// Set to null not to modify this property.
         /// </summary>
+        [StringLength(1024)]
         public string NoteInternal { get; set; }
 
         /// <summary>
@@ -38,6 +40,7 @@ namespace KachnaOnline.Dto.ClubStates
         /// Set to an empty string to remove the note.
         /// Set to null not to modify this property.
         /// </summary>
+        [StringLength(1024)]
         public string NotePublic { get; set; }
     }
 }
