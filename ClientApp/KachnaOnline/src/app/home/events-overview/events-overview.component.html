@@ -6,7 +6,7 @@ Author: František Nečas
 <div class="container">
   <div class="mb-2 row">
     <div class="col-3 p-0">
-      <div class="d-none d-sm-flex justify-content-start">
+      <div class="d-none d-md-flex justify-content-start">
         <app-loading-spinner></app-loading-spinner>
       </div>
     </div>
@@ -14,7 +14,7 @@ Author: František Nečas
       <h2>Plán akcí a otevírání klubu</h2>
     </div>
     <div class="col-3 p-0">
-      <div class="d-none d-sm-flex justify-content-end">
+      <div class="d-none d-md-flex justify-content-end">
         <div class="btn-group" role="group">
           <button type="button" class="btn {{calendarView ? 'btn-primary' : 'btn-outline-primary'}}"
                   (click)="setCalendarView(true)"><i class="far fa-calendar-alt"></i></button>
@@ -26,10 +26,10 @@ Author: František Nečas
   </div>
 </div>
 
-<div class="d-block d-sm-none">
+<div class="d-block d-md-none">
   <app-events-overview-text></app-events-overview-text>
 </div>
-<div class="d-none d-sm-block">
+<div class="d-none d-md-block">
   <ng-container *ngIf="calendarView">
     <app-events-overview-calendar></app-events-overview-calendar>
   </ng-container>
