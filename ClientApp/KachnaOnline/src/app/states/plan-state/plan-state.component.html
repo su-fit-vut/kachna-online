@@ -1,6 +1,7 @@
 <h1 *ngIf="mode == M.CreatePlanned">Naplánovat budoucí stav klubu</h1>
 <h1 *ngIf="mode == M.ModifyCurrent || mode == M.CreateCurrent">Změnit aktuální stav klubu</h1>
-<h1 *ngIf="mode == M.ModifyPlanned">Upravit naplánovaný stav klubu</h1>
+<app-back-arrow *ngIf="mode == M.ModifyPlanned" [headingSize]="1"
+                heading="Upravit naplánovaný stav klubu"></app-back-arrow>
 
 <div class="mb-3" *ngIf="mode != M.CreatePlanned && referenceState && referenceState.state != ST.Closed">
   <button class="btn btn-outline-danger" (click)="closeOrDeleteState()">
