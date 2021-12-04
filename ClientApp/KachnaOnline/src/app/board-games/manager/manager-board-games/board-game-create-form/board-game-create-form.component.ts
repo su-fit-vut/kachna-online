@@ -2,13 +2,28 @@
 // Author: František Nečas
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormGroup, Validators, FormBuilder, ValidationErrors, ValidatorFn, AbstractControl } from "@angular/forms";
 import { BoardGame } from "../../../../models/board-games/board-game.model";
 import { ToastrService } from "ngx-toastr";
 import { BoardGamesService } from "../../../../shared/services/board-games.service";
 import { BoardGameCategory } from "../../../../models/board-games/board-game-category.model";
 import { UserDetail } from "../../../../models/users/user.model";
-import { MadeByUser } from "../../../../models/users/made-by-user.model";
+
+export const playersValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const min = control.get('playersMin');
+  const max = control.get('playersMax');
+  if (min === null || max === null || min.value === null || max.value === null || min.value <= max.value) {
+    return null;
+  } else {
+    return {playersWrong: true};
+  }
+}
+
+export const stockValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const stock = control.get('inStock');
+  const unavailable = control.get('unavailable');
+  return (stock && unavailable && stock.value >= unavailable.value) ? null : {stockWrong: true};
+}
 
 @Component({
   selector: 'app-board-game-create-form',
@@ -22,28 +37,29 @@ export class BoardGameCreateFormComponent implements OnInit {
   @Output() formSubmitted: EventEmitter<FormGroup> = new EventEmitter();
   categories: BoardGameCategory[] = []
 
-  form = new FormGroup({
-    name: new FormControl(''),
-    description: new FormControl(''),
-    image: new FormGroup({
-      file: new FormControl(undefined),
+  form = this.fb.group({
+    name: ['', [Validators.required, Validators.maxLength(256)]],
+    description: [''],
+    image: this.fb.group({
+      file: [undefined]
     }),
-    imageUrl: new FormControl(''),
-    playersMin: new FormControl(undefined),
-    playersMax: new FormControl(undefined),
-    inStock: new FormControl(1),
-    category: new FormControl(''),
-    categoryId: new FormControl(undefined),
-    noteInternal: new FormControl(''),
-    ownerId: new FormControl(undefined),
-    unavailable: new FormControl(0),
-    visible: new FormControl(true),
-    defaultReservationDays: new FormControl(undefined),
-  })
+    imageUrl: [''],
+    playersMin: [undefined, Validators.min(1)],
+    playersMax: [undefined, Validators.min(1)],
+    inStock: [1, [Validators.required, Validators.min(0)]],
+    category: ['', Validators.required],
+    categoryId: [undefined, Validators.required],
+    noteInternal: ['', Validators.maxLength(1024)],
+    ownerId: [undefined],
+    unavailable: [0, [Validators.required, Validators.min(0)]],
+    visible: [true, Validators.required],
+    defaultReservationDays: [undefined, Validators.min(1)],
+  }, {validators: [playersValidator, stockValidator]})
   image: string = "";
   category: string = "";
 
-  constructor(private toastrService: ToastrService, private boardGamesService: BoardGamesService) {
+  constructor(private toastrService: ToastrService, private boardGamesService: BoardGamesService,
+              private fb: FormBuilder) {
   }
 
   ngOnChanges(): void {
@@ -59,7 +75,6 @@ export class BoardGameCreateFormComponent implements OnInit {
         category: this.startingState.category.name,
         categoryId: this.startingState.category.id,
         noteInternal: this.startingState.noteInternal,
-        ownerId: this.startingState.owner.id,
         unavailable: this.startingState.unavailable,
         visible: this.startingState.visible,
         defaultReservationDays: this.startingState.defaultReservationDays
@@ -109,7 +124,7 @@ export class BoardGameCreateFormComponent implements OnInit {
     for (let category of this.categories) {
       if (category.name == event) {
         this.category = category.name;
-        this.form.patchValue({categoryId: category.id});
+        this.form.patchValue({categoryId: category.id, category: category.name});
         return
       }
     }

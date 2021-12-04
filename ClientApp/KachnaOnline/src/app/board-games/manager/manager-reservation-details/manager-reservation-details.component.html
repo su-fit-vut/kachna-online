@@ -12,6 +12,7 @@ Author: František Nečas
 </div>
 
 <app-reservation-items [items]="items" [reservation]="reservation" (itemStateUpdated)="fetchItem($event)"
+                       class="clickable"
                        (reservationItemClicked)="routeToBoardGame($event)" [managerView]="true"></app-reservation-items>
 
 <div class="d-flex mt-2">
