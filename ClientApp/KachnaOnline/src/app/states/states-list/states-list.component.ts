@@ -15,7 +15,7 @@ export class StatesListComponent implements OnInit {
   isInFuture: boolean = true;
   loaded: boolean = false;
   hasError: boolean = false;
-  sortingFromNearest: boolean = true;
+  sortingFromOldest: boolean = true;
 
   currentMonth: Date;
 
@@ -37,9 +37,9 @@ export class StatesListComponent implements OnInit {
 
     this.service.getMonth(month, false).subscribe(res => {
         this.states = res;
-        this.sort(this.sortingFromNearest);
+        this.sort(this.sortingFromOldest);
       },
-      err => this.hasError = true,
+      _ => this.hasError = true,
       () => this.loaded = true);
   }
 
@@ -47,13 +47,13 @@ export class StatesListComponent implements OnInit {
     this.service.delete(state.id).subscribe(_ => this.monthChanged(this.currentMonth));
   }
 
-  sort(fromNearest: boolean) {
-    this.sortingFromNearest = fromNearest;
+  sort(fromOldest: boolean) {
+    this.sortingFromOldest = fromOldest;
 
-    if (fromNearest) {
-      this.states.sort((a, b) => b.start.getTime() - a.start.getTime());
-    } else {
+    if (fromOldest) {
       this.states.sort((a, b) => a.start.getTime() - b.start.getTime());
+    } else {
+      this.states.sort((a, b) => b.start.getTime() - a.start.getTime());
     }
   }
 
