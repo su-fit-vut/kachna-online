@@ -19,6 +19,7 @@ import { throwError } from "rxjs";
 import { HttpStatusCode } from "@angular/common/http";
 import { ImageUploadService } from "../../shared/services/image-upload.service";
 import { EventModification } from "../../models/events/event-modification.model";
+import { DateUtils } from "../../shared/utils/date-utils";
 
 
 @Component({
@@ -156,8 +157,8 @@ export class EventFormComponent implements OnInit {
     if (!this.verifyDates(from, to)) {
       return;
     }
-    eventData.from = this.dateTimeToString(formVal.fromDate, formVal.fromTime);
-    eventData.to = this.dateTimeToString(formVal.toDate, formVal.toTime);
+    eventData.from = DateUtils.dateTimeToString(formVal.fromDate, formVal.fromTime, this.nativeDateAdapter);
+    eventData.to = DateUtils.dateTimeToString(formVal.toDate, formVal.toTime, this.nativeDateAdapter);
 
     // Process image.
     let image = this.form.value['image'];
@@ -233,6 +234,7 @@ export class EventFormComponent implements OnInit {
         this.form.reset();
         this.eventsService.refreshEventsList();
         this.toastr.success('Akce úspěšně naplánována.', 'Naplánovat akci');
+        this.router.navigate(["/events", res.id]).finally();
       },
       err => {
         console.log(err);
@@ -247,7 +249,7 @@ export class EventFormComponent implements OnInit {
       res => {
         this.eventsService.refreshEventsList();
         this.toastr.success('Akce úspěšně upravena.', 'Upravit akci');
-        this.router.navigate([`/events/${eventId}`]).then();
+        this.router.navigate(["/events", eventId]).then();
       },
       err => {
         console.log(err);
@@ -266,15 +268,6 @@ export class EventFormComponent implements OnInit {
       let eventId = Number(params.get('eventId'));
       this.router.navigate([`/events/${eventId}/linked-states`]).then();
     });
-  }
-
-  private dateTimeToString(date: NgbDateStruct, time: NgbTimeStruct): string {
-    let dateObj = this.nativeDateAdapter.toModel(date);
-    dateObj?.setTime(dateObj?.getTime() - dateObj?.getTimezoneOffset());
-    dateObj?.setHours(time.hour);
-    dateObj?.setMinutes(time.minute);
-    dateObj?.setSeconds(0);
-    return dateObj?.toISOString() ?? "";
   }
 
   imageChanged(event: any): void {
