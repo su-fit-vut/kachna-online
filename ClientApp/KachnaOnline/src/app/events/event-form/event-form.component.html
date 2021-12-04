@@ -63,46 +63,40 @@ Author: David Chocholatý
     </div>
   </div>
 
-  <div class="d-flex flex-nowrap flex-row justify-content-between">
-    <div class="form-group d-flex align-items-center">
-      <label>Trvání od</label>
-
-      <div class="input-group mx-3">
-        <input class="form-control" [minDate]="calendar.getToday()" (click)="fromDate.open()" type="text" ngbDatepicker
-               #fromDate="ngbDatepicker" id="fromDate" formControlName="fromDate"
-               placeholder="dd. MM. yyyy" autocomplete="false" required
-               [class.is-invalid]="form.get('fromDate')?.errors || form.errors?.incorrectDateRange || form.errors?.planningForPast"/>
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="fromDate.toggle()" type="button"><i
-            class="far fa-calendar"></i></button>
-        </div>
+  <div class="form-group d-flex align-items-center">
+    <label>Trvání od</label>
+    <div class="input-group mx-3">
+      <input class="form-control" [minDate]="calendar.getToday()" (click)="fromDate.open()" type="text" ngbDatepicker
+             #fromDate="ngbDatepicker" id="fromDate" formControlName="fromDate"
+             placeholder="dd. MM. yyyy" autocomplete="false" required
+             [class.is-invalid]="form.get('fromDate')?.errors || form.errors?.incorrectDateRange || form.errors?.planningForPast"/>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary calendar" (click)="fromDate.toggle()" type="button"><i
+          class="far fa-calendar"></i></button>
       </div>
-      <ngb-timepicker formControlName="fromTime" required
-                      [class.is-invalid]="!form.value.fromTime || form.value.fromTime.invalid"></ngb-timepicker>
     </div>
-    <div class="form-group d-flex align-items-center">
-      <div class="form-row">
-        <label>Trvání do</label>
+    <ngb-timepicker formControlName="fromTime" required
+                    [class.is-invalid]="!form.value.fromTime || form.value.fromTime.invalid"></ngb-timepicker>
+  </div>
+  <div class="form-group d-flex align-items-center">
+    <label>Trvání do</label>
+    <div class="input-group mx-3">
+      <input class="form-control" [minDate]="calendar.getToday()" (click)="toDate.open()" type="text" ngbDatepicker
+             #toDate="ngbDatepicker" id="toDate" formControlName="toDate"
+             placeholder="dd. MM. yyyy" autocomplete="false" required
+             [class.is-invalid]="!form.value.toDate"/>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" (click)="toDate.toggle()" type="button"><i
+          class="far fa-calendar"></i></button>
       </div>
-      <div class="input-group mx-3">
-        <input class="form-control" [minDate]="calendar.getToday()" (click)="toDate.open()" type="text" ngbDatepicker
-               #toDate="ngbDatepicker" id="toDate" formControlName="toDate"
-               placeholder="dd. MM. yyyy" autocomplete="false" required
-               [class.is-invalid]="!form.value.toDate"/>
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" (click)="toDate.toggle()" type="button"><i
-            class="far fa-calendar"></i></button>
-        </div>
-      </div>
-
-      <ngb-timepicker formControlName="toTime" required [class.is-invalid]="!form.value.toTime"></ngb-timepicker>
     </div>
+
+    <ngb-timepicker formControlName="toTime" required [class.is-invalid]="!form.value.toTime"></ngb-timepicker>
   </div>
   <div class="text-danger">
     <div *ngIf="form.errors?.incorrectDateRange">Akce musí začínat dříve, než skončí.</div>
     <div *ngIf="form.errors?.planningForPast">Není možné plánovat akce do minulosti.</div>
   </div>
-
 
   <div class="d-flex flex-wrap justify-content-between">
     <div class="form-group mr-4 mt-3">
