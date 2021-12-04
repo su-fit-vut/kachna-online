@@ -161,27 +161,10 @@ Author: David Chocholatý
             <div NgbDropdownAnchor>
               <div class="btn-group btn-block d-xl-flex d-lg-flex d-md-flex d-sm-flex d-none">
                 <button type="button" class="btn btn-secondary text-nowrap btn-block " style="text-align:left"
-                        routerLink="users" routerLinkActive="active" (click)="isMenuCollapsed = true">
+                        routerLink="users" routerLinkActive="active">
                   Uživatelé
                 </button>
-                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right"
-                        ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                        data-reference="parent">
-                  <span class="sr-only">Toggle Dropdown</span>
-                </button>
               </div>
-              <button class="btn btn-secondary text-nowrap btn-block d-xl-none d-lg-none d-md-none d-sm-none"
-                      style="text-align:left" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Uživatelé</button>
-            </div>
-            <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" ngbDropdownMenu>
-              <button ngbDropdownItem (click)="isMenuCollapsed = true">...
-              </button>
-              <button class="dropdown-item d-lg-none d-xl-none d-md-none d-sm-none" (click)="isMenuCollapsed = true"
-                      routerLink="users" routerLinkActive="active" ngbDropdownItem>Seznam uživatelů
-              </button>
-              <div class="dropdown-divider"></div>
-              <button ngbDropdownItem (click)="isMenuCollapsed = true">...
-              </button>
             </div>
           </div>
         </li>
