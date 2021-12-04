@@ -10,6 +10,11 @@ import { Event } from "../../models/events/event.model";
 import { ClubState } from "../../models/states/club-state.model";
 import { formatDate } from "@angular/common";
 import { EventModification } from "../../models/events/event-modification.model";
+import {
+  DeletionConfirmationModalComponent,
+  DeletionType
+} from "../components/deletion-confirmation-modal/deletion-confirmation-modal.component";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +26,7 @@ export class EventsService {
   constructor(
     private http: HttpClient,
     private toastr: ToastrService,
+    private _modalService: NgbModal,
   ) {
   }
 
@@ -125,23 +131,21 @@ export class EventsService {
     this.eventDetail = Object.assign({}, selectedEventDetail);
   }
 
-  handleRemoveEventRequest(eventDetail?: Event) {
+  handleRemoveEvent(eventDetail?: Event) {
     if (eventDetail) {
       this.eventDetail = Object.assign({}, eventDetail);
     }
 
-    if (confirm("Opravdu chcete odstranit akci " + this.eventDetail.name + "?")) {
-      this.removeEventRequest(this.eventDetail.id).subscribe(
-        res => {
-          this.refreshEventsList();
-          this.toastr.success("Akce úspěšně zrušena.", "Zrušení akce");
-        },
-        err => {
-          console.log(err)
-          this.toastr.error("Akci se nepovedlo zrušit.", "Zrušení akce");
-        }
-      );
-    }
+    this.removeEventRequest(this.eventDetail.id).subscribe(
+      res => {
+        this.refreshEventsList();
+        this.toastr.success("Akce úspěšně zrušena.", "Zrušení akce");
+      },
+      err => {
+        console.log(err)
+        this.toastr.error("Akci se nepovedlo zrušit.", "Zrušení akce");
+      }
+    );
   }
 
   public getEventData(eventId: number, withLinkedStates: boolean = false) {
@@ -365,5 +369,19 @@ export class EventsService {
 
   getFormattedToDate(format: string = "d. M. yyyy HH:mm") {
     return formatDate(this.eventDetail.to, format, "cs-CZ")
+  }
+
+  openEventDeletionConfirmationModal(eventDetail: Event) {
+    const modal = this._modalService.open(DeletionConfirmationModalComponent);
+    modal.componentInstance.name = eventDetail.name;
+    modal.componentInstance.type = DeletionType.Event;
+
+    modal.result.then(
+      (result) => {
+        if (result == "Confirm deletion") {
+          this.handleRemoveEvent(eventDetail);
+        }
+      }, (reason) => {
+      });
   }
 }

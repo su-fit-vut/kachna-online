@@ -10,6 +10,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
 import { MonthSelectionComponent } from './month-selection/month-selection.component';
 import { PipesModule } from "../pipes/pipes.module";
+import { DeletionConfirmationModalComponent } from './deletion-confirmation-modal/deletion-confirmation-modal.component';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { PipesModule } from "../pipes/pipes.module";
     NumberSelectionComponent,
     UserSearchComponent,
     MonthSelectionComponent,
+    DeletionConfirmationModalComponent,
   ],
   imports: [
     RouterModule,

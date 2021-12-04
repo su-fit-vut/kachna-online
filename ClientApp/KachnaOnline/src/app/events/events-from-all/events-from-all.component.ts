@@ -7,6 +7,7 @@ import { EventsService } from '../../shared/services/events.service';
 import { Event } from '../../models/events/event.model';
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from "../../shared/services/authentication.service";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-events-from-all',
@@ -19,6 +20,7 @@ export class EventsFromAllComponent implements OnInit {
     private toastrService: ToastrService,
     private router: Router,
     public authenticationService: AuthenticationService,
+    private _modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
@@ -30,7 +32,7 @@ export class EventsFromAllComponent implements OnInit {
   }
 
   onDeleteButtonClicked(selectedEventDetail: Event) {
-    this.eventsService.handleRemoveEventRequest(selectedEventDetail);
+    this.eventsService.openEventDeletionConfirmationModal(selectedEventDetail);
   }
 
   onModifyButtonClicked(selectedEventDetail: Event) {

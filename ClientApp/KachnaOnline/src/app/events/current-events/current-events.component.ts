@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { Event } from "../../models/events/event.model";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../../shared/services/authentication.service";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-current-events',
@@ -18,6 +19,7 @@ export class CurrentEventsComponent implements OnInit {
     public eventsService: EventsService,
     private router: Router,
     public authenticationService: AuthenticationService,
+    private _modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
@@ -29,7 +31,7 @@ export class CurrentEventsComponent implements OnInit {
   }
 
   onDeleteButtonClicked(selectedEventDetail: Event) {
-    this.eventsService.handleRemoveEventRequest(selectedEventDetail);
+    this.eventsService.openEventDeletionConfirmationModal(selectedEventDetail);
   }
 
   onModifyButtonClicked(selectedEventDetail: Event) {

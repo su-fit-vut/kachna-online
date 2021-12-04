@@ -7,6 +7,7 @@ import { EventsService } from "../../shared/services/events.service";
 import { ToastrService } from "ngx-toastr";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../../shared/services/authentication.service";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-events-list',
@@ -20,6 +21,7 @@ export class EventsListComponent implements OnInit {
     private toastrService: ToastrService,
     private router: Router,
     public authenticationService: AuthenticationService,
+    private _modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
@@ -31,7 +33,7 @@ export class EventsListComponent implements OnInit {
   }
 
   onDeleteButtonClicked(selectedEventDetail: Event) {
-    this.eventsService.handleRemoveEventRequest(selectedEventDetail);
+    this.eventsService.openEventDeletionConfirmationModal(selectedEventDetail);
   }
 
   onModifyButtonClicked(selectedEventDetail: Event) {

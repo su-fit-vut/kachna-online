@@ -7,7 +7,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Event } from '../../models/events/event.model';
 import { AuthenticationService } from "../../shared/services/authentication.service";
-import { formatDate } from "@angular/common";
 
 @Component({
   selector: 'app-event-detail',
@@ -45,7 +44,7 @@ export class EventDetailComponent implements OnInit {
   }
 
   onDeleteButtonClicked() {
-    this.eventsService.handleRemoveEventRequest();
+    this.eventsService.openEventDeletionConfirmationModal(this.eventsService.eventDetail);
   }
 
   onManageLinkedStatesClicked() {

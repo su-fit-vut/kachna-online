@@ -1,0 +1,20 @@
+<!--
+deletion-confirmation-modal.component.html
+Author: David Chocholatý
+-->
+
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-title">{{typeTitle}}</h4>
+  <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <p><strong>{{typeText}}<span class="text-primary"> {{name}}</span>?</strong></p>
+  <p>{{typeContent}}</p>
+  <p><span class="text-danger">Tato operace nemůže být navrácena.</span></p>
+</div>
+<div class="modal-footer">
+  <button type="button" ngbAutofocus class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Zrušit</button>
+  <button type="button" class="btn btn-danger" (click)="modal.close('Confirm deletion')">Potvrdit</button>
+</div>
