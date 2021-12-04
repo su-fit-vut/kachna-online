@@ -66,8 +66,8 @@ export class PlanStateComponent implements OnInit {
     startTime: [{hour: new Date().getHours(), minute: new Date().getMinutes()}],
     plannedEndDate: [this.calendar.getToday(), Validators.required],
     plannedEndTime: [{hour: new Date().getHours() + 1, minute: new Date().getMinutes()}, Validators.required],
-    noteInternal: [''],
-    notePublic: [''],
+    noteInternal: ['', Validators.maxLength(1024)],
+    notePublic: ['', Validators.maxLength(1024)],
   }, {validators: [this.dateRangeValidator]})
 
   editingId: number;
