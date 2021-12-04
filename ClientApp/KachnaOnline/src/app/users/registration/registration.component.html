@@ -49,9 +49,7 @@
       <button
         type="button" class="btn"
         triggers="click hover focus" [autoClose]="true" [closeDelay]="500"
-        [ngbTooltip]="'Členové klubu jsou ohodnocování virtuálními body, tzv. prestiží, za jejich účast na aktivitách ' +
-         'a akcích SU a za poskytování členských příspěvků. Pro sbírání těchto bodů při nakupování občerstvení v klubu ' +
-         'je nutné udělit souhlas.'"
+        [ngbTooltip]="prestigeTooltipText"
         #tooltip3="ngbTooltip">
         <i class="far fa-question-circle"></i>
       </button>
