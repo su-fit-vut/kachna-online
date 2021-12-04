@@ -35,8 +35,10 @@ namespace KachnaOnline.Business.Facades
         /// <exception cref="KeysNotAvailableException">When they are not.</exception>
         private void CheckVapidKeys()
         {
+            var subjectValid = Uri.TryCreate(_pushOptions.CurrentValue.Subject, UriKind.Absolute, out var x) &&
+                               (x.Scheme == Uri.UriSchemeMailto || x.Scheme == Uri.UriSchemeHttps);
             if (string.IsNullOrEmpty(_pushOptions.CurrentValue.PrivateKey) ||
-                string.IsNullOrEmpty(_pushOptions.CurrentValue.PublicKey))
+                string.IsNullOrEmpty(_pushOptions.CurrentValue.PublicKey) || !subjectValid)
             {
                 throw new KeysNotAvailableException();
             }
