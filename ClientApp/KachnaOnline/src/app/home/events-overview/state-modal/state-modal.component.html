@@ -12,13 +12,18 @@ Author: František Nečas
 </div>
 <div class="modal-body">
   <div *ngIf="state.start.getDate() == state.plannedEnd.getDate(); else differentDates">
-    Od: <strong>{{state.start | date:'HH:mm'}}</strong><br>
-    Do: <strong>{{state.plannedEnd | date:'HH:mm'}}</strong>
+    Začátek: <strong>{{state.start | date:'HH:mm'}}</strong><br>
+    Plánovaný konec: <strong>{{state.plannedEnd | date:'HH:mm'}}</strong>
   </div>
   <ng-template #differentDates>
-    Od: {{state.start | date:'d. M.'}} <strong>{{state.start | date:'HH:mm'}}</strong><br>
-    Do: {{state.plannedEnd | date:'d. M.'}} <strong>{{state.plannedEnd | date:'HH:mm'}}</strong>
+    Začátek: {{state.start | date:'d. M.'}} <strong>{{state.start | date:'HH:mm'}}</strong><br>
+    Plánovaný konec: {{state.plannedEnd | date:'d. M.'}} <strong>{{state.plannedEnd | date:'HH:mm'}}</strong>
   </ng-template>
+
+  <div *ngIf="state.actualEnd != null">
+    Skutečný konec: {{state.actualEnd.getDate() == state.plannedEnd.getDate() ? '' : (state.actualEnd | date:'d. M.')}}
+    <strong>{{state.actualEnd | date:'HH:mm'}}</strong>
+  </div>
 
   <div *ngIf="state.state != 'OpenBar'" class="mt-2">Otevírá {{state.madeByUser.name}}.</div>
 
