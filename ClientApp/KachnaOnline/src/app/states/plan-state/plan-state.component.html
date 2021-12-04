@@ -42,9 +42,9 @@
     <div class="text-danger"
          *ngIf="(mode == M.CreatePlanned || mode == M.ModifyPlanned) &&
          (mainForm.errors?.startNotSet || mainForm.errors?.invalidDateRange || mainForm.errors?.startInPast)">
-      <div *ngIf="mainForm.errors?.startInPast">Začátek musí být plánován v budoucnu</div>
-      <div *ngIf="mainForm.errors?.startNotSet">Musí být naplánován začátek</div>
-      <div *ngIf="mainForm.errors?.invalidDateRange">Stav musí končit později než začíná</div>
+      <div *ngIf="mainForm.errors?.startInPast">Začátek musí být plánován v&nbsp;budoucnu.</div>
+      <div *ngIf="mainForm.errors?.startNotSet">Začátek musí být explicitně nastaven.</div>
+      <div *ngIf="mainForm.errors?.invalidDateRange">Stav musí končit později, než kdy začíná.</div>
     </div>
 
     <div class="form-group d-flex align-items-center">
@@ -65,8 +65,8 @@
     </div>
     <!-- The date/time selector would not play well with invalid-feedback class -->
     <div class="text-danger mt-0 mb-2" *ngIf="mainForm.errors?.endInPast || mainForm.errors?.endNotSet">
-      <div *ngIf="mainForm.errors?.endInPast">Není možné plánovat do minulosti</div>
-      <div *ngIf="mainForm.errors?.endNotSet">Musí být nastaveno čas a datum konce</div>
+      <div *ngIf="mainForm.errors?.endInPast">Není možné plánovat stavy v&nbsp;minulosti.</div>
+      <div *ngIf="mainForm.errors?.endNotSet">Datum a čas konce musí být nastaveny.</div>
     </div>
 
     <div class="form-group" *ngIf="mode == M.CreateCurrent">

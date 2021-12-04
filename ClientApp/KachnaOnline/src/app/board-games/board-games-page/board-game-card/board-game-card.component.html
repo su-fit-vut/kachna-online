@@ -11,7 +11,7 @@ Author: František Nečas
       <h6 [ngStyle]="{'color': '#' + boardGame.category.colourHex}">{{boardGame.category.name}}</h6>
     </div>
     <div class="card-text" *ngIf="boardGame.playersMax || boardGame.playersMin">
-      <p>{{boardGame.playersMin}} - {{boardGame.playersMax}} hráčů</p>
+      <p>{{boardGame.playersMin}}–{{boardGame.playersMax}} hráčů</p>
     </div>
     <app-reservation-button [available]="boardGame.available" [currentValue]="initialReserved"
                             [styles]="{'position': 'relative', 'z-index': 2}"
