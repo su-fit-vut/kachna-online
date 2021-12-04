@@ -4,14 +4,22 @@
 import { Event } from '../../models/events/event.model';
 import { EventsService } from '../../shared/services/events.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { NgForm, FormControl, FormGroup } from "@angular/forms";
+import {
+  NgForm,
+  FormBuilder,
+  Validators,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors
+} from "@angular/forms";
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from "@angular/router";
-import { NgbCalendar, NgbDateNativeAdapter, NgbDateStruct, NgbTimeStruct } from "@ng-bootstrap/ng-bootstrap";
+import { NgbCalendar, NgbDate, NgbDateNativeAdapter, NgbDateStruct, NgbTimeStruct } from "@ng-bootstrap/ng-bootstrap";
 import { throwError } from "rxjs";
 import { HttpStatusCode } from "@angular/common/http";
 import { ImageUploadService } from "../../shared/services/image-upload.service";
 import { EventModification } from "../../models/events/event-modification.model";
+
 
 @Component({
   selector: 'app-event-form',
@@ -28,25 +36,56 @@ export class EventFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private imageUploadService: ImageUploadService,
+    private fb: FormBuilder
     ) { }
 
-  form = new FormGroup({
-    id: new FormControl(-1),
-    name: new FormControl(""),
-    shortDescription: new FormControl(""),
-    fullDescription: new FormControl(""),
-    imageUrl: new FormControl(""),
-    image: new FormGroup({
-      file: new FormControl(undefined),
+  dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    let start = this.nativeDateAdapter.toModel(control.get('fromDate')?.value);
+    let end = this.nativeDateAdapter.toModel(control.get('toDate')?.value);
+    let startTime = control.get('fromTime')?.value;
+    let endTime = control.get('toTime')?.value;
+    if (!start || ! end || !startTime || !endTime) {
+      // Should be handled be required validators but make TS happy
+      return {datesNotSet: true};
+    }
+    start.setHours(startTime?.hour, startTime?.minute, 0);
+    end.setHours(endTime?.hour, endTime?.minute, 0);
+    if (start < new Date()) {
+      return {planningForPast: true};
+    }
+    return end > start ? null : {incorrectDateRange: true};
+  }
+
+  urlValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) {
+      return null;
+    }
+    let valid = true;
+    try {
+      new URL(control.value);
+    } catch {
+      valid = false;
+    }
+    return valid ? null : {invalidUrl: true};
+  }
+
+  form = this.fb.group({
+    id: [-1],
+    name: ["", [Validators.required, Validators.maxLength(128)]],
+    shortDescription: ["", [Validators.required, Validators.maxLength(512)]],
+    fullDescription: [""],
+    imageUrl: ["", Validators.maxLength(512)],
+    image: this.fb.group({
+      file: [undefined]
     }),
-    place: new FormControl(""),
-    placeUrl: new FormControl(""),
-    url: new FormControl(""),
-    fromDate: new FormControl(this.calendar.getToday()),
-    fromTime: new FormControl({hour: new Date().getHours(), minute: new Date().getMinutes()}),
-    toDate: new FormControl(this.calendar.getToday()),
-    toTime: new FormControl({hour: new Date().getHours() + 1, minute: new Date().getMinutes()}),
-  });
+    place: ["", Validators.maxLength(256)],
+    placeUrl: ["", [Validators.maxLength(512), this.urlValidator]],
+    url: ["", [Validators.maxLength(512), this.urlValidator]],
+    fromDate: [this.calendar.getToday(), Validators.required],
+    fromTime: [{hour: new Date().getHours(), minute: new Date().getMinutes()}, Validators.required],
+    toDate: [this.calendar.getToday(), Validators.required],
+    toTime: [{hour: new Date().getHours() + 1, minute: new Date().getMinutes()}, Validators.required],
+  }, {validators: [this.dateRangeValidator]})
 
   @Input() editMode: boolean = false;
   jumbotronText: string = "Naplánovat akci";
