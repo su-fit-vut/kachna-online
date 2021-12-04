@@ -28,7 +28,9 @@ namespace KachnaOnline.App.Controllers
         /// Returns the public VAPID key.
         /// </summary>
         /// <response code="200">The public VAPID key of the server.</response>
+        /// <response code="404">The server does not have VAPID keys configured, push notifications will not work.</response>
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("publicKey")]
         public ActionResult<string> GetPublicKey()
         {
@@ -46,8 +48,10 @@ namespace KachnaOnline.App.Controllers
         /// <param name="subscription">Configuration of the subscription.</param>
         /// <response code="204">The subscription was created.</response>
         /// <response code="401">When a subscription which only logged-in user can use was requested.</response>
+        /// <response code="503">When the server does not have VAPID keys configured. Push notifications will not work.</response>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         [HttpPut("subscriptions")]
         public async Task<IActionResult> Subscribe(PushSubscriptionDto subscription)
         {
@@ -58,8 +62,16 @@ namespace KachnaOnline.App.Controllers
                     "Board games reservation subscriptions can only be enabled by an authenticated user.");
             }
 
-            await _facade.Subscribe(this.User, subscription);
-            return this.NoContent();
+            try
+            {
+                await _facade.Subscribe(this.User, subscription);
+                return this.NoContent();
+            }
+            catch (KeysNotAvailableException)
+            {
+                return this.UnavailableProblem("The server does not have VAPID keys configured.",
+                    "Push subscriptions not available.");
+            }
         }
 
         /// <summary>
@@ -67,12 +79,22 @@ namespace KachnaOnline.App.Controllers
         /// </summary>
         /// <param name="endpoint">Endpoint of the active push subscription to delete.</param>
         /// <response code="204">The subscription has been cancelled.</response>
+        /// <response code="503">When the server does not have VAPID keys configured. Push notifications will not work.</response>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         [HttpDelete("subscriptions/{endpoint}")]
         public async Task<IActionResult> Unsubscribe(string endpoint)
         {
-            await _facade.Unsubscribe(WebUtility.UrlDecode(endpoint));
-            return this.NoContent();
+            try
+            {
+                await _facade.Unsubscribe(WebUtility.UrlDecode(endpoint));
+                return this.NoContent();
+            }
+            catch (KeysNotAvailableException)
+            {
+                return this.UnavailableProblem("The server does not have VAPID keys configured.",
+                    "Push subscriptions not available.");
+            }
         }
 
         /// <summary>
@@ -81,18 +103,28 @@ namespace KachnaOnline.App.Controllers
         /// <param name="endpoint">The endpoint of an active push subscription to get configuration of.</param>
         /// <response code="200">The configuration.</response>
         /// <response code="404">No such subscription exists.</response>
+        /// <response code="503">When the server does not have VAPID keys configured. Push notifications will not work.</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         [HttpGet("subscriptions/{endpoint}")]
         public async Task<ActionResult<PushSubscriptionConfiguration>> GetConfiguration(string endpoint)
         {
-            var subscription = await _facade.GetSubscription(WebUtility.UrlDecode(endpoint));
-            if (subscription == null)
+            try
             {
-                return this.NotFoundProblem("No such subscription exists.");
-            }
+                var subscription = await _facade.GetSubscription(WebUtility.UrlDecode(endpoint));
+                if (subscription == null)
+                {
+                    return this.NotFoundProblem("No such subscription exists.");
+                }
 
-            return new ActionResult<PushSubscriptionConfiguration>(subscription);
+                return new ActionResult<PushSubscriptionConfiguration>(subscription);
+            }
+            catch (KeysNotAvailableException)
+            {
+                return this.UnavailableProblem("The server does not have VAPID keys configured.",
+                    "Push subscriptions not available.");
+            }
         }
     }
 }

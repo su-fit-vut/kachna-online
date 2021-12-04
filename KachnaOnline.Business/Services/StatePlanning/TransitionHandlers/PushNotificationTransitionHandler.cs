@@ -22,7 +22,7 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
 
         public PushNotificationTransitionHandler(IOptionsMonitor<PushOptions> pushOptions, PushServiceClient pushClient,
             IPushSubscriptionsService pushSubscriptionsService, IClubStateService stateService,
-            ILogger<PushNotificationTransitionHandler> logger) : base(pushOptions, pushClient)
+            ILogger<PushNotificationTransitionHandler> logger) : base(pushOptions, pushClient, logger)
         {
             _pushSubscriptionsService = pushSubscriptionsService;
             _stateService = stateService;

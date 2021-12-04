@@ -50,5 +50,12 @@ namespace KachnaOnline.App.Extensions
             return controller.Problem(message ?? "An unexpected error occured", null,
                 StatusCodes.Status500InternalServerError, title);
         }
+
+        public static ObjectResult UnavailableProblem(this ControllerBase controller, string message = null,
+            string title = null)
+        {
+            return controller.Problem(message ?? "Service is not available", null,
+                StatusCodes.Status503ServiceUnavailable, title);
+        }
     }
 }
