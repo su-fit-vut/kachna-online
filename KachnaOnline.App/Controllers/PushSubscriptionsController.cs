@@ -34,7 +34,15 @@ namespace KachnaOnline.App.Controllers
         [HttpGet("publicKey")]
         public ActionResult<string> GetPublicKey()
         {
-            return new ActionResult<string>(_facade.GetPublicKey());
+            try
+            {
+                return new ActionResult<string>(_facade.GetPublicKey());
+            }
+            catch (KeysNotAvailableException)
+            {
+                return this.UnavailableProblem("The server does not have VAPID keys configured.",
+                    "Push subscriptions not available.");
+            }
         }
 
         /// <summary>
