@@ -3,23 +3,7 @@ events-overview-text.component.html
 Author: Ondřej Ondryáš
 -->
 
-<div class="d-flex justify-content-center mb-1">
-
-  <div>
-    <button class="btn btn-sm btn-primary float-right" (click)="changeMonth(-1)"><i class="fas fa-caret-left"></i>
-    </button>
-  </div>
-
-  <div class="text-center" style="width: 15em;">
-    <span class="d-inline-block h4 pl-3 pr-3 mb-0">
-      {{currentMonth.getMonth() | monthLoc}} {{currentMonth.getFullYear()}}</span>
-  </div>
-
-  <div>
-    <button class="btn btn-sm btn-primary" (click)="changeMonth(1)"><i class="fas fa-caret-right"></i></button>
-  </div>
-
-</div>
+<app-month-selection (monthChange)="this.monthChanged($event)"></app-month-selection>
 
 <div class="d-flex justify-content-center align-items-baseline mb-3">
   <input type="checkbox" id="showPast" class="mr-1" [checked]="showPast" (change)="this.updateAll($event)"/>
@@ -94,9 +78,8 @@ Author: Ondřej Ondryáš
         </tr>
         </tbody>
       </table>
-
-
     </ng-container>
+
     <ng-template #noStates><h5 class="text-muted text-center">V tomto měsíci nejsou naplánované žádné otvíračky.</h5>
     </ng-template>
   </div>
