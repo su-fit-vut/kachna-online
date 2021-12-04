@@ -2,9 +2,7 @@
 board-game-create.component.html
 Author: František Nečas
 -->
-<div class="d-flex">
-  <app-back-arrow targetRoute=".."></app-back-arrow>
-  <h2>Přidání deskové hry</h2>
-</div>
 
-<app-board-game-create-form [submitButtonText]="'Přidat hru'" (formSubmitted)="createGame($event)"></app-board-game-create-form>
+<app-back-arrow targetRoute=".." heading="Přidat deskovou hru"></app-back-arrow>
+<app-board-game-create-form [submitButtonText]="'Přidat hru'"
+                            (formSubmitted)="createGame($event)"></app-board-game-create-form>

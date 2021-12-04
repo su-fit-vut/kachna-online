@@ -7,13 +7,11 @@ Author: David Chocholatý
   <input type="hidden" id="id" class="form-control" formControlName="id">
 
   <div class="form-group">
-    <div class="form-row">
-      <label class="mr-1">Název</label>
-      <div style="color: grey;">(povinné)</div>
-    </div>
+    <label>Název (povinné)</label>
+
     <input class="form-control form-control-lg" placeholder="Název akce" id="name"
-    formControlName="name"
-    required maxlength="128" [class.is-invalid]="!form.value.name">
+           formControlName="name"
+           required maxlength="128" [class.is-invalid]="!form.value.name">
   </div>
 
   <div class="form-row">
@@ -21,14 +19,14 @@ Author: David Chocholatý
       <label>Místo konání</label>
       <input class="form-control form-control-lg" placeholder="Místo konání akce" name="place"
              formControlName="place"
-      maxlength="256">
+             maxlength="256">
     </div>
 
     <div class="form-group col-md-6">
       <label>URL místa konání</label>
       <input class="form-control form-control-lg" placeholder="URL místa konání akce" name="placeUrl"
              formControlName="placeUrl"
-      maxlength="512">
+             maxlength="512">
     </div>
   </div>
 
@@ -38,10 +36,7 @@ Author: David Chocholatý
   </div>
 
   <div class="form-group">
-    <div class="form-row">
-      <label class="mr-1">Krátký popis</label>
-      <div style="color: grey;">(povinné)</div>
-    </div>
+    <label>Krátký popis (povinné)</label>
     <textarea class="form-control form-control-lg" placeholder="Krátký popis akce" name="shortDescription"
               formControlName="shortDescription"
               required maxlength="512" [class.is-invalid]="!form.value.shortDescription"></textarea>
@@ -58,34 +53,31 @@ Author: David Chocholatý
     <label>URL</label>
     <input class="form-control form-control-lg" placeholder="URL akce" name="url"
            formControlName="url"
-    maxlength="512">
+           maxlength="512">
   </div>
 
-  <div class="form-row justify-content-between">
+  <div class="d-flex flex-nowrap flex-row justify-content-between">
     <div class="form-group d-flex align-items-center">
-      <div class="form-row">
-        <label class="mr-1">Trvání od</label>
-        <div style="color: grey;">(povinné)</div>
-      </div>
+      <label>Trvání od (povinné)</label>
 
       <div class="input-group mx-3">
         <input class="form-control" [minDate]="calendar.getToday()" (click)="fromDate.open()" type="text" ngbDatepicker
                #fromDate="ngbDatepicker" id="fromDate" formControlName="fromDate"
                placeholder="dd. MM. yyyy" autocomplete="false" required
-               [class.is-invalid]="!form.value.fromDate"
-               />
+               [class.is-invalid]="!form.value.fromDate"/>
         <div class="input-group-append">
           <button class="btn btn-outline-secondary calendar" (click)="fromDate.toggle()" type="button"><i
             class="far fa-calendar"></i></button>
         </div>
       </div>
 
-      <ngb-timepicker formControlName="fromTime" required [class.is-invalid]="!form.value.fromTime || form.value.fromTime.invalid"></ngb-timepicker>
+      <ngb-timepicker formControlName="fromTime" required
+                      [class.is-invalid]="!form.value.fromTime || form.value.fromTime.invalid"></ngb-timepicker>
     </div>
 
     <div class="form-group d-flex align-items-center">
       <div class="form-row">
-        <label class="mr-1">Trvání do</label>
+        <label>Trvání do</label>
         <div style="color: grey;">(povinné)</div>
       </div>
       <div class="input-group mx-3">
@@ -103,7 +95,7 @@ Author: David Chocholatý
     </div>
   </div>
 
-  <div class="form-row d-flex flex-wrap justify-content-between">
+  <div class="d-flex flex-wrap justify-content-between">
     <div class="form-group mr-4 mt-3">
       <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="form.invalid">{{submitText}}</button>
     </div>

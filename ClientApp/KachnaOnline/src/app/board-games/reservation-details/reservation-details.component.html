@@ -2,10 +2,9 @@
 reservation-details.component.html
 Author: František Nečas
 -->
-<div class="d-flex">
-  <app-back-arrow targetRoute=".."></app-back-arrow>
-  <h2>Rezervace</h2>
-</div>
+
+<app-back-arrow targetRoute=".." heading="Rezervace"></app-back-arrow>
+
 <h4>Vytvořena {{formattedDate}}</h4>
 
 <app-reservation-items (reservationItemClicked)="routeToBoardGame($event)" [reservation]="reservation"
