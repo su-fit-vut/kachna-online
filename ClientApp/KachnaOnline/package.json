@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --ssl true --serve-path \"/kachna/\"",
+    "start": "run-script-os",
+    "start:linux": "ng serve --ssl true --ssl-cert $HOME/.aspnet/https/${npm_package_name}.pem --ssl-key $HOME/.aspnet/https/${npm_package_name}.key --serve-path \"/kachna/\"",
+    "start:windows": "ng serve --ssl true --ssl-cert %APPDATA%\\ASP.NET\\https\\%npm_package_name%.pem --ssl-key %APPDATA%\\ASP.NET\\https\\%npm_package_name%.key --serve-path \"/kachna/\"",
     "build": "ng build --base-href \"/kachna/\"",
     "build-dev": "ng build --configuration development --base-href \"/kachna/\"",
     "watch": "ng build --watch --configuration development",
@@ -33,7 +35,8 @@
     "ngx-toastr": "^14.2.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "run-script-os": "^1.1.6"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.13",

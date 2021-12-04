@@ -11,8 +11,8 @@ import { KisLoggedInUserInformation } from "../app/models/users/kis-logged-in-us
 export class IEnvironment implements IEnvironmentParams {
   // Modifiable by the current environment.
   public production: boolean = false;
-  public baseApiUrl: string = 'http://localhost:5000/kachna/api';
-  public baseApiUrlDomain: string = 'localhost:5000';
+  public baseApiUrl: string = 'https://localhost:5001/kachna/api';
+  public baseApiUrlDomain: string = 'localhost:5001';
 
   // Global constants.
   public siteName: string = 'Kachna Online';

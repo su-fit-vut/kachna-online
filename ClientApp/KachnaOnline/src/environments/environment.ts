@@ -12,8 +12,8 @@ import { IEnvironment, IEnvironmentParams } from "./ienvironment";
  */
 const params: IEnvironmentParams = {
   production: false,
-  baseApiUrl: 'http://localhost:5000/kachna/api',
-  baseApiUrlDomain: 'localhost:5000',
+  baseApiUrl: 'https://localhost:5001/kachna/api',
+  baseApiUrlDomain: 'localhost:5001',
 };
 
 // Set environment for the application.
