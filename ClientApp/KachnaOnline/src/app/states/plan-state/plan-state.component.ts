@@ -55,22 +55,22 @@ export class PlanStateComponent implements OnInit {
       }
 
       if (this.mode != Mode.CreateCurrent && this.mode != Mode.CreatePlanned && state.state != ClubStateTypes.Closed) {
-        // TODO: Is there a better, more Angular-ish way to do this mapping?
+        this.mainForm.patchValue({
+            startDate: this.nativeDateAdapter.fromModel(state.start),
+            startTime: {
+                hour: state.start.getHours(),
+                minute: state.start.getMinutes()
+            },
 
-        this.mainForm.controls.startDate.setValue(this.nativeDateAdapter.fromModel(state.start));
-        this.mainForm.controls.startTime.setValue({
-          hour: state.start.getHours(),
-          minute: state.start.getMinutes()
+            plannedEndDate: this.nativeDateAdapter.fromModel(state.plannedEnd),
+            plannedEndTime: {
+                hour: state.plannedEnd.getHours(),
+                minute: state.plannedEnd.getMinutes()
+            },
+
+            noteInternal: state.noteInternal,
+            note: state.note
         });
-
-        this.mainForm.controls.plannedEndDate.setValue(this.nativeDateAdapter.fromModel(state.plannedEnd));
-        this.mainForm.controls.plannedEndTime.setValue({
-          hour: state.plannedEnd.getHours(),
-          minute: state.plannedEnd.getMinutes()
-        });
-
-        this.mainForm.controls.noteInternal.setValue(state.noteInternal);
-        this.mainForm.controls.notePublic.setValue(state.note);
       }
 
       if (this.mode == Mode.ModifyPlanned) {
