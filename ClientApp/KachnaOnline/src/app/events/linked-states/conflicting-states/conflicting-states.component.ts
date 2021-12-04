@@ -42,7 +42,7 @@ export class ConflictingStatesComponent implements OnInit {
   }
 
   onPlanNewClubStateClicked() {
-    this.router.navigate([`/states/plan`]).then(() => null);
+    this.router.navigate([`/states/plan`], {state: {event: this.eventsService.eventDetail}}).then(() => null);
   }
 
   openClubStateDetail(stateDetail: ClubState) {
@@ -51,7 +51,7 @@ export class ConflictingStatesComponent implements OnInit {
 
   onLinkConflictingClubState(conflictingState: ClubState) {
     if (conflictingState.eventId) {
-      if (confirm(`Stav je již navázán na jinou akci. Opravdu si přejete navázat stav na event?`)) {
+      if (confirm(`Stav je již navázán na jinou akci. Opravdu si přejete navázat stav na tuto akci?`)) {
         this.eventsService.relinkClubStateToEvent(conflictingState);
       }
     } else {
@@ -69,7 +69,7 @@ export class ConflictingStatesComponent implements OnInit {
     }
 
     if (linkedAlready) {
-      if (confirm(`Některé stavy jsou již navázány na jinou akci. Opravdu si přejete navázat stavy na event?`)) {
+      if (confirm(`Některé stavy jsou již navázány na jinou akci. Opravdu si přejete navázat stavy na tuto akci?`)) {
         this.eventsService.relinkAllConflictingClubStateToEvent();
       }
     } else {

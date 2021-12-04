@@ -52,7 +52,7 @@ export class StatesService {
     return this.http.get<ClubState[]>(`${this.StatesUrl}?from=${firstDay.toISOString()}&to=${lastDay.toISOString()}`);
   }
 
-  getBetween(start: Date, end:Date): Observable<ClubState[]> {
+  getBetween(start: Date, end: Date): Observable<ClubState[]> {
     let params = new HttpParams();
     params = params.set('from', start.toISOString());
     params = params.set('to', end.toISOString());
