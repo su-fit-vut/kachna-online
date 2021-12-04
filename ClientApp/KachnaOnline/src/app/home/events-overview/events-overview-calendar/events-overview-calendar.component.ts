@@ -71,21 +71,24 @@ export class EventsOverviewCalendarComponent implements OnInit {
           start: event.from,
           end: event.to,
           display: 'block',
-          color: "#D5384A"
+          color: "#28a745"
         })
       }
       for (let state of data[1]) {
         let title = "";
         let color = "#2A72FF";
+
         if (state.state == ClubStateTypes.OpenChillzone) {
-          color = "#3DA744";
+          color = "#063f61";
           title = "Chillzóna";
         } else if (state.state == ClubStateTypes.OpenBar) {
+          color = "#561303";
           title = "Bar";
         } else if (state.state == ClubStateTypes.Private) {
-          title = "Soukromá akce";
           color = "#6500F2";
+          title = "Soukromá akce";
         }
+
         api.addEvent({
           id: `${this.statePrefix}${state.id}`,
           title: title,

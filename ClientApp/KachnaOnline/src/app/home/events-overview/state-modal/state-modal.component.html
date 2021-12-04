@@ -11,11 +11,18 @@ Author: František Nečas
   </button>
 </div>
 <div class="modal-body">
-  <p>Od: {{state.start | date:'HH:mm'}}</p>
-  <p>Do: {{state.plannedEnd | date:'HH:mm'}}</p>
-  <p>Otevírá {{state.madeByUser.name}}</p>
-  <div *ngIf="state.note">
-    <h6>Poznámka</h6>
-    <p>{{state.note}}</p>
+  <div *ngIf="state.start.getDate() == state.plannedEnd.getDate(); else differentDates">
+    Od: <strong>{{state.start | date:'HH:mm'}}</strong><br>
+    Do: <strong>{{state.plannedEnd | date:'HH:mm'}}</strong>
+  </div>
+  <ng-template #differentDates>
+    Od: {{state.start | date:'d. M.'}} <strong>{{state.start | date:'HH:mm'}}</strong><br>
+    Do: {{state.plannedEnd | date:'d. M.'}} <strong>{{state.plannedEnd | date:'HH:mm'}}</strong>
+  </ng-template>
+
+  <div *ngIf="state.state != 'OpenBar'" class="mt-2">Otevírá {{state.madeByUser.name}}.</div>
+
+  <div *ngIf="state.note" class="mt-2">
+    {{state.note}}
   </div>
 </div>
