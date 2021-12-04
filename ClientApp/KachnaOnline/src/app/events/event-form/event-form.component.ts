@@ -37,22 +37,29 @@ export class EventFormComponent implements OnInit {
     private router: Router,
     private imageUploadService: ImageUploadService,
     private fb: FormBuilder
-    ) { }
+  ) { }
 
   dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     let start = this.nativeDateAdapter.toModel(control.get('fromDate')?.value);
     let end = this.nativeDateAdapter.toModel(control.get('toDate')?.value);
     let startTime = control.get('fromTime')?.value;
     let endTime = control.get('toTime')?.value;
-    if (!start || ! end || !startTime || !endTime) {
+
+    if (!start || !end || !startTime || !endTime) {
       // Should be handled be required validators but make TS happy
       return {datesNotSet: true};
     }
-    start.setHours(startTime?.hour, startTime?.minute, 0);
-    end.setHours(endTime?.hour, endTime?.minute, 0);
-    if (start < new Date()) {
+
+    start.setHours(startTime?.hour, startTime?.minute, 0, 0);
+    end.setHours(endTime?.hour, endTime?.minute, 0, 0);
+
+    let now = new Date();
+    now.setSeconds(0, 0);
+
+    if (start < now) {
       return {planningForPast: true};
     }
+
     return end > start ? null : {incorrectDateRange: true};
   }
 
@@ -119,9 +126,9 @@ export class EventFormComponent implements OnInit {
               minute: edittedEvent.to.getMinutes(),
             });
           }).catch(err => {
-            this.toastr.error("Stažení dat o akci se nezdařilo.", "Upravit akci");
-            return throwError(err);
-          });
+          this.toastr.error("Stažení dat o akci se nezdařilo.", "Upravit akci");
+          return throwError(err);
+        });
       });
     } else {
       this.eventsService.eventDetail = new Event();
@@ -145,7 +152,7 @@ export class EventFormComponent implements OnInit {
 
     // Process date and time values.
     const from = this.joinDateTime(formVal.fromDate, formVal.fromTime);
-    const to =  this.joinDateTime(formVal.toDate, formVal.toTime);
+    const to = this.joinDateTime(formVal.toDate, formVal.toTime);
     if (!this.verifyDates(from, to)) {
       return;
     }
@@ -162,8 +169,7 @@ export class EventFormComponent implements OnInit {
 
         if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
           this.modifyEvent(eventData);
-        }
-        else {
+        } else {
           this.planEvent(eventData);
         }
       }, err => {
@@ -173,8 +179,7 @@ export class EventFormComponent implements OnInit {
 
           if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
             this.modifyEvent(eventData);
-          }
-          else {
+          } else {
             this.planEvent(eventData);
           }
         } else {
@@ -187,14 +192,13 @@ export class EventFormComponent implements OnInit {
 
       if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
         this.modifyEvent(eventData);
-      }
-      else {
+      } else {
         this.planEvent(eventData);
       }
     }
   }
 
-  private joinDateTime(date: NgbDateStruct, time: NgbTimeStruct) : Date | null {
+  private joinDateTime(date: NgbDateStruct, time: NgbTimeStruct): Date | null {
     let dateObj = this.nativeDateAdapter.toModel(date);
     dateObj?.setHours(time.hour);
     dateObj?.setMinutes(time.minute);
@@ -264,7 +268,7 @@ export class EventFormComponent implements OnInit {
     });
   }
 
-  private dateTimeToString(date: NgbDateStruct, time: NgbTimeStruct) : string {
+  private dateTimeToString(date: NgbDateStruct, time: NgbTimeStruct): string {
     let dateObj = this.nativeDateAdapter.toModel(date);
     dateObj?.setTime(dateObj?.getTime() - dateObj?.getTimezoneOffset());
     dateObj?.setHours(time.hour);
