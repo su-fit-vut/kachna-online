@@ -93,7 +93,7 @@ export class EventsOverviewCalendarComponent implements OnInit {
           id: `${this.statePrefix}${state.id}`,
           title: title,
           start: state.start,
-          end: state.plannedEnd,
+          end: state.actualEnd ?? state.plannedEnd,
           display: 'block',
           color: color,
         })
