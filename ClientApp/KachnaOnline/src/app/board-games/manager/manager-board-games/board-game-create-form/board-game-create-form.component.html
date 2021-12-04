@@ -26,7 +26,7 @@ Author: František Nečas
     <app-user-search label="Majitel" (userSelected)="userSelected($event)" *ngIf="!startingState"></app-user-search>
     <ng-container *ngIf="startingState">
       <label for="bg-owner">Majitel</label>
-      <input id="bg-owner" type="text" class="form-control" [value]="this.startingState?.owner?.name" disabled>
+      <input id="bg-owner" type="text" class="form-control" [value]="startingState?.owner?.name" disabled>
     </ng-container>
     <label for="file">Obrázek<a *ngIf="image" href="{{image}}">, současný obrázek</a></label>
     <input class="form-control" type="file" id="file" accept=".jpg,.jpeg" (change)="imageChanged($event)">
