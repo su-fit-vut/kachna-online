@@ -43,10 +43,10 @@ Author: Ondřej Ondryáš
               </ng-container>
             </ng-container>
 
-            <ng-template #oneDay>{{e.from | date:'d. MM.'}} od {{e.from | date:'HH:mm'}}
+            <ng-template #oneDay>{{e.from | date:'EEE d. MM.'}} od {{e.from | date:'HH:mm'}}
               do {{e.to | date:'HH:mm'}}</ng-template>
             <ng-template #moreDays>
-              {{e.from | date:'d. M.'}} až {{e.to | date:'d. M.'}}
+              {{e.from | date:'EEE d. M.'}} až {{e.to | date:'EEE d. M.'}}
             </ng-template>
 
             <div>
@@ -70,7 +70,7 @@ Author: Ondřej Ondryáš
         <tbody>
         <tr *ngFor="let s of shownStates" class="pb-2"
             [class.table-bar]="s.type == 'OpenBar'">
-          <td style="width: 20%">{{s.from | date:'d. M.'}}</td>
+          <td style="width: 20%">{{s.from | date:'EEE d. M.'}}</td>
           <td style="width: 40%" [class.color-chillzone]="s.type == 'OpenChillzone'"
               [class.color-bar]="s.type == 'OpenBar'">{{s.from | date:'HH:mm'}}–{{s.to | date:'HH:mm'}}</td>
           <td style="width: 40%" [class.color-chillzone]="s.type == 'OpenChillzone'"
