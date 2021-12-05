@@ -68,12 +68,12 @@ export class ReservationDetailsItemComponent implements OnInit {
     this.boardGamesService.updateReservationState(this.reservationId, this.item.id,
       ReservationEventType.ExtensionRequested).subscribe(_ => {
       this.stateChanged.emit(this.item);
-      this.toastrService.success("Bylo zažádáno o prodloužení. Vyčkej, prosím, než ho někdo schválí " +
+      this.toastrService.success("Bylo zažádáno o prodloužení. Vyčkej, prosím, než ho někdo schválí, " +
         "nebo napiš kontaktní osobě.");
     }, err => {
       console.log(err);
       if (err.status == HttpStatusCode.Conflict) {
-        this.toastrService.warning("Již jsi žádal*a o prodloužení, vyčkej, prosím, než ho někdo schválí " +
+        this.toastrService.warning("Již jsi žádal*a o prodloužení, vyčkej, prosím, než ho někdo schválí, " +
           "nebo napiš kontaktní osobě.");
       } else {
         this.toastrService.error("Zaslání žádosti o prodloužení selhalo.");
