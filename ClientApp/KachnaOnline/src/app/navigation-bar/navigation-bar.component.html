@@ -88,10 +88,7 @@ Author: David Chocholatý
                       routerLinkActive="active" ngbDropdownItem>Probíhající akce
               </button>
               <button (click)="isMenuCollapsed = true" class="dropdown-item" ngbDropdownItem routerLinkActive="active"
-                      routerLink="/events/all">Seznam nadcházejících akcí
-              </button>
-              <button (click)="isMenuCollapsed = true" class="dropdown-item" ngbDropdownItem routerLinkActive="active"
-                      routerLink="/events/list">Plán akcí
+                      routerLink="/events/list">Přehled akcí
               </button>
               <div *ngIf="authenticationService.isEventsManager()" class="dropdown-divider"></div>
               <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="events/plan"

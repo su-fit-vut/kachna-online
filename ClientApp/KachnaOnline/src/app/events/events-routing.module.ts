@@ -55,7 +55,7 @@ const routes: Routes = [
             path: 'list',
             component: EventsListComponent,
             data: {
-              title: `${environment.siteName} | Seznam akcí`,
+              title: `${environment.siteName} | Přehled akcí`,
               description: 'Přehled akcí',
             }
           },
