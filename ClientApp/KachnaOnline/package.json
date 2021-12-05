@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "start-http": "ng serve --ssl false --serve-path \"/kachna/\"",
     "start": "run-script-os",
     "start:linux": "ng serve --ssl true --ssl-cert $HOME/.aspnet/https/${npm_package_name}.pem --ssl-key $HOME/.aspnet/https/${npm_package_name}.key --serve-path \"/kachna/\"",
     "start:windows": "ng serve --ssl true --ssl-cert %APPDATA%\\ASP.NET\\https\\%npm_package_name%.pem --ssl-key %APPDATA%\\ASP.NET\\https\\%npm_package_name%.key --serve-path \"/kachna/\"",
