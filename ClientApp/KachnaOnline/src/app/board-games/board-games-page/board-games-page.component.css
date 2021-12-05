@@ -7,10 +7,14 @@ Author: František Nečas
   position: -webkit-sticky;
   position: sticky;
   bottom: 20px;
-  right: 20px;
   float: right;
   /* Must be above the card links and buttons */
   z-index: 10;
+}
+
+.bottom-right>button {
+  border-radius: 12px;
+  box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.5);
 }
 
 #dropdownMenu {

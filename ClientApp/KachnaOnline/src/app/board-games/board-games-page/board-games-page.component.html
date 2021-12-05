@@ -63,7 +63,7 @@ Author: František Nečas
 <div *ngIf="shownGames.length == 0" class="mb-5 d-flex justify-content-center">
   <h3 class="text-secondary">Žádnou takovou hru bohužel nemáme :-(</h3>
 </div>
-<div class="bottom-right" *ngIf="currentReservation.size > 0">
+<div class="bottom-right mr-2" *ngIf="currentReservation.size > 0">
   <button *ngIf="mode == pageMode.Normal || mode == pageMode.ManagerReservation" type="button"
           class="btn btn-success btn-lg"
           routerLink="reserve">Dokončit rezervaci
