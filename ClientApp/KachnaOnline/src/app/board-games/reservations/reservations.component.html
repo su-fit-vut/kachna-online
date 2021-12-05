@@ -4,17 +4,20 @@ Author: František Nečas
 -->
 <h1>Moje rezervace</h1>
 
-<form>
-  <div class="form-group form-inline">
-    <label for="reservationState">Stav rezervace</label>
-    <select class="form-control input ml-3 w-auto" id="reservationState" [formControl]="reservationFilterForm">
-      <option>---</option>
-      <!-- FIXME: possibly a bug in angular, with dynamic generation using ngFor, the form is not correctly set -->
-      <option>Pouze právě běžící</option>
-      <option>Pouze po skončení platnosti</option>
-      <option>Pouze dokončené</option>
-    </select>
-  </div>
-</form>
+<div class="d-flex flex-wrap align-items-center justify-content-between">
+  <form>
+    <div class="form-group form-inline">
+      <label for="reservationState">Stav rezervace</label>
+      <select class="form-control input ml-3 w-auto" id="reservationState" [formControl]="reservationFilterForm">
+        <option>---</option>
+        <!-- FIXME: possibly a bug in angular, with dynamic generation using ngFor, the form is not correctly set -->
+        <option>Pouze právě běžící</option>
+        <option>Pouze po skončení platnosti</option>
+        <option>Pouze dokončené</option>
+      </select>
+    </div>
+  </form>
+  <app-color-coding></app-color-coding>
+</div>
 <app-reservation-table (reservationClicked)="navigateToReservation($event)"
                        [reservations]="reservations"></app-reservation-table>

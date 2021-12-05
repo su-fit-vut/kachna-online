@@ -39,6 +39,7 @@ import { BoardGameCreateComponent } from './manager/manager-board-games/board-ga
 import { BoardGameTableItemComponent } from './manager/manager-board-games/board-game-table-item/board-game-table-item.component';
 import { BoardGameCreateFormComponent } from './manager/manager-board-games/board-game-create-form/board-game-create-form.component';
 import { ManagerTableItemComponent } from './manager/manager-board-games/manager-table-item/manager-table-item.component';
+import { ColorCodingComponent } from './reservations/color-coding/color-coding.component';
 
 
 @NgModule({
@@ -73,6 +74,7 @@ import { ManagerTableItemComponent } from './manager/manager-board-games/manager
     BoardGameTableItemComponent,
     BoardGameCreateFormComponent,
     ManagerTableItemComponent,
+    ColorCodingComponent,
   ],
   imports: [
     CommonModule,

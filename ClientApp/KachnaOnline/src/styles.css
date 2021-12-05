@@ -47,3 +47,11 @@ table thead tr th {
 .color-bar {
   color: #561303;
 }
+
+.dot {
+  height: 15px;
+  width: 15px;
+  margin-right: 0.5em;
+  border-radius: 50%;
+  display: inline-block;
+}

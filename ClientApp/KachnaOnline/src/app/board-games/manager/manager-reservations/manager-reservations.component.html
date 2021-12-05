@@ -7,23 +7,26 @@ Author: František Nečas
   <button type="button" class="btn btn-success btn-lg align-self-start" (click)="addNewReservation()">Vytvořit pro uživatele</button>
 </div>
 
-<form>
-  <div class="d-flex flex-wrap mb-3">
-    <div class="form-group form-inline mb-0">
-      <label for="reservationState">Stav rezervace</label>
-      <select class="form-control input ml-3 w-auto" id="reservationState" [formControl]="reservationFilterForm">
-        <option>---</option>
-        <!-- FIXME: possibly a bug in angular, with dynamic generation using ngFor, the form is not correctly set -->
-        <option>Pouze nově přidané</option>
-        <option>Pouze právě běžící</option>
-        <option>Pouze po skončení platnosti</option>
-        <option>Pouze dokončené</option>
-      </select>
-    </div>
+<div class="d-flex flex-wrap justify-content-between align-items-center">
+  <form>
+    <div class="d-flex flex-wrap mb-3">
+      <div class="form-group form-inline mb-0">
+        <label for="reservationState">Stav rezervace</label>
+        <select class="form-control input ml-3 w-auto" id="reservationState" [formControl]="reservationFilterForm">
+          <option>---</option>
+          <!-- FIXME: possibly a bug in angular, with dynamic generation using ngFor, the form is not correctly set -->
+          <option>Pouze nově přidané</option>
+          <option>Pouze právě běžící</option>
+          <option>Pouze po skončení platnosti</option>
+          <option>Pouze dokončené</option>
+        </select>
+      </div>
 
-    <app-togglable-button [text]="'Pouze mně přiřazené'" (valueChanged)="onButtonToggle($event)" class="pl-2"
-                          [startingValue]="assignedFilter"></app-togglable-button>
-  </div>
-</form>
+      <app-togglable-button [text]="'Pouze mně přiřazené'" (valueChanged)="onButtonToggle($event)" class="pl-2"
+                            [startingValue]="assignedFilter"></app-togglable-button>
+    </div>
+  </form>
+  <app-color-coding></app-color-coding>
+</div>
 <app-reservation-table (reservationClicked)="navigateToReservation($event)" [managerView]="true"
                        [reservations]="reservations"></app-reservation-table>
