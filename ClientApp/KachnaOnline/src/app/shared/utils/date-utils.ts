@@ -1,4 +1,7 @@
-﻿import { NgbDateStruct, NgbTimeStruct } from "@ng-bootstrap/ng-bootstrap";
+﻿// date-utils.component.ts
+// Author: Ondřej Ondryáš
+
+import { NgbDateStruct, NgbTimeStruct } from "@ng-bootstrap/ng-bootstrap";
 import { NgbDateAdapter } from "@ng-bootstrap/ng-bootstrap/datepicker/adapters/ngb-date-adapter";
 
 export class DateUtils {

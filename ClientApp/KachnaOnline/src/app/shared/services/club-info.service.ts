@@ -1,3 +1,6 @@
+// club-info.service.ts
+// Author: Ondřej Ondryáš
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";

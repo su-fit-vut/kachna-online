@@ -1,3 +1,6 @@
+// state-loc.pipe.ts
+// Author: Ondřej Ondryáš
+
 import { Pipe, PipeTransform } from '@angular/core';
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
 

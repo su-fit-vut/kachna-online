@@ -1,3 +1,6 @@
+// states-routing.module.ts
+// Author: Ondřej Ondryáš
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PlanStateComponent } from "./plan-state/plan-state.component";

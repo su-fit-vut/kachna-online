@@ -1,3 +1,6 @@
+// components.module.ts
+// Author: David Chocholatý, František Nečas, Ondřej Ondryáš
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BackArrowComponent } from "./back-arrow/back-arrow.component";

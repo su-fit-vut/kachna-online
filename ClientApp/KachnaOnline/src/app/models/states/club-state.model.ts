@@ -1,5 +1,5 @@
 // club-state.model.ts
-// Author: David Chocholatý
+// Author: Ondřej Ondryáš
 
 import { MadeByUser } from "../users/made-by-user.model";
 import { ClubStateTypes } from "./club-state-types.model";

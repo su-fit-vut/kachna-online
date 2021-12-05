@@ -1,5 +1,5 @@
 // home.component.ts
-// Author: David Chocholatý
+// Author: Ondřej Ondryáš
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthenticationService } from "../shared/services/authentication.service";

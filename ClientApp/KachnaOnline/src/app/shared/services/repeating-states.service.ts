@@ -1,3 +1,6 @@
+// repeating-states.service.ts
+// Author: Ondřej Ondryáš
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ToastrService } from "ngx-toastr";
@@ -13,8 +16,7 @@ export class RepeatingStatesService {
   readonly RepeatingStatesUrl = environment.baseApiUrl + '/states/repeating';
 
   constructor(
-    private http: HttpClient,
-    private toastrService: ToastrService,
+    private http: HttpClient
   ) {}
 
   get(): Observable<RepeatingState[]> {

@@ -1,4 +1,4 @@
-// togglable-button.component.ts
+// toggleable-button.component.ts
 // Author: František Nečas, Ondřej Ondryáš
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';

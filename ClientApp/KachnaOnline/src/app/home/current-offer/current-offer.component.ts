@@ -1,3 +1,6 @@
+// current-offer.component.ts
+// Author: Ondřej Ondryáš
+
 import { Component, OnInit } from '@angular/core';
 import { ClubInfoService } from "../../shared/services/club-info.service";
 import { ClubOffer, ClubOfferItem } from "../../models/clubinfo/offer.model";

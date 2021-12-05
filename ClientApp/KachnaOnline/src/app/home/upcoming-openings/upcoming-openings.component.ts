@@ -1,3 +1,6 @@
+// upcoming-openings.component.ts
+// Author: Ondřej Ondryáš
+
 import { Component, OnInit } from '@angular/core';
 import { ClubState } from "../../models/states/club-state.model";
 import { StatesService } from "../../shared/services/states.service";

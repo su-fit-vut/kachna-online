@@ -1,6 +1,9 @@
+// repeating-states.component.ts
+// Author: Ondřej Ondryáš
+
 import { Component, OnInit } from '@angular/core';
 import { RepeatingStatesService } from "../../shared/services/repeating-states.service";
-import { groupBy, map, tap, toArray } from "rxjs/operators";
+import { groupBy, map, toArray } from "rxjs/operators";
 import { from } from "rxjs";
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
 

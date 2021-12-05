@@ -1,5 +1,7 @@
+// day-loc.pipe.ts
+// Author: Ondřej Ondryáš
+
 import { Pipe, PipeTransform } from '@angular/core';
-import { stringify } from "@angular/compiler/src/util";
 
 @Pipe({
   name: 'dayLoc'

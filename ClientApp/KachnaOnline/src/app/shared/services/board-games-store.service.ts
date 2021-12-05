@@ -1,3 +1,6 @@
+// board-games-store.service.ts
+// Author: František Nečas
+
 import { Injectable } from '@angular/core';
 import { ReservationState } from "../../models/board-games/reservation.model";
 
