@@ -63,7 +63,7 @@ export class PlanStateComponent implements OnInit {
   M = Mode;
 
   mainForm = this.fb.group({
-    stateType: [ClubStateTypes.OpenChillzone, Validators.required],
+    stateType: [ClubStateTypes.OpenChillzone],
     startDate: [this.calendar.getToday()],
     startTime: [{hour: new Date().getHours(), minute: new Date().getMinutes()}],
     plannedEndDate: [this.calendar.getToday(), Validators.required],
@@ -197,9 +197,9 @@ export class PlanStateComponent implements OnInit {
 
       if (this.mode == Mode.ModifyPlanned) {
         dto.start = DateUtils.dateTimeToString(startDate, startTime, this.nativeDateAdapter);
+        // TODO: enable planned state type changes on backend
       } else {
         // Modifying the current state
-
         delete dto.state;
       }
 

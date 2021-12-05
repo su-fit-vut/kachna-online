@@ -11,7 +11,7 @@
 
 <div class="row">
   <form [formGroup]="mainForm" class="col-xl-6" (ngSubmit)="onSubmit()">
-    <div class="form-group">
+    <div class="form-group" *ngIf="mode == M.CreateCurrent || mode == M.CreatePlanned">
       <label for="stateType">Typ stavu:</label>
       <select class="form-control" id="stateType" formControlName="stateType">
         <option [value]="ST.OpenChillzone">Otevřeno – chillzóna</option>
@@ -75,7 +75,8 @@
 
     <div class="form-group">
       <label for="noteInternal">Interní poznámka:</label>
-      <textarea class="form-control" id="noteInternal" formControlName="noteInternal" [class.is-invalid]="mainForm.get('noteInternal')?.errors"></textarea>
+      <textarea class="form-control" id="noteInternal" formControlName="noteInternal"
+                [class.is-invalid]="mainForm.get('noteInternal')?.errors"></textarea>
       <div class="invalid-feedback">
         <div *ngIf="mainForm.get('noteInternal')?.errors?.['maxlength']">Poznámka musí být kratší než 1024 znaků.</div>
       </div>
@@ -83,7 +84,8 @@
 
     <div class="form-group">
       <label for="notePublic">Veřejná poznámka:</label>
-      <textarea class="form-control" id="notePublic" formControlName="notePublic" [class.is-invalid]="mainForm.get('notePublic')?.errors"></textarea>
+      <textarea class="form-control" id="notePublic" formControlName="notePublic"
+                [class.is-invalid]="mainForm.get('notePublic')?.errors"></textarea>
       <div class="invalid-feedback">
         <div *ngIf="mainForm.get('notePublic')?.errors?.['maxlength']">Poznámka musí být kratší než 1024 znaků.</div>
       </div>
