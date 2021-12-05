@@ -74,7 +74,7 @@ export class EventsService {
 
     firstDay.setTime(firstDay.getTime() - firstDay.getTimezoneOffset() * 60000);
     lastDay.setTime(lastDay.getTime() - lastDay.getTimezoneOffset() * 60000);
-    return this.getEventsInInterval(firstDay.toISOString(), lastDay.toISOString());
+    return this.getBetween(firstDay, lastDay);
   }
 
   getBetween(start: Date, end: Date): Observable<Event[]> {

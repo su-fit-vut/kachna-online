@@ -8,6 +8,7 @@ import { Component, Output, OnInit, EventEmitter, Input } from '@angular/core';
 export class MonthSelectionComponent implements OnInit {
 
   @Input() public justifyCenter: boolean = true;
+  @Input() public minMonth: Date;
   @Output() public monthChange: EventEmitter<Date> = new EventEmitter()
 
   month: Date;
@@ -22,5 +23,14 @@ export class MonthSelectionComponent implements OnInit {
   changeMonth(delta: number) {
     this.month.setMonth(this.month.getMonth() + delta);
     this.monthChange.emit(this.month);
+  }
+
+  setDisabledIfMinMonthSet(): boolean {
+    if (this.minMonth) {
+      if (this.month.getFullYear() == this.minMonth.getFullYear() && this.month.getMonth() == this.minMonth.getMonth()) {
+        return true;
+      }
+    }
+    return false;
   }
 }

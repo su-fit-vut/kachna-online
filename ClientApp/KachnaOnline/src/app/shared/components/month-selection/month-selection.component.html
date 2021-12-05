@@ -1,6 +1,7 @@
 <div class="d-flex {{justifyCenter ? 'justify-content-center' : ''}} mb-2">
   <div>
-    <button class="btn btn-sm btn-primary float-right" (click)="changeMonth(-1)"><i class="fas fa-caret-left"></i>
+    <button class="btn btn-sm btn-primary float-right" (click)="changeMonth(-1)"
+            [disabled]="setDisabledIfMinMonthSet()"><i class="fas fa-caret-left"></i>
     </button>
   </div>
 
