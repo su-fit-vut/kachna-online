@@ -70,8 +70,9 @@ Author: František Nečas
     <i class="fas fa-check"></i>
     Dokončit rezervaci
   </button>
-  <button *ngIf="mode == pageMode.AddingGames" type="button" class="btn btn-success btn-lg"
+  <button *ngIf="mode == pageMode.AddingGames" type="button" class="btn btn-warning btn-lg p-3 font-weight-bold"
           (click)="addToReservation()">
+    <i class="fas fa-plus"></i>
     Přidat do rezervace
   </button>
 </div>
