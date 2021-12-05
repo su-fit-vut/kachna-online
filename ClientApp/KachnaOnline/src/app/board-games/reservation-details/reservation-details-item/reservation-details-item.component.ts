@@ -28,7 +28,7 @@ export class ReservationDetailsItemComponent implements OnInit {
     ["Assigned", "Připravena k předání"],
     ["HandedOver", "Převzatá"],
     ["Done", "Vrácená"],
-    ["Expired", "Platnost vypršela"]
+    ["Expired", "Výpůjční doba vypršela"]
   ]);
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService) {
