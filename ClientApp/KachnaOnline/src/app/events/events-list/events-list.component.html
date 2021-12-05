@@ -5,6 +5,13 @@ Author: David Chocholatý
 
 <h1>Přehled akcí</h1>
 
+<div class="d-flex align-items-center">
+  <span class="dot bg-secondary"></span>
+  <span class="mr-4">Uběhlé akce</span>
+  <span class="dot bg-success"></span>
+  <span class="mr-4">Právě běžící akce</span>
+</div>
+
 <table class="table table-stripped" *ngIf="events.length > 0">
   <thead class="thead-light">
   <tr>
@@ -17,8 +24,14 @@ Author: David Chocholatý
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let eventDetail of events" class="clickable">
-    <td (click)="openEventDetail(eventDetail)">{{eventDetail.name}}</td>
+  <tr *ngFor="let eventDetail of events" class="clickable"
+    [ngClass]="{
+    'table-secondary': eventDetail.to.getTime() < now.getTime(),
+    'table-success': eventDetail.from.getTime() < now.getTime() && eventDetail.to.getTime() >= now.getTime()
+    }"
+  >
+
+  <td (click)="openEventDetail(eventDetail)">{{eventDetail.name}}</td>
     <td (click)="openEventDetail(eventDetail)">
       {{eventDetail.from | date:'d. M. yyyy HH:mm'}}
     </td>
