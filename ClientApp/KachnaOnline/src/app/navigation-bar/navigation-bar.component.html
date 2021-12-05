@@ -6,7 +6,7 @@ Author: David Chocholatý
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3 fixed-top">
   <div class="container">
     <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed" data-toggle="collapse"
-            aria-controls="navbarsExample04" data-target="navbarsExample04" aria-expanded="false"
+            aria-controls="navbar" data-target="navbar" aria-expanded="false"
             aria-label="Toggle navigation">
       &#9776;
     </button>
@@ -29,23 +29,23 @@ Author: David Chocholatý
         <li class="nav-item align-self-xl-center align-self-lg-center mr-xl-3 mr-lg-3 mt-xl-0 mt-lg-0 mt-md-3 mt-sm-3 mt-2" *ngIf="authenticationService.isStatesManager()" ngbDropdown>
           <div ngbDropdown class="d-inline-block btn-block">
             <div NgbDropdownAnchor>
-              <div class="btn-group btn-block d-xl-flex d-lg-flex d-md-flex d-sm-flex d-none">
+              <div class="btn-group btn-block d-xl-flex d-lg-flex d-md-none d-sm-none d-none">
             <button type="button" class="btn btn-secondary text-nowrap btn-block
-             d-xl-block d-lg-block d-md-block d-sm-block align-self-md-center d-none" style="text-align:left"
+             d-xl-block d-lg-block d-md-none d-sm-none align-self-md-center d-none" style="text-align:left"
                     routerLink="" (click)="isMenuCollapsed = true">Stav klubu
             </button>
             <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right
-            d-xl-block d-lg-block d-md-block d-sm-block d-none"
+            d-xl-block d-lg-block d-md-none d-sm-none d-none"
                     id="tmp" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                     data-reference="parent">
               <span class="sr-only">Toggle Dropdown</span>
             </button>
                 </div>
-                <button class="btn btn-secondary text-nowrap btn-block d-xl-none d-lg-none d-md-none d-sm-none" style="text-align:left"
+                <button class="btn btn-secondary text-nowrap btn-block d-xl-none d-lg-none" style="text-align:left"
                         ngbDropdownToggle>Stav klubu</button>
               </div>
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-              <button class="dropdown-item d-lg-none d-xl-none d-md-none d-sm-none" (click)="isMenuCollapsed = true"
+              <button class="dropdown-item d-lg-none d-xl-none" (click)="isMenuCollapsed = true"
                       routerLink="" ngbDropdownItem>Aktuální stav klubu
               </button>
               <button (click)="isMenuCollapsed = true" class="dropdown-item" routerLink="/states/change" routerLinkActive="active"
@@ -70,17 +70,18 @@ Author: David Chocholatý
         <li class="nav-item align-self-xl-center align-self-lg-center mr-xl-3 mr-lg-3 mt-xl-0 mt-lg-0 mt-md-3 mt-sm-3 mt-2" ngbDropdown>
           <div ngbDropdown class="d-inline-block btn-block">
             <div NgbDropdownAnchor>
-              <div class="btn-group btn-block d-xl-flex d-lg-flex d-md-flex d-sm-flex d-none">
-                <button type="button" class="btn btn-secondary text-nowrap btn-block d-xl-block d-lg-block d-md-block d-sm-block d-none" style="text-align:left"
+              <div class="btn-group btn-block d-xl-flex d-lg-flex d-md-none d-sm-none d-none">
+                <button type="button" class="btn btn-secondary text-nowrap btn-block d-xl-block d-lg-block d-md-none d-sm-none d-none" style="text-align:left"
                         routerLink="events/current" routerLinkActive="active" (click)="isMenuCollapsed = true">Akce
                 </button>
-                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right d-lg-block d-md-block d-sm-block d-none"
+                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right
+                        d-lg-block d-md-none d-sm-none d-none"
                         ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         data-reference="parent">
                   <span class="sr-only">Toggle Dropdown</span>
                 </button>
               </div>
-              <button class="btn btn-secondary text-nowrap btn-block d-xl-none d-lg-none d-md-none d-sm-none" style="text-align:left"
+              <button class="btn btn-secondary text-nowrap btn-block d-xl-none d-lg-none" style="text-align:left"
                       ngbDropdownToggle>Akce</button>
             </div>
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
@@ -105,22 +106,22 @@ Author: David Chocholatý
               <button type="button" *ngIf="authenticationService.isLoggedOut()" class="btn btn-secondary text-nowrap btn-block" style="text-align:left"
                       routerLink="board-games" (click)="isMenuCollapsed = true">Deskovky
               </button>
-              <div class="btn-group btn-block d-xl-flex d-lg-flex d-md-flex d-sm-flex d-none" *ngIf="authenticationService.isLoggedIn()">
-                <button type="button" class="btn btn-secondary text-nowrap btn-block d-xl-block d-lg-block d-md-block d-sm-block d-none" style="text-align:left"
+              <div class="btn-group btn-block d-xl-flex d-lg-flex d-md-none d-sm-none d-none" *ngIf="authenticationService.isLoggedIn()">
+                <button type="button" class="btn btn-secondary text-nowrap btn-block d-xl-block d-lg-block d-md-none d-sm-none d-none" style="text-align:left"
                         routerLink="board-games" (click)="isMenuCollapsed = true">Deskovky
                 </button>
                 <button type="button"
-                        class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right d-xl-block d-lg-block d-md-block d-sm-block d-none"
+                        class="btn btn-secondary dropdown-toggle dropdown-toggle-split dropdown-menu-right d-xl-block d-lg-block d-md-none d-sm-none d-none"
                         ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         data-reference="parent">
                   <span class="sr-only">Toggle Dropdown</span>
                 </button>
               </div>
-            <button class="btn btn-secondary text-nowrap btn-block d-xl-none d-lg-none d-md-none d-sm-none" *ngIf="authenticationService.isLoggedIn()" style="text-align:left"
+            <button class="btn btn-secondary text-nowrap btn-block d-xl-none d-lg-none" *ngIf="authenticationService.isLoggedIn()" style="text-align:left"
                     ngbDropdownToggle>Deskovky</button>
             </div>
             <div class="dropdown-menu dropdown-menu-text dropdown-menu-right" aria-labelledby="tmp" ngbDropdownMenu>
-              <button class="dropdown-item d-lg-none d-xl-none d-md-none d-sm-none" (click)="isMenuCollapsed = true"
+              <button class="dropdown-item d-xl-none d-lg-none" (click)="isMenuCollapsed = true"
                       routerLink="board-games" routerLinkActive="active" ngbDropdownItem>Přehled deskových her
               </button>
               <button class="dropdown-item" routerLink="board-games/reservations" routerLinkActive="active"
