@@ -31,7 +31,7 @@ export class ReservationComponent implements OnInit {
 
   ngOnInit(): void {
     this.formattedDate = formatDate(this.reservation.madeOn, "d. M. y", "cs-CZ");
-    let note = this.managerView ? (this.reservation.noteInternal || "") : this.reservation.noteUser;
+    let note = this.managerView ? (this.reservation.noteInternal || "") : (this.reservation.noteUser || "");
     this.formattedNote = note.substr(0, this.shownNoteChars);
     if (note.length > this.shownNoteChars) {
       this.noteTooLong = true;
