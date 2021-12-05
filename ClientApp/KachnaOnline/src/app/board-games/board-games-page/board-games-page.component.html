@@ -38,9 +38,12 @@ Author: František Nečas
                              (categoryRemoved)="onCategoryRemoved($event)"
                              [initiallyEnabled]="categoryIds"></app-category-selector>
     </div>
-    <div class="mt-3">
+    <div class="mr-4 mt-3">
       <app-togglable-button [startingValue]="availableOnly !== undefined" [text]="'Pouze dostupné'"
                             (valueChanged)="onAvailabilityUpdate($event)"></app-togglable-button>
+    </div>
+    <div class="mt-3" *ngIf="categoryIds.length > 0 || availableOnly !== undefined || players !== undefined">
+      <button type="button" class="btn btn-danger" (click)="resetFilters()">Zrušit filtry</button>
     </div>
   </div>
 

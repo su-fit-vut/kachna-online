@@ -66,6 +66,13 @@ export class BoardGamesPageComponent implements OnInit {
       this.categoryIds, this.currentReservation);
   }
 
+  resetFilters(): void {
+    this.players = undefined;
+    this.categoryIds = [];
+    // This change will trigger fetch as the number selector will output
+    this.availableOnly = undefined;
+  }
+
   onCategoryAdded(category: number): void {
     if (this.categoryIds.length == 0) {
       // Prepare for category-based filtering.

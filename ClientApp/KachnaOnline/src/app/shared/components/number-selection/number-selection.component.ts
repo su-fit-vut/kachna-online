@@ -20,6 +20,10 @@ export class NumberSelectionComponent implements OnInit {
   constructor() {
   }
 
+  ngOnChanges(): void {
+    this.countForm.setValue(this.initialValue);
+  }
+
   ngOnInit(): void {
     this.countForm.setValue(this.initialValue);
     this.countForm.valueChanges.subscribe(value => {
