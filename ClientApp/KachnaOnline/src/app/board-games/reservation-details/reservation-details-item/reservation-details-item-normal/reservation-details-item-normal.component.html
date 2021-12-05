@@ -17,6 +17,9 @@ Author: František Nečas
             (click)="$event.stopPropagation(); requestExtension()">
       Prodloužit
     </button>
+    <div *ngIf="item.lastEventType == eventType.ExtensionRequested">
+      Žádost o prodloužení čeká na schválení
+    </div>
   </ng-container>
   <ng-container *ngIf="managerView">
     <app-manager-button-cluster [item]="item" (handOver)="handOver()"
