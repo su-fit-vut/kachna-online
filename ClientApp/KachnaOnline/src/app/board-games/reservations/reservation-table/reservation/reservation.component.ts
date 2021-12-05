@@ -39,7 +39,7 @@ export class ReservationComponent implements OnInit {
     }
     for (let reservationItem of this.reservation.items) {
       if (reservationItem.assignedTo !== null) {
-        this.assignedUsers.add(reservationItem.assignedTo.name);
+        this.assignedUsers.add(`${reservationItem.assignedTo.name} (${reservationItem.assignedTo.nickname})`);
       }
     }
   }

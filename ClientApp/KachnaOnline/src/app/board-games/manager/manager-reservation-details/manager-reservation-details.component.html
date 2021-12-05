@@ -30,7 +30,10 @@ Author: František Nečas
     <label for="userNote">Poznámka uživatele</label>
     <textarea class="form-control" id="userNote" rows="2" readonly>{{reservation?.noteUser}}</textarea>
   </div>
-  <hr/>
+  <div class="form-group border-bottom">
+    <label>E-mail uživatele:&nbsp;</label>
+    <a href="mailto:{{reservation?.madeBy?.email ?? ''}}">{{reservation?.madeBy?.email ?? ''}}</a>
+  </div>
   <div class="form-group">
     <label for="internalNote">Interní poznámka</label>
     <textarea class="form-control" id="internalNote" rows="2" [formControl]="noteInternalForm" maxlength="1024"

@@ -91,14 +91,11 @@ namespace KachnaOnline.Business.Extensions
 
             var dto = new MadeByUserDto()
             {
-                Name = user.Nickname ?? user.Name,
-                DiscordId = user.DiscordId?.ToString()
+                Name = user.Name,
+                Nickname = user.Nickname,
+                Email = user.Email,
+                Id = showId ? user.Id : null
             };
-
-            if (showId)
-            {
-                dto.Id = user.Id;
-            }
 
             return dto;
         }
