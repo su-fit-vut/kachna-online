@@ -196,15 +196,15 @@ export class AuthenticationService {
   }
 
   isStatesManager(): boolean {
-    return this.hasRole(RoleTypes.StatesManager) || this.hasRole(RoleTypes.Admin);
+    return this.hasRole(RoleTypes.StatesManager);
   }
 
   isEventsManager(): boolean {
-    return this.hasRole(RoleTypes.EventsManager) || this.hasRole(RoleTypes.Admin);
+    return this.hasRole(RoleTypes.EventsManager);
   }
 
   isBoardGamesManager(): boolean {
-    return this.hasRole(RoleTypes.BoardGamesManager) || this.hasRole(RoleTypes.Admin);
+    return this.hasRole(RoleTypes.BoardGamesManager);
   }
 
   isAdmin(): boolean {
