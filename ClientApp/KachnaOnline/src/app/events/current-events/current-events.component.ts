@@ -7,7 +7,7 @@ import { Event } from "../../models/events/event.model";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../../shared/services/authentication.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { EventItem, StateItem } from "../../home/events-overview/events-overview.component";
+import { EventItem } from "../../home/events-overview/events-overview.component";
 import { StatesService } from "../../shared/services/states.service";
 import { forkJoin, Observable } from "rxjs";
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
@@ -24,6 +24,7 @@ export class CurrentEventsComponent implements OnInit {
   nextEvents: EventItem[] = [];
   shownNextEvents: EventItem[] = [];
   currentMonth: Date = new Date();
+  loading: boolean = false;
 
   constructor(
     public eventsService: EventsService,
@@ -36,11 +37,12 @@ export class CurrentEventsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.loading = true;
     this.eventsService.getCurrentEventsRequest().subscribe(
       (res: Event[]) => {
         this.makeCurrentEvents(res);
       },
-      (err) => {
+      (_) => {
         this.toastrService.error("Nepodařilo se stáhnout aktuální akce.", "Stažení akcí")
       }
     );
@@ -49,7 +51,7 @@ export class CurrentEventsComponent implements OnInit {
       (res: Event[]) => {
         this.makeNextEvents(res);
       },
-      (err) => {
+      (_) => {
         this.toastrService.error("Nepodařilo se stáhnout následující akce.", "Stažení akcí")
       }
     );
@@ -114,7 +116,10 @@ export class CurrentEventsComponent implements OnInit {
       }
     }
 
-    forkJoin(waiting).pipe(endWith(null)).subscribe(_ => this.currentEvents = this.sortEvents(this.currentEvents));
+    forkJoin(waiting).pipe(endWith(null)).subscribe(_ => {
+      this.currentEvents = this.sortEvents(this.currentEvents);
+      //this.loading = false;
+    });
   }
 
   getNextEvents(from: Date = new Date()) {
@@ -179,7 +184,10 @@ export class CurrentEventsComponent implements OnInit {
       }
     }
 
-    forkJoin(waiting).pipe(endWith(null)).subscribe(_ => this.updateNextEvents());
+    forkJoin(waiting).pipe(endWith(null)).subscribe(_ => {
+      this.updateNextEvents();
+      this.loading = false;
+    });
   }
 
   sortEvents(events: EventItem[]): EventItem[] {
