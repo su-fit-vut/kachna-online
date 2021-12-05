@@ -6,7 +6,7 @@ Author: František Nečas
 .bottom-right {
   position: -webkit-sticky;
   position: sticky;
-  bottom: 20px;
+  bottom: 24px;
   float: right;
   /* Must be above the card links and buttons */
   z-index: 10;
