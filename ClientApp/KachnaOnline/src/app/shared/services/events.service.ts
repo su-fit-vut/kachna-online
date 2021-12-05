@@ -10,11 +10,10 @@ import { Event } from "../../models/events/event.model";
 import { ClubState } from "../../models/states/club-state.model";
 import { formatDate } from "@angular/common";
 import { EventModification } from "../../models/events/event-modification.model";
-import {
-  DeletionConfirmationModalComponent,
-  DeletionType
+import { DeletionConfirmationModalComponent, DeletionType,
 } from "../components/deletion-confirmation-modal/deletion-confirmation-modal.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { StatesService } from "./states.service";
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +26,7 @@ export class EventsService {
     private http: HttpClient,
     private toastr: ToastrService,
     private _modalService: NgbModal,
+    private statesService: StatesService,
   ) {
   }
 
@@ -167,34 +167,8 @@ export class EventsService {
     this.getEventData(eventId, true);
   }
 
-  unlinkLinkedState(linkedStateId: number) {
-    this.unlinkLinkedStateRequest(linkedStateId).toPromise()
-      .then(() => {
-        this.refreshLinkedStatesList(this.eventDetail.id);
-        this.toastr.success("Odpojení navázaného stavu proběhlo úspěšně.", "Odpojení navázaných stavů");
-      }).catch((error: any) => {
-      this.toastr.error("Odpojení navázaného stavu selhalo.", "Odpojení navázaných stavů");
-      return throwError(error);
-    });
-  }
-
   unlinkLinkedStateRequest(linkedStateId: number) {
     return this.http.delete(`${this.StatesUrl}/${linkedStateId}/linkedEvent`);
-  }
-
-  unlinkAllLinkedStates() {
-    if (confirm(`Opravdu si přejete odpojit od akce ${this.eventDetail.name} všechny stavy, které jsou k ní nyní navázány? Tato operace dané stavy nezruší.`)) {
-      this.unlinkAllLinkedStatesRequest().toPromise()
-        .then(() => {
-          this.refreshLinkedStatesList(this.eventDetail.id);
-          this.toastr.success("Odpojení navázaných stavů proběhlo úspěšně.", "Odpojení navázaných stavů");
-        }).catch((error: any) => {
-          console.log(error);
-          this.toastr.error("Odpojení navázaných stavů selhalo.", "Odpojení navázaných stavů");
-          return;
-        }
-      );
-    }
   }
 
   unlinkAllLinkedStatesRequest() {
@@ -383,5 +357,52 @@ export class EventsService {
         }
       }, (reason) => {
       });
+  }
+
+  getLinkedStatesForEventRequest(eventId: number) {
+    return this.http.get<ClubState[]>(`${this.EventsUrl}/${eventId}/linkedStates`);
+  }
+
+  openLinkedStateDeletionConfirmationModal(state: ClubState): Observable<any> {
+    const modal = this._modalService.open(DeletionConfirmationModalComponent);
+    modal.componentInstance.name = state.id;
+    modal.componentInstance.type = DeletionType.LinkedState;
+
+    modal.result.then(
+      (result) => {
+        if (result == "Confirm deletion") {
+          return this.statesService.delete(state.id);
+        }
+
+        return new Observable<any>();
+      }, (reason) => {
+      });
+    return new Observable<any>();
+  }
+
+  openLinkedStatesDeletionConfirmationModal(eventDetail: Event): Observable<any> {
+    const modal = this._modalService.open(DeletionConfirmationModalComponent);
+    modal.componentInstance.name = eventDetail.name;
+    modal.componentInstance.type = DeletionType.LinkedStates;
+
+    modal.result.then(
+      (result) => {
+        if (result == "Confirm deletion") {
+          if (eventDetail.linkedPlannedStateIds) {
+            for (let linkedStateId of eventDetail.linkedPlannedStateIds) {
+              this.statesService.delete(linkedStateId).toPromise()
+                .then(_ => {
+                }).catch((error: any) => {
+                  this.toastr.error(`Zrušení napojených stavů k akci ${eventDetail.name} selhalo.`, "Zrušení napojených stavů");
+                  return throwError(error);
+                });
+            }
+          }
+        }
+
+        return new Observable<any>();
+      }, (reason) => {
+      });
+    return new Observable<any>();
   }
 }

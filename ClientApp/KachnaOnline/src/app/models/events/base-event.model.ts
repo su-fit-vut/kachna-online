@@ -14,5 +14,5 @@ export class BaseEvent {
   url: string = "";
   linkedPlannedStateIds: number[] | null = [];
   madeById: string = "";
-  linkedStatesDtos: ClubState[];
+  linkedStatesDtos: ClubState[] = [];
 }

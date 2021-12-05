@@ -6,6 +6,9 @@ import { EventsService } from "../../../shared/services/events.service";
 import { ToastrService } from "ngx-toastr";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ClubState } from "../../../models/states/club-state.model";
+import { StatesService } from "../../../shared/services/states.service";
+import { Event } from "../../../models/events/event.model";
+import { throwError } from "rxjs";
 
 @Component({
   selector: 'app-manage-linked-states',
@@ -15,15 +18,28 @@ import { ClubState } from "../../../models/states/club-state.model";
 export class ManageLinkedStatesComponent implements OnInit {
   constructor(
     public eventsService: EventsService,
+    private statesService: StatesService,
     private toastrService: ToastrService,
     private router: Router,
     private route: ActivatedRoute,
   ) { }
 
+  eventDetail: Event = new Event();
+
   ngOnInit(): void {
+    this.refreshLinkedStatesList();
+  }
+
+  refreshLinkedStatesList() {
     this.route.paramMap.subscribe(params => {
       let eventId = Number(params.get('eventId'));
-      this.eventsService.refreshLinkedStatesList(eventId);
+      this.eventsService.getEventRequest(eventId, true).toPromise()
+        .then((eventDetail: Event) => {
+          this.eventDetail = eventDetail;
+        }).catch(err => {
+          this.toastrService.error("Nepodařilo se načíst navázané stavy k akci.", "Načtení navázaných stavů");
+          return throwError(err);
+      });
     });
   }
 
@@ -36,32 +52,53 @@ export class ManageLinkedStatesComponent implements OnInit {
       this.toastrService.error("Tento stav již začal, není ho proto možné odebrat.")
       return;
     }
-    this.eventsService.unlinkLinkedState(linkedState.id);
+    this.eventsService.unlinkLinkedStateRequest(linkedState.id).toPromise()
+      .then(() => {
+        this.refreshLinkedStatesList();
+        this.toastrService.success("Odpojení navázaného stavu proběhlo úspěšně.", "Odpojení navázaných stavů");
+      }).catch((error: any) => {
+      this.toastrService.error("Odpojení navázaného stavu selhalo.", "Odpojení navázaných stavů");
+      return throwError(error);
+    });
   }
 
   onDeleteButtonClicked(linkedState: ClubState) {
-    //this.statesService.deleteState(linkedState.id); // TODO: Uncomment when implemented. Add a single confirmation inside.
+    this.eventsService.openLinkedStateDeletionConfirmationModal(linkedState).subscribe(_ => {
+      this.refreshLinkedStatesList();
+    });
   }
 
   onPlanNewClubStateClicked() {
-    this.router.navigate([`/states/plan`], {state: {event: this.eventsService.eventDetail}}).then(() => null);
+    this.router.navigate([`/states/plan`], {state: {event: this.eventDetail}}).then(() => null);
   }
 
   onAddFromExistingClubStates() {
-    this.router.navigate([`/events/${this.eventsService.eventDetail.id}/conflicting-states`]).then(() => null);
+    this.router.navigate([`/events/${this.eventDetail.id}/conflicting-states`]).then(() => null);
   }
 
   onUnlinkAllButtonClicked() {
-    this.eventsService.unlinkAllLinkedStates();
+    if (confirm(`Opravdu si přejete odpojit od akce ${this.eventDetail.name} všechny stavy, které jsou k ní nyní navázány? Tato operace dané stavy nezruší.`)) {
+      this.eventsService.unlinkAllLinkedStatesRequest().toPromise()
+        .then(() => {
+          this.toastrService.success("Odpojení napojených stavů proběhlo úspěšně.", "Odpojení napojených stavů");
+          this.refreshLinkedStatesList();
+        }).catch((error: any) => {
+          this.toastrService.error("Odpojení napojených stavů selhalo.", "Odpojení napojených stavů");
+          return throwError(error);
+        }
+      );
+    }
   }
 
   onDeleteAllButtonClicked() {
-    if (this.eventsService.eventDetail.linkedPlannedStateIds == null) {
+    if (this.eventDetail.linkedPlannedStateIds == null) {
       return;
     }
 
-    for (let stateId of this.eventsService.eventDetail.linkedPlannedStateIds) {
-      //this.statesService.deleteState(stateId); // TODO: Uncomment when implemented. Add a single confirmation inside.
+    for (let stateId of this.eventDetail.linkedPlannedStateIds) {
+      this.eventsService.openLinkedStatesDeletionConfirmationModal(this.eventDetail).subscribe(_ => {
+        this.refreshLinkedStatesList();
+      });
     }
   }
 
@@ -77,7 +114,7 @@ export class ManageLinkedStatesComponent implements OnInit {
    * Checks whether any linked state has already started.
    */
   anyLinkedStateAlreadyStarted(): boolean {
-    for (let linkedState of this.eventsService.eventDetail.linkedStatesDtos) {
+    for (let linkedState of this.eventDetail.linkedStatesDtos) {
       if (this.linkedStateHasStarted(linkedState)) {
         return true;
       }
