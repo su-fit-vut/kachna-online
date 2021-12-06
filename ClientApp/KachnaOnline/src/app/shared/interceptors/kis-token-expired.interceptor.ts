@@ -22,7 +22,7 @@ export class KisTokenExpiredInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (request.url.includes("/kis/api/")) {
-      if (request.url.includes("kis/api/auth")) {
+      if (request.url.includes("/kis/api/auth/")) {
         return next.handle(request);
       }
 
@@ -35,7 +35,6 @@ export class KisTokenExpiredInterceptor implements HttpInterceptor {
                 localStorage.setItem(environment.kisAccessTokenStorageName, res.auth_token);
                 localStorage.setItem(environment.kisRefreshTokenStorageName, res.refresh_token);
                 this.authenticationService.decodeKisToken();
-                this.authenticationService.getInformationAboutUser().then();
                 return next.handle(request.clone({
                   setHeaders: {
                     'Authorization': `Bearer ${res.auth_token}`,
