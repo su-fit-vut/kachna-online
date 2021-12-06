@@ -76,6 +76,17 @@ export class AuthenticationService {
       });
   }
 
+  logInRt(refreshToken: string): Promise<any> {
+    let params = new HttpParams().set('kisRefreshToken', refreshToken);
+    return this.http.get<AccessTokens>(`${AUTH_API}/accessTokenFromRefreshToken`, {params: params}).toPromise()
+      .then((res) => {
+        return this.handleAccessTokens(res);
+      }).catch((error: any) => {
+        this.toastr.error("Načtení přístupových údajů selhalo.", "Přihlášení");
+        return throwError(error);
+      });
+  }
+
   private setRefreshIntervalForAuthToken() {
     clearInterval(this.refreshLocalTokenIntervalHandle);
     this.refreshLocalTokenIntervalHandle = setInterval(() => {
@@ -381,13 +392,11 @@ export class AuthenticationService {
     let params = new HttpParams().set('session', sessionId);
     return this.http.post<KisRefreshTokenResponse>(`${environment.kisApiUrl}/auth/eduid/register`, "", {params: params}).toPromise()
       .then((res) => {
-        localStorage.setItem(environment.kisAccessTokenStorageName, res.auth_token);
-        localStorage.setItem(environment.kisRefreshTokenStorageName, res.refresh_token);
-        this.decodeKisToken();
-        this.getInformationAboutUser().then();
-        this.toastr.success("Registrace proběhla úspěšně.", "Registrace uživatele");
-        this.router.navigate(['user-profile']).then();
-        return;
+        this.logInRt(res.refresh_token).then(() => {
+          this.toastr.success("Registrace proběhla úspěšně.", "Registrace uživatele");
+          this.router.navigate(['user-profile']).then();
+          return;
+        });
       }).catch((error) => {
         if (error.error.detail == "User is already registered") {
           this.logIn().then(_ => {
