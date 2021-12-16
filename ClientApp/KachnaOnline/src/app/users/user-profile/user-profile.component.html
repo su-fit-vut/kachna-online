@@ -7,21 +7,21 @@ Author: David Chocholatý, Ondřej Ondryáš
 
 <div class="row">
   <div class="col-xl-6">
-    <form novalidate autocomplete="off" #form="ngForm" (submit)="onSaveChanges(form)">
+    <form novalidate autocomplete="off" [formGroup]="form" (submit)="onSaveChanges()">
       <div class="form-group form-row">
-        <label for="staticName" class="col-2 col-form-label">Jméno</label>
+        <label for="name" class="col-2 col-form-label">Jméno</label>
         <div class="col-10">
-          <input #name="ngModel" [(ngModel)]="authenticationService.user.name" class="form-control-plaintext"
-                 id="staticName" name="name" placeholder="Jméno"
+          <input class="form-control form-control-plaintext"
+                 id="name" formControlName="name" placeholder="Jméno"
                  readonly type="text">
         </div>
       </div>
 
       <div class="form-group form-row">
-        <label for="staticEmail" class="col-2 col-form-label">E-mail</label>
+        <label for="email" class="col-2 col-form-label">E-mail</label>
         <div class="col-10">
-          <input #email="ngModel" [(ngModel)]="authenticationService.user.email" class="form-control-plaintext"
-                 id="staticEmail" name="email" placeholder="E-mail"
+          <input class="form-control form-control-plaintext"
+                 id="email" name="email" formControlName="email" placeholder="E-mail"
                  readonly type="text">
         </div>
       </div>
@@ -29,18 +29,16 @@ Author: David Chocholatý, Ondřej Ondryáš
       <div class="form-group form-row">
         <label for="nickname" class="col-2 col-form-label">Přezdívka</label>
         <div class="col-10">
-          <input #nickname="ngModel" [(ngModel)]="authenticationService.user.nickname"
-                 [class.invalid]="nickname.invalid"
-                 class="form-control" id="nickname" name="nickname" placeholder="Přezdívka"
-                 type="text" maxlength="128"> <!--  FIXME: What is the max length? -->
+          <input [class.is-invalid]="form.controls.nickname.invalid"
+                 class="form-control" id="nickname" formControlName="nickname" name="nickname" placeholder="Přezdívka"
+                 type="text" maxlength="128"> <!--  TODO: Any other format requirements? -->
         </div>
       </div>
 
       <div class="form-group">
         <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="gamificationCheckbox" name="gamification"
-                 #gamification="ngModel" [(ngModel)]="authenticationService.user.gamificationConsent">
-          <label class="form-check-label" for="gamificationCheckbox">Souhlas s gamifikací</label>
+          <input type="checkbox" class="form-check-input" formControlName="gamificationConsent" id="gamificationConsent" name="gamification">
+          <label class="form-check-label" for="gamificationConsent">Souhlas s gamifikací</label>
 
           <button class="btn p-0 ml-3" type="button" triggers="click hover focus" [autoClose]="true" [closeDelay]="500"
                   [ngbTooltip]="gamificationConsentTooltipText" #tooltip3="ngbTooltip">
@@ -58,11 +56,11 @@ Author: David Chocholatý, Ondřej Ondryáš
 
       <div #collapse="ngbCollapse" [(ngbCollapse)]="isCardInfoCollapsed">
         <div class="form-group form-row">
-          <label for="card" class="col-3 col-form-label">Přiřazovací kód karty</label>
+          <label for="cardCode" class="col-3 col-form-label">Přiřazovací kód karty</label>
           <div class="col-9 d-flex flex-nowrap flex-row align-content-center">
-            <input #card="ngModel" [(ngModel)]="authenticationService.user.cardCode" [class.invalid]="card.invalid"
-                   class="form-control" id="card" name="card" placeholder="Kód karty"
-                   type="text" maxlength="5" pattern="[A-Z]{5}">
+            <input [class.invalid]="form.controls.cardCode.invalid"
+                   class="form-control" id="cardCode" name="cardCode" formControlName="cardCode" placeholder="Kód karty"
+                   type="text" maxlength="5" pattern="[a-zA-Z]{5}">
 
             <button
               type="button" class="btn p-0 ml-3"
@@ -75,7 +73,7 @@ Author: David Chocholatý, Ondřej Ondryáš
       </div>
       </div>
 
-      <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Uložit změny</button>
+      <button class="btn btn-primary" type="submit" [disabled]="form.invalid || form.pristine">Uložit změny</button>
     </form>
   </div>
 </div>
