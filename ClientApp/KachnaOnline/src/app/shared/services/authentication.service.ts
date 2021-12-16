@@ -212,7 +212,7 @@ export class AuthenticationService {
   }
 
   getInformationAboutUser(): Promise<any> {
-    return this.http.get<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me`).toPromise()
+    return this.getInformationAboutLoggedInUserFromKisRequest().toPromise()
       .then((res) => {
         this.kisLoggedInUserInformation = res;
         localStorage.setItem(environment.kisLoggedInUserInformationStorageName, JSON.stringify(this.kisLoggedInUserInformation));
@@ -224,6 +224,10 @@ export class AuthenticationService {
         throwError(error);
         this.toastr.error("Stažení informací o uživateli z KIS se nezdařilo.", "Přihlášení");
       });
+  }
+
+  getInformationAboutLoggedInUserFromKisRequest() {
+    return this.http.get<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me`);
   }
 
   getUserName() {
@@ -329,7 +333,7 @@ export class AuthenticationService {
   }
 
   userInfoSaved() {
-    this.updateNicknameRequest().toPromise()
+    this.updateNicknameRequest(this.user.nickname).toPromise()
       .then(_ => {
         this.toastr.success("Přezdívka úspěšně aktualizována.", "Správa účtu");
         this.updateLocalUserInformation();
@@ -340,8 +344,19 @@ export class AuthenticationService {
     this.changeGamificationConsent(this.user.gamificationConsent);
   }
 
-  updateNicknameRequest() {
-    return this.http.put<any>(`${USERS_API}/me/nickname`, JSON.stringify(this.user.nickname),
+  updateNickname(nickname: string) {
+    this.updateNicknameRequest(nickname).toPromise()
+      .then(_ => {
+        this.toastr.success("Přezdívka úspěšně aktualizována.", "Správa účtu");
+        this.updateLocalUserInformation();
+      }).catch((err) => {
+      console.log(err);
+      this.toastr.error("Přezdívku nebylo možné aktualizovat.", "Správa účtu");
+    });
+  }
+
+  updateNicknameRequest(nickname: string) {
+    return this.http.put<any>(`${USERS_API}/me/nickname`, JSON.stringify(nickname),
       {headers: new HttpHeaders({'Content-Type': 'application/json'})});
   }
 
@@ -417,8 +432,25 @@ export class AuthenticationService {
         this.storeUserDataToStorage();
         this.toastr.success("Změna souhlasu s gamifikací proběhla úspěšně.", "Změna uživatelských údajů");
       }).catch((error: any) => {
-      throwError(error);
-      this.toastr.error("Změna souhlasu s gamifikací selhala.", "Změna uživatelských údajů");
+        throwError(error);
+        this.toastr.error("Změna souhlasu s gamifikací selhala.", "Změna uživatelských údajů");
+    });
+  }
+
+  changeCardCode(cardCode: string) {
+    this.http.put<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me/rfid`,
+      JSON.stringify(cardCode.toUpperCase()), {headers: new HttpHeaders({'Content-Type': 'application/json'})}).toPromise()
+      .then((res: KisLoggedInUserInformation) => {
+        this.kisLoggedInUserInformation = res;
+        localStorage.setItem(environment.kisLoggedInUserInformationStorageName, JSON.stringify(this.kisLoggedInUserInformation));
+
+        this.assignDataFromKisUserInformation();
+        this.assignDataFromLocalTokenContent();
+        this.storeUserDataToStorage();
+        this.toastr.success("Nastavení přiřazovacího kódu karty proběhlo úspěšně.", "Změna uživatelských údajů");
+      }).catch((error: any) => {
+        throwError(error);
+        this.toastr.success("Nastavení přiřazovacího kódu karty selhalo.", "Změna uživatelských údajů");
     });
   }
 }
