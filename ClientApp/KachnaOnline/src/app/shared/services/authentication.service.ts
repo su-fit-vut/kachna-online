@@ -6,7 +6,7 @@ import { KisEduIdResponse } from '../../models/users/auth/kis/kis-eduid-response
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { LocalTokenContent } from "../../models/users/auth/local-token-content.model";
@@ -16,7 +16,7 @@ import { AccessTokens } from "../../models/users/auth/access-tokens.model";
 import { KisTokenContent } from "../../models/users/auth/kis/kis-token-content.model";
 import { KisLoggedInUserInformation } from "../../models/users/kis-logged-in-user-information.model";
 import { KisRefreshTokenResponse } from "../../models/users/auth/kis/kis-refresh-token-response.model";
-import { Observable, throwError } from "rxjs";
+import { Observable, of, throwError } from "rxjs";
 
 const AUTH_API = `${environment.baseApiUrl}/auth`;
 const USERS_API = `${environment.baseApiUrl}/users`;
@@ -28,7 +28,7 @@ export class AuthenticationService {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private toastr: ToastrService,
+    private toastrService: ToastrService,
     private location: Location,
     public jwtHelper: JwtHelperService,
     private route: ActivatedRoute
@@ -54,7 +54,7 @@ export class AuthenticationService {
         localStorage.setItem(environment.returnAddressStorageName, this.router.url);
         window.open(kisResponse.wayf_url, '_self');
       }).catch((error: any) => {
-      this.toastr.error("Přihlášení do KIS selhalo.", "Přihlášení");
+      this.toastrService.error("Přihlášení do KIS selhalo.", "Přihlášení");
       return throwError(error);
     });
   }
@@ -71,7 +71,7 @@ export class AuthenticationService {
       .then((res) => {
         return this.handleAccessTokens(res);
       }).catch((error: any) => {
-        this.toastr.error("Načtení přístupových údajů selhalo.", "Přihlášení");
+        this.toastrService.error("Načtení přístupových údajů selhalo.", "Přihlášení");
         return throwError(error);
       });
   }
@@ -82,7 +82,7 @@ export class AuthenticationService {
       .then((res) => {
         return this.handleAccessTokens(res);
       }).catch((error: any) => {
-        this.toastr.error("Načtení přístupových údajů selhalo.", "Přihlášení");
+        this.toastrService.error("Načtení přístupových údajů selhalo.", "Přihlášení");
         return throwError(error);
       });
   }
@@ -156,7 +156,7 @@ export class AuthenticationService {
       .then((res) => {
         this.handleAccessTokens(res).then();
       }).catch((error: any) => {
-      this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
+      this.toastrService.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
       this.logOut();
       return throwError(error);
     });
@@ -171,7 +171,7 @@ export class AuthenticationService {
         this.decodeKisToken();
         this.getInformationAboutUser().then();
       }).catch((error: any) => {
-      this.toastr.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
+      this.toastrService.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
       this.logOut();
       return throwError(error);
     });
@@ -233,7 +233,7 @@ export class AuthenticationService {
         this.storeUserDataToStorage();
       }).catch((error: any) => {
         throwError(error);
-        this.toastr.error("Stažení informací o uživateli z KIS se nezdařilo.", "Přihlášení");
+        this.toastrService.error("Stažení informací o uživateli z KIS se nezdařilo.", "Přihlášení");
       });
   }
 
@@ -330,7 +330,7 @@ export class AuthenticationService {
         this.shownUsersList = this.usersList;
       }).catch((error: any) => {
       throwError(error);
-      this.toastr.error("Stažení seznamu uživatelů se nezdařilo.", "Správa uživatelů");
+      this.toastrService.error("Stažení seznamu uživatelů se nezdařilo.", "Správa uživatelů");
     });
   }
 
@@ -343,32 +343,36 @@ export class AuthenticationService {
     return this.http.get<UserDetail[]>(`${environment.baseApiUrl}/users`, {params: params});
   }
 
-  userInfoSaved() {
-    this.updateNicknameRequest(this.user.nickname).toPromise()
-      .then(_ => {
-        this.toastr.success("Přezdívka úspěšně aktualizována.", "Správa účtu");
-        this.updateLocalUserInformation();
-      }).catch((err) => {
-      console.log(err);
-      this.toastr.error("Přezdívku nebylo možné aktualizovat.", "Správa účtu");
-    });
-    this.changeGamificationConsent(this.user.gamificationConsent);
-  }
-
   updateNickname(nickname: string) {
-    this.updateNicknameRequest(nickname).toPromise()
+    this.updateKisNicknameRequest(nickname).toPromise()
       .then(_ => {
-        this.toastr.success("Přezdívka úspěšně aktualizována.", "Správa účtu");
+        this.updateLocalNicknameRequest(nickname);
         this.updateLocalUserInformation();
-      }).catch((err) => {
-      console.log(err);
-      this.toastr.error("Přezdívku nebylo možné aktualizovat.", "Správa účtu");
+        return;
+      }).catch((err: any) => {
+        this.handleUpdateNicknameErrors(err.error);
+        return;
     });
   }
 
-  updateNicknameRequest(nickname: string) {
-    return this.http.put<any>(`${USERS_API}/me/nickname`, JSON.stringify(nickname),
+  updateKisNicknameRequest(nickname: string): Observable<KisLoggedInUserInformation> {
+    return this.http.put<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me/nickname`, JSON.stringify(nickname),
       {headers: new HttpHeaders({'Content-Type': 'application/json'})});
+  }
+
+  updateLocalNicknameRequest(nickname: string) {
+    return this.http.put(`${USERS_API}/me/nickname`, JSON.stringify(nickname),
+      {headers: new HttpHeaders({'Content-Type': 'application/json'})});
+  }
+
+  private handleUpdateNicknameErrors(err: HttpErrorResponse) {
+    if (err.status === 0) {
+      this.toastrService.error("Nepodařilo se odeslat požadavek.", "Změna uživatelských údajů");
+    } else if (err.status === 409) {
+      this.toastrService.error("Požadovanou přezdívku už někdo používá.", "Změna uživatelských údajů");
+    } else if (err.status === 429) {
+      this.toastrService.error("Přezdívka může být změněna jen jednou za 3 měsíce.", "Změna uživatelských údajů");
+    }
   }
 
   updateLocalUserInformation() {
@@ -377,7 +381,7 @@ export class AuthenticationService {
         this.user.nickname = userDetail.nickname;
       }).catch((err) => {
       console.log(err);
-      this.toastr.error("Nebylo možné data o uživateli aktualizovat.", "Správa účtu");
+      this.toastrService.error("Nebylo možné data o uživateli aktualizovat.", "Správa účtu");
     });
   }
 
@@ -408,7 +412,7 @@ export class AuthenticationService {
     return this.http.post<KisRefreshTokenResponse>(`${environment.kisApiUrl}/auth/eduid/register`, "", {params: params}).toPromise()
       .then((res) => {
         this.logInRt(res.refresh_token).then(() => {
-          this.toastr.success("Registrace proběhla úspěšně.", "Registrace uživatele");
+          this.toastrService.success("Registrace proběhla úspěšně.", "Registrace uživatele");
           this.router.navigate(['user-profile']).then();
           return;
         });
@@ -418,11 +422,11 @@ export class AuthenticationService {
             this.router.navigate(['user-profile']).then();
             return;
           }).catch(_ => {
-            this.toastr.error("Nastala neočekávaná chyba. Zkuste celým procesem projít znovu.",
+            this.toastrService.error("Nastala neočekávaná chyba. Zkuste celým procesem projít znovu.",
               "Registrace uživatele");
           })
         } else {
-          this.toastr.error("Registrace selhala.", "Registrace uživatele");
+          this.toastrService.error("Registrace selhala.", "Registrace uživatele");
           return throwError(error);
         }
         return;
@@ -439,27 +443,36 @@ export class AuthenticationService {
         this.assignDataFromKisUserInformation();
         this.assignDataFromLocalTokenContent();
         this.storeUserDataToStorage();
-        this.toastr.success("Změna souhlasu s gamifikací proběhla úspěšně.", "Změna uživatelských údajů");
+        this.toastrService.success("Změna souhlasu s gamifikací proběhla úspěšně.", "Změna uživatelských údajů");
       }).catch((error: any) => {
         throwError(error);
-        this.toastr.error("Změna souhlasu s gamifikací selhala.", "Změna uživatelských údajů");
+        this.toastrService.error("Změna souhlasu s gamifikací selhala.", "Změna uživatelských údajů");
     });
   }
 
   changeCardCode(cardCode: string) {
-    this.http.put<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me/rfid`,
-      JSON.stringify(cardCode.toUpperCase()), {headers: new HttpHeaders({'Content-Type': 'application/json'})}).toPromise()
-      .then((res: KisLoggedInUserInformation) => {
-        this.kisLoggedInUserInformation = res;
-        localStorage.setItem(environment.kisLoggedInUserInformationStorageName, JSON.stringify(this.kisLoggedInUserInformation));
-
-        this.assignDataFromKisUserInformation();
-        this.assignDataFromLocalTokenContent();
-        this.storeUserDataToStorage();
-        this.toastr.success("Nastavení přiřazovacího kódu karty proběhlo úspěšně.", "Změna uživatelských údajů");
-      }).catch((error: any) => {
-        throwError(error);
-        this.toastr.success("Nastavení přiřazovacího kódu karty selhalo.", "Změna uživatelských údajů");
+    this.changeCardCodeRequest(cardCode).toPromise()
+      .then(_ => {
+        this.toastrService.success("Nastavení kódu karty proběhlo úspěšně.", "Změna uživatelských údajů");
+      }).catch(err => {
+        this.handleChangeCardCodeErrors(err.error)
     });
+  }
+
+  changeCardCodeRequest(cardCode: string) {
+    return this.http.put<KisLoggedInUserInformation>(`${environment.kisApiUrl}/users/me/rfid`,
+      JSON.stringify(cardCode.toUpperCase()), {headers: new HttpHeaders({'Content-Type': 'application/json'})});
+  }
+
+  private handleChangeCardCodeErrors(err: HttpErrorResponse) {
+    if (err.status === 0) {
+      this.toastrService.error("Nepodařilo se odeslat požadavek.", "Změna uživatelských údajů");
+    } else if (err.status === 404) {
+      this.toastrService.error("Zadaný přiřazovací kód neexistuje, vyžádejte si u baru nový.", "Změna uživatelských údajů");
+    } else if (err.status === 409) {
+      this.toastrService.error("Vaše karta nemůže být použita (v systému už existuje karta se stejným ID).", "Změna uživatelských údajů");
+    } else if (err.status === 429) {
+      this.toastrService.error("Karta může být změněna pouze jednou za 6 měsíců.", "Změna uživatelských údajů");
+    }
   }
 }
