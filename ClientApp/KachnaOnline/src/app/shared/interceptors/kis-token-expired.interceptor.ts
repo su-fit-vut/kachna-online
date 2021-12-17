@@ -50,7 +50,7 @@ export class KisTokenExpiredInterceptor implements HttpInterceptor {
             );
           }
         }
-        return new Observable<HttpEvent<any>>();
+        return throwError(err);
       }));
     }
     return next.handle(request);

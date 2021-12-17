@@ -59,19 +59,16 @@ export class UserProfileComponent implements OnInit {
   }
 
   onSaveChanges() {
-    //this.authenticationService.userInfoSaved();
-
     let formVal = this.form.controls;
     if (formVal.nickname.dirty) {
-      console.log(formVal.nickname)
       this.authenticationService.updateNickname(formVal.nickname.value);
     }
 
-    if (formVal.gamificationConsent.touched) {
+    if (formVal.gamificationConsent.dirty) {
       this.authenticationService.changeGamificationConsent(formVal.gamificationConsent.value);
     }
 
-    if (formVal.cardCode.touched) {
+    if (formVal.cardCode.dirty) {
       this.authenticationService.changeCardCode(formVal.cardCode.value);
     }
 
