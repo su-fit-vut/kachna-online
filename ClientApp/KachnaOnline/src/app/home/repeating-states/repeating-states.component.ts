@@ -31,7 +31,7 @@ export class RepeatingStatesComponent implements OnInit {
           e.pipe(map(a => ({from: a.timeFrom, to: a.timeTo, type: a.state})),
             toArray()).subscribe(x => {
             ro.values = x;
-            ro.values.sort();
+            ro.values.sort((a, b) => parseInt(a.from) - parseInt(b.from));
           });
 
           return ro;
