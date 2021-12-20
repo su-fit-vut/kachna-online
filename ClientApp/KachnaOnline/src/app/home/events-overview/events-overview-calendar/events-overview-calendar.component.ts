@@ -28,6 +28,7 @@ export class EventsOverviewCalendarComponent implements OnInit {
       right: 'prev,next'
     },
     initialView: 'dayGridMonth',
+    firstDay: 1,
     dayMaxEvents: true,
     weekends: true,
     locale: 'cs-CZ',
