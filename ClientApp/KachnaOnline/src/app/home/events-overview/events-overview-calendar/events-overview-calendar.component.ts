@@ -12,6 +12,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { StateModalComponent } from "../state-modal/state-modal.component";
 import { LoaderService } from "../../../shared/services/loader.service";
 import { forkJoin } from "rxjs";
+import { CalendarStoreService } from "../../../shared/services/calendar-store.service";
 
 @Component({
   selector: 'app-events-overview-calendar',
@@ -30,6 +31,7 @@ export class EventsOverviewCalendarComponent implements OnInit {
     initialView: 'dayGridMonth',
     firstDay: 1,
     dayMaxEvents: true,
+    initialDate: this.storeService.getDate() ?? null,
     weekends: true,
     locale: 'cs-CZ',
     themeSystem: 'bootstrap',
@@ -51,13 +53,14 @@ export class EventsOverviewCalendarComponent implements OnInit {
 
   constructor(private statesService: StatesService, private eventsService: EventsService,
               private toastrService: ToastrService, private router: Router, private modalService: NgbModal,
-              private loaderService: LoaderService) {
+              private storeService: CalendarStoreService) {
   }
 
   ngOnInit(): void {
   }
 
   onDateChange(dateInfo: { start: Date, end: Date }): void {
+    this.storeService.setDate(dateInfo.start);
     this.updateCalendar(dateInfo.start, dateInfo.end);
   }
 
