@@ -39,6 +39,17 @@ export class EventsOverviewCalendarComponent implements OnInit {
     displayEventEnd: true,
     editable: true, // this adds cursor pointer
     eventClick: this.eventClick.bind(this),
+    eventContent: function(arg) {
+      let formattedEvent = `
+<div class="fc-event-time">${arg.timeText}</div>
+<div class="fc-event-title-container">
+  <div class="fc-event-title fc-sticky">${arg.event.title}</div>
+</div>`;
+      if (arg.event.extendedProps.icon) {
+        formattedEvent += `<i class="fa ${arg.event.extendedProps.icon} fc-sticky align-self-center pr-1"></i>`
+      }
+      return {html: `<div class=fc-event-main-frame>${formattedEvent}</div>`};
+    },
     moreLinkContent: function(arg) {
       let text = `+${arg.num} další`;
       if (arg.num > 4) {
@@ -100,6 +111,9 @@ export class EventsOverviewCalendarComponent implements OnInit {
           end: state.actualEnd ?? state.plannedEnd,
           display: 'block',
           color: color,
+          extendedProps: {
+            icon: state.note || state.noteInternal ? "fa-comment-dots" : null
+          }
         })
       }
     }, err => {
