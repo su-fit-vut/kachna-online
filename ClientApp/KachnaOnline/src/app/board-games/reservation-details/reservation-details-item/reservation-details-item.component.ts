@@ -23,7 +23,7 @@ export class ReservationDetailsItemComponent implements OnInit {
 
   formattedExpiration: string;
   formattedStates: Map<string, string> = new Map([
-    ["New", "Nová"],
+    ["New", "Čeká na člena SU"],
     ["Cancelled", "Zrušená"],
     ["Assigned", "Připravena k předání"],
     ["HandedOver", "Převzatá"],

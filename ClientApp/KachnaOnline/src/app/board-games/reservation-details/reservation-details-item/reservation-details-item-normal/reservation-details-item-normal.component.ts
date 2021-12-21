@@ -12,10 +12,6 @@ import { ToastrService } from "ngx-toastr";
   styleUrls: ['./reservation-details-item-normal.component.css']
 })
 export class ReservationDetailsItemNormalComponent extends ReservationDetailsItemComponent {
-  @HostListener("click") onclick() {
-    this.reservationItemClicked.emit(this.item);
-  }
-
   constructor(boardGamesService: BoardGamesService, toastrService: ToastrService) {
     super(boardGamesService, toastrService);
   }

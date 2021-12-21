@@ -9,7 +9,7 @@ Author: František Nečas
     'text-secondary': item.state == itemState.Cancelled || item.state == itemState.Done,
     'text-success': item.state == itemState.HandedOver,
     'text-info': item.state == itemState.Assigned
-  }">Stav: {{formattedStates.get(item.state)}}</li>
+  }">Průběh rezervace: {{formattedStates.get(item.state)}}</li>
   <li *ngIf="item.expiresOn" [ngClass]="{'text-danger': item.state == itemState.Expired}">Vypůjčeno
     do: {{formattedExpiration}}</li>
   <li *ngIf="item.assignedTo">Kontaktní osoba: {{item.assignedTo.name}}</li>
@@ -24,7 +24,7 @@ Author: František Nečas
       <button type="button" class="btn btn-primary"
               *ngIf="item.state == itemState.HandedOver && item.lastEventType != eventType.ExtensionRequested"
               (click)="requestExtension()">
-        Prodloužit
+        Požádat o prodloužení
       </button>
     </li>
     <li *ngIf="item.lastEventType == eventType.ExtensionRequested" class="text-info">
