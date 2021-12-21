@@ -47,8 +47,10 @@ export class EventItem {
 }
 
 export class StateItem {
+  id: number;
   from: Date;
   to: Date;
   type: ClubStateTypes;
   eventName: string | null;
+  hasNote: boolean = false;
 }

@@ -68,13 +68,16 @@ Author: Ondřej Ondryáš
     <ng-container *ngIf="shownStates.length > 0; else noStates">
       <table class="table">
         <tbody>
-        <tr *ngFor="let s of shownStates" class="pb-2"
-            [class.table-bar]="s.type == 'OpenBar'">
+        <tr *ngFor="let s of shownStates" class="pb-2 clickable"
+            [class.table-bar]="s.type == 'OpenBar'" (click)="onStateClicked(s)">
           <td style="width: 20%">{{s.from | date:'EEE d. M.'}}</td>
-          <td style="width: 40%" [class.color-chillzone]="s.type == 'OpenChillzone'"
+          <td style="width: 35%" [class.color-chillzone]="s.type == 'OpenChillzone'"
               [class.color-bar]="s.type == 'OpenBar'">{{s.from | date:'HH:mm'}}–{{s.to | date:'HH:mm'}}</td>
-          <td style="width: 40%" [class.color-chillzone]="s.type == 'OpenChillzone'"
+          <td style="width: 35%" [class.color-chillzone]="s.type == 'OpenChillzone'"
               [class.color-bar]="s.type == 'OpenBar'">{{s.type | stateLoc}}</td>
+          <td style="width: 10%">
+            <i *ngIf="s.hasNote" class="fa fa-comment-dots"></i>
+          </td>
         </tr>
         </tbody>
       </table>

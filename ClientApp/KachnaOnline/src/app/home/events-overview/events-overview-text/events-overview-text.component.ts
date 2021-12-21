@@ -10,6 +10,8 @@ import { ClubStateTypes } from "../../../models/states/club-state-types.model";
 import { endWith } from "rxjs/operators";
 import { ClubState } from "../../../models/states/club-state.model";
 import { EventItem, StateItem } from "../events-overview.component";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { StateModalComponent } from "../state-modal/state-modal.component";
 
 @Component({
   selector: 'app-events-overview-text',
@@ -25,7 +27,8 @@ export class EventsOverviewTextComponent implements OnInit {
 
   showPast: boolean = false;
 
-  constructor(private eventsService: EventsService, private stateService: StatesService) {
+  constructor(private eventsService: EventsService, private stateService: StatesService,
+              private modalService: NgbModal, private statesService: StatesService) {
   }
 
   ngOnInit(): void {
@@ -99,10 +102,12 @@ export class EventsOverviewTextComponent implements OnInit {
 
     for (let s of stateModels) {
       let state: StateItem = {
+        id: s.id,
         from: s.start,
         to: s.actualEnd ?? s.plannedEnd,
         type: s.state,
-        eventName: null
+        eventName: null,
+        hasNote: (s.noteInternal || s.note) !== null
       };
 
       if (s.eventId != null) {
@@ -146,5 +151,12 @@ export class EventsOverviewTextComponent implements OnInit {
 
       target.push(e);
     }
+  }
+
+  onStateClicked(state: StateItem) {
+    this.statesService.get(state.id).subscribe(state => {
+      const modalRef = this.modalService.open(StateModalComponent);
+      modalRef.componentInstance.state = state;
+    })
   }
 }
