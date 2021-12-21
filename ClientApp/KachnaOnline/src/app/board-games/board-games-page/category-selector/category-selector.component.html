@@ -7,6 +7,15 @@ Author: František Nečas
         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kategorie
 </button>
 <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+  <div class="d-flex justify-content-end">
+    <button
+      type="button" class="btn m-0 p-0 mr-2"
+      triggers="click hover focus" [autoClose]="true" [closeDelay]="500"
+      [ngbTooltip]="'Hry pro přehlednost členíme do kategorií dle typu hry. Každý typ má svoji barvu, přičemž v klubu pak odpovídají kategoriím jednotlivé police.'"
+      #tooltip3="ngbTooltip">
+      <i class="far fa-question-circle"></i>
+    </button>
+  </div>
   <form>
     <ul class="list-group">
       <app-category *ngFor="let category of categories" [category]="category"
