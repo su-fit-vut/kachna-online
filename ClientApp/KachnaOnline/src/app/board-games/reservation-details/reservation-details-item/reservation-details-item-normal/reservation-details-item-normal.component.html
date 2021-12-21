@@ -2,7 +2,7 @@
 reservation-details-item-normal.component.html
 Author: František Nečas
 -->
-<td>{{item.boardGame.name}}</td>
+<td  class="clickable" (click)="reservationItemClicked.emit(item)">{{item.boardGame.name}}</td>
 <td>{{formattedStates.get(item.state)}}</td>
 <td>{{formattedExpiration}}</td>
 <td>{{item.assignedTo?.name}}</td>
@@ -15,7 +15,7 @@ Author: František Nečas
     <button type="button" class="btn btn-primary"
             *ngIf="item.state == itemState.HandedOver && item.lastEventType != eventType.ExtensionRequested"
             (click)="$event.stopPropagation(); requestExtension()">
-      Prodloužit
+      Požádat o prodloužení
     </button>
     <div *ngIf="item.lastEventType == eventType.ExtensionRequested">
       Žádost o prodloužení čeká na schválení
