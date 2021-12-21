@@ -69,8 +69,13 @@ export class BoardGamesPageComponent implements OnInit {
   resetFilters(): void {
     this.players = undefined;
     this.categoryIds = [];
-    // This change will trigger fetch as the number selector will output
     this.availableOnly = undefined;
+    this.searchModel = '';
+    this.fetchGames(this.categoryIds, false, true);
+  }
+
+  updateShownGames(newGames: BoardGame[]) {
+    this.shownGames = this.filterByName(newGames, this.searchModel);
   }
 
   onCategoryAdded(category: number): void {
@@ -84,14 +89,14 @@ export class BoardGamesPageComponent implements OnInit {
         this.boardGamesService.getBoardGames([category], this.players, this.availableOnly).subscribe(
           games => {
             this.filteredGames = this.filteredGames.concat(games[0]);
-            this.shownGames = this.filteredGames;
+            this.updateShownGames(this.filteredGames);
           }
         )
       } else {
         this.filteredGames = this.filteredGames.concat(addToFiltered);
       }
     }
-    this.shownGames = this.filteredGames;
+    this.updateShownGames(this.filteredGames);
     this.categoryIds.push(category)
   }
 
@@ -104,7 +109,7 @@ export class BoardGamesPageComponent implements OnInit {
     } else {
       this.filteredGames = this.filteredGames.filter(g => g.category.id != category);
     }
-    this.shownGames = this.filteredGames;
+    this.updateShownGames(this.filteredGames);
   }
 
   onAvailabilityUpdate(newAvailability: boolean): void {
@@ -120,6 +125,8 @@ export class BoardGamesPageComponent implements OnInit {
         }
         for (let gamesSet of games) {
           this.boardGames = this.boardGames.concat(gamesSet);
+          // Always sort by name to keep the order consistent
+          this.boardGames.sort((a, b) => (a.name > b.name ? 1 : (b.name > a.name ? -1 : 0)));
         }
         // Use cached filters on init
         if (init && this.categoryIds.length > 0) {
@@ -127,7 +134,7 @@ export class BoardGamesPageComponent implements OnInit {
         } else {
           this.filteredGames = this.boardGames;
         }
-        this.shownGames = this.filteredGames;
+        this.updateShownGames(this.filteredGames);
       },
       err => {
         console.log(err);
@@ -140,17 +147,24 @@ export class BoardGamesPageComponent implements OnInit {
     this.fetchGames(this.categoryIds, false, true);
   }
 
+  filterByName(games: BoardGame[], name: string): BoardGame[] {
+    if (name) {
+      return games.filter(g => g.name.toLowerCase().indexOf(name.toLowerCase()) > -1);
+    }
+    return games;
+  }
+
   search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
     text$.pipe(
       distinctUntilChanged(),
       map(term => {
-        this.shownGames = this.filteredGames.filter(g => g.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
+        this.updateShownGames(this.filterByName(this.filteredGames, term));
         return this.shownGames.map(g => g.name).slice(0, 10);
       })
     )
 
   selectItem(payload: NgbTypeaheadSelectItemEvent): void {
-    this.shownGames = this.shownGames.filter(g => payload.item == g.name);
+    this.updateShownGames(this.shownGames.filter(g => payload.item == g.name));
   }
 
   onReservationUpdate(game: BoardGame): void {
