@@ -7,6 +7,7 @@ using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Facades;
 using KachnaOnline.Dto.ClubInfo;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KachnaOnline.App.Controllers
@@ -14,6 +15,7 @@ namespace KachnaOnline.App.Controllers
     [ApiController]
     [Route("club")]
     [AllowAnonymous]
+    [EnableCors(Startup.LocalCorsPolicy)]
     public class ClubInfoController : ControllerBase
     {
         private readonly ClubInfoFacade _facade;
