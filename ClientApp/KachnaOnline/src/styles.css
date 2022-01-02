@@ -31,13 +31,30 @@ input.invalid {
   color: inherit;
 }
 
+.clickable {
+  position: relative;
+}
+
 .clickable:hover {
   cursor: pointer;
-  background-color: #fafafa;
+}
+
+.clickable:hover:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(1,1,1,.05);
 }
 
 table thead tr th {
   font-weight: 600;
+}
+
+.table > tbody > tr > td {
+  vertical-align: middle;
 }
 
 .color-chillzone {

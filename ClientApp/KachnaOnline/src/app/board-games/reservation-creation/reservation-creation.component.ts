@@ -93,7 +93,7 @@ export class ReservationCreationComponent implements OnInit {
         _ => {
           // Reset reservation and redirect
           this.storeService.resetSavedReservation();
-          this.toastrService.success("Nyní, prosím, vyčkej, než si rezervaci vezme na starost někdo z SU a " +
+          this.toastrService.success("Nyní, prosím, vyčkej, než si rezervaci vezme na starost někdo z SU, a " +
             "domluv se s ním na předání hry.", "Rezervace vytvořena", {timeOut: 7000});
           this.router.navigate(["/board-games/reservations"]).then();
         },
