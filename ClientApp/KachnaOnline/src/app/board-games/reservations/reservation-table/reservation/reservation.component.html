@@ -5,7 +5,8 @@ Author: František Nečas
 <td class="align-middle">{{formattedDate}}</td>
 <td class="d-none d-md-table-cell my-auto align-middle" *ngIf="!managerView">
   <p>{{formattedNote}}</p>
-  <button type="button" class="btn btn-outline-secondary mt-1 note-button" *ngIf="noteTooLong" [ngbPopover]="reservation.noteUser"
+  <button type="button" class="btn btn-outline-secondary mt-1 note-button" *ngIf="noteTooLong"
+          [ngbPopover]="reservation.noteUser"
           (click)="$event.stopPropagation();"
           popoverTitle="Poznámka" placement="right">
     Celá poznámka
@@ -13,15 +14,16 @@ Author: František Nečas
 </td>
 <td class="d-none d-sm-table-cell align-middle" *ngIf="managerView">{{reservation?.madeBy?.name}}</td>
 <td class="align-middle">
-  <ul class="list-group">
-    <li *ngFor="let assigned of assignedUsers" class="list-group-item">{{assigned}}</li>
-  </ul>
+  <span *ngFor="let assigned of assignedUsers; let last = last">
+    <ng-container *ngIf="last">{{assigned}}</ng-container>
+    <ng-container *ngIf="!last">{{assigned}},&nbsp;</ng-container>
+  </span>
 </td>
 <td class="d-none d-md-table-cell align-middle">
   <ul class="list-group">
     <li *ngFor="let item of reservation.items.slice(0, maxGames)" class="list-group-item">{{item.boardGame.name}}</li>
     <li *ngIf="reservation.items.length > maxGames" class="list-group-item list-group-item-info">...
-      a {{reservation.items.length - maxGames}} další{{reservation.items.length - maxGames > 4 ? "ch": ""}}
+      a {{reservation.items.length - maxGames}} další{{reservation.items.length - maxGames > 4 ? "ch" : ""}}
     </li>
   </ul>
 </td>

@@ -2,10 +2,10 @@
 reservation-details-item-normal.component.html
 Author: František Nečas
 -->
-<td  class="clickable" (click)="reservationItemClicked.emit(item)">{{item.boardGame.name}}</td>
+<td class="clickable" (click)="reservationItemClicked.emit(item)">{{item.boardGame.name}}</td>
 <td>{{formattedStates.get(item.state)}}</td>
 <td>{{formattedExpiration}}</td>
-<td>{{item.assignedTo?.name}}</td>
+<td><a *ngIf="item.assignedTo && item.assignedTo.name" href="mailto:{{item.assignedTo.email}}">{{item.assignedTo?.name}}</a></td>
 <td>
   <ng-container *ngIf="!managerView">
     <button type="button" class="btn btn-danger" *ngIf="item.state == itemState.New || item.state == itemState.Assigned"
