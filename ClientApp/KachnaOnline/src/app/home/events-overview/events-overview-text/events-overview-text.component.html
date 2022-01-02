@@ -68,8 +68,8 @@ Author: Ondřej Ondryáš
     <ng-container *ngIf="shownStates.length > 0; else noStates">
       <table class="table">
         <tbody>
-        <tr *ngFor="let s of shownStates" class="pb-2 clickable"
-            [class.table-bar]="s.type == 'OpenBar'" (click)="onStateClicked(s)">
+        <tr *ngFor="let s of shownStates" class="pb-2" [class.clickable]="s.hasNote"
+            [class.table-bar]="s.type == 'OpenBar'" (click)="s.hasNote ? onStateClicked(s) : null">
           <td style="width: 20%">{{s.from | date:'EEE d. M.'}}</td>
           <td style="width: 35%" [class.color-chillzone]="s.type == 'OpenChillzone'"
               [class.color-bar]="s.type == 'OpenBar'">{{s.from | date:'HH:mm'}}–{{s.to | date:'HH:mm'}}</td>
@@ -87,5 +87,3 @@ Author: Ondřej Ondryáš
     </ng-template>
   </div>
 </div>
-
-
