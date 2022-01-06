@@ -27,7 +27,7 @@ Author: František Nečas
     <tbody>
     <tr app-reservation-details-item-normal *ngFor="let item of items" [item]="item" [reservationId]="reservation.id"
         (reservationItemClicked)="rowClicked($event)" [managerView]="managerView"
-        (stateChanged)="itemStateUpdated.emit($event)"
+        (stateChanged)="itemStateUpdated.emit($event)" style="cursor: default;"
         [ngClass]="{
           'table-danger': item.state === itemState.Expired,
           'table-secondary': item.state == itemState.Cancelled || item.state == itemState.Done,

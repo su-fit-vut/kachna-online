@@ -2,7 +2,7 @@
 reservation-details-item-normal.component.html
 Author: František Nečas
 -->
-<td class="clickable" (click)="reservationItemClicked.emit(item)">{{item.boardGame.name}}</td>
+<td><button class="btn-link btn p-1" (click)="reservationItemClicked.emit(item)">{{item.boardGame.name}}</button></td>
 <td>{{formattedStates.get(item.state)}}</td>
 <td>{{formattedExpiration}}</td>
 <td><a *ngIf="item.assignedTo && item.assignedTo.name" href="mailto:{{item.assignedTo.email}}">{{item.assignedTo?.name}}</a></td>

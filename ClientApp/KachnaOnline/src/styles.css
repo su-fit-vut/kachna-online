@@ -31,22 +31,9 @@ input.invalid {
   color: inherit;
 }
 
-.clickable {
-  position: relative;
-}
-
 .clickable:hover {
   cursor: pointer;
-}
-
-.clickable:hover:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(1,1,1,.05);
+  filter: brightness(90%);
 }
 
 table thead tr th {
