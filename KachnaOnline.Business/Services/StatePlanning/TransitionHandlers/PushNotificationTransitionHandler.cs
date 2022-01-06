@@ -47,8 +47,8 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             {
                 var title = state.Type == StateType.OpenBar ? "Otvíračka v Kachně" : "Chillzóna v Kachně";
                 var msg = state.Type == StateType.OpenBar
-                    ? $"U Kachničky je otevřeno, bar je obsluhován, pípy naraženy, tak se stav! Končíme ve {state.PlannedEnd:HH:mm}."
-                    : $"U Kachničky je otevřeno v režimu chillzóna do {state.PlannedEnd:HH:mm}.";
+                    ? $"U Kachničky je od {state.Start:HH:mm} otevřeno, bar je obsluhován, pípy naraženy, tak se stav! Končíme ve {state.PlannedEnd:HH:mm}."
+                    : $"U Kachničky je otevřeno v režimu chillzóna od {state.Start:HH:mm} do {state.PlannedEnd:HH:mm}.";
 
                 try
                 {
