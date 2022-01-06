@@ -75,6 +75,43 @@ namespace KachnaOnline.Business.Services.Discord
             }
         }
 
+        protected async Task<DiscordMessage> ModifyWebhookMessage(ulong messageId, string message,
+            string webhookUrl = null)
+        {
+            webhookUrl ??= _webhookUrl;
+
+            if (string.IsNullOrEmpty(webhookUrl))
+            {
+                _logger.LogError("Webhook URL not available");
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(message))
+            {
+                _logger.LogError("Empty message.");
+                return null;
+            }
+
+            using var client = _httpClientFactory.CreateClient();
+            var content = $"{{ \"content\": \"{message}\" }}";
+
+            try
+            {
+                _logger.LogDebug("Updating a Discord webhook message.");
+                var response = await client.PatchAsync($"{webhookUrl}/messages/{messageId}",
+                    new StringContent(content, Encoding.UTF8, "application/json"));
+                response.EnsureSuccessStatusCode();
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                _logger.LogDebug("Webhook response payload: {data}", responseData);
+                return JsonConvert.DeserializeObject<DiscordMessage>(responseData);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot update Discord webhook message");
+                return null;
+            }
+        }
 
         /// <summary>
         /// Deletes a Discord webhook message.

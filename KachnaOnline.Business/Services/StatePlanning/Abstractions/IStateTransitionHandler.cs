@@ -1,7 +1,9 @@
 // IStateTransitionHandler.cs
 // Author: Ondřej Ondryáš
 
+using System;
 using System.Threading.Tasks;
+using KachnaOnline.Business.Models.ClubStates;
 
 namespace KachnaOnline.Business.Services.StatePlanning.Abstractions
 {
@@ -17,6 +19,13 @@ namespace KachnaOnline.Business.Services.StatePlanning.Abstractions
         /// <param name="previousStateId">The ID of the previous state. Null if no state directly precedes this one.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         Task PerformStartAction(int stateId, int? previousStateId);
+
+        /// <summary>
+        /// Perform this handler's action for a modification of a state.
+        /// </summary>
+        /// <param name="previousState"></param>
+        /// <returns></returns>
+        Task PerformModifyAction(State previousState);
 
         /// <summary>
         /// Perform this handler's action for the end of the specified state.

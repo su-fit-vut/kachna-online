@@ -2,6 +2,7 @@
 // Author: Ondřej Ondryáš
 
 using System.Threading.Tasks;
+using KachnaOnline.Business.Models.ClubStates;
 
 namespace KachnaOnline.Business.Services.StatePlanning.Abstractions
 {
@@ -18,6 +19,13 @@ namespace KachnaOnline.Business.Services.StatePlanning.Abstractions
         /// <param name="previousStateId">The ID of the previous state. Null if no state directly precedes this one.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         Task TriggerStateStart(int stateId, int? previousStateId);
+
+        /// <summary>
+        /// Performs the state modification actions.
+        /// </summary>
+        /// <param name="previousState"></param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        Task TriggerStateModification(State previousState);
 
         /// <summary>
         /// Performs the state end actions.

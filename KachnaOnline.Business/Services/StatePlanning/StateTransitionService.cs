@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KachnaOnline.Business.Models.ClubStates;
 using KachnaOnline.Business.Services.StatePlanning.Abstractions;
 using Microsoft.Extensions.Logging;
 
@@ -36,6 +37,25 @@ namespace KachnaOnline.Business.Services.StatePlanning
                 catch (Exception e)
                 {
                     _logger.LogError(e, "An error occurred when performing start action {ActionName}.",
+                        transitionHandler.GetType().Name);
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task TriggerStateModification(State previousState)
+        {
+            _logger.LogDebug("Processing trigger actions for a modification of state {StateId}.", previousState.Id);
+
+            foreach (var transitionHandler in _transitionHandlers)
+            {
+                try
+                {
+                    await transitionHandler.PerformModifyAction(previousState);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "An error occurred when performing modification action {ActionName}.",
                         transitionHandler.GetType().Name);
                 }
             }

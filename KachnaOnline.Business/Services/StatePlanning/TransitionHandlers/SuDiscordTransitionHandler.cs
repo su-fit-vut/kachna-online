@@ -98,6 +98,19 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             }
         }
 
+        public async Task PerformModifyAction(State previousState)
+        {
+            if (previousState.Ended.HasValue || previousState.Start > DateTime.Now)
+                return;
+
+            var state = await _stateService.GetState(previousState.Id);
+            var madeBy = state.MadeById.HasValue ? await _userService.GetUser(state.MadeById.Value) : null;
+            var madeByName = madeBy.GetDiscordMention(true);
+
+            await this.SendWebhookMessage(
+                $"Aktuální stav pozměněn – aktuální konec: {state.PlannedEnd:HH:mm}, otevírá: {madeByName}.");
+        }
+
         public async Task PerformEndAction(int stateId, int? nextStateId)
         {
             var state = await _stateService.GetState(stateId);

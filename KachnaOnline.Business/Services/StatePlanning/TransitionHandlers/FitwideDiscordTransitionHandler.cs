@@ -43,65 +43,11 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             var state = await _stateService.GetState(stateId);
             var previousState = previousStateId.HasValue ? await _stateService.GetState(previousStateId.Value) : null;
 
-            var madeBy = state.MadeById.HasValue ? await _userService.GetUser(state.MadeById.Value) : null;
-            var madeByName = madeBy.GetDiscordMention(false);
-
             string msg = null;
 
             if (state.Type == StateType.OpenChillzone)
             {
-                if (!state.PlannedEnd.HasValue)
-                {
-                    _logger.LogCritical("Data inconsistency: chillzone with no planned end (ID {Id}).", state.Id);
-                    return;
-                }
-
-                if (previousState?.Type == StateType.OpenChillzone
-                    && previousState.PlannedEnd.HasValue)
-                {
-                    var timeDelta = state.PlannedEnd.Value - previousState.PlannedEnd.Value;
-                    if (timeDelta < TimeSpan.Zero)
-                    {
-                        msg = $"Chillzóna je zkrácena do **{state.PlannedEnd.Value:HH:mm}** {PeepoSushiRoll}";
-                        if (state.NotePublic != null)
-                        {
-                            msg += " " + state.NotePublic;
-                        }
-                    }
-                    else if (timeDelta > TimeSpan.FromMinutes(15))
-                    {
-                        msg = $"Chillzóna je prodloužena do **{state.PlannedEnd.Value:HH:mm}** {Hypers}";
-                        if (state.NotePublic != null)
-                        {
-                            msg += " " + state.NotePublic;
-                        }
-                    }
-
-                    if (previousState.MadeById != state.MadeById
-                        && madeByName != null)
-                        msg += $" Nyní pro vás otevírá {madeByName} {PeepoLove}";
-                }
-                else
-                {
-                    var openTillString = $"**do {state.PlannedEnd.Value:HH:mm}**";
-                    var nextBarOpening = await _stateService.GetNextPlannedState(StateType.OpenBar);
-                    if (nextBarOpening != null &&
-                        nextBarOpening.Start - state.PlannedEnd.Value < TimeSpan.FromMinutes(15))
-                    {
-                        openTillString = $"až do otvíračky (v {nextBarOpening.Start:HH:mm})";
-                    }
-
-                    msg = $"Kachna je otevřena v režimu chillzóna {openTillString}! {Hypers}";
-                    if (madeByName != null)
-                    {
-                        msg += $" Otevírá pro vás {madeByName} {PeepoLove}";
-                    }
-
-                    if (state.NotePublic != null)
-                    {
-                        msg += " " + state.NotePublic;
-                    }
-                }
+                msg = await this.GetChillzoneMessage(previousState, state);
             }
             else if (state.Type == StateType.OpenBar &&
                      (previousState is null || previousState.Type != StateType.OpenBar))
@@ -121,6 +67,26 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
                 {
                     await this.SaveMessageId(stateId, result.Id);
                 }
+            }
+        }
+
+        public async Task PerformModifyAction(State previousState)
+        {
+            if (previousState.Type != StateType.OpenChillzone)
+                return;
+
+            var state = await _stateService.GetState(previousState.Id);
+            if (state.Start > DateTime.Now || state.Ended.HasValue)
+                return;
+
+            var discordMessageId = await this.GetMessageId(state.Id);
+            if (!discordMessageId.HasValue)
+                return;
+
+            var msg = await this.GetChillzoneMessage(previousState, state);
+            if (msg != null)
+            {
+                await this.ModifyWebhookMessage(discordMessageId.Value, msg);
             }
         }
 
@@ -152,6 +118,59 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             {
                 await this.DeleteWebhookMessage(messageId.Value);
             }
+        }
+
+        private async Task<string> GetChillzoneMessage(State previousState, State state)
+        {
+            var madeBy = state.MadeById.HasValue ? await _userService.GetUser(state.MadeById.Value) : null;
+            var madeByName = madeBy.GetDiscordMention(false);
+
+            if (!state.PlannedEnd.HasValue)
+            {
+                _logger.LogCritical("Data inconsistency: chillzone with no planned end (ID {Id}).", state.Id);
+                return null;
+            }
+
+            var openTillString = $"**do {state.PlannedEnd.Value:HH:mm}**";
+            if (previousState?.Type == StateType.OpenChillzone
+                && previousState.PlannedEnd.HasValue)
+            {
+                var timeDelta = state.PlannedEnd.Value - previousState.PlannedEnd.Value;
+                if (timeDelta < TimeSpan.Zero)
+                {
+                    openTillString +=
+                        $" (byla zkrácena z přechozích {previousState.PlannedEnd.Value:HH:mm} {PeepoSushiRoll}).";
+                }
+                else if (timeDelta > TimeSpan.FromMinutes(15))
+                {
+                    openTillString +=
+                        $" (byla prodloužena z přechozích {previousState.PlannedEnd.Value:HH:mm} {Hypers}).";
+                }
+            }
+            else
+            {
+                openTillString += $"! {Hypers}";
+            }
+
+            var nextBarOpening = await _stateService.GetNextPlannedState(StateType.OpenBar);
+            if (nextBarOpening != null &&
+                nextBarOpening.Start - state.PlannedEnd.Value < TimeSpan.FromMinutes(15))
+            {
+                openTillString = $"až do otvíračky (v {nextBarOpening.Start:HH:mm})";
+            }
+
+            var msg = $"Kachna je otevřena v režimu chillzóna {openTillString}";
+            if (madeByName != null)
+            {
+                msg += $" Otevírá pro vás {madeByName} {PeepoLove}";
+            }
+
+            if (state.NotePublic != null)
+            {
+                msg += " " + state.NotePublic;
+            }
+
+            return msg;
         }
     }
 }

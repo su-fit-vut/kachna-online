@@ -4,6 +4,7 @@
 using System;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
+using KachnaOnline.Business.Models.ClubStates;
 using KachnaOnline.Business.Services.StatePlanning.Abstractions;
 
 namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
@@ -22,6 +23,11 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
         }
 
         public Task PerformStartAction(int stateId, int? previousStateId)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task PerformModifyAction(State previousState)
         {
             return Task.CompletedTask;
         }

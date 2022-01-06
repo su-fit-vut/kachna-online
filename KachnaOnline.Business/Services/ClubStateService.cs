@@ -450,7 +450,7 @@ namespace KachnaOnline.Business.Services
                         }
 
                         await foreach (var state in _stateRepository.GetForRepeatingState(stateEntity.Id,
-                            deleteStatesFromDate))
+                                           deleteStatesFromDate))
                         {
                             await _stateRepository.Delete(state);
                         }
@@ -730,6 +730,9 @@ namespace KachnaOnline.Business.Services
                     break;
             }
 
+            // Keep the original state for the trigger handler
+            var originalState = await this.GetState(modifiedStateEntity.Id);
+
             // Check user IDs (and apply potential MadeById modifications)
             await CheckAndModifyUserReferences();
 
@@ -872,6 +875,12 @@ namespace KachnaOnline.Business.Services
                     await _unitOfWork.SaveChanges();
                     await _statePlannerService.NotifyPlanChanged();
 
+                    TaskUtils.FireAndForget(_serviceProvider, _logger, async (services, _) =>
+                    {
+                        var transitionService = services.GetRequiredService<IStateTransitionService>();
+                        await transitionService.TriggerStateModification(originalState);
+                    });
+
                     return new StatePlanningResult()
                     {
                         TargetStateId = modifiedStateEntity.Id,
@@ -911,11 +920,23 @@ namespace KachnaOnline.Business.Services
                         throw new UserNotFoundException(modification.MadeById.Value);
 
                     _logger.LogInformation(
-                        "User {UserId} changed MadeById of State {StateId} from {OriginalMadeById} to {NewMadeById}.",
+                        "User {UserId} changed MadeById of state {StateId} from {OriginalMadeById} to {NewMadeById}.",
                         changeMadeByUserId, modifiedStateEntity.Id, modifiedStateEntity.MadeById,
                         modification.MadeById.Value);
 
                     modifiedStateEntity.MadeById = modification.MadeById.Value;
+                }
+                else
+                {
+                    var newMadeByUser = await _userService.GetUser(changeMadeByUserId);
+                    if (newMadeByUser is null)
+                        throw new UserNotFoundException(changeMadeByUserId);
+
+                    _logger.LogInformation(
+                        "Changing MadeById of state {StateId} from {OriginalMadeById} to {NewMadeById}.",
+                        modifiedStateEntity.Id, modifiedStateEntity.MadeById, changeMadeByUserId);
+
+                    modifiedStateEntity.MadeById = changeMadeByUserId;
                 }
             }
 

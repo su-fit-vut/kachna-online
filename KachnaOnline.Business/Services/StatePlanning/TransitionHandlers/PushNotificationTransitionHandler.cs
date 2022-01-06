@@ -61,6 +61,11 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             }
         }
 
+        public Task PerformModifyAction(State previousState)
+        {
+            return Task.CompletedTask;
+        }
+
         public Task PerformEndAction(int stateId, int? nextStateId)
         {
             return Task.CompletedTask;
