@@ -33,6 +33,7 @@ input.invalid {
 
 .clickable:hover {
   cursor: pointer;
+  background-color: white;
   filter: brightness(90%);
 }
 

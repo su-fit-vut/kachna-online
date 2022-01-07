@@ -35,7 +35,7 @@ Author: David Chocholatý, Ondřej Ondryáš
       </tr>
       </thead>
       <tbody *ngIf="authenticationService.shownUsersList.length > 0">
-      <tr *ngFor="let user of authenticationService.shownUsersList" class="clickable bg-white">
+      <tr *ngFor="let user of authenticationService.shownUsersList" class="clickable">
         <td (click)="openUserDetail(user)">
           {{user.id}}
         </td>

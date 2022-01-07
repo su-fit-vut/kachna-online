@@ -16,10 +16,10 @@ Author: František Nečas
     </thead>
     <tbody>
     <tr app-reservation *ngFor="let reservation of reservations" [reservation]="reservation" [managerView]="managerView"
-        (reservationClicked)="onReservationClicked($event)" [ngClass]="{
+        (reservationClicked)="onReservationClicked($event)" class="clickable" [ngClass]="{
           'table-danger': isExpired(reservation),
           'table-secondary': isDone(reservation)
-          }" class="clickable"></tr>
+          }"></tr>
     </tbody>
   </table>
 </div>
