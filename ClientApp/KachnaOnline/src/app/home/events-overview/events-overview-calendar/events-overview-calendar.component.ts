@@ -71,7 +71,10 @@ export class EventsOverviewCalendarComponent implements OnInit {
   }
 
   onDateChange(dateInfo: { start: Date, end: Date }): void {
-    this.storeService.setDate(dateInfo.start);
+    // The calendar has "excess" days from other months to fill week rows, start and end date could be outside
+    // of the currently selected month. Save the middle point between these dates.
+    let midMonthDelta = (dateInfo.end.valueOf() - dateInfo.start.valueOf()) / 2;
+    this.storeService.setDate(new Date(dateInfo.start.valueOf() + midMonthDelta));
     this.updateCalendar(dateInfo.start, dateInfo.end);
   }
 
