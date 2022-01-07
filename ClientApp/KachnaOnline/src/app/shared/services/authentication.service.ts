@@ -255,6 +255,10 @@ export class AuthenticationService {
     return this.user.name;
   }
 
+  getUserId(): number {
+    return this.user.id;
+  }
+
   assignDataFromLocalTokenContent() {
   }
 
