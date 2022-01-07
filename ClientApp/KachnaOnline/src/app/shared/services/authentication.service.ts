@@ -32,7 +32,8 @@ export class AuthenticationService {
     private location: Location,
     public jwtHelper: JwtHelperService,
     private route: ActivatedRoute
-  ) { }
+  ) {
+  }
 
   localTokenContent: LocalTokenContent = new LocalTokenContent();
   kisTokenContent: KisTokenContent = new KisTokenContent();
@@ -54,7 +55,8 @@ export class AuthenticationService {
         localStorage.setItem(environment.returnAddressStorageName, this.router.url);
         window.open(kisResponse.wayf_url, '_self');
       }).catch((error: any) => {
-      this.toastrService.error("Přihlášení do KIS selhalo.", "Přihlášení");
+      this.toastrService.error("Nepodařilo se zažádat KIS o přihlášení, zkuste to znovu nebo nám dejte vědět. (Chyba: kis-eduid.)",
+        "Přihlášení");
       return throwError(error);
     });
   }
@@ -71,7 +73,7 @@ export class AuthenticationService {
       .then((res) => {
         return this.handleAccessTokens(res);
       }).catch((error: any) => {
-        this.toastrService.error("Načtení přístupových údajů selhalo.", "Přihlášení");
+        this.toastrService.error("Přihlášení selhalo, zkuste to znovu nebo nám dejte vědět. (Chyba: login-session.)", "Přihlášení");
         return throwError(error);
       });
   }
@@ -82,7 +84,7 @@ export class AuthenticationService {
       .then((res) => {
         return this.handleAccessTokens(res);
       }).catch((error: any) => {
-        this.toastrService.error("Načtení přístupových údajů selhalo.", "Přihlášení");
+        this.toastrService.error("Přihlášení selhalo, zkuste to znovu nebo nám dejte vědět. (Chyba: login-rt.)", "Přihlášení");
         return throwError(error);
       });
   }
@@ -156,7 +158,11 @@ export class AuthenticationService {
       .then((res) => {
         this.handleAccessTokens(res).then();
       }).catch((error: any) => {
-      this.toastrService.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
+      if (error.status === 0) {
+        this.toastrService.error("Obnovení přihlášení selhalo, zkuste se přihlásit znovu.", "Přihlášení");
+      } else {
+        this.toastrService.info("Přihlášení vypršelo, přihlašte se znovu.", "Přihlášení");
+      }
       this.logOut();
       return throwError(error);
     });
@@ -171,7 +177,11 @@ export class AuthenticationService {
         this.decodeKisToken();
         this.getInformationAboutUser().then();
       }).catch((error: any) => {
-      this.toastrService.error("Obnovení přihlášení selhalo. Přihlaš se znovu.", "Přihlášení");
+      if (error.status === 0) {
+        this.toastrService.error("Obnovení přihlášení selhalo, zkuste se přihlásit znovu.", "Přihlášení");
+      } else {
+        this.toastrService.info("Přihlášení vypršelo, přihlašte se znovu.", "Přihlášení");
+      }
       this.logOut();
       return throwError(error);
     });
@@ -350,8 +360,8 @@ export class AuthenticationService {
         this.updateLocalUserInformation();
         return;
       }).catch((err: any) => {
-        this.handleUpdateNicknameErrors(err.error);
-        return;
+      this.handleUpdateNicknameErrors(err.error);
+      return;
     });
   }
 
@@ -367,7 +377,7 @@ export class AuthenticationService {
 
   private handleUpdateNicknameErrors(err: HttpErrorResponse) {
     if (err.status === 0) {
-      this.toastrService.error("Nepodařilo se odeslat požadavek.", "Změna uživatelských údajů");
+      this.toastrService.error("Nepodařilo se odeslat požadavek na změnu přezdívky. Funguje vám internet? Zkuste to znovu nebo nám dejte vědět. (Chyba: kis-nick.)", "Změna uživatelských údajů");
     } else if (err.status === 409) {
       this.toastrService.error("Požadovanou přezdívku už někdo používá.", "Změna uživatelských údajů");
     } else if (err.status === 429) {
@@ -381,7 +391,7 @@ export class AuthenticationService {
         this.user.nickname = userDetail.nickname;
       }).catch((err) => {
       console.log(err);
-      this.toastrService.error("Nebylo možné data o uživateli aktualizovat.", "Správa účtu");
+      this.toastrService.error("Nastala neočekávaná chyba. Zkuste se prosím odhlásit a znovu přihlásit.", "Správa účtu");
     });
   }
 
@@ -445,17 +455,17 @@ export class AuthenticationService {
         this.storeUserDataToStorage();
         this.toastrService.success("Změna souhlasu s gamifikací proběhla úspěšně.", "Změna uživatelských údajů");
       }).catch((error: any) => {
-        throwError(error);
-        this.toastrService.error("Změna souhlasu s gamifikací selhala.", "Změna uživatelských údajů");
+      throwError(error);
+      this.toastrService.error(`Změna souhlasu s gamifikací selhala. Zkuste to znovu nebo nám dejte vědět. (Chyba: kis-consent/${error.status}.)`, "Změna uživatelských údajů");
     });
   }
 
   changeCardCode(cardCode: string) {
     this.changeCardCodeRequest(cardCode).toPromise()
       .then(_ => {
-        this.toastrService.success("Nastavení kódu karty proběhlo úspěšně.", "Změna uživatelských údajů");
+        this.toastrService.success("Přiřazení karty proběhlo úspěšně.", "Změna uživatelských údajů");
       }).catch(err => {
-        this.handleChangeCardCodeErrors(err.error)
+      this.handleChangeCardCodeErrors(err.error)
     });
   }
 
@@ -466,7 +476,7 @@ export class AuthenticationService {
 
   private handleChangeCardCodeErrors(err: HttpErrorResponse) {
     if (err.status === 0) {
-      this.toastrService.error("Nepodařilo se odeslat požadavek.", "Změna uživatelských údajů");
+      this.toastrService.error("Nepodařilo se odeslat požadavek na nastavení karty. Funguje vám internet? Zkuste to znovu nebo nám dejte vědět. (Chyba: kis-card.)", "Změna uživatelských údajů");
     } else if (err.status === 404) {
       this.toastrService.error("Zadaný přiřazovací kód neexistuje, vyžádejte si u baru nový.", "Změna uživatelských údajů");
     } else if (err.status === 409) {
