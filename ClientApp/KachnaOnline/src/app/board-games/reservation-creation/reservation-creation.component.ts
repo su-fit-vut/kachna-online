@@ -31,7 +31,7 @@ export class ReservationCreationComponent implements OnInit {
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               private router: Router, private storeService: BoardGamesStoreService,
-              private authService: AuthenticationService) {
+              public authService: AuthenticationService) {
   }
 
   ngOnInit(): void {
@@ -104,7 +104,7 @@ export class ReservationCreationComponent implements OnInit {
       this.toastrService.error("Rezervace nesmí být prázdná.")
       return;
     }
-    if (this.pageMode == BoardGamePageState.Normal) {
+    if (this.pageMode == BoardGamePageState.Normal && !handover) {
       this.boardGamesService.reserve(this.currentReservation, this.noteForm.value).subscribe(
         _ => {
           // Reset reservation and redirect
@@ -118,27 +118,27 @@ export class ReservationCreationComponent implements OnInit {
           this.showConflictingGame(err);
         }
       )
-    } else if (this.pageMode == BoardGamePageState.ManagerReservation) {
+    } else if (this.pageMode == BoardGamePageState.ManagerReservation || handover) {
       if (!this.forUser) {
-        this.toastrService.error("Uživatel, pro kterého je tato rezervace, musí být zvolen.");
-      } else {
-        this.boardGamesService.reserveForUser(this.currentReservation, this.noteForm.value, this.forUser).pipe(
-          mergeMap((reservation) => {
-            let obs = assign ? this.updateAllItemStates(reservation, ReservationEventType.Assigned) : of(null);
-            return obs.pipe(map(assignedResult => ({reservation, assignedResult})));
-          })
-        ).pipe(
-          mergeMap(({reservation, assignedResult}) => {
-            let obs =  handover ? this.updateAllItemStates(reservation, ReservationEventType.HandedOver) : of(null);
-            return obs.pipe(map(handedOverResult => ({reservation, assignedResult, handedOverResult})));
-          })
-        ).pipe(mergeMap(({reservation, assignedResult, handedOverResult}) => {
-          this.storeService.resetSavedReservation();
-          this.storeService.setPageMode(BoardGamePageState.Normal);
-          this.toastrService.success("Rezervace pro uživatele byla vytvořena.");
-          return this.router.navigate([`/board-games/manager/reservations/${reservation.id}`]);
-        })).subscribe();
+        // Handover from the user-mode by a manager.
+        this.forUser = this.loggedInUser;
       }
+      this.boardGamesService.reserveForUser(this.currentReservation, this.noteForm.value, this.forUser).pipe(
+        mergeMap((reservation) => {
+          let obs = assign ? this.updateAllItemStates(reservation, ReservationEventType.Assigned) : of(null);
+          return obs.pipe(map(assignedResult => ({reservation, assignedResult})));
+        })
+      ).pipe(
+        mergeMap(({reservation, assignedResult}) => {
+          let obs =  handover ? this.updateAllItemStates(reservation, ReservationEventType.HandedOver) : of(null);
+          return obs.pipe(map(handedOverResult => ({reservation, assignedResult, handedOverResult})));
+        })
+      ).pipe(mergeMap(({reservation, assignedResult, handedOverResult}) => {
+        this.storeService.resetSavedReservation();
+        this.storeService.setPageMode(BoardGamePageState.Normal);
+        this.toastrService.success("Rezervace pro uživatele byla vytvořena.");
+        return this.router.navigate([`/board-games/manager/reservations/${reservation.id}`]);
+      })).subscribe();
     }
   }
 }

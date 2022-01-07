@@ -26,20 +26,20 @@ Author: František Nečas
     <textarea class="form-control" id="internalNote" rows="2" [formControl]="noteForm" maxlength="1024"
               placeholder="Tuto poznámku uvidí jen ostatní správci"></textarea>
   </div>
-  <div class="d-flex">
-    <div *ngIf="pageMode == mode.ManagerReservation">
-      <button type="button" class="btn btn-lg btn-info mr-2" (click)="reserve(true, false)"
-              [disabled]="currentReservation.size == 0 || !forUser">
-        Zarezervovat a vzít si na starost
-      </button>
-      <button type="button" class="btn btn-lg btn-success mr-2" (click)="reserve(true, true)"
-              [disabled]="currentReservation.size == 0 || !forUser">
-        Zarezervovat a {{(forUser && forUser == loggedInUser) ? "převzít" : "předat"}}
-      </button>
-    </div>
+  <div class="d-flex flex-wrap">
+    <button type="button" class="btn btn-lg btn-info mr-2 mb-1" (click)="reserve(true, false)"
+            [disabled]="currentReservation.size == 0 || !forUser" *ngIf="pageMode == mode.ManagerReservation">
+      Zarezervovat a vzít si na starost
+    </button>
+    <button type="button" class="btn btn-lg btn-success mr-2 mb-1" (click)="reserve(true, true)"
+            [disabled]="currentReservation.size == 0 || (pageMode == mode.ManagerReservation && !forUser)"
+            *ngIf="pageMode == mode.ManagerReservation || authService.isBoardGamesManager()">
+      Zarezervovat a {{((forUser && forUser == loggedInUser) ||
+        (pageMode == mode.Normal && authService.isBoardGamesManager())) ? "převzít" : "předat"}}
+    </button>
     <button type="button" class="btn btn-lg" [ngClass]="{
-    'btn-success': pageMode == mode.Normal,
-    'btn-outline-success': pageMode == mode.ManagerReservation}"
+    'btn-success': pageMode == mode.Normal && !authService.isBoardGamesManager(),
+    'btn-outline-success': pageMode == mode.ManagerReservation || authService.isBoardGamesManager()}"
             [disabled]="currentReservation.size == 0 || (pageMode != mode.Normal && !forUser)"
             (click)="reserve()">
       Zarezervovat
