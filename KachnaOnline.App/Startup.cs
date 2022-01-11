@@ -121,7 +121,6 @@ namespace KachnaOnline.App
 
             if (env.IsDevelopment())
             {
-                app.UseCors(LocalCorsPolicy);
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -150,6 +149,15 @@ namespace KachnaOnline.App
 
             // Add routing middleware.
             app.UseRouting();
+
+            if (env.IsDevelopment())
+            {
+                app.UseCors(LocalCorsPolicy);
+            }
+            else
+            {
+                app.UseCors();
+            }
 
             // Add authorization middleware.
             app.UseAuthentication();
