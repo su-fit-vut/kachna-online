@@ -198,7 +198,7 @@ export class CurrentEventsComponent implements OnInit {
   }
 
   monthChanged(month: Date) {
-    this.eventsService.getMonthEvents(month).subscribe(res => this.makeNextEvents(res));
+    this.eventsService.getMonthEvents(month, false).subscribe(res => this.makeNextEvents(res));
   }
 
   updateNextEvents(): void {
