@@ -21,7 +21,7 @@ Author: David Chocholatý
         <br>
         <ng-container *ngIf="e.place">
           místo konání:
-          <ng-container *ngIf="e.placeUrl == null; else placeWithUrl">{{e.place}}</ng-container>
+          <ng-container *ngIf="!e.placeUrl || e.placeUrl.length == 0; else placeWithUrl">{{e.place}}</ng-container>
           <ng-template #placeWithUrl><a href="{{e.placeUrl}}">{{e.place}}</a></ng-template>
         </ng-container>
 
@@ -46,7 +46,7 @@ Author: David Chocholatý
         </div>
       </div>
       <div class="col-lg-5 col-sm-12 d-none d-sm-block pl-lg-1" *ngIf="e.imageUrl != null">
-        <img src="{{e.imageUrl}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
+        <img src="https://{{env.baseApiUrlDomain}}{{e.imageUrl}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
       </div>
     </div>
 
@@ -99,7 +99,7 @@ Author: David Chocholatý
       </div>
     </div>
     <div class="col-lg-5 col-sm-12 d-none d-sm-block pl-lg-1" *ngIf="e.imageUrl != null">
-      <img src="{{e.imageUrl}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
+      <img src="https://{{env.baseApiUrlDomain}}{{e.imageUrl}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
     </div>
   </div>
 </ng-container>

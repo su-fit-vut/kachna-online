@@ -3,15 +3,16 @@ linked-states.component.html
 Author: David Chocholatý
 -->
 
-<div class="card-body">
-  <div class="container">
-    <div class="row" *ngFor="let linkedState of eventsService.eventDetail.linkedStatesDtos">
-      <div class="col-md-8">
-        {{linkedState.start | date:'d. M. yyyy HH:mm'}}–{{linkedState.plannedEnd | date:'d. M. yyyy HH:mm'}}
-      </div>
-      <div class="col-md-auto">
-        ({{linkedState.state | stateLoc}})
-      </div>
+<div class="container">
+  <div class="row" *ngFor="let linkedState of eventsService.eventDetail.linkedStatesDtos">
+    <div class="col-md-8" *ngIf="linkedState.start.getDate() == linkedState.plannedEnd.getDate(); else multiDay">
+      {{linkedState.start | date:'HH:mm'}}–{{linkedState.plannedEnd | date:'HH:mm'}}
+    </div>
+    <ng-template #multiDay>
+      {{linkedState.start | date:'d. M. HH:mm'}}–{{linkedState.plannedEnd | date:'d. M. HH:mm'}}
+    </ng-template>
+    <div class="col-md-auto">
+      ({{linkedState.state | stateLoc}})
     </div>
   </div>
 </div>

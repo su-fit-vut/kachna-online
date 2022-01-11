@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Event } from '../../models/events/event.model';
 import { AuthenticationService } from "../../shared/services/authentication.service";
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: 'app-event-detail',
@@ -16,6 +17,8 @@ import { AuthenticationService } from "../../shared/services/authentication.serv
 export class EventDetailComponent implements OnInit {
   event: Event = new Event();
   activateEditEventModal: boolean = false;
+
+  env = environment;
 
   constructor(
     public eventsService: EventsService,

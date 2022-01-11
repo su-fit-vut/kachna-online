@@ -12,26 +12,28 @@ Author: David Chocholatý
       {{eventsService.eventDetail.name}}
     </a>
   </h3>
-  <div class="list-group">
+  <div class="">
     <div class="card">
       <div class="row no-gutters">
         <div class="col">
           <div class="card-body">
-            <div class="list-group-item" *ngIf="eventsService.eventDetail.shortDescription">
+            <div class="" *ngIf="eventsService.eventDetail.shortDescription">
               <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">Popis</h5>
               </div>
-              <p class="mb-1">{{eventsService.eventDetail.shortDescription}}</p>
+              <p class="mb-2">{{eventsService.eventDetail.shortDescription}}</p>
             </div>
-            <div class="list-group-item">
+
+            <div class="">
               <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">Termín konání</h5>
               </div>
               <div class="container row">
-                <p>Od {{eventsService.getFormattedFromDate()}} do {{eventsService.getFormattedToDate()}}</p>
+                <p class="mb-2">Od {{eventsService.eventDetail.from | date:'d. M. HH:mm'}} do {{eventsService.eventDetail.to | date: 'd. M. HH:mm'}}</p>
               </div>
             </div>
-            <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.place">
+
+            <div class="flex-fill mb-2" *ngIf="eventsService.eventDetail.place">
               <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">Místo</h5>
               </div>
@@ -39,19 +41,21 @@ Author: David Chocholatý
               <a [href]="eventsService.eventDetail.placeUrl" *ngIf="eventsService.eventDetail.placeUrl" href="."
                  class="mb-1">{{eventsService.eventDetail.place}}</a>
             </div>
+
+            <div class="flex-fill" *ngIf="eventsService.eventDetail.linkedPlannedStateIds?.length">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Kachna bude v rámci akce otevřená</h5>
+              </div>
+              <app-linked-states></app-linked-states>
+            </div>
           </div>
         </div>
+
         <div class="col-md-4" *ngIf="eventsService.eventDetail.imageUrl">
-          <img src="{{eventsService.eventDetail.imageUrl}}"
-               class="card-img img-fluid rounded" alt="Obrázek akce"/>
+          <img src="https://{{env.baseApiUrlDomain}}{{eventsService.eventDetail.imageUrl}}"
+               class="img-fluid" alt="Obrázek akce"/>
         </div>
       </div>
-    </div>
-    <div class="list-group-item flex-fill" *ngIf="eventsService.eventDetail.linkedPlannedStateIds?.length">
-      <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">Kachna bude v rámci akce otevřená</h5>
-      </div>
-      <app-linked-states></app-linked-states>
     </div>
 
     <div class="list-group-item" *ngIf="eventsService.eventDetail.fullDescription">

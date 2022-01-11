@@ -29,7 +29,7 @@ Author: Ondřej Ondryáš
             <br>
             <ng-container *ngIf="e.place">
               místo konání:
-              <ng-container *ngIf="e.placeUrl == null; else placeWithUrl">{{e.place}}</ng-container>
+              <ng-container *ngIf="!e.placeUrl || e.placeUrl.length == 0; else placeWithUrl">{{e.place}}</ng-container>
               <ng-template #placeWithUrl><a href="{{e.placeUrl}}">{{e.place}}</a></ng-template>
             </ng-container>
 
