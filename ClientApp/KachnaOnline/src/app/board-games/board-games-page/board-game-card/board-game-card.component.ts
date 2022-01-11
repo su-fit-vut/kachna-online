@@ -4,6 +4,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BoardGame } from "../../../models/board-games/board-game.model";
 import { AuthenticationService } from "../../../shared/services/authentication.service";
+import { UrlUtils } from "../../../shared/utils/url-utils";
 
 @Component({
   selector: 'app-board-game',
@@ -14,6 +15,8 @@ export class BoardGameCardComponent implements OnInit {
   @Input() boardGame: BoardGame
   @Input() initialReserved: number = 0;
   @Output() reservationUpdate: EventEmitter<BoardGame> = new EventEmitter()
+
+  getImageUrl = UrlUtils.getAbsoluteImageUrl;
 
   constructor(public authenticationService: AuthenticationService) {
   }

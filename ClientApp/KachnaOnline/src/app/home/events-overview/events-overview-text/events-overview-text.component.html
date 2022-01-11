@@ -54,7 +54,7 @@ Author: Ondřej Ondryáš
             </div>
           </div>
           <div class="col-lg-5 col-sm-12 d-none d-sm-block pl-lg-1" *ngIf="e.imageUrl != null">
-            <img src="{{e.imageUrl}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
+            <img src="{{getImageUrl(e.imageUrl)}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
           </div>
         </div>
 

@@ -8,6 +8,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Event } from '../../models/events/event.model';
 import { AuthenticationService } from "../../shared/services/authentication.service";
 import { environment } from "../../../environments/environment";
+import { UrlUtils } from "../../shared/utils/url-utils";
 
 @Component({
   selector: 'app-event-detail',
@@ -18,7 +19,7 @@ export class EventDetailComponent implements OnInit {
   event: Event = new Event();
   activateEditEventModal: boolean = false;
 
-  env = environment;
+  getImageUrl = UrlUtils.getAbsoluteImageUrl;
 
   constructor(
     public eventsService: EventsService,

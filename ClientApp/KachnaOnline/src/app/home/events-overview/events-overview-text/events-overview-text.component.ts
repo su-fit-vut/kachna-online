@@ -12,6 +12,7 @@ import { ClubState } from "../../../models/states/club-state.model";
 import { EventItem, StateItem } from "../events-overview.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { StateModalComponent } from "../state-modal/state-modal.component";
+import { UrlUtils } from "../../../shared/utils/url-utils";
 
 @Component({
   selector: 'app-events-overview-text',
@@ -26,6 +27,8 @@ export class EventsOverviewTextComponent implements OnInit {
   shownStates: StateItem[] = [];
 
   showPast: boolean = false;
+
+  getImageUrl = UrlUtils.getAbsoluteImageUrl;
 
   constructor(private eventsService: EventsService, private stateService: StatesService,
               private modalService: NgbModal, private statesService: StatesService) {

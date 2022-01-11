@@ -13,7 +13,7 @@ import { forkJoin, Observable } from "rxjs";
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
 import { endWith } from "rxjs/operators";
 import { ToastrService } from "ngx-toastr";
-import { environment } from "../../../environments/environment";
+import { UrlUtils } from "../../shared/utils/url-utils";
 
 @Component({
   selector: 'app-current-events',
@@ -27,7 +27,7 @@ export class CurrentEventsComponent implements OnInit {
   currentMonth: Date = new Date();
   loading: boolean = false;
 
-  env = environment;
+  getImageUrl = UrlUtils.getAbsoluteImageUrl;
 
   constructor(
     public eventsService: EventsService,

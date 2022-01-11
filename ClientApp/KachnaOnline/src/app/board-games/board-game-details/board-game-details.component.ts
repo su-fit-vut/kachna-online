@@ -8,6 +8,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 import { BoardGame } from "../../models/board-games/board-game.model";
 import { BoardGamesStoreService } from "../../shared/services/board-games-store.service";
+import { UrlUtils } from "../../shared/utils/url-utils";
 
 @Component({
   selector: 'app-board-game-details',
@@ -19,6 +20,8 @@ export class BoardGameDetailsComponent implements OnInit {
   private routeSub: Subscription;
   boardGame: BoardGame;
   currentReservation: Map<number, number>;
+
+  getImageUrl = UrlUtils.getAbsoluteImageUrl;
 
   constructor(private boardGamesService: BoardGamesService, private toastrService: ToastrService,
               private route: ActivatedRoute, private storeService: BoardGamesStoreService) {

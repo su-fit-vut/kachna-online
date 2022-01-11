@@ -29,7 +29,7 @@ Author: František Nečas
   <div class="col-sm-5">
     <ng-container *ngIf="boardGame">
       <div class="col">
-        <img src="{{boardGame.imageUrl ? boardGame.imageUrl : 'assets/image_not_found.jpg'}}" class="img-fluid rounded"
+        <img src="{{boardGame.imageUrl ? getImageUrl(boardGame.imageUrl) : 'assets/image_not_found.jpg'}}" class="img-fluid rounded"
              alt="Fotka deskové hry"/>
       </div>
       <div class="col mt-3">

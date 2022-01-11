@@ -52,7 +52,7 @@ Author: David Chocholatý
         </div>
 
         <div class="col-md-4" *ngIf="eventsService.eventDetail.imageUrl">
-          <img src="https://{{env.baseApiUrlDomain}}{{eventsService.eventDetail.imageUrl}}"
+          <img src="{{getImageUrl(eventsService.eventDetail.imageUrl)}}"
                class="img-fluid" alt="Obrázek akce"/>
         </div>
       </div>

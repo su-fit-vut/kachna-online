@@ -12,7 +12,7 @@ Author: David Chocholatý
         <a class="border-bottom d-inline-block h5 text-decoration-none" [class.mr-2]="e.url != null"
            [routerLink]="['/events', e.id]">{{e.title}}</a>
 
-        <a class="d-inline-block text-decoration-none" *ngIf="e.url != null"
+        <a class="d-inline-block text-decoration-none" *ngIf="e.url != null && e.url.length > 0"
            href="{{e.url}}">web události <span><i style="vertical-align: 1px"
                                                   class="fas fa-external-link-alt small pl-1"></i></span></a>
         <br>
@@ -46,7 +46,7 @@ Author: David Chocholatý
         </div>
       </div>
       <div class="col-lg-5 col-sm-12 d-none d-sm-block pl-lg-1" *ngIf="e.imageUrl != null">
-        <img src="https://{{env.baseApiUrlDomain}}{{e.imageUrl}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
+        <img src="{{getImageUrl(e.imageUrl)}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
       </div>
     </div>
 
@@ -74,7 +74,7 @@ Author: David Chocholatý
       <br>
       <ng-container *ngIf="e.place">
         místo konání:
-        <ng-container *ngIf="e.placeUrl == null; else placeWithUrl">{{e.place}}</ng-container>
+        <ng-container *ngIf="!e.placeUrl || e.placeUrl.length == 0; else placeWithUrl">{{e.place}}</ng-container>
         <ng-template #placeWithUrl><a href="{{e.placeUrl}}">{{e.place}}</a></ng-template>
       </ng-container>
 
@@ -99,7 +99,7 @@ Author: David Chocholatý
       </div>
     </div>
     <div class="col-lg-5 col-sm-12 d-none d-sm-block pl-lg-1" *ngIf="e.imageUrl != null">
-      <img src="https://{{env.baseApiUrlDomain}}{{e.imageUrl}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
+      <img src="{{getImageUrl(e.imageUrl)}}" class="img-fluid img-thumbnail" alt="{{e.title}}"/>
     </div>
   </div>
 </ng-container>
