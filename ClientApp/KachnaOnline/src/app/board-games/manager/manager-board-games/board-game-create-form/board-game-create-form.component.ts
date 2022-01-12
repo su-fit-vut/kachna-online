@@ -114,6 +114,7 @@ export class BoardGameCreateFormComponent implements OnInit {
 
   imageChanged(event: any): void {
     this.form.patchValue({image: {file: event.target.files.item(0)}});
+    this.form.controls.image?.markAsDirty();
   }
 
   userSelected(event: UserDetail): void {
