@@ -22,7 +22,7 @@ Author: Ondřej Ondryáš
 
             <a class="d-inline-block text-decoration-none" *ngIf="e.url != null"
                href="{{e.url}}">web události <span><i style="vertical-align: 1px"
-                                                      class="fas fa-external-link-alt small pl-1"></i></span></a>
+                                                      class="fas fa-external-link-alt font-small pl-1"></i></span></a>
             <br>
 
             <ng-container *ngIf="e.multipleDays; then oneDay else moreDays"></ng-container>
@@ -43,7 +43,7 @@ Author: Ondřej Ondryáš
               </ng-container>
             </ng-container>
 
-            <ng-template #oneDay>{{e.from | date:'EEE d. MM.'}} od {{e.from | date:'HH:mm'}}
+            <ng-template #oneDay>{{e.from | date:'EEE d. M.'}} od {{e.from | date:'HH:mm'}}
               do {{e.to | date:'HH:mm'}}</ng-template>
             <ng-template #moreDays>
               {{e.from | date:'EEE d. M.'}} až {{e.to | date:'EEE d. M.'}}

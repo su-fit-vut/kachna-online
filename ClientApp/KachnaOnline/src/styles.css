@@ -60,3 +60,7 @@ table thead tr th {
   border-radius: 50%;
   display: inline-block;
 }
+
+.font-small {
+  font-size: 80%;
+}

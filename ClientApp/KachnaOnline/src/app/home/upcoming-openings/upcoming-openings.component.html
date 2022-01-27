@@ -11,7 +11,7 @@ Author: Ondřej Ondryáš
       <h5 class="text-muted" *ngIf="hasChillzone == undefined">načítám...</h5>
       <h5 *ngIf="hasChillzone == false">Žádná chillzóna není naplánovaná</h5>
       <h5 *ngIf="nextChillzone">
-        {{nextChillzone.start.getDay() | dayLoc}} {{nextChillzone.start | date:'dd. MM.'}}
+        {{nextChillzone.start.getDay() | dayLoc}} {{nextChillzone.start | date:'d. M.'}}
         od {{nextChillzone.start | date:'HH:mm'}}
         do {{nextChillzone.plannedEnd | date:'HH:mm'}}
       </h5>
@@ -20,7 +20,7 @@ Author: Ondřej Ondryáš
       <h2>Nejbližší otvíračka</h2>
       <h5 class="text-muted" *ngIf="hasBar == undefined">načítám...</h5>
       <h5 *ngIf="hasBar == false">Žádná otvíračka s barem není naplánovaná</h5>
-      <h5 *ngIf="nextBar">{{nextBar.start.getDay() | dayLoc}} {{nextBar.start | date:'dd. MM.'}}
+      <h5 *ngIf="nextBar">{{nextBar.start.getDay() | dayLoc}} {{nextBar.start | date:'d. M.'}}
         od {{nextBar.start | date:'HH:mm'}}
         do {{nextBar.plannedEnd | date:'HH:mm'}}</h5>
     </div>
