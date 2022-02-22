@@ -1,0 +1,4 @@
+.img-fluid{
+  object-fit: contain;
+  aspect-ratio: 1 / 1;
+}
