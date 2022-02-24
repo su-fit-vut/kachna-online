@@ -1,6 +1,3 @@
-// manager-reservations.component.ts
-// Author: František Nečas
-
 import { Component, OnInit } from '@angular/core';
 import { Reservation, ReservationState } from "../../../models/board-games/reservation.model";
 import { FormControl } from "@angular/forms";

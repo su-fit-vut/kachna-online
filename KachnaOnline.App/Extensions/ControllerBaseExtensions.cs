@@ -1,6 +1,3 @@
-// ControllerBaseExtensions.cs
-// Author: Ondřej Ondryáš
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

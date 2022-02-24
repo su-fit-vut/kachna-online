@@ -1,6 +1,3 @@
-// StateNotFoundException.cs
-// Author: Ondřej Ondryáš
-
 using System;
 
 namespace KachnaOnline.Business.Exceptions.ClubStates

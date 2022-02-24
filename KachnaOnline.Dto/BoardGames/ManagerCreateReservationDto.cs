@@ -1,6 +1,3 @@
-// ManagerCreateReservationDto.cs
-// Author: František Nečas
-
 using System.ComponentModel.DataAnnotations;
 
 namespace KachnaOnline.Dto.BoardGames

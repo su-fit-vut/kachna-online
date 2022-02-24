@@ -1,6 +1,3 @@
-// ReservationDto.cs
-// Author: František Nečas
-
 using System;
 using System.ComponentModel.DataAnnotations;
 using KachnaOnline.Dto.Users;

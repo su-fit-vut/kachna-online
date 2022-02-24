@@ -1,6 +1,3 @@
-// LegacyStateDto.cs
-// Author: Ondřej Ondryáš
-
 using System;
 
 namespace KachnaOnline.Dto.ClubStates

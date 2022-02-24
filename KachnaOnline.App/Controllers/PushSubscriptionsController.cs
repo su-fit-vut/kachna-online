@@ -1,6 +1,3 @@
-// PushSubscriptionsController.cs
-// Author: František Nečas
-
 using System;
 using System.Net;
 using System.Threading.Tasks;

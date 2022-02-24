@@ -1,6 +1,3 @@
-// EventDto.cs
-// Author: David Chocholatý
-
 namespace KachnaOnline.Dto.Events
 {
     /// <summary>

@@ -1,6 +1,3 @@
-﻿// SuDiscordTransitionHandler.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;

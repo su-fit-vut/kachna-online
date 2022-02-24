@@ -1,6 +1,3 @@
-// PushNotificationClient.cs
-// Author: František Nečas
-
 using System;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Configuration;

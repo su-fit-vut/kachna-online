@@ -1,6 +1,3 @@
-// states-list-component.ts
-// Author: Ondřej Ondryáš
-
 import { Component, OnInit } from '@angular/core';
 import { StatesService } from "../../shared/services/states.service";
 import { ClubState } from "../../models/states/club-state.model";

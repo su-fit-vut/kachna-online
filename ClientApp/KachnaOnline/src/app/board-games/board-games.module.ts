@@ -1,6 +1,3 @@
-// board-games.module.ts
-// Author: František Nečas
-
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { CommonModule } from '@angular/common';

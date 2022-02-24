@@ -1,6 +1,3 @@
-// Program.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using KachnaOnline.Data;
 using Microsoft.AspNetCore.Hosting;

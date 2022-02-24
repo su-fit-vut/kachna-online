@@ -1,6 +1,3 @@
-// EventWithLinkedStatesDto.cs
-// Author: David Chocholatý
-
 using System.Collections.Generic;
 using KachnaOnline.Dto.ClubStates;
 

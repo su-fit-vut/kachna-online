@@ -1,6 +1,3 @@
-// ImageConstants.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Business.Constants
 {
     public class ImageConstants

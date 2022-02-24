@@ -1,6 +1,3 @@
-// Startup.cs
-// Author: Ondřej Ondryáš
-
 using System.Linq;
 using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Extensions;

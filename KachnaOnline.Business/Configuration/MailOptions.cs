@@ -1,6 +1,3 @@
-// MailOptions.cs
-// Author: František Nečas, Ondřej Ondryáš
-
 namespace KachnaOnline.Business.Configuration
 {
     public class MailOptions

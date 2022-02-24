@@ -1,6 +1,3 @@
-// board-game-card-card.component.ts
-// Author: František Nečas
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BoardGame } from "../../../models/board-games/board-game.model";
 import { AuthenticationService } from "../../../shared/services/authentication.service";

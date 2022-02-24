@@ -1,6 +1,3 @@
-// JwtOptions.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Business.Configuration
 {
     public class JwtOptions

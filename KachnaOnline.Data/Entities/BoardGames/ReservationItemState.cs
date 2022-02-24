@@ -1,6 +1,3 @@
-// ReservationItemState.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Data.Entities.BoardGames
 {
     public enum ReservationItemState

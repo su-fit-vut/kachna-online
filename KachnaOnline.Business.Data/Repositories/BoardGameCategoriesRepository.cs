@@ -1,6 +1,3 @@
-// BoardGameCategoriesRepository.cs
-// Author: František Nečas
-
 using System.Threading.Tasks;
 using KachnaOnline.Business.Data.Repositories.Abstractions;
 using KachnaOnline.Data;

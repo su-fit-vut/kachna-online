@@ -1,6 +1,3 @@
-// IUserRepository.cs
-// Author: Ondřej Ondryáš
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using KachnaOnline.Data.Entities.Users;

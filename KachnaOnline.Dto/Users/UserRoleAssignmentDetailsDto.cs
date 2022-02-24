@@ -1,6 +1,3 @@
-// UserRoleAssignmentDetailsDto.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Dto.Users
 {
     public class UserRoleAssignmentDetailsDto

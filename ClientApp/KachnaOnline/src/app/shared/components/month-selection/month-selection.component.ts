@@ -1,6 +1,3 @@
-// month-selection.component.ts
-// Author: Ondřej Ondryáš
-
 import { Component, Output, OnInit, EventEmitter, Input } from '@angular/core';
 
 @Component({

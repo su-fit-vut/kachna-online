@@ -1,6 +1,3 @@
-// StateType.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Data.Entities.ClubStates
 {
     public enum StateType

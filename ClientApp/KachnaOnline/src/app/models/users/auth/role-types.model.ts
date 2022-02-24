@@ -1,6 +1,3 @@
-// role-types.model.ts
-// Author: David Chocholatý
-
 export enum RoleTypes {
   EventsManager = "EventsManager",
   BoardGamesManager = "BoardGamesManager",

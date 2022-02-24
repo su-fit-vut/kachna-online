@@ -1,6 +1,3 @@
-// board-game-category.model.ts
-// Author: František Nečas
-
 /**
  * Model of a board game category.
  */

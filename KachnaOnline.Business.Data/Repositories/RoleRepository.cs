@@ -1,6 +1,3 @@
-// RoleRepository.cs
-// Author: Ondřej Ondryáš
-
 using System.Linq;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Data.Repositories.Abstractions;

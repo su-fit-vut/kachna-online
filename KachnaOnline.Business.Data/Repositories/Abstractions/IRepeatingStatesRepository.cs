@@ -1,6 +1,3 @@
-// IRepeatingStatesRepository.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.Collections.Generic;
 using KachnaOnline.Data.Entities.ClubStates;

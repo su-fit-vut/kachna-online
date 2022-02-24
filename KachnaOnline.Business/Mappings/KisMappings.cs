@@ -1,6 +1,3 @@
-// KisMappings.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.Linq;
 using AutoMapper;

@@ -1,6 +1,3 @@
-// StateNotAssociatedToEventException.cs
-// Author: David Chocholatý
-
 using System;
 
 namespace KachnaOnline.Business.Exceptions.ClubStates

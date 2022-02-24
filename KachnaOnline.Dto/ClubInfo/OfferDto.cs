@@ -1,6 +1,3 @@
-// OfferDto.cs
-// Author: Ondřej Ondryáš
-
 using System.Collections.Generic;
 using KachnaOnline.Dto.Swagger;
 

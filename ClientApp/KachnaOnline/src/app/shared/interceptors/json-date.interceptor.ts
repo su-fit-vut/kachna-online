@@ -1,7 +1,5 @@
-// json-date.interceptor.ts
 // Based on code from:
 // https://gist.github.com/martinobordin/39bb1fe3400a29c1078dec00ff76bba9 (Martino Bordin)
-// Modified by: Ondřej Ondryáš
 
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';

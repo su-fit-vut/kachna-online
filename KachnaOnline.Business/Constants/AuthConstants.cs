@@ -1,6 +1,3 @@
-// AuthConstants.cs
-// Author: František Nečas
-
 namespace KachnaOnline.Business.Constants
 {
     public static class AuthConstants

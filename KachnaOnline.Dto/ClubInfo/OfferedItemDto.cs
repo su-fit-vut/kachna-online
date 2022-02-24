@@ -1,6 +1,3 @@
-// OfferedItemDto.cs
-// Author: Ondřej Ondryáš
-
 using KachnaOnline.Dto.Swagger;
 
 namespace KachnaOnline.Dto.ClubInfo

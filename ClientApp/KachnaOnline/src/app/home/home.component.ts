@@ -1,6 +1,3 @@
-// home.component.ts
-// Author: Ondřej Ondryáš
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthenticationService } from "../shared/services/authentication.service";
 import { ClubState } from "../models/states/club-state.model";

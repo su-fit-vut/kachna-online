@@ -1,6 +1,3 @@
-// IdentityConstants.cs
-// Author: Ondřej Ondryáš
-
 using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace KachnaOnline.Business.Constants

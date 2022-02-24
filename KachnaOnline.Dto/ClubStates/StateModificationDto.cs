@@ -1,6 +1,3 @@
-// StateModificationDto.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.ComponentModel.DataAnnotations;
 

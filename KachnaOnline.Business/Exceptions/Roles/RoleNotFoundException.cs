@@ -1,6 +1,3 @@
-// RoleNotFoundException.cs
-// Author: František Nečas
-
 using System;
 
 namespace KachnaOnline.Business.Exceptions.Roles

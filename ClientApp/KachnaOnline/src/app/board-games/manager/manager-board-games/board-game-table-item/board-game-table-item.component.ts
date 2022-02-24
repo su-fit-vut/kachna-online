@@ -1,6 +1,3 @@
-// board-game-table-item.component.ts
-// Author: František Nečas
-
 import { Component, OnInit } from '@angular/core';
 
 @Component({

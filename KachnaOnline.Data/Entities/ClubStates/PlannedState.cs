@@ -1,6 +1,3 @@
-// PlannedState.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.ComponentModel.DataAnnotations;
 using KachnaOnline.Data.Entities.Events;

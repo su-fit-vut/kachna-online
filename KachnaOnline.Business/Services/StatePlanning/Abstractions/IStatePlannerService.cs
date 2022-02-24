@@ -1,6 +1,3 @@
-// IStatePlanner.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,13 +54,13 @@ namespace KachnaOnline.Business.Services.StatePlanning.Abstractions
 
             /// <summary>
             /// True if the next event to wait for is the end of the current state; false if the event is the start
-            /// of a planned state. 
+            /// of a planned state.
             /// </summary>
             public bool IsStateEnd { get; init; }
         }
 
         /// <summary>
-        /// Returns information about the next planned transition (current state end or the closest planned state start). 
+        /// Returns information about the next planned transition (current state end or the closest planned state start).
         /// A <see cref="CancellationToken"/> is included in the returned value that signalizes the plan service that
         /// the returned transition may no longer be the closest next one.
         /// </summary>

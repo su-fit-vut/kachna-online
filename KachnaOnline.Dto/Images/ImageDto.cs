@@ -1,6 +1,3 @@
-// ImageDto.cs
-// Author: Ondřej Ondryáš
-
 using Newtonsoft.Json;
 
 namespace KachnaOnline.Dto.Images

@@ -1,6 +1,3 @@
-// board-games-service.ts
-// Author: František Nečas
-
 import { Injectable } from '@angular/core';
 import { environment } from "../../../environments/environment";
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";

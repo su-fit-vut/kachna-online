@@ -1,6 +1,3 @@
-// kis-token-content.model.ts
-// Author: David Chocholatý
-
 /**
  * KIS token content of KIS API access token.
  */

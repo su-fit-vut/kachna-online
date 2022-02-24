@@ -1,6 +1,3 @@
-// category-update.component.ts
-// Author: František Nečas
-
 import { Component, Input, OnInit } from '@angular/core';
 import { BoardGameCategory } from "../../../../models/board-games/board-game-category.model";
 import { BoardGamesService } from "../../../../shared/services/board-games.service";

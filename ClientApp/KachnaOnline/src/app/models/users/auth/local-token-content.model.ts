@@ -1,6 +1,3 @@
-// local-token-content.model.ts
-// Author: David Chocholatý
-
 /**
  * Token content of Kachna Online API access token.
  */

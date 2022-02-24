@@ -1,6 +1,3 @@
-// MailBoardGamesNotificationHandler.cs
-// Author: František Nečas
-
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;

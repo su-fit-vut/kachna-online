@@ -1,6 +1,3 @@
-// ImagesController.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.Threading.Tasks;
 using KachnaOnline.App.Extensions;

@@ -1,6 +1,3 @@
-// authentication.service.ts
-// Author: David Chocholatý
-
 import { environment } from '../../../environments/environment';
 import { KisEduIdResponse } from '../../models/users/auth/kis/kis-eduid-response.model';
 import { ToastrService } from 'ngx-toastr';

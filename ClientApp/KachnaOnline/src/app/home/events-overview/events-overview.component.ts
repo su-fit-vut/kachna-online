@@ -1,6 +1,3 @@
-// events-overview.component.ts
-// Authors: František Nečas, Ondřej Ondryáš
-
 import { Component, OnInit } from '@angular/core';
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
 import { environment } from "../../../environments/environment";

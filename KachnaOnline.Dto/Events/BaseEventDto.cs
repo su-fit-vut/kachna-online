@@ -1,6 +1,3 @@
-// BaseEventDto.cs
-// Author: David Chocholatý
-
 using System;
 using System.ComponentModel.DataAnnotations;
 

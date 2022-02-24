@@ -1,6 +1,3 @@
-// board-game.model.ts
-// Author: František Nečas
-
 import { BoardGameCategory } from "./board-game-category.model";
 import { MadeByUser } from "../users/made-by-user.model";
 

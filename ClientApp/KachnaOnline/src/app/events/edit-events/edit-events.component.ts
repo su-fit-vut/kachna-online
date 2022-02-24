@@ -1,6 +1,3 @@
-// edit-events.component.ts
-// Author: David Chocholatý
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { EventsService } from "../../shared/services/events.service";

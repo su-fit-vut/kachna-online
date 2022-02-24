@@ -1,6 +1,3 @@
-// StateType.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Dto.ClubStates
 {
     /// <summary>

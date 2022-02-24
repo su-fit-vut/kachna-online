@@ -1,6 +1,3 @@
-// KisLeaderboardItem.cs
-// Author: Ondřej Ondryáš
-
 using System.Text.Json.Serialization;
 
 namespace KachnaOnline.Business.Models.Kis

@@ -1,6 +1,3 @@
-// events-list.component.ts
-// Author: David Chocholatý
-
 import { Component, OnInit } from '@angular/core';
 import { Event } from "../../models/events/event.model";
 import { EventsService } from "../../shared/services/events.service";

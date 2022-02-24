@@ -1,6 +1,3 @@
-// ReservedBoardGameDto.cs
-// Author: František Nečas
-
 namespace KachnaOnline.Dto.BoardGames
 {
     /// <summary>

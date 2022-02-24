@@ -1,6 +1,3 @@
-// registration.component.ts
-// Author: David Chocholatý
-
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from "@angular/forms";
 import { AuthenticationService } from "../../shared/services/authentication.service";

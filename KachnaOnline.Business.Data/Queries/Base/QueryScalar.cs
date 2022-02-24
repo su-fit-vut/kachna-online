@@ -1,6 +1,3 @@
-﻿// QueryScalar.cs
-// Author: Ondřej Ondryáš
-
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 

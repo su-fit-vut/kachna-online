@@ -1,7 +1,3 @@
-<!--
-reservation-button.component.html
-Author: František Nečas
--->
 <div *ngIf="authenticationService.isLoggedIn()">
   <div *ngIf="available <= 0; then thenBlock else elseBlock"></div>
   <ng-template #thenBlock>

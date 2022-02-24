@@ -1,6 +1,3 @@
-// PushSubscription.cs
-// Author: František Nečas
-
 using System.Collections.Generic;
 
 namespace KachnaOnline.Business.Models.PushNotifications

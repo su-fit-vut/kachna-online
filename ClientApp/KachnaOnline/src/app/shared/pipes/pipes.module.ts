@@ -1,6 +1,3 @@
-// pipes.module.ts
-// Author: Ondřej Ondryáš
-
 import { NgModule } from "@angular/core";
 import { DayLocPipe } from "./day-loc.pipe";
 import { MonthLocPipe } from "./month-loc.pipe";

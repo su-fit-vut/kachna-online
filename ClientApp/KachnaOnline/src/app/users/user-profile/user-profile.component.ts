@@ -1,6 +1,3 @@
-// user-profile.component.ts
-// Author: David Chocholatý
-
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from "../../shared/services/authentication.service";
 import { FormBuilder, FormControl, NgForm, Validators } from "@angular/forms";

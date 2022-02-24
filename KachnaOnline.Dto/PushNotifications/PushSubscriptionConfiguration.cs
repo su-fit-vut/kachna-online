@@ -1,6 +1,3 @@
-// PushSubscriptionConfiguration.cs
-// Author: František Nečas
-
 namespace KachnaOnline.Dto.PushNotifications
 {
     /// <summary>

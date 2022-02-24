@@ -1,6 +1,3 @@
-// DataBootstrapper.cs
-// Author: Ondřej Ondryáš
-
 using KachnaOnline.Data.Entities.BoardGames;
 using KachnaOnline.Data.Entities.Users;
 

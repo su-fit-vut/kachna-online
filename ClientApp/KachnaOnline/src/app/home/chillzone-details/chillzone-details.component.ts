@@ -1,6 +1,3 @@
-// chillzone-details.component.ts
-// Author: Ondřej Ondryáš
-
 import { Component, Input, OnInit } from '@angular/core';
 import { ClubState } from "../../models/states/club-state.model";
 

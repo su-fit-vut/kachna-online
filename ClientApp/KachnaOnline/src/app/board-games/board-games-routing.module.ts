@@ -1,6 +1,3 @@
-// board-games-routing.module.ts
-// Author: František Nečas
-
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BoardGamesPageComponent } from "./board-games-page/board-games-page.component";

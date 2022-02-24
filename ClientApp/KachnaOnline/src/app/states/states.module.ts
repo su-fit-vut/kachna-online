@@ -1,6 +1,3 @@
-// states.module.ts
-// Author: Ondřej Ondryáš
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 

@@ -1,6 +1,3 @@
-// CreateCategoryDto.cs
-// Author: František Nečas
-
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 

@@ -1,6 +1,3 @@
-// PushSubscriptionsFacade.cs
-// Author: František Nečas
-
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;

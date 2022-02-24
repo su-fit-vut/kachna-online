@@ -1,6 +1,3 @@
-// PushSubscriptionsService.cs
-// Author: František Nečas
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,6 +1,3 @@
-// KisConstants.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Business.Constants
 {
     public class KisConstants

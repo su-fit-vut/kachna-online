@@ -1,6 +1,3 @@
-// UserRole.cs
-// Author: Ondřej Ondryáš
-
 using System.ComponentModel.DataAnnotations;
 
 namespace KachnaOnline.Data.Entities.Users

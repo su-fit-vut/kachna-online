@@ -1,6 +1,3 @@
-// IReservationRepository.cs
-// Author: František Nečas
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using KachnaOnline.Data.Entities.BoardGames;

@@ -1,6 +1,3 @@
-// kis-token-interceptor.interceptor.ts
-// Author: David Chocholatý
-
 import {
   HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpClient, HttpErrorResponse, HttpParams
 } from '@angular/common/http';

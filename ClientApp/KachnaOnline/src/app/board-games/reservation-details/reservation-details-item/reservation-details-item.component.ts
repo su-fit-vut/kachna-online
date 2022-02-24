@@ -1,6 +1,3 @@
-// reservation-details-item.component.ts
-// Author: František Nečas
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ReservationItem, ReservationItemState } from "../../../models/board-games/reservation-item.model";
 import { BoardGamesService } from "../../../shared/services/board-games.service";
