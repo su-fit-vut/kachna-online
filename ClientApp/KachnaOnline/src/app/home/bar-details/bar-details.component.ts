@@ -1,6 +1,3 @@
-// bar-details.component.ts
-// Author: Ondřej Ondryáš
-
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ClubState } from "../../models/states/club-state.model";
 import { ClubInfoService } from "../../shared/services/club-info.service";

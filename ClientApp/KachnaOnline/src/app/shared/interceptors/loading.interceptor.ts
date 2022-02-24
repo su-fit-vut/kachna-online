@@ -1,5 +1,3 @@
-// loading.interceptor.ts
-// Author: František Nečas
 // Inspired by: https://stackoverflow.com/questions/49385369/angular-show-spinner-for-every-http-request-with-very-less-code-changes
 
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";

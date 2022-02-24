@@ -1,6 +1,3 @@
-// EventsRepository.cs
-// Author: David Chocholatý
-
 using System;
 using System.Collections.Generic;
 using System.Linq;

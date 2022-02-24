@@ -1,6 +1,3 @@
-// PushOptions.cs
-// Author: František Nečas
-
 namespace KachnaOnline.Business.Configuration
 {
     public class PushOptions

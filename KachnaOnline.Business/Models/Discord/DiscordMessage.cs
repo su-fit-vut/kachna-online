@@ -1,6 +1,3 @@
-// DiscordMessage.cs
-// Author: František Nečas
-
 using System;
 
 namespace KachnaOnline.Business.Models.Discord

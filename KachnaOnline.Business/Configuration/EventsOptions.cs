@@ -1,6 +1,3 @@
-// EventsOptions.cs
-// Author: David Chocholatý
-
 namespace KachnaOnline.Business.Configuration
 {
     public class EventsOptions

@@ -1,6 +1,3 @@
-// manager-board-games.component.ts
-// Author: František Nečas
-
 import { Component } from '@angular/core';
 import { BoardGame } from "../../../models/board-games/board-game.model";
 import { ActivatedRoute, Router } from "@angular/router";

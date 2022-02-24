@@ -1,6 +1,3 @@
-// RepeatingState.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +15,7 @@ namespace KachnaOnline.Data.Entities.ClubStates
         [Required] public DateTime EffectiveTo { get; set; }
         [Required] public TimeSpan TimeFrom { get; set; }
         [Required] public TimeSpan TimeTo { get; set; }
-        
+
         [StringLength(1024)] public string NoteInternal { get; set; }
         [StringLength(1024)] public string NotePublic { get; set; }
 

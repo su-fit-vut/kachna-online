@@ -1,6 +1,3 @@
-// board-games-page.component.ts
-// Author: František Nečas
-
 import { Component, OnInit } from '@angular/core';
 import { Observable, OperatorFunction, Subscription } from "rxjs";
 import { distinctUntilChanged, map } from "rxjs/operators";

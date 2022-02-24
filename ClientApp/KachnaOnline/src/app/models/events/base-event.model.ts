@@ -1,6 +1,3 @@
-// base-event.model.ts
-// Author: David Chocholatý
-
 import { ClubState } from "../states/club-state.model";
 
 export class BaseEvent {

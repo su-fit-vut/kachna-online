@@ -1,6 +1,3 @@
-// PlannedStatesToLinkDto.cs
-// Author: David Chocholatý
-
 using System.ComponentModel.DataAnnotations;
 
 namespace KachnaOnline.Dto.Events

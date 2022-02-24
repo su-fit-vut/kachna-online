@@ -1,6 +1,3 @@
-// MadeByUserDto.cs
-// Author: Ondřej Ondryáš
-
 using System.ComponentModel.DataAnnotations;
 using KachnaOnline.Dto.Swagger;
 using Newtonsoft.Json;

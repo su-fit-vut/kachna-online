@@ -1,6 +1,3 @@
-// MadeByUserDto.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Dto.Users
 {
     public class UserDetailsDto : UserDto

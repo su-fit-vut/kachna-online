@@ -1,6 +1,3 @@
-// StateDto.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using KachnaOnline.Dto.Users;
 using Newtonsoft.Json;

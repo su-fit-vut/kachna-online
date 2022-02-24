@@ -1,6 +1,3 @@
-// IBoardGamesNotificationHandler.cs
-// Author: František Nečas
-
 using System.Threading.Tasks;
 
 namespace KachnaOnline.Business.Services.BoardGamesNotifications.Abstractions

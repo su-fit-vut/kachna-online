@@ -1,6 +1,3 @@
-// manager-table-item.component.ts
-// Author: František Nečas
-
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { BoardGame } from "../../../../models/board-games/board-game.model";
 

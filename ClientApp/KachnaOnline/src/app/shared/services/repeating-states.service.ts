@@ -1,6 +1,3 @@
-// repeating-states.service.ts
-// Author: Ondřej Ondryáš
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ToastrService } from "ngx-toastr";

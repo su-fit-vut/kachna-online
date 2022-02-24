@@ -1,6 +1,3 @@
-// UserExtensions.cs
-// Author: Ondřej Ondryáš
-
 using KachnaOnline.Business.Models.Users;
 
 namespace KachnaOnline.Business.Extensions

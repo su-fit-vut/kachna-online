@@ -1,6 +1,3 @@
-// environment.prod.ts
-// Author: David Chocholatý
-
 import { IEnvironment, IEnvironmentParams } from "./ienvironment";
 
 /**

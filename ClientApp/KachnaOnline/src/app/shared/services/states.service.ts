@@ -1,6 +1,3 @@
-// states.service.ts
-// Author: Ondřej Ondryáš
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from "@angular/common/http";
 import { ToastrService } from "ngx-toastr";

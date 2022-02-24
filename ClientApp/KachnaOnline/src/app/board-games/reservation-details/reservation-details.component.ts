@@ -1,6 +1,3 @@
-// reservation-details.component.ts
-// Author: František Nečas
-
 import { Component, Input, OnInit } from '@angular/core';
 import { BoardGamesService } from "../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";

@@ -1,6 +1,3 @@
-// page-not-found.component.ts
-// Author: David Chocholatý
-
 import { Component, OnInit } from '@angular/core';
 
 @Component({

@@ -1,6 +1,3 @@
-// time-str.pipe.ts
-// Author: Ondřej Ondryáš
-
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({

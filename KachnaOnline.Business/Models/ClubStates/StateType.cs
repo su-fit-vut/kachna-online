@@ -1,6 +1,3 @@
-// StateType.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Business.Models.ClubStates
 {
     /// <summary>
@@ -20,7 +17,7 @@ namespace KachnaOnline.Business.Models.ClubStates
 
         /// <summary>
         /// The club is closed to the public because there's a private event.
-        /// This state type is generally only seen in responses to requests authorized to state managers. 
+        /// This state type is generally only seen in responses to requests authorized to state managers.
         /// </summary>
         Private = 2,
 

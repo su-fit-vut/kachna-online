@@ -1,6 +1,3 @@
-// ienvironment.ts
-// Author: David Chocholatý
-
 import { LocalTokenContent } from "../app/models/users/auth/local-token-content.model";
 import { KisTokenContent } from "../app/models/users/auth/kis/kis-token-content.model";
 import { KisLoggedInUserInformation } from "../app/models/users/kis-logged-in-user-information.model";

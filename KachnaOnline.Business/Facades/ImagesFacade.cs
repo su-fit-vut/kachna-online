@@ -1,6 +1,3 @@
-// ImagesFacade.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.IO;
 using System.Security.Cryptography;

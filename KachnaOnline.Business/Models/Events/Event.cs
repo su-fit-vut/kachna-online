@@ -1,6 +1,3 @@
-// Event.cs
-// Author: David Chocholatý
-
 namespace KachnaOnline.Business.Models.Events
 {
     /// <summary>

@@ -1,6 +1,3 @@
-// prestige-table.component.ts
-// Author: Ondřej Ondryáš
-
 import { Component, Input, OnInit } from '@angular/core';
 import { PrestigeLeaderboardItem } from "../../../models/clubinfo/leaderboard.model";
 

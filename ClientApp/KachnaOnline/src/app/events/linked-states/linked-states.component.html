@@ -1,8 +1,3 @@
-<!--
-linked-states.component.html
-Author: David Chocholatý
--->
-
 <div class="container">
   <div class="row" *ngFor="let linkedState of eventsService.eventDetail.linkedStatesDtos">
     <div class="col-md-8" *ngIf="linkedState.start.getDate() == linkedState.plannedEnd.getDate(); else multiDay">

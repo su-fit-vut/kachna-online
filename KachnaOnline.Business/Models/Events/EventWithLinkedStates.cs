@@ -1,6 +1,3 @@
-// EventWithLinkedStates.cs
-// Author: David Chocholatý
-
 using System.Collections.Generic;
 using KachnaOnline.Business.Models.ClubStates;
 using KachnaOnline.Dto.Events;

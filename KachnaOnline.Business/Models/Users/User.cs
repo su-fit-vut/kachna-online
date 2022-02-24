@@ -1,6 +1,3 @@
-// User.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Business.Models.Users
 {
     public class User

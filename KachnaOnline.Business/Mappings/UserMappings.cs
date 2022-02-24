@@ -1,6 +1,3 @@
-// UserMappings.cs
-// Author: Ondřej Ondryáš
-
 using AutoMapper;
 using KachnaOnline.Business.Models.Users;
 using KachnaOnline.Dto.Users;

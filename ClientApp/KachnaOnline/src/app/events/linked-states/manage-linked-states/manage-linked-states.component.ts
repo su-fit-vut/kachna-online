@@ -1,6 +1,3 @@
-// manage-linked-states.component.ts
-// Author: David Chocholatý
-
 import { Component, OnInit } from '@angular/core';
 import { EventsService } from "../../../shared/services/events.service";
 import { ToastrService } from "ngx-toastr";

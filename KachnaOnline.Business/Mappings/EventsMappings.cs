@@ -1,6 +1,3 @@
-// EventsMappings.cs
-// Author: David Chocholatý
-
 using System.Linq;
 using AutoMapper;
 using AutoMapper.Internal;

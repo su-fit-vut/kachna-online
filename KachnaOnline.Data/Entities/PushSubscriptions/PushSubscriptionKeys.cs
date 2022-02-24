@@ -1,6 +1,3 @@
-// PushSubscriptionKey.cs
-// Author: František Nečas
-
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

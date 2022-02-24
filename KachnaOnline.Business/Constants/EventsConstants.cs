@@ -1,6 +1,3 @@
-// EventsConstants.cs
-// Author: David Chocholatý
-
 namespace KachnaOnline.Business.Constants
 {
     public static class EventsConstants

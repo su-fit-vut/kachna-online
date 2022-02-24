@@ -1,6 +1,3 @@
-// DiscordBoardGamesNotificationHandler.cs
-// Author: František Nečas
-
 using System.Net.Http;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Configuration;

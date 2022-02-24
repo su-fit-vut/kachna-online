@@ -1,6 +1,3 @@
-// category-selector.component.ts
-// Author: František Nečas
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ToastrService } from "ngx-toastr";

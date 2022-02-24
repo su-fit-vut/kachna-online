@@ -1,6 +1,3 @@
-// events-overview-calendar.component.ts
-// Author: František Nečas
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CalendarOptions, EventClickArg, FullCalendarComponent } from "@fullcalendar/angular";
 import { StatesService } from "../../../shared/services/states.service";

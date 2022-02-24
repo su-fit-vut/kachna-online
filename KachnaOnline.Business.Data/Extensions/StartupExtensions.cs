@@ -1,6 +1,3 @@
-// StartupExtensions.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using KachnaOnline.Business.Data.Repositories;
 using KachnaOnline.Business.Data.Repositories.Abstractions;

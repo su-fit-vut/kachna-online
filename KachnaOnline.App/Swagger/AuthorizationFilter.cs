@@ -1,6 +1,3 @@
-// AuthorizationFilter.cs
-// Author: Ondřej Ondryáš
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;

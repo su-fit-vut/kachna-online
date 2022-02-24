@@ -1,6 +1,3 @@
-// AuthController.cs
-// Author: Ondřej Ondryáš
-
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using KachnaOnline.App.Extensions;

@@ -1,6 +1,3 @@
-// BoardGamesMappings.cs
-// Author: František Nečas
-
 using System;
 using AutoMapper;
 using KachnaOnline.Business.Models.BoardGames;

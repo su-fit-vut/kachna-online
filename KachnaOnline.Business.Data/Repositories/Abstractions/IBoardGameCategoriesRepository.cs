@@ -1,6 +1,3 @@
-// IBoardGameCategoriesRepository.cs
-// Author: František Nečas
-
 using System.Threading.Tasks;
 using KachnaOnline.Data.Entities.BoardGames;
 

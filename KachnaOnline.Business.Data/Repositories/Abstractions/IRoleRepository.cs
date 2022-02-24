@@ -1,6 +1,3 @@
-// IRoleRepository.cs
-// Author: Ondřej Ondryáš
-
 using System.Threading.Tasks;
 using KachnaOnline.Data.Entities.Users;
 

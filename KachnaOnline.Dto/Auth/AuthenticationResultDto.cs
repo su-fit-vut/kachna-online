@@ -1,6 +1,3 @@
-// AuthenticationResultDto.cs
-// Author: Ondřej Ondryáš
-
 namespace KachnaOnline.Dto.Auth
 {
     public class AuthenticationResultDto

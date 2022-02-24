@@ -1,6 +1,3 @@
-// PushSubscriptionDto.cs
-// Author: František Nečas
-
 using System.ComponentModel.DataAnnotations;
 using Lib.Net.Http.WebPush;
 

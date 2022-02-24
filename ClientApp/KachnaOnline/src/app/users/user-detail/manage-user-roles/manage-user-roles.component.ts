@@ -1,6 +1,3 @@
-// manager-user-roles.component.ts
-// Author: David Chocholatý
-
 import { Component, OnInit } from '@angular/core';
 import { UserDetail } from "../../../models/users/user.model";
 import { AuthenticationService } from "../../../shared/services/authentication.service";

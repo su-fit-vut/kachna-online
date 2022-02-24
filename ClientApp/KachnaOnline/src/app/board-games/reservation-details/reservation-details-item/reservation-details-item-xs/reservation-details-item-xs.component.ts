@@ -1,6 +1,3 @@
-// reservation-details-item-xs.component.ts
-// Author: František Nečas
-
 import { Component } from '@angular/core';
 import { ReservationDetailsItemComponent } from "../reservation-details-item.component";
 import { BoardGamesService } from "../../../../shared/services/board-games.service";

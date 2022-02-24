@@ -1,6 +1,3 @@
-// BoardGamesNotificationBackgroundService.cs
-// Author: František Nečas
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;

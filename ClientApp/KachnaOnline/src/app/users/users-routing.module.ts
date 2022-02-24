@@ -1,6 +1,3 @@
-// users-routing.module.ts
-// Author: David Chocholatý
-
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 

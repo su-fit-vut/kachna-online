@@ -1,6 +1,3 @@
-// StartupExtensions.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.Net.Http.Headers;
 using KachnaOnline.Business.Configuration;

@@ -1,6 +1,3 @@
-// state-modification.model.ts
-// Author: Ondřej Ondryáš
-
 import { ClubStateTypes } from "./club-state-types.model";
 
 export class StateModification {

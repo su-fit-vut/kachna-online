@@ -1,6 +1,3 @@
-// kis-logged-in-user-information.model.ts
-// Author: David Chocholatý
-
 /**
  * KIS information about the logged in user.
  */

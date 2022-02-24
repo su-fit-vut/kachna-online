@@ -1,6 +1,3 @@
-// user-search.component.ts
-// Author: František Nečas
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UserDetail } from "../../../models/users/user.model";
 import { AuthenticationService } from "../../services/authentication.service";

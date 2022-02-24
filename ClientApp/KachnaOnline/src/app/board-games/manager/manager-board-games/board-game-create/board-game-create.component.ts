@@ -1,6 +1,3 @@
-// board-game-create.component.ts
-// Author: František Nečas
-
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from "@angular/forms";
 import { BoardGamesService } from "../../../../shared/services/board-games.service";

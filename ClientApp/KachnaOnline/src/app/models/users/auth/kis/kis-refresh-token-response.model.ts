@@ -1,6 +1,3 @@
-// kis-refresh-token-response.model.ts
-// Author: David Chocholatý
-
 /**
  * KIS response to refresh access token request to KIS API.
  */

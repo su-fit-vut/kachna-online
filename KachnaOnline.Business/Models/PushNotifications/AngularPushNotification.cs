@@ -1,6 +1,3 @@
-// AngularPushNotification.cs
-// Author: František Nečas
-
 using System.Collections.Generic;
 using Lib.Net.Http.WebPush;
 using Newtonsoft.Json;

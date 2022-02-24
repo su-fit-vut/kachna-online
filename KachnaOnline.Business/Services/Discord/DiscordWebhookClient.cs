@@ -1,6 +1,3 @@
-// DiscordWebhookClient.cs
-// Author: Ondřej Ondryáš, František Nečas
-
 using System;
 using System.Net.Http;
 using System.Text;

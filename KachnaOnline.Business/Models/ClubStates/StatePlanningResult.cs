@@ -1,13 +1,10 @@
-// NewStateResult.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.Collections.Generic;
 
 namespace KachnaOnline.Business.Models.ClubStates
 {
     /// <summary>
-    /// Represents a result of a state planning attempt. 
+    /// Represents a result of a state planning attempt.
     /// </summary>
     public readonly struct StatePlanningResult
     {
@@ -34,7 +31,7 @@ namespace KachnaOnline.Business.Models.ClubStates
         public DateTime? ModifiedPreviousStatePlannedEnd { get; init; }
 
         /// <summary>
-        /// An array of already planned states that prevented the state to be planned. 
+        /// An array of already planned states that prevented the state to be planned.
         /// </summary>
         public List<int> OverlappingStatesIds { get; init; }
 

@@ -1,6 +1,3 @@
-// club-state.model.ts
-// Author: Ondřej Ondryáš
-
 import { MadeByUser } from "../users/made-by-user.model";
 import { ClubStateTypes } from "./club-state-types.model";
 

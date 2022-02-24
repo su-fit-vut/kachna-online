@@ -1,6 +1,3 @@
-// back-arrow.component.ts
-// Author: František Nečas, Ondřej Ondryáš
-
 import { Component, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 

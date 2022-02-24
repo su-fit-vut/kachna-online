@@ -1,6 +1,3 @@
-// ReservationEventType.cs
-// Author: František Nečas
-
 namespace KachnaOnline.Business.Models.BoardGames
 {
     /// <summary>

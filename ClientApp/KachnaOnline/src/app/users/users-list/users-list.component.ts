@@ -1,6 +1,3 @@
-// users-list.component.ts
-// Author: David Chocholatý
-
 import { Component, OnInit } from '@angular/core';
 import { EventsService } from "../../shared/services/events.service";
 import { ClubState } from "../../models/states/club-state.model";

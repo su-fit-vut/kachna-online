@@ -1,6 +1,3 @@
-// RepeatingStateModification.cs
-// Author: Ondřej Ondryáš
-
 using System;
 
 namespace KachnaOnline.Business.Models.ClubStates
@@ -17,13 +14,13 @@ namespace KachnaOnline.Business.Models.ClubStates
 
         /// <summary>
         /// The ID of the new 'made by' user for the repeating state and its planned states that haven't started yet.
-        /// Set to null not to modify this property. 
+        /// Set to null not to modify this property.
         /// </summary>
         public int? MadeById { get; set; }
 
         /// <summary>
         /// The new state type for the repeating state and its planned states that haven't started yet.
-        /// Set to null not to modify this property. 
+        /// Set to null not to modify this property.
         /// </summary>
         public StateType? State { get; set; }
 

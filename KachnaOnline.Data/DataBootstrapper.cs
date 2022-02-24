@@ -1,6 +1,3 @@
-// DataBootstrapper.cs
-// Author: Ondřej Ondryáš
-
 using System.IO;
 using System.Linq;
 using KachnaOnline.Data.Entities.BoardGames;

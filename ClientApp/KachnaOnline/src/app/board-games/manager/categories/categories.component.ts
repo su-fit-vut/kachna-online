@@ -1,6 +1,3 @@
-// categories.component.ts
-// Author: František Nečas
-
 import { Component, OnInit } from '@angular/core';
 import { BoardGamesService } from "../../../shared/services/board-games.service";
 import { ActivatedRoute, Router } from "@angular/router";

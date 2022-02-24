@@ -1,6 +1,3 @@
-// BoardGame.cs
-// Author: František Nečas
-
 using System;
 
 namespace KachnaOnline.Business.Models.BoardGames

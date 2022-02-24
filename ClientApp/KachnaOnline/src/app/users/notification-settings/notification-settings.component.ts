@@ -1,6 +1,3 @@
-// notification-settings.component.ts
-// Author: František Nečas
-
 import { Component, OnInit } from '@angular/core';
 import { SwPush } from "@angular/service-worker";
 import { PushNotificationsService } from "../../shared/services/push-notifications.service";

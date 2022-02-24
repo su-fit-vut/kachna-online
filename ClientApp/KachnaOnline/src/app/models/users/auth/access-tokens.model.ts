@@ -1,6 +1,3 @@
-// access-tokens.model.ts
-// Author: David Chocholatý
-
 /**
  * Access tokens from Kachna Online API
  */

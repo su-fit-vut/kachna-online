@@ -1,6 +1,3 @@
-// app.module.ts
-// Author: David Chocholatý
-
 import { environment } from '../environments/environment';
 import { EventsService } from './shared/services/events.service';
 import { LOCALE_ID, NgModule } from '@angular/core';

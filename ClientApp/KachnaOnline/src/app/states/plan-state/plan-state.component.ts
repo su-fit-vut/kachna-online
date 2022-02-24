@@ -1,6 +1,3 @@
-// plan-state.component.ts
-// Author: Ondřej Ondryáš
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import {

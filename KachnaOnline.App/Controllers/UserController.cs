@@ -1,6 +1,3 @@
-// UserController.cs
-// Author: František Nečas, Ondřej Ondryáš
-
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;

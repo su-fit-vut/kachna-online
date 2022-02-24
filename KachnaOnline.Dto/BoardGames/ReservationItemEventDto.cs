@@ -1,6 +1,3 @@
-// ReservationItemEventDto.cs
-// Author: František Nečas
-
 using System;
 using KachnaOnline.Dto.Swagger;
 using KachnaOnline.Dto.Users;

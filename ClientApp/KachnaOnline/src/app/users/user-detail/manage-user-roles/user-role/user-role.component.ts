@@ -1,6 +1,3 @@
-// user-role.component.ts
-// Author: David Chocholatý
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RoleTypes } from "../../../../models/users/auth/role-types.model";
 

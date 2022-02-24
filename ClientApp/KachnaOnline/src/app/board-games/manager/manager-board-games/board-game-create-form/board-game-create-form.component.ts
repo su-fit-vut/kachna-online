@@ -1,6 +1,3 @@
-// board-game-create-form.component.ts
-// Author: František Nečas
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, ValidationErrors, ValidatorFn, AbstractControl } from "@angular/forms";
 import { BoardGame } from "../../../../models/board-games/board-game.model";

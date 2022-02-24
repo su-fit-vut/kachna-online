@@ -1,6 +1,3 @@
-// reservation.component.ts
-// Author: František Nečas
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Reservation } from "../../../../models/board-games/reservation.model";
 import { formatDate } from "@angular/common";

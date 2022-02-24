@@ -1,6 +1,3 @@
-// BoardGameStockDto.cs
-// Author: František Nečas
-
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 

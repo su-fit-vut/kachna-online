@@ -1,6 +1,3 @@
-// offer.model.ts
-// Author: Ondřej Ondryáš
-
 export class ClubOfferItem {
   name: string;
   price: number;

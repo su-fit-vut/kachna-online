@@ -1,6 +1,3 @@
-// state-modal.component.ts
-// Author: František Nečas
-
 import { Component, Input, OnInit } from '@angular/core';
 import { ClubState } from "../../../models/states/club-state.model";
 import { ClubStateTypes } from "../../../models/states/club-state-types.model";

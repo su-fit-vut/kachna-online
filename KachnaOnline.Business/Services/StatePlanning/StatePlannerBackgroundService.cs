@@ -1,6 +1,3 @@
-// StatePlannerBackgroundService.cs
-// Author: Ondřej Ondryáš
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;

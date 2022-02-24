@@ -1,6 +1,3 @@
-// loader.service.ts
-// Author: František Nečas
-
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from "rxjs";
 

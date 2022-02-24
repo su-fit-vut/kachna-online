@@ -1,6 +1,3 @@
-// PushSubscriptionMappings.cs
-// Author: František Nečas
-
 using AutoMapper;
 using KachnaOnline.Business.Models.PushNotifications;
 using KachnaOnline.Dto.PushNotifications;

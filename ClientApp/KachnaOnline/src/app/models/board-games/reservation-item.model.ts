@@ -1,6 +1,3 @@
-// reservation-item.model.ts
-// Author: František Nečas
-
 import { MadeByUser } from "../users/made-by-user.model";
 import { ReservationEventType } from "./reservation-item-event.model";
 

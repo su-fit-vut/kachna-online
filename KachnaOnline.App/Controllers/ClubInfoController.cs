@@ -1,6 +1,3 @@
-// ClubInfoController.cs
-// Author: Ondřej Ondryáš
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using KachnaOnline.App.Extensions;

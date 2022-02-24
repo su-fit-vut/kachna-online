@@ -1,6 +1,3 @@
-// user.model.ts
-// Author: David Chocholatý
-
 export class User {
   id: number = -1;
   name: string = "";

@@ -1,6 +1,3 @@
-// reservation-history.component.ts
-// Author: František Nečas
-
 import { Component, OnInit } from '@angular/core';
 import { ReservationEventType, ReservationItemEvent } from "../../../models/board-games/reservation-item-event.model";
 import { BoardGamesService } from "../../../shared/services/board-games.service";

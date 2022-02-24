@@ -1,6 +1,3 @@
-// reservation-button.component.ts
-// Author: František Nečas
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthenticationService } from "../../../../shared/services/authentication.service";
 

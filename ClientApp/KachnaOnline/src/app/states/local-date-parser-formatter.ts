@@ -1,6 +1,3 @@
-// local-date-parser-formatter.ts
-// Author: Ondřej Ondryáš
-
 import { Injectable } from "@angular/core";
 import { NgbDateParserFormatter, NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
 
