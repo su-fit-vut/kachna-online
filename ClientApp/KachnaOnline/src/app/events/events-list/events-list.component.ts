@@ -8,7 +8,6 @@ import { ToastrService } from "ngx-toastr";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../../shared/services/authentication.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { first } from "rxjs/operators";
 import { throwError } from "rxjs";
 
 @Component({
@@ -30,16 +29,12 @@ export class EventsListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let firstDayOfYear = new Date(this.now.getFullYear(), 0, 1, 0, 0, 0, 0);
-    let lastDayOfYear = new Date(firstDayOfYear);
-    lastDayOfYear.setFullYear(lastDayOfYear.getFullYear() + 1);
-    this.eventsService.getBetween(firstDayOfYear, lastDayOfYear).toPromise()
-      .then((res: Event[]) => {
-        this.events = res.sort((a, b) => a.from.getTime() - b.from.getTime());
-      }).catch(err => {
+    this.eventsService.getYearEvents(this.now).subscribe(
+      res => this.setEvents(res),
+      err => {
         this.toastrService.error("Stažení akcí selhalo.", "Stažení akcí");
         return throwError(err);
-    });
+      });
   }
 
   openEventDetail(eventDetail: Event) {
@@ -52,5 +47,22 @@ export class EventsListComponent implements OnInit {
 
   onModifyButtonClicked(selectedEventDetail: Event) {
     this.router.navigate([`/events/${selectedEventDetail.id}/edit`]).then();
+  }
+
+  yearChanged(year: Date) {
+    this.eventsService.getYearEvents(year).subscribe(
+      res => this.setEvents(res),
+      err => {
+        this.toastrService.error("Stažení akcí selhalo.", "Stažení akcí");
+        return throwError(err);
+      });
+  }
+
+  setEvents(eventModels: Event[]): void {
+    this.events = this.sortEvents(eventModels);
+  }
+
+  sortEvents(events: Event[]): Event[] {
+    return events.sort((a, b) => a.from.getTime() - b.from.getTime());
   }
 }
