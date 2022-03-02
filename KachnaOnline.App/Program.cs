@@ -25,8 +25,9 @@ namespace KachnaOnline.App
 
                 var migrateDb = Environment.CommandLine.Contains("--migrate-db");
                 var bootstrapDb = Environment.CommandLine.Contains("--bootstrap-db");
+                var fillImages = args.Length > 0 && args[0] == "--fill-images";
 
-                if (migrateDb || bootstrapDb)
+                if (migrateDb || bootstrapDb || fillImages)
                 {
                     Log.Information("Database initialization mode.");
 
@@ -45,6 +46,19 @@ namespace KachnaOnline.App
                         Log.Information("Bootstrapping the database.");
                         var dbBootstrapper = new DataBootstrapper(dbContext);
                         dbBootstrapper.BootstrapDatabase();
+                    }
+
+                    if (fillImages)
+                    {
+                        if (args.Length < 3)
+                        {
+                            Log.Warning("Usage: --fill-images <directory> <URL prefix>");
+                            return;
+                        }
+
+                        Log.Information("Filling image URLs.");
+                        var dbBootstrapper = new DataBootstrapper(dbContext);
+                        dbBootstrapper.FillImages(args[1], args[2]);
                     }
 
                     Log.Information("The requested operations were completed, shutting down.");
