@@ -48,8 +48,23 @@ export class CurrentOfferComponent implements OnInit {
     if (offer.products?.length > 0) {
       this.hasProducts = true;
 
-      let coffee = [];
+      offer.products.sort((a, b) => {
+        let fa = a.name.toLowerCase(),
+          fb = b.name.toLowerCase();
+
+        if (fa < fb) {
+          return -1;
+        }
+        if (fa > fb) {
+          return 1;
+        }
+        return 0;
+      });
+
+      let wine = [];
+      let cider = [];
       let bev = [];
+      let coffee = [];
       let food = [];
       let others = [];
 
@@ -60,12 +75,16 @@ export class CurrentOfferComponent implements OnInit {
           bev.push(p);
         } else if (p.labels.includes("Jídlo")) {
           food.push(p);
+        } else if (p.labels.includes("Víno")) {
+          wine.push(p);
+        } else if (p.labels.includes("Cider")) {
+          cider.push(p);
         } else {
           others.push(p);
         }
       }
 
-      this.makeCategories({"Káva": coffee, "Nealko": bev, "Jídlo": food, "Další nabídka": others});
+      this.makeCategories({"Cider": cider, "Víno": wine, "Káva": coffee, "Nealko": bev, "Jídlo": food, "Další nabídka": others});
     }
   }
 
