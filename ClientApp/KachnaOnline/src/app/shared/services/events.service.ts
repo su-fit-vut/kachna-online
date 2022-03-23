@@ -74,6 +74,13 @@ export class EventsService {
     return this.getBetween(firstDay, lastDay);
   }
 
+  getYearEvents(year: Date) {
+    let firstDayOfYear = new Date(year.getFullYear(), 0, 1, 0, 0, 0, 0);
+    let lastDayOfYear = new Date(year.getFullYear(), 11, 31, 23, 59, 59);
+
+    return this.getBetween(firstDayOfYear, lastDayOfYear);
+  }
+
   getBetween(start: Date, end: Date): Observable<Event[]> {
     return this.getEventsInInterval(start.toISOString(), end.toISOString());
   }

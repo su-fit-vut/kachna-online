@@ -11,6 +11,7 @@ import { FormsModule } from "@angular/forms";
 import { MonthSelectionComponent } from './month-selection/month-selection.component';
 import { PipesModule } from "../pipes/pipes.module";
 import { DeletionConfirmationModalComponent } from './deletion-confirmation-modal/deletion-confirmation-modal.component';
+import { YearSelectionComponent } from "./year-selection/year-selection.component";
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { DeletionConfirmationModalComponent } from './deletion-confirmation-moda
     NumberSelectionComponent,
     UserSearchComponent,
     MonthSelectionComponent,
+    YearSelectionComponent,
     DeletionConfirmationModalComponent,
   ],
   imports: [
@@ -35,6 +37,7 @@ import { DeletionConfirmationModalComponent } from './deletion-confirmation-moda
         ToggleableButtonComponent,
         NumberSelectionComponent,
         UserSearchComponent,
+        YearSelectionComponent,
         MonthSelectionComponent,
     ]
 })

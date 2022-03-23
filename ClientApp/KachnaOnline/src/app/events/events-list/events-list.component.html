@@ -1,5 +1,8 @@
 <h1>Přehled akcí</h1>
 
+<app-year-selection (yearChange)="this.yearChanged($event)"
+                     [justifyCenter]="false"></app-year-selection>
+
 <div class="d-flex align-items-center">
   <span class="dot bg-secondary"></span>
   <span class="mr-4">Proběhlé akce</span>

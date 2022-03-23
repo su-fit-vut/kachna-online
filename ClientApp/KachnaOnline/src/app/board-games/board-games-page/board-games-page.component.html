@@ -53,7 +53,7 @@
   <div class="col mb-3 d-flex align-items-stretch" *ngFor="let boardGame of shownGames">
     <app-board-game [boardGame]="boardGame" [initialReserved]="currentReservation.get(boardGame.id) || 0"
                     (reservationUpdate)="onReservationUpdate($event)"
-                    class="d-flex align-items-stretch"></app-board-game>
+                    class="d-flex align-items-stretch flex-grow-1"></app-board-game>
   </div>
 </div>
 <div *ngIf="shownGames.length == 0" class="mb-5 d-flex justify-content-center">

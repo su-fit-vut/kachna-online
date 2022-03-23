@@ -1,3 +1,5 @@
+using System.IO;
+using System.Linq;
 using KachnaOnline.Data.Entities.BoardGames;
 using KachnaOnline.Data.Entities.Users;
 
@@ -24,6 +26,22 @@ namespace KachnaOnline.Data
             var cats = this.MakeCategories();
             this.MakeGames(cats);
             this.MakeRoles();
+        }
+
+        public void FillImages(string dir, string targetPrefix)
+        {
+            var images = Directory.GetFiles(dir, "*.jpg");
+
+            foreach (var boardGame in _dbContext.BoardGames)
+            {
+                if (string.IsNullOrEmpty(boardGame.ImageUrl) &&
+                    images.Any(i => Path.GetFileName(i) == $"{boardGame.Id}.jpg"))
+                {
+                    boardGame.ImageUrl = $"/{targetPrefix}/{boardGame.Id}.jpg";
+                }
+            }
+
+            _dbContext.SaveChanges();
         }
 
         /// <summary>
@@ -749,10 +767,10 @@ namespace KachnaOnline.Data
 
             var roles = new[]
             {
-                new Role { Name = "StatesManager" },
-                new Role { Name = "EventsManager" },
-                new Role { Name = "BoardGamesManager" },
-                new Role { Name = "Admin" }
+                new Role {Name = "StatesManager"},
+                new Role {Name = "EventsManager"},
+                new Role {Name = "BoardGamesManager"},
+                new Role {Name = "Admin"}
             };
 
             _dbContext.Roles.AddRange(roles);
