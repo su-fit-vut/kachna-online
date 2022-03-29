@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (C) 2022 Studetnská unie FIT VUT v Brně, David Chocholatý, František Nečas, Ondřej Ondryáš and contributors
+Copyright (C) 2022 Studentská unie FIT VUT v Brně, David Chocholatý, František Nečas, Ondřej Ondryáš and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
