@@ -23,7 +23,7 @@ export class ReservationDetailsItemComponent implements OnInit {
     ["New", "Čeká na schválení členem SU"],
     ["Cancelled", "Zrušená"],
     ["Assigned", "Připravena k předání"],
-    ["HandedOver", "Převzatá"],
+    ["HandedOver", "Předaná"],
     ["Done", "Vrácená"],
     ["Expired", "Výpůjční doba vypršela"]
   ]);
