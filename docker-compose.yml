@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+    postgres:
+        image: "docker.io/postgres:13"
+        restart: always
+        expose:
+            - "5432"
+        volumes:
+            - database-data:/var/lib/postgresql/data/
+        env_file:
+            - docker/database.env
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U kachna"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+    api:
+        build:
+            context: ./KachnaOnline.App
+            dockerfile: Dockerfile.development
+        volumes:
+            - ./:/src:z
+        env_file:
+            - docker/api.env
+        environment:
+            # Override the default URLs to expose the API outside the container
+            - URLS=https://+:5001;http://+:5000
+        ports:
+            - "5000:5000"
+            - "5001:5001"
+        depends_on:
+            postgres:
+                condition: service_healthy
+        command: "${DOTNET_ARGS:-}"
+
+volumes:
+    database-data:
