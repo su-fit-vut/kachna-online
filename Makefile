@@ -15,4 +15,7 @@ compose-bootstrap:
 compose-setup-db:
 	DOTNET_ARGS="--migrate-db --bootstrap-db" $(COMPOSE) up api
 
-.PHONY: compose-up compose-migrate compose-bootstrap compose-setup-db compose-restart-api
+compose-build-fe:
+	$(COMPOSE) exec frontend npm run build-dev
+
+.PHONY: compose-up compose-migrate compose-bootstrap compose-setup-db compose-restart-api compose-build-fe
