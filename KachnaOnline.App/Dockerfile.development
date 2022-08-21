@@ -3,4 +3,4 @@ WORKDIR /src/KachnaOnline.App
 EXPOSE 5000
 EXPOSE 5001
 RUN dotnet dev-certs https
-ENTRYPOINT ["dotnet", "run"]
+ENTRYPOINT ["./runapi.sh"]
