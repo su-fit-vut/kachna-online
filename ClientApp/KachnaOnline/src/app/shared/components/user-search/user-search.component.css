@@ -1,0 +1,10 @@
+.reset-icon {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  z-index: 1;
+  position: absolute;
+  margin-right: 10px;
+  border-color: transparent;
+  background: #c0bdbd;
+}

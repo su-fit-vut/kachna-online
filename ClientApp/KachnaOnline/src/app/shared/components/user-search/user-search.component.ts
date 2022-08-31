@@ -12,7 +12,7 @@ import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } f
 export class UserSearchComponent implements OnInit {
   @Input() label: string
   @Output() userSelected: EventEmitter<UserDetail> = new EventEmitter();
-  model: UserDetail[]
+  model?: UserDetail[]
   searching: boolean;
   searchFailed: boolean;
   noUsersFound: boolean;
@@ -35,6 +35,10 @@ export class UserSearchComponent implements OnInit {
     result += `${x.email})`;
     return result;
   };
+
+  resetModel(): void {
+    this.model = undefined;
+  }
 
   search = (text$: Observable<string>) =>
     text$.pipe(
