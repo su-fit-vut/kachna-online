@@ -104,6 +104,13 @@ namespace KachnaOnline.Business.Services.StatePlanning
 
                 if (toWait > TimeSpan.Zero)
                 {
+                    var waitAgain = false;
+                    // Task.Delay would throw, cap the waiting time
+                    if (toWait.TotalMilliseconds > Int32.MaxValue)
+                    {
+                        toWait = TimeSpan.FromMilliseconds(Int32.MaxValue);
+                        waitAgain = true;
+                    }
                     _logger.LogDebug(
                         "Waiting for {WaitTimeSpan} until triggering the transition for state {NextStateId}.",
                         toWait, nextTransition.StateId);
@@ -117,6 +124,11 @@ namespace KachnaOnline.Business.Services.StatePlanning
                         // Getting here means that the state plan has been modified and we have to start a new round
                         // of waiting for the newly planned state.
                         _logger.LogDebug("The last waiting was cancelled.");
+                        continue;
+                    }
+
+                    if (waitAgain)
+                    {
                         continue;
                     }
                 }
