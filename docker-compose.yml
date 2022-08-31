@@ -6,6 +6,9 @@ services:
         restart: unless-stopped
         expose:
             - "5432"
+        ports:
+            # Avoid clashes with localhost postgres
+            - "6543:5432"
         volumes:
             - database-data:/var/lib/postgresql/data/
         env_file:
