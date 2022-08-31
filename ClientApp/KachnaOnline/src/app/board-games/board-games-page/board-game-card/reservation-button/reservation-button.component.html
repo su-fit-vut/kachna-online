@@ -1,4 +1,5 @@
-<div *ngIf="authenticationService.isLoggedIn()">
+<div *ngIf="authenticationService.isLoggedIn(); then loggedIn else notLoggedIn"></div>
+<ng-template #loggedIn>
   <div *ngIf="available <= 0; then thenBlock else elseBlock"></div>
   <ng-template #thenBlock>
     <button type="button" class="btn btn-secondary expand" disabled>Aktuálně nedostupné</button>
@@ -21,4 +22,7 @@
       <button type="button" class="btn btn-danger btn-sm" (click)="reservedDecrement()" [ngStyle]="styles">-</button>
     </div>
   </ng-template>
-</div>
+</ng-template>
+<ng-template #notLoggedIn>
+  <label *ngIf="available <= 0" class="btn btn-secondary expand disabled">Aktuálně nedostupné</label>
+</ng-template>
