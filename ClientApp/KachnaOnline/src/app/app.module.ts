@@ -105,6 +105,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
       countDuplicates: true,
       resetTimeoutOnDuplicate: true,
       timeOut: 3000, // In milliseconds.
+      closeButton: true, // Show close button to signal that it can be dismissed
     }),
     JwtModule.forRoot({
       config: {
