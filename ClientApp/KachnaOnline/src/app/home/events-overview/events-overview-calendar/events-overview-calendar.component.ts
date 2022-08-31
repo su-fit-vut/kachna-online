@@ -11,6 +11,9 @@ import { LoaderService } from "../../../shared/services/loader.service";
 import { forkJoin } from "rxjs";
 import { CalendarStoreService } from "../../../shared/services/calendar-store.service";
 
+const statePrefix = "state";
+const eventPrefix = "event";
+
 @Component({
   selector: 'app-events-overview-calendar',
   templateUrl: './events-overview-calendar.component.html',
@@ -53,11 +56,42 @@ export class EventsOverviewCalendarComponent implements OnInit {
         text += 'ch';
       }
       return {html: `<p>${text}</p>`}
+    },
+    eventOrder: function(a: any, b: any) {
+      // Return 1 to put a after b, -1 to put a before b
+      // The ordering is:
+      //  1) events
+      //  2) current/upcoming states
+      //  3) past states
+      // each of the categories is ordered based on start time
+      let aType = a.id.split("-")[0];
+      let bType = b.id.split("-")[0];
+      if (aType == bType) {
+        // Either 2 states or 2 events, check if either has already ended
+        let now = new Date()
+        let aEnded = a.end < now;
+        let bEnded = b.end < now;
+        if (aEnded === bEnded) {
+          // Sort chronologically
+          return a.start - b.start;
+        } else if (aEnded) {
+          console.log("after")
+          return 1;
+        } else {
+          // bEnded
+          return -1;
+        }
+      }
+      else if (aType == eventPrefix) {
+        return -1;
+      }
+      else {
+        // can only be bType == eventPrefix
+        return 1;
+      }
+
     }
   }
-
-  private statePrefix = "state-"
-  private eventPrefix = "event-";
 
   constructor(private statesService: StatesService, private eventsService: EventsService,
               private toastrService: ToastrService, private router: Router, private modalService: NgbModal,
@@ -81,7 +115,7 @@ export class EventsOverviewCalendarComponent implements OnInit {
       api.removeAllEvents();
       for (let event of data[0]) {
         api.addEvent({
-          id: `${this.eventPrefix}${event.id}`,
+          id: `${eventPrefix}-${event.id}`,
           title: event.name,
           start: event.from,
           end: event.to,
@@ -105,7 +139,7 @@ export class EventsOverviewCalendarComponent implements OnInit {
         }
 
         api.addEvent({
-          id: `${this.statePrefix}${state.id}`,
+          id: `${statePrefix}-${state.id}`,
           title: title,
           start: state.start,
           end: state.actualEnd ?? state.plannedEnd,
@@ -123,11 +157,11 @@ export class EventsOverviewCalendarComponent implements OnInit {
   }
 
   eventClick(clickInfo: EventClickArg) {
-    if (clickInfo.event.id.startsWith(this.eventPrefix)) {
-      let eventId = clickInfo.event.id.replace(this.eventPrefix, "");
+    if (clickInfo.event.id.startsWith(eventPrefix)) {
+      let eventId = clickInfo.event.id.replace(`${eventPrefix}-`, "");
       this.router.navigate([`/events/${eventId}`]).then();
-    } else if (clickInfo.event.id.startsWith(this.statePrefix)) {
-      let stateId = clickInfo.event.id.replace(this.statePrefix, "");
+    } else if (clickInfo.event.id.startsWith(statePrefix)) {
+      let stateId = clickInfo.event.id.replace(`${statePrefix}-`, "");
       this.statesService.get(parseInt(stateId)).subscribe(state => {
         const modalRef = this.modalService.open(StateModalComponent);
         modalRef.componentInstance.state = state;
