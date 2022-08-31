@@ -15,6 +15,13 @@
       </ng-container>
     </div>
 
+    <div *ngIf="state.followingState && state.followingState.state!=ST.Closed" class="state-details mb-1">
+      Následuje {{
+        state.followingState.state==ST.OpenChillzone ? "chillzóna" :
+          state.followingState.state==ST.OpenBar ? "otvíračka s barem" : "soukromá akce"}}
+      do {{state.followingState.plannedEnd | date: 'HH:mm'}}.
+    </div>
+
     <a href="javascript:void(0)" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k nám?</a>
     <a href="javascript:void(0)" (click)="authenticationService.getSessionIdFromKisEduId('registration')" class="state-details ml-4" *ngIf="authenticationService.isLoggedOut()">Stát se členem klubu</a>
   </div>
