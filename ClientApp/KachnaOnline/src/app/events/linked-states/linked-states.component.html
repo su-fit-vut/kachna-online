@@ -1,9 +1,15 @@
 <div class="container">
   <div class="row" *ngFor="let linkedState of eventsService.eventDetail.linkedStatesDtos">
-    <div class="col-md-8" *ngIf="linkedState.start.getDate() == linkedState.plannedEnd.getDate(); else multiDay">
-      {{linkedState.start | date:'HH:mm'}}–{{linkedState.plannedEnd | date:'HH:mm'}}
+    <div class="col-md-8" *ngIf="linkedState.start.getDate() == linkedState.plannedEnd.getDate(); else multiDayState">
+      <div *ngIf="eventsService.eventDetail.from.getDate() == eventsService.eventDetail.to.getDate(); else multiDayEvent">
+        {{linkedState.start | date:'HH:mm'}}–{{linkedState.plannedEnd | date:'HH:mm'}}
+      </div>
+      <ng-template #multiDayEvent>
+        {{linkedState.start | date: 'd. M.'}}
+        {{linkedState.start | date:'HH:mm'}}–{{linkedState.plannedEnd | date:'HH:mm'}}
+      </ng-template>
     </div>
-    <ng-template #multiDay>
+    <ng-template #multiDayState>
       {{linkedState.start | date:'d. M. HH:mm'}}–{{linkedState.plannedEnd | date:'d. M. HH:mm'}}
     </ng-template>
     <div class="col-md-auto">
