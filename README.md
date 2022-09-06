@@ -3,20 +3,19 @@
 Is Kachna open? That is the question.
 
 Kachna Online is an application aiming to unify information about the
-Student's Club at Brno University of Technology called U Kachničky.
+students' club at Brno University of Technology called U Kachničky.
 The most crucial element of the system is informing about opening hours of the club,
 which are dynamic, since opening the club is pointless without the target
-audience knowing about the opening.
+audience knowing about it.
 Aside from opening hours, the system also maintains a calendar of events
-of the Student Union, and allows students to borrow board games from the wide
-range available.
+of the Students' Union, and allows students to borrow board games from the club.
 
-The production version is deployed on the server of
-[FIT BUT Student Union](https://www.su.fit.vutbr.cz/kachna/).
+The production version is deployed on the
+[FIT BUT Students' Union](https://www.su.fit.vutbr.cz/kachna/) server.
 Documentation of the REST API is available as an OpenAPI document and Swagger UI
 [there as well](https://www.su.fit.vutbr.cz/kachna/api/swagger/index.html).
 Authentication to the system is done using the Student Union's internal system
-*KIS* which makes uses of academic identity federation
+*KIS* which makes use of an academic identity federation
 [eduID.cz](https://www.eduid.cz/).
 
 ## Contributing
@@ -35,6 +34,8 @@ Prerequisites:
  - docker-compose
  - \[OPTIONAL\] GNU make - the rest of this section will assume its use, however docker-compose commands can be run directly without it.
  - \[OPTIONAL\] Use rootless podman containers with docker-compose for better security. [Setup instructions](https://fedoramagazine.org/use-docker-compose-with-podman-to-orchestrate-containers-on-fedora/)
+     - When using podman, networking plugins ([_containernetworking-plugins_](https://github.com/containernetworking/plugins);
+       [_dnsname_](https://github.com/containers/dnsname), which may be included in a plugins package like `podman-plugins`) must be installed.
 
 Most common docker-compose commands useful for development are wrapped
 in a Makefile in case you are not familiar with docker-compose.
@@ -51,14 +52,14 @@ Following runs can be performed by:
 make compose-up
 ```
 
-This starts the ASP .NET6 API at
+This starts the ASP.NET API at
 [https://localhost:5001/kachna/api](https://localhost:5001/kachna/api),
 the interactive Swagger UI can be accessed at
 [https://localhost:5001/kachna/api/swagger/index.html](https://localhost:5001/kachna/api/swagger/index.html).
 The Angular 12 frontend starts at
 [https://localhost:4200/kachna/](https://localhost:4200/kachna/).
 
-The changes in the frontend are automatically applied and the frontend is restarted.
+Changes in the frontend are automatically applied and the frontend is restarted.
 To apply backend changes, the `api` docker-compose service must be restarted:
 
 ```
@@ -145,6 +146,10 @@ Afterwards, the application can be run in regular mode:
 ```
 dotnet run
 ```
+
+A `wwwroot` directory must be present in the `KachnaOnline.App` directory. In this repository, this is a symlink
+to `ClientApp/KachnaOnline/dist/KachnaOnline`, so either build the client app (`npm build`) or simply create
+the target directory. On Windows, you'll have to remove the 'symlink file' and replace it with an actual directory.
 
 #### Running the frontend
 
