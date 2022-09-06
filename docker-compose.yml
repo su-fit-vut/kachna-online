@@ -2,6 +2,7 @@ version: "3"
 
 services:
     postgres:
+        container_name: "postgres"
         image: "docker.io/postgres:13"
         restart: unless-stopped
         expose:
