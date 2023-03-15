@@ -13,6 +13,8 @@ export class ChillzoneDetailsComponent implements OnInit {
 
   @Input() state: ClubState;
 
+  currentOfferCollapsed: boolean = true;
+
   ngOnInit(): void {
   }
 

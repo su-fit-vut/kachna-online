@@ -73,10 +73,12 @@ export class CurrentOfferComponent implements OnInit {
         } else if (p.labels.includes("Jídlo")) {
           food.push(p);
         } else if (p.labels.includes("Víno")) {
-          wine.push(p);
+          if (!p.name.includes("lahev")) {
+            wine.push(p);
+          }
         } else if (p.labels.includes("Cider")) {
           cider.push(p);
-        } else {
+        } else if (!p.labels.includes("Zálohovaný obal")) {
           others.push(p);
         }
       }
