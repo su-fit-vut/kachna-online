@@ -15,7 +15,7 @@
       </ng-container>
     </div>
 
-    <div *ngIf="state.followingState && state.followingState.state!=ST.Closed" class="state-details mb-1">
+    <div *ngIf="state.followingState && state.followingState.state!=ST.Closed && state.state!=ST.Closed" class="state-details mb-1">
       Následuje {{
         state.followingState.state==ST.OpenChillzone ? "chillzóna" :
           state.followingState.state==ST.OpenBar ? "otvíračka s barem" : "soukromá akce"}}
