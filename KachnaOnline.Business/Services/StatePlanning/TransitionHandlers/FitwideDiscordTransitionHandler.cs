@@ -49,11 +49,16 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             else if (state.Type == StateType.OpenBar &&
                      (previousState is null || previousState.Type != StateType.OpenBar))
             {
-                msg = "Máme tady otvíračku!";
+                msg = $"Máme tady otvíračku! {Hypers} Aktuální nabídku najdete na https://su.fit.vutbr.cz/kachna/.";
 
                 if (state.PlannedEnd.HasValue)
                 {
-                    msg += $" Končíme ve {state.PlannedEnd.Value:HH:mm} {Hypers} {state.NotePublic}";
+                    msg += $" Končíme ve {state.PlannedEnd.Value:HH:mm}.";
+                }
+
+                if (!string.IsNullOrEmpty(state.NotePublic))
+                {
+                    msg += $"\\n{state.NotePublic}";
                 }
             }
 
@@ -156,7 +161,7 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
                 openTillString = $"až do otvíračky (v {nextBarOpening.Start:HH:mm})";
             }
 
-            var msg = $"Kachna je otevřena v režimu chillzóna {openTillString}";
+            var msg = $"Kachna je otevřena v režimu chillzóna {openTillString} Aktuální nabídku najdete na https://su.fit.vutbr.cz/kachna/.";
             if (madeByName != null)
             {
                 msg += $" Otevírá pro vás {madeByName} {PeepoLove}";
