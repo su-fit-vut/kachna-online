@@ -23,6 +23,7 @@ namespace KachnaOnline.App
     public class Startup
     {
         public const string LocalCorsPolicy = "LocalPolicy";
+        public const string MainCorsPolicy = "MainPolicy";
 
         public IConfiguration Configuration { get; }
 
@@ -38,12 +39,23 @@ namespace KachnaOnline.App
         public void ConfigureServices(IServiceCollection services)
         {
             // Add CORS policy for local development and internal apps
-            services.AddCors(o => o.AddPolicy(LocalCorsPolicy, builder =>
+            services.AddCors(o =>
             {
-                builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
-                builder.WithOrigins("https://localhost:4200").AllowAnyHeader().AllowAnyMethod();
-                builder.WithOrigins("https://su-int.fit.vutbr.cz").AllowAnyHeader().AllowAnyMethod();
-            }));
+                o.AddPolicy(LocalCorsPolicy, builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+                    builder.WithOrigins("https://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+                    builder.WithOrigins("https://su-int.fit.vutbr.cz").AllowAnyHeader().AllowAnyMethod();
+                });
+
+                o.AddPolicy(MainCorsPolicy, builder =>
+                {
+                    builder.WithOrigins("https://su.fit.vut.cz", "https://su.fit.vutbr.cz",
+                               "https://www.su.fit.vut.cz", "https://www.su.fit.vutbr.cz",
+                               "https://su-int.fit.vutbr.cz", "https://su-dev.fit.vutbr.cz")
+                           .AllowAnyHeader().AllowAnyMethod();
+                });
+            });
 
             // Load configuration objects.
             services.Configure<KisOptions>(this.Configuration.GetSection("Kis"));
@@ -65,18 +77,18 @@ namespace KachnaOnline.App
 
             // Add MVC controllers.
             services.AddControllers()
-                .AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                })
-                .AddMvcOptions(options =>
-                {
-                    var inputFormatter = options.InputFormatters.OfType<NewtonsoftJsonInputFormatter>().First();
-                    inputFormatter.SupportedMediaTypes.Clear();
-                    inputFormatter.SupportedMediaTypes.Add("application/json");
-                    inputFormatter.SupportedMediaTypes.Add("text/json");
-                });
+                    .AddNewtonsoftJson(options =>
+                    {
+                        options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
+                        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    })
+                    .AddMvcOptions(options =>
+                    {
+                        var inputFormatter = options.InputFormatters.OfType<NewtonsoftJsonInputFormatter>().First();
+                        inputFormatter.SupportedMediaTypes.Clear();
+                        inputFormatter.SupportedMediaTypes.Add("application/json");
+                        inputFormatter.SupportedMediaTypes.Add("text/json");
+                    });
 
             // Add JWT authentication.
             services.AddCustomJwtAuthentication(this.Configuration);
@@ -147,14 +159,7 @@ namespace KachnaOnline.App
             // Add routing middleware.
             app.UseRouting();
 
-            if (env.IsDevelopment())
-            {
-                app.UseCors(LocalCorsPolicy);
-            }
-            else
-            {
-                app.UseCors();
-            }
+            app.UseCors(env.IsDevelopment() ? LocalCorsPolicy : MainCorsPolicy);
 
             // Add authorization middleware.
             app.UseAuthentication();

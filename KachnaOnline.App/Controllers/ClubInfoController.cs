@@ -12,7 +12,6 @@ namespace KachnaOnline.App.Controllers
     [ApiController]
     [Route("club")]
     [AllowAnonymous]
-    [EnableCors(Startup.LocalCorsPolicy)]
     public class ClubInfoController : ControllerBase
     {
         private readonly ClubInfoFacade _facade;
