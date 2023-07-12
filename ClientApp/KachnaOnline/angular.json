@@ -108,5 +108,8 @@
       }
     }
   },
-  "defaultProject": "KachnaOnline"
+  "defaultProject": "KachnaOnline",
+  "cli": {
+    "analytics": false
+  }
 }

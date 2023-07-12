@@ -5,8 +5,8 @@ import { IEnvironment, IEnvironmentParams } from "./ienvironment";
  */
 const params: IEnvironmentParams = {
   production: true,
-  baseApiUrl: 'https://www.su.fit.vutbr.cz/kachna/api',
-  baseApiUrlDomain: 'su.fit.vutbr.cz',
+  baseApiUrl: 'https://su.fit.vut.cz/kachna/api',
+  baseApiUrlDomain: 'su.fit.vut.cz',
 };
 
 // Set environment for the application.
