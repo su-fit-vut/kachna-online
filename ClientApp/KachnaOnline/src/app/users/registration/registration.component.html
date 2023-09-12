@@ -1,28 +1,31 @@
-<h1>Stát se členem klubu</h1>
+<h1>Stát se členem klubu SU</h1>
 
 <p class="text-justify">
-  Občerstvení a další služby v&nbsp;klubu U&nbsp;Kachničky poskytuje SU FIT pouze členům klubu. Být členem
-  klubu znamená být <em>sympatizujícím členem</em> Studentské unie FIT VUT v&nbsp;Brně.
+  Občerstvení a&nbsp;další služby v&nbsp;klubu U&nbsp;Kachničky poskytuje SU FIT pouze členům klubu SU.
+  Členství klubu SU je typem členství ve spolku Studentská unie FIT VUT v&nbsp;Brně.
 </p>
 
 <p class="text-justify">
-  Sympatizujícím členem se může stát libovolná fyzické osoba mj. registrací v&nbsp;informačním systému SU, kterou je
-  možné dokončit tlačítkem níže. Sympatizující členství v&nbsp;SU se řídí
-  <a href="https://drive.google.com/file/d/17KnKr-80zZrBEBzMj_dPM6BMheVrEAab/view">stanovami spolku</a>.
-  Registrací vyjadřuješ zájem účastnit se aktivit provozovaných SU. Sympatizující člen musí
-  alespoň jednou ročně uhradit členský příspěvek v libovolné výši, tj. minimálně 1 Kč. To je možné provést například
-  při nákupu občerstvení v&nbsp;klubu.
+  Členem klubu SU se může stát libovolná fyzická osoba podáním žádosti (registrací) v&nbsp;informačním systému SU.
+  Tuto žádost podáš stisknutím tlačítka níže. Členství klubu SU se řídí
+  <a href="https://drive.google.com/file/d/1WNAdozanmG4MstpaEjtQ9dC298-kcqCK/preview">stanovami spolku</a>
+  a&nbsp;dalšími
+  <a href="https://drive.google.com/drive/folders/1X7wfGPS8GrDCNzs0TOBo_1Cl2vWl0kZU">vnitřními předpisy SU</a>.
+  Podáním žádosti (registrací) vyjadřuješ zájem účastnit se aktivit provozovaných SU. Člen klubu SU má povinnost
+  uhradit členský příspěvek ve výši alespoň 7&nbsp;Kč dvakrát ročně, viz
+  <a href="https://drive.google.com/file/d/1JIVtunY6e9N4XxUJeHDrNuGlgLefVywT/preview">předpis</a>.
+  To je možné provést například při nákupu občerstvení v&nbsp;klubu, a&nbsp;to i&nbsp;v&nbsp;několika platbách.
 </p>
 
 <p class="text-justify">
-  Občerstvení je v&nbsp;klubu prodáváno v&nbsp;souladu se stanovami neziskově, za účelem podpory seznamování a
-  komunikace studentů.
+  Občerstvení je v&nbsp;klubu prodáváno v&nbsp;souladu se stanovami neziskově, za účelem podpory seznamování a&nbsp;komunikace
+  studentů.
 </p>
 
 <p class="text-justify">
   Abychom ti mohli prodat občerstvení, musíš se identifikovat čipovou kartou (např. ISIC) přiřazenou ke svému účtu.
   Po potvrzení registrace tlačítkem níže se dostaneš na stránku <em>Můj profil</em>. U&nbsp;baru požádej člena SU
-  o&nbsp;spárování karty, dostaneš krátký kód, který vyplníš v&nbsp;sekci <em>Nastavení karty</em> na této stránce.
+  o&nbsp;spárování karty. Dostaneš krátký kód, který vyplníš v&nbsp;sekci <em>Nastavení karty</em> na této stránce.
 </p>
 
 <form [formGroup]="form" autocomplete="off" novalidate (ngSubmit)="onSubmit()">
@@ -31,7 +34,7 @@
       <input class="form-check-input" type="checkbox" value="" id="sympathizingMemberConsent"
              formControlName="sympathizingMemberConsent" required>
       <label class="form-check-label" for="sympathizingMemberConsent">
-        Chci se stát sympatizujícím členem Studentské unie FIT VUT v&nbsp;Brně podle stanov
+        Žádám o&nbsp;udělení členství klubu SU podle stanov Studentské unie FIT VUT v&nbsp;Brně
       </label>
     </div>
   </div>
@@ -41,7 +44,7 @@
       <input class="form-check-input" type="checkbox" value="" id="gamificationConsent"
              formControlName="gamificationConsent" checked>
       <label class="form-check-label" for="gamificationConsent">
-        Souhlasím s gamifikací
+        Souhlasím s&nbsp;gamifikací (počítáním prestiže)
       </label>
     </div>
 
@@ -57,10 +60,29 @@
   </div>
 
   <button class="btn btn-primary" type="submit" [disabled]="form.invalid">
-    Stát se členem klubu
+    Stát se členem klubu SU
   </button>
 
   <button class="btn btn-outline-danger ml-2" routerLink="/">
     Zrušit registraci
   </button>
 </form>
+
+<hr>
+
+<p>
+  O&nbsp;členech klubu SU ukládáme následující údaje:
+</p>
+
+<ul>
+  <li>Jméno a příjmení</li>
+  <li>E-mailová adresa</li>
+  <li>Identifikátor eduID (eduPersonUniqueId)</li>
+  <li>Hash ID čipové karty (pokud je nastavena)</li>
+  <li>Seznam provedených nákupů a&nbsp;poskytnutých členských příspěvků</li>
+</ul>
+
+<p class="text-justify">
+  Uvedené údaje jsou ukládány výhradně pro účely udržování seznamu členů, vedení účetnictví a&nbsp;vedení evidence
+  členských příspěvků, které vyplývají z&nbsp;vnitřních předpisů SU. Údaje nejsou sdíleny s&nbsp;žádnou třetí stranou.
+</p>
