@@ -36,19 +36,20 @@ export class StatesService {
   }
 
   getMonth(month: Date, peekNextMonth: boolean = true): Observable<ClubState[]> {
-    let firstDay = new Date(month.getFullYear(), month.getMonth(), month.getDate(), 0, 0, 0);
-    firstDay.setDate(1);
+    const year = month.getUTCFullYear();
+    const monthNum = month.getUTCMonth();
+
+    let firstDay = new Date(Date.UTC(year, monthNum, 1, 0, 0, 0));
     let lastDay;
+
     if (peekNextMonth) {
       // 35 is the number of days to show when presenting a calendar
       // firstDay is 00:00:00, so last day is firstDay + 36 days - 1 second (let's not care about leap seconds and DST...)
       lastDay = new Date(firstDay.getTime() + 36 * 86400000 - 1);
     } else {
-      lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0, 23, 59, 59);
+      lastDay = new Date(Date.UTC(year, monthNum + 1, 1, 0, 0, 0));
     }
 
-    firstDay.setTime(firstDay.getTime() - firstDay.getTimezoneOffset() * 60000);
-    lastDay.setTime(lastDay.getTime() - lastDay.getTimezoneOffset() * 60000);
     return this.http.get<ClubState[]>(`${this.StatesUrl}?from=${firstDay.toISOString()}&to=${lastDay.toISOString()}`);
   }
 

@@ -43,10 +43,12 @@
 
 <app-upcoming-openings *ngIf="state && state.state==ST.Closed"></app-upcoming-openings>
 <app-repeating-states></app-repeating-states>
-
 <app-events-overview></app-events-overview>
-
-<app-current-offer-collapsible-block *ngIf="!state || state.state==ST.Closed"></app-current-offer-collapsible-block>
+<ng-container *ngIf="!state || state.state==ST.Closed">
+  <div class="border-top mt-2">
+    <app-current-offer-collapsible-block ></app-current-offer-collapsible-block>
+  </div>
+</ng-container>
 
 <ng-template #getting_there let-modal>
   <div class="modal-header">

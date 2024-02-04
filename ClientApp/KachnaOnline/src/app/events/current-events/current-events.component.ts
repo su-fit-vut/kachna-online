@@ -122,15 +122,6 @@ export class CurrentEventsComponent implements OnInit {
     });
   }
 
-  getNextEvents(from: Date = new Date()) {
-    let firstDay = new Date(from.getFullYear(), from.getMonth(), from.getDate());
-    let lastDay = new Date(firstDay.getTime() + 62 * 86400000 - 1);
-
-    firstDay.setTime(firstDay.getTime() - firstDay.getTimezoneOffset() * 60000);
-    lastDay.setTime(lastDay.getTime() - lastDay.getTimezoneOffset() * 60000);
-    return this.eventsService.getBetween(firstDay, lastDay);
-  }
-
   makeNextEvents(eventModels: Event[]): void {
     this.nextEvents = [];
     let waiting: Observable<any>[] = [];

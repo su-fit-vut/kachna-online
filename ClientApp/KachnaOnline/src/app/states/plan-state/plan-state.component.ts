@@ -184,7 +184,9 @@ export class PlanStateComponent implements OnInit {
         startTime = {hour: new Date().getHours(), minute: new Date().getMinutes(), second: 0};
       }
 
-      dto.start = DateUtils.dateTimeToString(startDate, startTime, this.nativeDateAdapter);
+      dto.start = this.mode == Mode.CreateCurrent
+        ? null
+        : DateUtils.dateTimeToString(startDate, startTime, this.nativeDateAdapter);
       dto.plannedEnd = DateUtils.dateTimeToString(endDate, endTime, this.nativeDateAdapter);
       dto.state = val.stateType;
 

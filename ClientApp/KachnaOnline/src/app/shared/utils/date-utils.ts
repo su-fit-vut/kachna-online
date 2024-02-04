@@ -3,13 +3,7 @@ import { NgbDateAdapter } from "@ng-bootstrap/ng-bootstrap/datepicker/adapters/n
 
 export class DateUtils {
   public static dateTimeToString(date: NgbDateStruct, time: NgbTimeStruct, adapter: NgbDateAdapter<Date>): string {
-    let dateObj = adapter.toModel(date);
-
-    dateObj?.setHours(time.hour);
-    dateObj?.setMinutes(time.minute);
-    dateObj?.setSeconds(0);
-    dateObj?.setTime(dateObj?.getTime() - dateObj?.getTimezoneOffset() * 60000);
-
+    let dateObj = new Date(date.year, date.month - 1, date.day, time.hour, time.minute, 0);
     return dateObj?.toISOString() ?? "";
   }
 }

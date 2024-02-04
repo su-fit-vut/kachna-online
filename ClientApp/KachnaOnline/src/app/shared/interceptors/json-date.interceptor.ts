@@ -18,7 +18,7 @@ export class JsonDateInterceptor implements HttpInterceptor {
   }
 
   isIsoDateString(value: any): boolean {
-    return (typeof value !== 'string') ? false : this.isoDateFormat.test(value)
+    return (typeof value == 'string') && this.isoDateFormat.test(value)
   }
 
   convertDates(body: any) {
@@ -29,6 +29,8 @@ export class JsonDateInterceptor implements HttpInterceptor {
     for (const key of Object.keys(body)) {
       const value = body[key];
       if (this.isIsoDateString(value)) {
+        // The Date() constructor accepts an UTC ISO 8601 date string and stores it
+        // "with respect to the local timezone" (i.e. getHours() returns the local time values)
         body[key] = new Date(value);
       } else if (typeof value === 'object') {
         this.convertDates(value);
