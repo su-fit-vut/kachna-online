@@ -21,6 +21,7 @@ export class MonthSelectionComponent implements OnInit {
   }
 
   changeMonth(delta: number) {
+    this.month.setDate(1);
     this.month.setMonth(this.month.getMonth() + delta);
     this.monthChange.emit(this.month);
   }
