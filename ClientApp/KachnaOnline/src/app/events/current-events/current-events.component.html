@@ -1,7 +1,7 @@
 <ng-container *ngIf="currentEvents.length > 0">
   <h1>Právě probíhající akce</h1>
 
-  <div *ngFor="let e of currentEvents" class="pb-3 container">
+  <div *ngFor="let e of currentEvents" class="pb-4 container">
     <div class="row">
       <div class="col pr-lg-1">
         <a class="border-bottom d-inline-block h5 text-decoration-none" [class.mr-2]="e.url != null"
