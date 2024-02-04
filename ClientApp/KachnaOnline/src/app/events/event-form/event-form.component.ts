@@ -90,12 +90,13 @@ export class EventFormComponent implements OnInit {
     fromTime: [{hour: new Date().getHours(), minute: new Date().getMinutes()}, Validators.required],
     toDate: [this.calendar.getToday(), Validators.required],
     toTime: [{hour: new Date().getHours() + 1, minute: new Date().getMinutes()}, Validators.required],
-  }, {validators: [this.dateRangeValidator]})
+  }, {validators: [this.dateRangeValidator]});
+
 
   @Input() editMode: boolean = false;
   jumbotronText: string = "Naplánovat akci";
   submitText: string = "Přidat akci";
-  image: string = "";
+  currentImageUrl: string | null = null;
 
   ngOnInit(): void {
     if (this.editMode) {
@@ -109,7 +110,8 @@ export class EventFormComponent implements OnInit {
             this.form.controls.name.setValue(edittedEvent.name);
             this.form.controls.shortDescription.setValue(edittedEvent.shortDescription);
             this.form.controls.fullDescription.setValue(edittedEvent.fullDescription);
-            this.form.controls.imageUrl.setValue(edittedEvent.imageUrl);
+            // this.form.controls.imageUrl.setValue(edittedEvent.imageUrl);
+            this.currentImageUrl = edittedEvent.imageUrl;
             this.form.controls.place.setValue(edittedEvent.place);
             this.form.controls.placeUrl.setValue(edittedEvent.placeUrl);
             this.form.controls.url.setValue(edittedEvent.url);
@@ -159,7 +161,7 @@ export class EventFormComponent implements OnInit {
 
     // Process image.
     let image = this.form.value['image'];
-    delete this.form.value['image'];
+
     if (image.file) {
       this.imageUploadService.postFile(image['file']).subscribe(data => {
         this.form.patchValue({imageUrl: data.url});
@@ -186,9 +188,11 @@ export class EventFormComponent implements OnInit {
       })
     } else {
       this.form.patchValue({imageUrl: null});
-      eventData.imageUrl = this.form.value.imageUrl;
-
       if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
+        if (this.currentImageUrl != null) {
+          eventData.imageUrl = this.currentImageUrl;
+        }
+
         this.modifyEvent(eventData);
       } else {
         this.planEvent(eventData);
@@ -269,5 +273,10 @@ export class EventFormComponent implements OnInit {
 
   imageChanged(event: any): void {
     this.form.patchValue({image: {file: event.target.files.item(0)}});
+    this.currentImageUrl = null;
+  }
+
+  clearCurrentImage(): void {
+    this.currentImageUrl = null;
   }
 }
