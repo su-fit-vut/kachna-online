@@ -3,6 +3,21 @@
 <head>
   <meta charset="utf-8">
   <title>Kachna Online</title>
+
+  <script>
+    if (location.hostname.includes('vutbr') || location.hostname.includes('www.')) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+          }
+
+          window.location.href = 'https://su.fit.vut.cz/kachna';
+        });
+      }
+    }
+  </script>
+
   <base href="/kachna/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="assets/kachna_bez_peny.png">
