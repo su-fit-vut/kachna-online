@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Configuration;
 using KachnaOnline.Business.Models.ClubStates;
@@ -50,6 +51,10 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
                 try
                 {
                     await this.SendNotification(subscription, title, msg);
+                }
+                catch (PushServiceClientException e) when (e.StatusCode == HttpStatusCode.Gone)
+                {
+                    await _pushSubscriptionsService.DeletePushSubscription(subscription.Endpoint);
                 }
                 catch (Exception e)
                 {

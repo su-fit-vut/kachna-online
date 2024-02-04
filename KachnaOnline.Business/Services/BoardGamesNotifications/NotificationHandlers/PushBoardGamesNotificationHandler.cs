@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using KachnaOnline.Business.Configuration;
 using KachnaOnline.Business.Exceptions.BoardGames;
@@ -65,6 +66,10 @@ namespace KachnaOnline.Business.Services.BoardGamesNotifications.NotificationHan
                     try
                     {
                         await this.SendNotification(subscription, "Blíží se konec výpůjční doby deskovky", message);
+                    }
+                    catch (PushServiceClientException e) when (e.StatusCode == HttpStatusCode.Gone)
+                    {
+                        await _pushSubscriptionsService.DeletePushSubscription(subscription.Endpoint);
                     }
                     catch (Exception e)
                     {
