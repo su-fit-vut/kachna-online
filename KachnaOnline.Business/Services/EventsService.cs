@@ -15,6 +15,7 @@ using KachnaOnline.Business.Models.Events;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using EventEntity = KachnaOnline.Data.Entities.Events.Event;
+using StateType = KachnaOnline.Data.Entities.ClubStates.StateType;
 
 namespace KachnaOnline.Business.Services
 {
@@ -278,6 +279,9 @@ namespace KachnaOnline.Business.Services
                 if (stateEntity.Start < eventEntity.From || stateEntity.PlannedEnd > eventEntity.To)
                     throw new LinkingStateToEventException("State is planned outside of the time span for the event.",
                         eventId, stateId);
+
+                if (stateEntity.State == StateType.Private)
+                    throw new LinkingStateToEventException("Private states cannot be linked to an event.");
 
                 // Link the planned state to the event. Even if the planned state already has been linked to an event,
                 // the former event is overwritten by this event.
