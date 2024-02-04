@@ -28,6 +28,9 @@ export class StateModalComponent implements OnInit {
       case ClubStateTypes.Private:
         this.heading = "Soukromá akce";
         break;
+      case ClubStateTypes.OpenTearoom:
+        this.heading = "Čajovna";
+        break;
     }
   }
 

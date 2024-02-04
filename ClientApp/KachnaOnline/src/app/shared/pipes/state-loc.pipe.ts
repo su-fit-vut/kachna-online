@@ -10,7 +10,8 @@ export class StateLocPipe implements PipeTransform {
     OpenChillzone: "chillzóna",
     OpenBar: "otevřeno s barem",
     Private: "soukromá akce",
-    Closed: "zavřeno"
+    Closed: "zavřeno",
+    OpenTearoom: "čajovna"
   };
 
   transform(value: ClubStateTypes): string {

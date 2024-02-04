@@ -7,7 +7,6 @@ import { ToastrService } from "ngx-toastr";
 import { Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { StateModalComponent } from "../state-modal/state-modal.component";
-import { LoaderService } from "../../../shared/services/loader.service";
 import { forkJoin } from "rxjs";
 import { CalendarStoreService } from "../../../shared/services/calendar-store.service";
 
@@ -120,7 +119,7 @@ export class EventsOverviewCalendarComponent implements OnInit {
           start: event.from,
           end: event.to,
           display: 'block',
-          color: "#28a745"
+          color: "#b4409a"
         })
       }
       for (let state of data[1]) {
@@ -136,6 +135,9 @@ export class EventsOverviewCalendarComponent implements OnInit {
         } else if (state.state == ClubStateTypes.Private) {
           color = "#6500F2";
           title = "Soukromá akce";
+        } else if (state.state == ClubStateTypes.OpenTearoom) {
+          color = "#196911";
+          title = "Čajovna";
         }
 
         api.addEvent({

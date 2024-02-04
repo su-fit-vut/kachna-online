@@ -44,6 +44,10 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
 import { EventsOverviewCalendarComponent } from "./home/events-overview/events-overview-calendar/events-overview-calendar.component";
 import { StateModalComponent } from './home/events-overview/state-modal/state-modal.component';
 import { KisTokenExpiredInterceptor } from "./shared/interceptors/kis-token-expired.interceptor";
+import {
+  CurrentOfferCollapsibleBlockComponent
+} from "./home/current-offer-collapsible-block/current-offer-collapsible-block.component";
+import { TearoomDetailsComponent } from "./home/tearoom-details/tearoom-details.component";
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -73,6 +77,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     LoggedOutContentComponent,
     ForbiddenComponent,
     ChillzoneDetailsComponent,
+    TearoomDetailsComponent,
     RepeatingStatesComponent,
     BarDetailsComponent,
     PrestigeTableComponent,
@@ -80,6 +85,7 @@ export function tokenGetter(request?: HttpRequest<any>) {
     EventsOverviewComponent,
     LoadingSpinnerComponent,
     CurrentOfferComponent,
+    CurrentOfferCollapsibleBlockComponent,
     EventsOverviewTextComponent,
     EventsOverviewCalendarComponent,
     StateModalComponent,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ClubInfoService } from "../../shared/services/club-info.service";
 import { ClubOffer, ClubOfferItem } from "../../models/clubinfo/offer.model";
 
@@ -9,7 +9,8 @@ import { ClubOffer, ClubOfferItem } from "../../models/clubinfo/offer.model";
 })
 export class CurrentOfferComponent implements OnInit {
 
-  constructor(private infoService: ClubInfoService) { }
+  constructor(private infoService: ClubInfoService) {
+  }
 
   loaded: boolean = false;
   hasError: boolean = false;
@@ -20,6 +21,8 @@ export class CurrentOfferComponent implements OnInit {
   products: { [categoryName: string]: ClubOfferItem[] } = {};
 
   taps: ClubOfferItem[];
+
+  @Input() tearoomMode: boolean = false;
 
   ngOnInit(): void {
     this.loadOffer();
@@ -58,18 +61,24 @@ export class CurrentOfferComponent implements OnInit {
         return 0;
       });
 
+      let tea = [];
       let wine = [];
       let cider = [];
       let bev = [];
       let coffee = [];
       let food = [];
+      let bottledBeer = [];
       let others = [];
 
       for (let p of offer.products) {
-        if (p.labels.includes("Káva")) {
+        if (p.labels.includes("Čaj")) {
+          tea.push(p);
+        } else if (p.labels.includes("Káva")) {
           coffee.push(p);
         } else if (p.labels.includes("Nealko")) {
           bev.push(p);
+        } else if (p.labels.includes("Pivo") && p.labels.includes("Sklo")) {
+          bottledBeer.push(p);
         } else if (p.labels.includes("Jídlo")) {
           food.push(p);
         } else if (p.labels.includes("Víno")) {
@@ -83,7 +92,26 @@ export class CurrentOfferComponent implements OnInit {
         }
       }
 
-      this.makeCategories({"Cider": cider, "Víno": wine, "Káva": coffee, "Nealko": bev, "Jídlo": food, "Další nabídka": others});
+      if (this.tearoomMode) {
+        this.makeCategories({
+          "Čaj": tea,
+          "Káva": coffee,
+          "Nealko": bev,
+          "Jídlo": food,
+          "Další nabídka": others
+        })
+      } else {
+        this.makeCategories({
+          "Cider": cider,
+          "Lahvové pivo": bottledBeer,
+          "Víno": wine,
+          "Káva": coffee,
+          "Čaj": tea,
+          "Nealko": bev,
+          "Jídlo": food,
+          "Další nabídka": others
+        });
+      }
     }
   }
 

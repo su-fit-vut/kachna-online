@@ -1,0 +1,14 @@
+<div class="d-block mt-3" style="text-align: center">
+  <button class="btn btn-link btn-sm text-decoration-none state-details"
+          (click)="currentOffer.toggle()">
+    Aktuální nabídka {{currentOfferCollapsed ? "▼" : "▲"}}
+  </button>
+</div>
+
+<div #currentOffer="ngbCollapse" [(ngbCollapse)]="currentOfferCollapsed">
+  <div class="card">
+    <div class="card-body">
+      <app-current-offer [tearoomMode]="tearoomMode"></app-current-offer>
+    </div>
+  </div>
+</div>

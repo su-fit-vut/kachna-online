@@ -12,20 +12,7 @@
     {{state.noteInternal}}
   </div>
 
-  <div class="d-block mt-3">
-    <button class="btn btn-link btn-sm text-decoration-none state-details"
-            (click)="currentOffer.toggle()">
-      Aktuální nabídka {{currentOfferCollapsed ? "▼" : "▲"}}
-    </button>
-  </div>
-
-  <div #currentOffer="ngbCollapse" [(ngbCollapse)]="currentOfferCollapsed">
-    <div class="card">
-      <div class="card-body">
-        <app-current-offer></app-current-offer>
-      </div>
-    </div>
-  </div>
+  <app-current-offer-collapsible-block></app-current-offer-collapsible-block>
 
   <div class=" d-block mt-3">
     <button class="btn btn-link btn-sm text-decoration-none state-details"

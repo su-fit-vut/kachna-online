@@ -15,7 +15,6 @@ export class BarDetailsComponent implements OnInit, OnDestroy {
 
   @Input() state: ClubState;
 
-  currentOfferCollapsed: boolean = true;
   leaderboardCollapsed: boolean = true;
 
   todayPrestige: PrestigeLeaderboardItem[];

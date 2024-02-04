@@ -1,0 +1,16 @@
+<div class="state-details text-center">
+  Zavíráme <span class="font-weight-bold">{{state.plannedEnd | timeLocative}}</span>.
+</div>
+
+<div class="border-bottom pb-2 mb-2 text-center">
+  <div class="state-details" *ngIf="state.note != null && state.note.length > 0">
+    {{state.note}}
+  </div>
+
+  <div class="state-details mt-2" *ngIf="state.noteInternal != null && state.noteInternal.length > 0">
+    <div class="small font-weight-light">Interní poznámka:</div>
+    {{state.noteInternal}}
+  </div>
+
+  <app-current-offer-collapsible-block [tearoomMode]="true"></app-current-offer-collapsible-block>
+</div>

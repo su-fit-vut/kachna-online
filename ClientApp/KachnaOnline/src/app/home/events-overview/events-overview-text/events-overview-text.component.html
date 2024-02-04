@@ -67,8 +67,10 @@
             [class.table-bar]="s.type == 'OpenBar'" (click)="s.hasNote ? onStateClicked(s) : null">
           <td style="width: 20%">{{s.from | date:'EEE d. M.'}}</td>
           <td style="width: 35%" [class.color-chillzone]="s.type == 'OpenChillzone'"
+              [class.color-tearoom]="s.type == 'OpenTearoom'"
               [class.color-bar]="s.type == 'OpenBar'">{{s.from | date:'HH:mm'}}–{{s.to | date:'HH:mm'}}</td>
           <td style="width: 35%" [class.color-chillzone]="s.type == 'OpenChillzone'"
+              [class.color-tearoom]="s.type == 'OpenTearoom'"
               [class.color-bar]="s.type == 'OpenBar'">{{s.type | stateLoc}}</td>
           <td style="width: 10%">
             <i *ngIf="s.hasNote" class="fa fa-comment-dots"></i>

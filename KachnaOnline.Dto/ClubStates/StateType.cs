@@ -24,6 +24,11 @@ namespace KachnaOnline.Dto.ClubStates
         /// <summary>
         /// The club is closed to the public.
         /// </summary>
-        Closed = 3
+        Closed = 3,
+
+        /// <summary>
+        /// The club is open to the public in the 'tearoom' mode.
+        /// </summary>
+        OpenTearoom = 4
     }
 }

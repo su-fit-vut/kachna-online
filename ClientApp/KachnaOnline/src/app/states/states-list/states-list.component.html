@@ -28,7 +28,9 @@
       </thead>
       <tbody>
       <tr *ngFor="let state of states">
-        <td [class.color-bar]="state.state == 'OpenBar'" [class.color-chillzone]="state.state == 'OpenChillzone'">
+        <td [class.color-bar]="state.state == 'OpenBar'"
+            [class.color-chillzone]="state.state == 'OpenChillzone'"
+            [class.color-tearoom]="state.state == 'OpenTearoom'">
           {{state.state | stateLoc}}
         </td>
         <td class="text-nowrap">{{state.start | date:'d. M.'}}</td>
