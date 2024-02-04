@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { EventsService } from "../../../shared/services/events.service";
 import { StatesService } from "../../../shared/services/states.service";
 import { Event } from "../../../models/events/event.model";
-import { forkJoin, Observable } from "rxjs";
+import { forkJoin, Observable, of } from "rxjs";
 import { ClubStateTypes } from "../../../models/states/club-state-types.model";
-import { endWith } from "rxjs/operators";
+import { catchError, endWith } from "rxjs/operators";
 import { ClubState } from "../../../models/states/club-state.model";
 import { EventItem, StateItem } from "../events-overview.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -66,7 +66,11 @@ export class EventsOverviewTextComponent implements OnInit {
       };
 
       if (e.linkedPlannedStateIds != undefined && e.linkedPlannedStateIds?.length > 0) {
-        let requests = e.linkedPlannedStateIds.map(e => this.stateService.get(e));
+        let requests = e.linkedPlannedStateIds.map(e =>
+          this.stateService.get(e).pipe(catchError(err => {
+            console.warn(`Failed to fetch state with ID ${e}`, err);
+            return of(null);
+          })));
         event.stateTypes = [];
 
         let reqJoin = forkJoin(requests);
@@ -77,6 +81,9 @@ export class EventsOverviewTextComponent implements OnInit {
           let hasBar = false;
 
           for (let cs of a) {
+            if (cs == null)
+              continue;
+
             if (cs.state == ClubStateTypes.OpenBar && !hasBar) {
               event.stateTypes?.push("otevřeno s barem");
               hasBar = true;
@@ -87,7 +94,7 @@ export class EventsOverviewTextComponent implements OnInit {
           }
 
           this.events.push(event);
-        })
+        });
       } else {
         this.events.push(event);
       }
