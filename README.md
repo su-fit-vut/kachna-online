@@ -29,16 +29,19 @@ and develop it locally.
 The preferred way of running the project locally for development is using
 containers, since it removes the hassle of installing dependencies locally.
 
+Two Dockerfile flavours are included: the development files expect you to bind the source code as a volume and allow for hot-reloading of the frontend and backend. The production files are optimised for deployment.
+
 Prerequisites:
- - docker
- - docker-compose
- - \[OPTIONAL\] GNU make - the rest of this section will assume its use, however docker-compose commands can be run directly without it.
- - \[OPTIONAL\] Use rootless podman containers with docker-compose for better security. [Setup instructions](https://fedoramagazine.org/use-docker-compose-with-podman-to-orchestrate-containers-on-fedora/)
+ - Docker and Docker Compose
+ - \[OPTIONAL\] GNU make - the rest of this section will assume its use, however docker compose commands can be run directly without it.
+ - \[OPTIONAL\] Use rootless podman containers with docker compose for better security. [Setup instructions](https://fedoramagazine.org/use-docker-compose-with-podman-to-orchestrate-containers-on-fedora/)
      - When using podman, networking plugins ([_containernetworking-plugins_](https://github.com/containernetworking/plugins);
        [_dnsname_](https://github.com/containers/dnsname), which may be included in a plugins package like `podman-plugins`) must be installed.
 
-Most common docker-compose commands useful for development are wrapped
-in a Makefile in case you are not familiar with docker-compose.
+For development, it's recommended to pass your local UID and GID to Compose. The default values are 1000:1000.
+
+Most common Compose commands useful for development are wrapped
+in a Makefile in case you are not familiar with Compose.
 Running the project for the first time requires setting up the
 database:
 
@@ -58,13 +61,6 @@ the interactive Swagger UI can be accessed at
 [https://localhost:5001/kachna/api/swagger/index.html](https://localhost:5001/kachna/api/swagger/index.html).
 The Angular 12 frontend starts at
 [https://localhost:4200/kachna/](https://localhost:4200/kachna/).
-
-Changes in the frontend are automatically applied and the frontend is restarted.
-To apply backend changes, the `api` docker-compose service must be restarted:
-
-```
-make compose-restart-api
-```
 
 Some functionality of the project, e.g. Discord webhooks for notifying about
 club state changes or email reminders, require additional configuration, e.g.
@@ -96,7 +92,7 @@ web-push generate-vapid-keys
 
 ### Project Structure
 
-The application consists of a REST API backend built using **.NET 6**
+The application consists of a REST API backend built using **.NET 8**
 with a **PostgreSQL** database and a PWA frontend built using **Angular 12**.
 
 The backend consists of 5 projects:
@@ -109,16 +105,15 @@ The backend consists of 5 projects:
 The frontend is located at `ClientApp/KachnaOnline` and consists of multiple separated modules,
 each corresponding to a logical element of the system (e.g. board games or events).
 
-### Local Setup (not recommended)
+### Local Setup
 
-In some cases, it may be useful to run the project directly on your local machine,
-however it is not recommended due to the difficulty of the setup.
+In some cases, it may be useful to run the project directly on your local machine (however it is not recommended due to the difficulty of the setup).
 For completeness, this section gives a brief overview of the setup process.
 
 #### Dependencies
 
 - [PostgreSQL](https://www.postgresql.org/download/) with a user and a database setup.
-- Runtime environment of [.NET 6](https://dotnet.microsoft.com/download)
+- [.NET 8 SDK](https://dotnet.microsoft.com/download)
 - [Angular](https://angular.io/guide/setup-local) ([Node.js](https://nodejs.org/en/download/) environment is required for its functionality along with the *npm* package manager)
 
 #### Running the backend
@@ -138,7 +133,7 @@ Before running application for the first time, it is necessary to perform databa
 migrations. The database can also be filled with sample data:
 
 ```
-dotnet run - --migrate-db --bootstrap-db
+dotnet run -- --migrate-db --bootstrap-db
 ```
 
 Afterwards, the application can be run in regular mode:
@@ -146,6 +141,8 @@ Afterwards, the application can be run in regular mode:
 ```
 dotnet run
 ```
+
+You can also use `dotnet watch` instead to enable hot-reloading.
 
 A `wwwroot` directory must be present in the `KachnaOnline.App` directory. In this repository, this is a symlink
 to `ClientApp/KachnaOnline/dist/KachnaOnline`, so either build the client app (`npm build`) or simply create

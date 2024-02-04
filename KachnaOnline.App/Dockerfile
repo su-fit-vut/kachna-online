@@ -1,20 +1,32 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+﻿# Set context to the root of the repo
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build
+ENV DOTNET_PRINT_TELEMETRY_MESSAGE="false"
+ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE="1"
+ENV DOTNET_NOLOGO="true"
+
 WORKDIR /src
-COPY ["KachnaOnline.App/KachnaOnline.App.csproj", "KachnaOnline.App/"]
-RUN dotnet restore "KachnaOnline.App/KachnaOnline.App.csproj"
+
+# Run restore separately
+COPY ./KachnaOnline.App/*.csproj ./KachnaOnline.App/
+COPY ./KachnaOnline.Business/*.csproj ./KachnaOnline.Business/
+COPY ./KachnaOnline.Business.Data/*.csproj ./KachnaOnline.Business.Data/
+COPY ./KachnaOnline.Data/*.csproj ./KachnaOnline.Data/
+COPY ./KachnaOnline.Dto/*.csproj ./KachnaOnline.Dto/
+RUN dotnet restore ./KachnaOnline.App/KachnaOnline.App.csproj -r linux-x64
+
+# Copy entire source code
 COPY . .
-WORKDIR "/src/KachnaOnline.App"
-RUN dotnet build "KachnaOnline.App.csproj" -c Release -o /app/build
 
-FROM build AS publish
-RUN dotnet publish "KachnaOnline.App.csproj" -c Release -o /app/publish
+# Build and publish
+WORKDIR /src/KachnaOnline.App
+RUN ls -la
 
-FROM base AS final
+RUN dotnet publish --no-restore -o /publish
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled-composite as runtime
+EXPOSE 8080
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "KachnaOnline.App.dll"]
+COPY --from=build /publish .
+ENTRYPOINT ["./KachnaOnline.App"]

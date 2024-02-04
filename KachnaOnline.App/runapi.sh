@@ -3,4 +3,4 @@
 if [ ! -d wwwroot ]; then
     mkdir -p ../ClientApp/KachnaOnline/dist/KachnaOnline
 fi
-dotnet run $@
+dotnet watch run --urls "$ASPNETCORE_URLS" -- $@

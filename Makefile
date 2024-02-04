@@ -1,10 +1,7 @@
-COMPOSE ?= docker-compose
+COMPOSE ?= docker compose
 
 compose-up:
 	$(COMPOSE) up
-
-compose-restart-api:
-	$(COMPOSE) restart api
 
 compose-migrate:
 	DOTNET_ARGS="--migrate-db" $(COMPOSE) up api

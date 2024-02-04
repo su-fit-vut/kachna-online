@@ -2,8 +2,9 @@ version: "3"
 
 services:
     postgres:
-        container_name: "postgres"
-        image: "docker.io/postgres:13"
+        container_name: "kachnaonline-postgres"
+        hostname: "postgres"
+        image: "docker.io/postgres:16"
         restart: unless-stopped
         expose:
             - "5432"
@@ -23,14 +24,14 @@ services:
         build:
             context: ./KachnaOnline.App
             dockerfile: Dockerfile.development
+            args:
+                UID: "${UID:-1000}"
+                GID: "${GID:-1000}"
         restart: unless-stopped
         volumes:
             - ./:/src:z
         env_file:
             - docker/api.env
-        environment:
-            # Override the default URLs to expose the API outside the container
-            - URLS=https://+:5001;http://+:5000
         ports:
             - "5000:5000"
             - "5001:5001"
@@ -45,6 +46,7 @@ services:
         command: "${DOTNET_ARGS:-}"
     frontend:
         build:
+            dockerfile: Dockerfile.development
             context: ./ClientApp/KachnaOnline
         restart: unless-stopped
         volumes:
