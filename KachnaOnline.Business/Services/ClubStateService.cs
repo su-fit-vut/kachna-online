@@ -280,10 +280,6 @@ namespace KachnaOnline.Business.Services
 
             var newEntity = _mapper.Map<RepeatingStateEntity>(newRepeatingState);
 
-            // Get the first actual day of occurrence
-            var daysToAdd = ((int)newRepeatingState.DayOfWeek - (int)dateFrom.DayOfWeek + 7) % 7;
-            dateFrom = dateFrom.AddDays(daysToAdd);
-
             // Store the rounded values instead of the original ones
             newEntity.EffectiveFrom = dateFrom;
             newEntity.EffectiveTo = dateTo;
@@ -1135,6 +1131,10 @@ namespace KachnaOnline.Business.Services
         private async Task<RepeatingStatePlanningResult> PlanStatesForRepeatingState(
             RepeatingStateEntity repeatingStateEntity, DateTime dateFrom)
         {
+            // Get the first actual day of occurrence
+            var daysToAdd = ((int)repeatingStateEntity.DayOfWeek - (int)dateFrom.DayOfWeek + 7) % 7;
+            dateFrom = dateFrom.AddDays(daysToAdd);
+
             var dateTo = repeatingStateEntity.EffectiveTo;
             var timeFrom = repeatingStateEntity.TimeFrom;
             var timeTo = repeatingStateEntity.TimeTo;
