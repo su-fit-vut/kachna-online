@@ -17,9 +17,11 @@ export class UpcomingOpeningsComponent implements OnInit {
 
   nextChillzone: ClubState;
   nextBar: ClubState;
+  nextTearoom: ClubState;
 
   hasChillzone: boolean;
   hasBar: boolean;
+  hasTearoom: boolean;
 
   ngOnInit(): void {
     this.service.getNext(ClubStateTypes.OpenChillzone)
@@ -46,6 +48,19 @@ export class UpcomingOpeningsComponent implements OnInit {
       .subscribe(e => {
         this.nextBar = e;
         this.hasBar = true;
+      });
+
+    this.service.getNext(ClubStateTypes.OpenTearoom)
+      .pipe(catchError((error: HttpErrorResponse) => {
+        if (error.status == 404) {
+          this.hasTearoom = false;
+          return EMPTY;
+        }
+        return throwError(error);
+      }))
+      .subscribe(e => {
+        this.nextTearoom = e;
+        this.hasTearoom = true;
       });
   }
 
