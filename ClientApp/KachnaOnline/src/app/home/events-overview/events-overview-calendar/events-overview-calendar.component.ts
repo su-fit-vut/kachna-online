@@ -165,6 +165,7 @@ export class EventsOverviewCalendarComponent implements OnInit {
     } else if (clickInfo.event.id.startsWith(statePrefix)) {
       let stateId = clickInfo.event.id.replace(`${statePrefix}-`, "");
       this.statesService.get(parseInt(stateId)).subscribe(state => {
+        this.modalService.dismissAll();
         const modalRef = this.modalService.open(StateModalComponent);
         modalRef.componentInstance.state = state;
       })
