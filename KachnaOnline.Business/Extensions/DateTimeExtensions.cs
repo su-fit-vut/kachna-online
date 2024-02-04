@@ -13,7 +13,7 @@ namespace KachnaOnline.Business.Extensions
         public static DateTime RoundToMinutes(this DateTime dateTime)
         {
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day,
-                dateTime.Hour, dateTime.Minute, 0);
+                dateTime.Hour, dateTime.Minute, 0, dateTime.Kind);
         }
     }
 }

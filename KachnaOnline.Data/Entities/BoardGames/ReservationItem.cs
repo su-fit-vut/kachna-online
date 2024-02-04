@@ -11,7 +11,10 @@ namespace KachnaOnline.Data.Entities.BoardGames
         [Key] public int Id { get; set; }
         [Required] public int ReservationId { get; set; }
         [Required] public int BoardGameId { get; set; }
+
+        [Column(TypeName = "timestamp without time zone")]
         public DateTime? ExpiresOn { get; set; }
+
         public bool NotifiedOnExpiration { get; set; }
         public bool NotifiedBeforeExpiration { get; set; }
 

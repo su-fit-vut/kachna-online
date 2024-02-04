@@ -11,7 +11,11 @@ namespace KachnaOnline.Data.Entities.BoardGames
     {
         [Key] public int Id { get; set; }
         [Required] public int MadeById { get; set; }
-        [Required] public DateTime MadeOn { get; set; }
+
+        [Required]
+        [Column(TypeName = "timestamp without time zone")]
+        public DateTime MadeOn { get; set; }
+
         [StringLength(1024)] public string NoteUser { get; set; }
         [StringLength(1024)] public string NoteInternal { get; set; }
         public ulong? WebhookMessageId { get; set; }

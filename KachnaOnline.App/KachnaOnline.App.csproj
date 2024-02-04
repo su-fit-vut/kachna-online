@@ -41,4 +41,8 @@
         <ProjectReference Include="..\KachnaOnline.Data\KachnaOnline.Data.csproj" />
         <ProjectReference Include="..\KachnaOnline.Dto\KachnaOnline.Dto.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ModelBinders\" />
+    </ItemGroup>
 </Project>

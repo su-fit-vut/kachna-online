@@ -10,9 +10,15 @@ namespace KachnaOnline.Data.Entities.BoardGames
     {
         [Required] public int ReservationItemId { get; set; }
         [Required] public int MadeById { get; set; }
-        [Required] public DateTime MadeOn { get; set; }
+
+        [Column(TypeName = "timestamp without time zone")]
+        [Required]
+        public DateTime MadeOn { get; set; }
+
         [Required] public ReservationItemState NewState { get; set; }
         [Required] public ReservationEventType Type { get; set; }
+
+        [Column(TypeName = "timestamp without time zone")]
         public DateTime? NewExpiryDateTime { get; set; }
 
         // Navigation properties

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using KachnaOnline.Data.Entities.Events;
 using KachnaOnline.Data.Entities.Users;
 
@@ -9,10 +10,19 @@ namespace KachnaOnline.Data.Entities.ClubStates
     {
         [Key] public int Id { get; set; }
         [Required] public int MadeById { get; set; }
-        [Required] public DateTime Start { get; set; }
+
+        [Required]
+        [Column(TypeName = "timestamp without time zone")]
+        public DateTime Start { get; set; }
+
+        [Column(TypeName = "timestamp without time zone")]
         public DateTime PlannedEnd { get; set; }
+
         [Required] public StateType State { get; set; }
+
+        [Column(TypeName = "timestamp without time zone")]
         public DateTime? Ended { get; set; }
+
         public int? ClosedById { get; set; }
 
         [StringLength(1024)] public string NoteInternal { get; set; }

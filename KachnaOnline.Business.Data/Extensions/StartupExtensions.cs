@@ -12,7 +12,7 @@ namespace KachnaOnline.Business.Data.Extensions
     {
         public static void AddAppData(this IServiceCollection services, IConfiguration configuration)
         {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", false);
 
             services.AddDbContext<AppDbContext>(options =>
             {

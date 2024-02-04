@@ -1,4 +1,5 @@
 using System.Linq;
+using KachnaOnline.App.DateHandling;
 using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Extensions;
 using KachnaOnline.Business.Configuration;
@@ -81,6 +82,11 @@ namespace KachnaOnline.App
                     {
                         options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
                         options.SerializerSettings.Converters.Add(new StringEnumConverter());
+
+                        options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                        options.SerializerSettings.DateParseHandling = DateParseHandling.DateTime;
+                        options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                        options.SerializerSettings.Converters.Add(new CustomDateTimeConverter());
                     })
                     .AddMvcOptions(options =>
                     {
@@ -88,6 +94,8 @@ namespace KachnaOnline.App
                         inputFormatter.SupportedMediaTypes.Clear();
                         inputFormatter.SupportedMediaTypes.Add("application/json");
                         inputFormatter.SupportedMediaTypes.Add("text/json");
+
+                        options.ModelBinderProviders.Insert(0, new KindAdjustingDateTimeModelBinderProvider());
                     });
 
             // Add JWT authentication.

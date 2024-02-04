@@ -185,3 +185,18 @@ notifications since Angular service worker requires a fully-featured HTTP server
 The npm *http-server* package can be used for this purpose, instructions for
 running it can be found in
 [Angular documentation](https://angular.io/guide/service-worker-getting-started#service-worker-in-action-a-tour).
+
+
+## Handling dates and times
+
+[In timezones lies madness.](https://www.youtube.com/watch?v=-5wpm-gesOY) The API will
+always return correct UTC times in the ISO 8601 format (e.g. `2024-08-01T13:45:00Z`, mind the trailing Z).
+Similarly, it will expect all the datetime inputs to be in UTC. The frontend must handle the conversion
+between the user's timezone and UTC.
+
+Internally, the dates are always converted to system local time. They are also stored in the database
+in local time using PostgreSQL's `timestamp without time zone` type. The database should use the same
+timezone as the application (using the `TimeZone` connnection string parameter should suffice). See
+[Npgsql's](https://www.npgsql.org/doc/types/datetime.html) and
+[PostgreSQL's](https://www.postgresql.org/docs/current/datatype-datetime.html#DATATYPE-TIMEZONES) docs
+for more information on how timezones are handled.
