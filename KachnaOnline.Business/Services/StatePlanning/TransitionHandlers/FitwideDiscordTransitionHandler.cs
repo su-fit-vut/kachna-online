@@ -49,8 +49,16 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             else if (state.Type == StateType.OpenBar &&
                      (previousState is null || previousState.Type != StateType.OpenBar))
             {
-                msg = $"Máme tady otvíračku! {Hypers} Aktuální nabídku najdete na https://su.fit.vutbr.cz/kachna/.";
+                msg = $"Máme tady otvíračku! {Hypers} Aktuální nabídku najdete na https://su.fit.vut.cz/kachna/.";
+            }
+            else if (state.Type == StateType.OpenTearoom)
+            {
+                msg =
+                    $"Máme tady čajovnu – klidnou otvíračku bez alkoholu. {Hypers} Nabídku čajů i dalšího občerstvení najdete na https://su.fit.vut.cz/kachna/.";
+            }
 
+            if (state.Type != StateType.OpenChillzone)
+            {
                 if (state.PlannedEnd.HasValue)
                 {
                     msg += $" Končíme ve {state.PlannedEnd.Value:HH:mm}.";
@@ -78,10 +86,12 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
                 return;
 
             var state = await _stateService.GetState(previousState.Id);
+
             if (state.Start > DateTime.Now || state.Ended.HasValue)
                 return;
 
             var discordMessageId = await this.GetMessageId(state.Id);
+
             if (!discordMessageId.HasValue)
                 return;
 
@@ -110,6 +120,7 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
         private async Task<ulong?> GetMessageId(int stateId)
         {
             var stateEntity = await _unitOfWork.PlannedStates.Get(stateId);
+
             return stateEntity?.DiscordNotificationId;
         }
 
@@ -130,6 +141,7 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             if (!state.PlannedEnd.HasValue)
             {
                 _logger.LogCritical("Data inconsistency: chillzone with no planned end (ID {Id}).", state.Id);
+
                 return null;
             }
 
@@ -158,10 +170,18 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             if (nextBarOpening != null &&
                 nextBarOpening.Start - state.PlannedEnd.Value < TimeSpan.FromMinutes(15))
             {
-                openTillString = $"až do otvíračky (v {nextBarOpening.Start:HH:mm})";
+                openTillString = $"až do otvíračky (v {nextBarOpening.Start:HH:mm}).";
             }
 
-            var msg = $"Kachna je otevřena v režimu chillzóna {openTillString} Aktuální nabídku najdete na https://su.fit.vutbr.cz/kachna/.";
+            var nextTeaRoomOpening = await _stateService.GetNextPlannedState(StateType.OpenBar);
+            if (nextTeaRoomOpening != null &&
+                nextTeaRoomOpening.Start - state.PlannedEnd.Value < TimeSpan.FromMinutes(15))
+            {
+                openTillString = $"až do začátku čajovny v {nextTeaRoomOpening.Start:HH:mm}.";
+            }
+
+            var msg =
+                $"Kachna je otevřena v režimu chillzóna {openTillString}";
             if (madeByName != null)
             {
                 msg += $" Otevírá pro vás {madeByName} {PeepoLove}";
@@ -169,7 +189,12 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
 
             if (state.NotePublic != null)
             {
-                msg += " " + state.NotePublic;
+                msg += "\\n" + state.NotePublic;
+                msg += "\\nAktuální nabídku najdete na https://su.fit.vut.cz/kachna/.";
+            }
+            else
+            {
+                msg += " Aktuální nabídku najdete na https://su.fit.vut.cz/kachna/.";
             }
 
             return msg;

@@ -83,9 +83,9 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
                     }
                 }
             }
-            else if (state.Type == StateType.OpenBar && previousState?.Type == StateType.OpenChillzone)
+            else if (state.Type is StateType.OpenBar or StateType.OpenTearoom && previousState?.Type == StateType.OpenChillzone)
             {
-                msg = "Ukončeno otvíračkou.";
+                msg = state.Type == StateType.OpenBar ? "Ukončeno otvíračkou." : "Ukončeno čajovnou.";
             }
 
             if (msg != null)
