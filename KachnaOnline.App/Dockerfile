@@ -23,8 +23,12 @@ WORKDIR /src/KachnaOnline.App
 RUN dotnet publish --no-restore -o /publish
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled-composite as runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled-extra as runtime
 EXPOSE 8080
 WORKDIR /app
 COPY --from=build /publish .
+
+ARG TZ=Europe/Prague
+ENV TZ=${TZ}
+
 ENTRYPOINT ["./KachnaOnline.App"]
