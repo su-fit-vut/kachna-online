@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using KachnaOnline.App.Configuration;
 using KachnaOnline.App.DateHandling;
 using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Extensions;
@@ -8,6 +9,7 @@ using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
@@ -117,13 +119,17 @@ namespace KachnaOnline.App
             // Add OpenAPI document service.
             services.AddCustomSwaggerGen();
 
-            // Add reverse proxy forwarded header options
-            services.Configure<ForwardedHeadersOptions>(options =>
+            // Add reverse proxy forwarded header options (if configured)
+            var servingConfig = this.Configuration.GetSection("Serving").Get<ServingConfiguration>();
+            if (servingConfig.ReverseProxyNetworkIp != null)
             {
-                options.ForwardedHeaders =
-                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-                options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("172.16.0.0"), 12));
-            });
+                services.Configure<ForwardedHeadersOptions>(options =>
+                {
+                    options.ForwardedHeaders = ForwardedHeaders.All;
+                    options.KnownNetworks.Add(new IPNetwork(
+                        IPAddress.Parse(servingConfig.ReverseProxyNetworkIp), servingConfig.ReverseProxyNetworkPrefix));
+                });
+            }
         }
 
         /// <summary>
@@ -136,24 +142,35 @@ namespace KachnaOnline.App
         /// </param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseStaticFiles(new StaticFileOptions()
-                {
-                    RequestPath = "/kachna",
-                    FileProvider = new PhysicalFileProvider(env.WebRootPath)
-                });
-            }
+            var servingConfig = this.Configuration.GetSection("Serving").Get<ServingConfiguration>();
 
-            if (env.IsProduction())
+            // Use forwarded headers if a reverse proxy network is configured.
+            if (servingConfig.ReverseProxyNetworkIp != null)
             {
                 app.UseForwardedHeaders();
             }
 
-            app.UsePathBase("/kachna/api");
+            // Normally, we don't want the app to serve static files (i.e. the frontend).
+            // However, it might be useful for development, so the app can be configured to serve wwwroot
+            // on any path. This is intentionally put before UsePathBase.
+            if (servingConfig.ServeStaticFiles)
+            {
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    RequestPath = new PathString(servingConfig.StaticFilesPathBase),
+                    FileProvider = new PhysicalFileProvider(env.WebRootPath)
+                });
+            }
+
+            // Use path base if configured.
+            if (servingConfig.PathBase != null)
+            {
+                app.UsePathBase(new PathString(servingConfig.PathBase));
+            }
 
             if (env.IsDevelopment())
             {
+                // Use developer exceptions in development.
                 app.UseDeveloperExceptionPage();
             }
             else
