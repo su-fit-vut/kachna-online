@@ -20,8 +20,6 @@ COPY . .
 
 # Build and publish
 WORKDIR /src/KachnaOnline.App
-RUN ls -la
-
 RUN dotnet publish --no-restore -o /publish
 
 # Build runtime image
