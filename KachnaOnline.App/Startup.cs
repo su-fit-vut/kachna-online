@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using KachnaOnline.App.DateHandling;
 using KachnaOnline.App.Extensions;
 using KachnaOnline.Business.Extensions;
@@ -7,6 +8,7 @@ using KachnaOnline.Business.Constants;
 using KachnaOnline.Business.Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Serilog;
+using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
 
 namespace KachnaOnline.App
 {
@@ -113,6 +116,14 @@ namespace KachnaOnline.App
 
             // Add OpenAPI document service.
             services.AddCustomSwaggerGen();
+
+            // Add reverse proxy forwarded header options
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("172.16.0.0"), 12));
+            });
         }
 
         /// <summary>
@@ -132,6 +143,11 @@ namespace KachnaOnline.App
                     RequestPath = "/kachna",
                     FileProvider = new PhysicalFileProvider(env.WebRootPath)
                 });
+            }
+
+            if (env.IsProduction())
+            {
+                app.UseForwardedHeaders();
             }
 
             app.UsePathBase("/kachna/api");
