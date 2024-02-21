@@ -173,7 +173,7 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
                 openTillString = $"až do otvíračky (v {nextBarOpening.Start:HH:mm}).";
             }
 
-            var nextTeaRoomOpening = await _stateService.GetNextPlannedState(StateType.OpenBar);
+            var nextTeaRoomOpening = await _stateService.GetNextPlannedState(StateType.OpenTearoom);
             if (nextTeaRoomOpening != null &&
                 nextTeaRoomOpening.Start - state.PlannedEnd.Value < TimeSpan.FromMinutes(15))
             {
