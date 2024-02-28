@@ -38,6 +38,9 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
         public async Task PerformStartAction(int stateId, int? previousStateId)
         {
             var state = await _stateService.GetState(stateId);
+            if (state.Type is StateType.Private or StateType.Closed)
+                return;
+
             var previousState = previousStateId.HasValue ? await _stateService.GetState(previousStateId.Value) : null;
 
             string msg = null;
