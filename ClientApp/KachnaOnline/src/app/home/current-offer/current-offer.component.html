@@ -9,7 +9,7 @@
 <div *ngIf="hasTaps" class="row row-cols-2 row-cols-md-4 justify-content-center">
   <div *ngFor="let tap of taps" class="col mb-3">
     <div class="card h-100">
-      <img [src]="tap.imageUrl" style="max-width: 80px;" class="card-img-top mx-auto my-2" alt="{{tap.name}}">
+      <img [src]="tap.imageUrl ?? 'assets/placeholder_article.svg'" style="max-width: 80px;" class="card-img-top mx-auto my-2" alt="{{tap.name}}">
       <div class="card-body p-1">
         <h5 class="card-title">{{tap.name}}</h5>
       </div>
@@ -27,8 +27,7 @@
     <div class="row justify-content-center">
       <div *ngFor="let product of products[category]" class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
         <div class="card h-100">
-          <img [src]="product.imageUrl" style="max-width: 80px;" class="card-img-top mx-auto my-2"
-               alt="{{product.name}}">
+          <img [src]="product.imageUrl ?? 'assets/placeholder_article.svg'" style="max-width: 80px;" class="card-img-top mx-auto my-2" alt="{{product.name}}">
           <div class="card-body p-1">
             <h5 class="card-title">{{product.name}}</h5>
           </div>
