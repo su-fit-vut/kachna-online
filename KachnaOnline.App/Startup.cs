@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using KachnaOnline.App.Configuration;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Serilog;
@@ -57,9 +59,9 @@ namespace KachnaOnline.App
                 o.AddPolicy(MainCorsPolicy, builder =>
                 {
                     builder.WithOrigins("https://su.fit.vut.cz", "https://su.fit.vutbr.cz",
-                               "https://www.su.fit.vut.cz", "https://www.su.fit.vutbr.cz",
-                               "https://su-int.fit.vutbr.cz", "https://su-dev.fit.vutbr.cz")
-                           .AllowAnyHeader().AllowAnyMethod();
+                            "https://www.su.fit.vut.cz", "https://www.su.fit.vutbr.cz",
+                            "https://su-int.fit.vutbr.cz", "https://su-dev.fit.vutbr.cz")
+                        .AllowAnyHeader().AllowAnyMethod();
                 });
             });
 
@@ -83,25 +85,25 @@ namespace KachnaOnline.App
 
             // Add MVC controllers.
             services.AddControllers()
-                    .AddNewtonsoftJson(options =>
-                    {
-                        options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
-                        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
 
-                        options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                        options.SerializerSettings.DateParseHandling = DateParseHandling.DateTime;
-                        options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                        options.SerializerSettings.Converters.Add(new CustomDateTimeConverter());
-                    })
-                    .AddMvcOptions(options =>
-                    {
-                        var inputFormatter = options.InputFormatters.OfType<NewtonsoftJsonInputFormatter>().First();
-                        inputFormatter.SupportedMediaTypes.Clear();
-                        inputFormatter.SupportedMediaTypes.Add("application/json");
-                        inputFormatter.SupportedMediaTypes.Add("text/json");
+                    options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                    options.SerializerSettings.DateParseHandling = DateParseHandling.DateTime;
+                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    options.SerializerSettings.Converters.Add(new CustomDateTimeConverter());
+                })
+                .AddMvcOptions(options =>
+                {
+                    var inputFormatter = options.InputFormatters.OfType<NewtonsoftJsonInputFormatter>().First();
+                    inputFormatter.SupportedMediaTypes.Clear();
+                    inputFormatter.SupportedMediaTypes.Add("application/json");
+                    inputFormatter.SupportedMediaTypes.Add("text/json");
 
-                        options.ModelBinderProviders.Insert(0, new KindAdjustingDateTimeModelBinderProvider());
-                    });
+                    options.ModelBinderProviders.Insert(0, new KindAdjustingDateTimeModelBinderProvider());
+                });
 
             // Add JWT authentication.
             services.AddCustomJwtAuthentication(this.Configuration);
@@ -165,6 +167,7 @@ namespace KachnaOnline.App
             // Use path base if configured.
             if (servingConfig.PathBase != null)
             {
+                Log.Information("Using PathBase: {PathBase}", servingConfig.PathBase);
                 app.UsePathBase(new PathString(servingConfig.PathBase));
             }
 
@@ -189,7 +192,16 @@ namespace KachnaOnline.App
             app.UseStatusCodePagesWithReExecute("/error/{0}");
 
             // Add OpenAPI document providing middleware.
-            app.UseSwagger();
+            app.UseSwagger(c =>
+            {
+                c.PreSerializeFilters.Add((doc, req) =>
+                {
+                    doc.Servers = new List<OpenApiServer>()
+                    {
+                        new() { Url = servingConfig.PathBase ?? "/" }
+                    };
+                });
+            });
 
             // Add SwaggerUI.
             app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "Kachna Online API"));
