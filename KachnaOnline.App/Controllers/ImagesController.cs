@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KachnaOnline.App.Controllers
 {
-    [Authorize(AuthConstants.AnyManagerPolicy)]
     [Route("images")]
     public class ImagesController : ControllerBase
     {
@@ -22,23 +21,24 @@ namespace KachnaOnline.App.Controllers
         }
 
         /// <summary>
-        /// Returns the URL of an uploaded image with the given hash.
+        /// Returns an uploaded image with the given hash.
         /// </summary>
         /// <param name="md5Hash">An MD5 hash of the image.</param>
-        /// <response code="200">A relative URL of the image.</response>
+        /// <response code="200">The image.</response>
         /// <response code="404">The image does not exist.</response>
         [HttpGet("{md5Hash}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ResponseCache(Duration = ImageConstants.CacheMaxAge, Location = ResponseCacheLocation.Any)]
-        public ActionResult<string> GetImageUrl(string md5Hash)
+        [AllowAnonymous]
+        public IActionResult GetImage(string md5Hash)
         {
             md5Hash = md5Hash.ToLowerInvariant();
-            var imagePath = _facade.GetImagePath(md5Hash);
+            var (imagePath, mime) = _facade.GetImageActualPath(md5Hash);
 
-            if (System.IO.File.Exists(imagePath))
+            if (imagePath != null)
             {
-                return this.Url.Content($"~{ImageConstants.ImageUrlPath}/{md5Hash}.jpg");
+                return this.PhysicalFile(imagePath, mime);
             }
 
             return this.NotFoundProblem();
@@ -60,28 +60,28 @@ namespace KachnaOnline.App.Controllers
         [ProducesResponseType(typeof(ImageDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ImageDto), StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        [Authorize(AuthConstants.AnyManagerPolicy)]
         public async Task<ActionResult<ImageDto>> UploadImage(IFormFile file, string md5Hash)
         {
             if (file is null)
                 return this.BadRequest();
 
-            if (file.ContentType != "image/jpeg" && file.ContentType != "image/jpg")
+            if (file.ContentType is not ("image/jpeg" or "image/jpg" or "image/png"))
             {
                 return this.Problem(statusCode: StatusCodes.Status415UnsupportedMediaType,
-                    title: "Invalid content type", detail: "Only JPEG images (image/jpeg) are accepted.");
+                    title: "Invalid content type", detail: "Only JPEG and PNG images are accepted.");
             }
 
             if (!string.IsNullOrEmpty(md5Hash))
             {
-                md5Hash = md5Hash.ToLowerInvariant();
-                var imagePath = _facade.GetImagePath(md5Hash);
-
-                if (System.IO.File.Exists(imagePath))
+                var (actualPath, _) = _facade.GetImageActualPath(md5Hash);
+                if (actualPath != null)
                 {
                     return this.Conflict(new ImageDto()
                     {
-                        Url = this.Url.Content($"~{ImageConstants.ImageUrlPath}/{md5Hash}.jpg"),
-                        Hash = md5Hash
+                        Url = this.Url.Content($"~{ImageConstants.ImageUrlPath}/{md5Hash}"),
+                        Hash = md5Hash,
+                        Exists = true
                     });
                 }
             }
@@ -96,7 +96,7 @@ namespace KachnaOnline.App.Controllers
             }
             else
             {
-                return this.Created(this.Url.Action("GetImageUrl", "Images",
+                return this.Created(this.Url.Action("GetImage", "Images",
                     new { md5Hash = result.Hash }) ?? throw new InvalidOperationException(), result);
             }
         }

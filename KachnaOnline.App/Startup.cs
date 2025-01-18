@@ -185,9 +185,6 @@ namespace KachnaOnline.App
             // Add Serilog's request logging middleware.
             app.UseSerilogRequestLogging();
 
-            // Serve uploaded images.
-            app.UseUploadedImagesStaticFiles(env);
-
             // Handle 400+ HTTP status codes.
             app.UseStatusCodePagesWithReExecute("/error/{0}");
 

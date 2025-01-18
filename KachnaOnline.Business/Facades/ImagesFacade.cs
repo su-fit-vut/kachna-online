@@ -17,18 +17,37 @@ namespace KachnaOnline.Business.Facades
         public ImagesFacade(IHostEnvironment environment)
         {
             _environment = environment;
+
+            var dir = Path.Combine(_environment.ContentRootPath, ImageConstants.ImageDirectory);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
         }
 
-        public string GetImagePath(string md5Hash)
-            => Path.Combine(_environment.ContentRootPath, ImageConstants.ImageDirectory,
-                md5Hash + ".jpg");
+        public string GetImageBasePath(string md5Hash)
+            => Path.Combine(_environment.ContentRootPath, ImageConstants.ImageDirectory, md5Hash);
+
+        public (string, string) GetImageActualPath(string md5Hash)
+        {
+            md5Hash = md5Hash.ToLowerInvariant();
+            var imagePath = this.GetImageBasePath(md5Hash);
+
+            var actualImagePath = imagePath + ".png";
+            if (File.Exists(actualImagePath))
+                return (actualImagePath, "image/png");
+
+            actualImagePath = imagePath + ".jpg";
+            if (File.Exists(actualImagePath))
+                return (actualImagePath, "image/jpeg");
+
+            return (null, null);
+        }
 
         public async Task<ImageDto> UploadImage(IFormFile file)
         {
             using var md5 = MD5.Create();
             md5.Initialize();
 
-            var tempName = this.GetImagePath($"{DateTime.Now.Ticks}-{this.GetHashCode()}");
+            var tempName = this.GetImageBasePath($"{DateTime.Now.Ticks}-{this.GetHashCode()}");
             var stream = new FileStream(tempName, FileMode.CreateNew);
             await file.CopyToAsync(stream);
 
@@ -45,13 +64,16 @@ namespace KachnaOnline.Business.Facades
             var dto = new ImageDto()
             {
                 Hash = hash,
-                Url = $"{ImageConstants.ImageUrlPath}/{hash}.jpg",
+                Url = $"{ImageConstants.ImageUrlPath}/{hash}",
                 Exists = false
             };
 
-            var newFileName = this.GetImagePath(hash);
+            var newFileName = this.GetImageBasePath(hash)
+                + (file.ContentType == "image/png"
+                    ? ".png"
+                    : ".jpg");
 
-            if (newFileName is null || File.Exists(newFileName))
+            if (File.Exists(newFileName))
             {
                 await stream.DisposeAsync();
                 File.Delete(tempName);

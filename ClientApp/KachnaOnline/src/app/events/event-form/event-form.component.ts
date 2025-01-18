@@ -110,7 +110,7 @@ export class EventFormComponent implements OnInit {
             this.form.controls.name.setValue(edittedEvent.name);
             this.form.controls.shortDescription.setValue(edittedEvent.shortDescription);
             this.form.controls.fullDescription.setValue(edittedEvent.fullDescription);
-            // this.form.controls.imageUrl.setValue(edittedEvent.imageUrl);
+            this.form.controls.imageUrl.setValue(edittedEvent.imageUrl);
             this.currentImageUrl = edittedEvent.imageUrl;
             this.form.controls.place.setValue(edittedEvent.place);
             this.form.controls.placeUrl.setValue(edittedEvent.placeUrl);

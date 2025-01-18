@@ -33,7 +33,7 @@
     <label for="file" *ngIf="!currentImageUrl">Obrázek akce</label>
     <label for="file" *ngIf="currentImageUrl">Obrázek akce, <a [href]="currentImageUrl">stávající obrázek</a></label>
     <div class="input-group">
-      <input class="form-control" type="file" id="file" accept=".jpg,.jpeg" (change)="imageChanged($event)">
+      <input class="form-control" type="file" id="file" accept=".png,.jpg,.jpeg" (change)="imageChanged($event)">
       <ng-container *ngIf="editMode && currentImageUrl !== null">
         <button class="btn btn-secondary ml-2" (click)="clearCurrentImage()">odstranit stávající</button>
       </ng-container>
