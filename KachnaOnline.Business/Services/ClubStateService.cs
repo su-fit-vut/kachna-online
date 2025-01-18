@@ -48,6 +48,7 @@ namespace KachnaOnline.Business.Services
         private readonly IRepeatingStatesRepository _repeatingStatesRepository;
 
         private const int StatePlanningEnterTimeout = 1000;
+        private static readonly TimeSpan MinimumStateLength = TimeSpan.FromMinutes(2);
         private static readonly SemaphoreSlim StatePlanningSemaphore = new(1);
 
         /// <summary>
@@ -259,6 +260,9 @@ namespace KachnaOnline.Business.Services
                 throw new ArgumentException(
                     $"The {nameof(RepeatingState.TimeTo)} time must come after the {nameof(RepeatingState.TimeFrom)}.");
             }
+
+            if (timeTo - timeFrom < MinimumStateLength)
+                throw new ArgumentException($"The minimum length for states is {MinimumStateLength}.");
 
             if (!Enum.IsDefined(typeof(DayOfWeek), newRepeatingState.DayOfWeek))
                 throw new ArgumentException($"The value of {nameof(RepeatingState.DayOfWeek)} is not valid.");
@@ -1009,13 +1013,80 @@ namespace KachnaOnline.Business.Services
             });
         }
 
+        private async Task SolveCollision(PlannedState newState, PlannedState existingState)
+        {
+            var newStart = newState.Start;
+            var newEnd = newState.PlannedEnd;
+            var existingStart = existingState.Start;
+            var existingEnd = existingState.PlannedEnd;
+
+            // New entirely covers existing -> remove existing
+            if (newStart <= existingStart && newEnd >= existingEnd)
+            {
+                await _stateRepository.Delete(existingState);
+                newState.NextPlannedStateId = existingState.NextPlannedStateId;
+                return;
+            }
+
+            // Existing right after new
+            if (existingStart == newEnd)
+            {
+                newState.NextPlannedStateId = existingState.Id;
+            }
+            // New around start of existing -> trim existing from left
+            else if (newStart <= existingStart && newEnd > existingStart && newEnd < existingEnd)
+            {
+                existingState.Start = newEnd;
+                newState.NextPlannedStateId = existingState.Id;
+            }
+            // New entirely inside existing -> cut existing into two
+            else if (newStart > existingStart && newEnd < existingEnd)
+            {
+                if (existingEnd - newEnd < MinimumStateLength)
+                {
+                    // Don't create part B, just trim existing from right and relink
+                    existingState.PlannedEnd = newStart;
+                    existingState.NextPlannedStateId = newState.Id;
+                }
+                else
+                {
+                    // Create part B from existing
+                    var cutNewEntity = _mapper.Map<PlannedState>(existingState);
+                    cutNewEntity.Id = default;
+                    cutNewEntity.Start = newEnd;
+
+                    // Relink existing to new
+                    existingState.PlannedEnd = newStart;
+                    existingState.NextPlannedStateId = newState.Id;
+                    await _stateRepository.Add(cutNewEntity);
+                    await _unitOfWork.SaveChanges();
+
+                    // Relink new to part B
+                    newState.NextPlannedStateId = cutNewEntity.Id;
+                }
+            }
+            // New ends after existing ends -> trim existing from right
+            // Includes case: new starts when existing ends
+            else if (newStart > existingStart && newStart <= existingEnd && newEnd >= existingEnd)
+            {
+                existingState.PlannedEnd = newStart;
+                existingState.NextPlannedStateId = newState.Id;
+            }
+
+            // Delete possible short states
+            if (existingState.PlannedEnd - existingState.Start < MinimumStateLength)
+            {
+                await _stateRepository.Delete(existingState);
+            }
+        }
+
         /// <summary>
         /// A helper routine for <see cref="PlanState"/> and <see cref="PlanStatesForRepeatingState"/>.
         /// Performs overlap checks for a new planned state, adjusts adjacent states and creates a database
         /// entry for the new state.
         /// </summary>
         /// <remarks>
-        /// Calls to this method should be made inside of a database transaction and the state planning lock.
+        /// Calls to this method should be made inside a database transaction and the state planning lock.
         /// </remarks>
         private async Task<StatePlanningResult> CheckAndCreatePlannedState(NewState newState)
         {
@@ -1047,63 +1118,45 @@ namespace KachnaOnline.Business.Services
 
             if (newState.PlannedEnd <= newState.Start)
                 throw new InvalidOperationException("The state's planned end must come after its start.");
-
-            // Check for blocking overlaps (already planned states that would start during the newly created one)
-            var overlappingStateEntities = _stateRepository.GetStartingBetween(newState.Start.Value,
-                newState.PlannedEnd.Value);
-
-            int? followingStateId = null;
-            var overlappingIds = new List<int>();
-            await foreach (var overlappingStateEntity in overlappingStateEntities)
-            {
-                // If one of the 'overlapping' states actually begins at the exact same time when the planned state ends
-                // it will be the new state's following state
-                if (overlappingStateEntity.Start == newState.PlannedEnd.Value)
-                    followingStateId = overlappingStateEntity.Id;
-                else
-                    overlappingIds.Add(overlappingStateEntity.Id);
-            }
-
-            if (overlappingIds.Count > 0)
-                return new StatePlanningResult() { OverlappingStatesIds = overlappingIds };
+            if (newState.PlannedEnd - newState.Start < MinimumStateLength)
+                throw new InvalidOperationException($"The minimum length of a state is {MinimumStateLength}.");
 
             // TODO: map using automapper?
+            // Add new entity
             var newStateEntity = new PlannedState()
             {
                 MadeById = newState.MadeById,
                 NoteInternal = newState.NoteInternal,
                 NotePublic = newState.NotePublic,
-                Start = newState.Start.Value,
+                Start = newState.Start!.Value,
                 PlannedEnd = newState.PlannedEnd.Value,
                 State = _mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType>(newState.Type),
-                NextPlannedStateId = followingStateId,
                 RepeatingStateId = newState.RepeatingStateId
             };
 
-            // Check for non-blocking overlaps (the new state starts in the middle of another, already planned one)
-            var existingStateEntity = await _stateRepository.GetCurrent(newState.Start, true);
-
-            await _stateRepository.Add(newStateEntity);
+            // Get all states that collide somehow with the newly creates
+            var allCollidingStates = await _stateRepository.GetAllCollidingStates(newState.Start.Value,
+                newState.PlannedEnd.Value);
 
             try
             {
-                // First we have to create the new entity
+                await _stateRepository.Add(newStateEntity);
                 await _unitOfWork.SaveChanges();
 
-                if (existingStateEntity != null)
+                // Solve all collisions
+                foreach (var collidingState in allCollidingStates)
                 {
-                    // ... and then relink the existing one
-                    existingStateEntity.PlannedEnd = newState.Start.Value;
-                    existingStateEntity.NextPlannedStateId = newStateEntity.Id;
-                    await _unitOfWork.SaveChanges();
+                    if (collidingState.Id == newStateEntity.Id)
+                        continue;
+                    await this.SolveCollision(newStateEntity, collidingState);
                 }
+
+                await _unitOfWork.SaveChanges();
 
                 return new StatePlanningResult()
                 {
                     TargetStateId = newStateEntity.Id,
-                    TargetStatePlannedEnd = newStateEntity.PlannedEnd,
-                    ModifiedPreviousStateId = existingStateEntity?.Id,
-                    ModifiedPreviousStatePlannedEnd = existingStateEntity?.PlannedEnd
+                    TargetStatePlannedEnd = newStateEntity.PlannedEnd
                 };
             }
             catch (Exception e)
@@ -1120,7 +1173,7 @@ namespace KachnaOnline.Business.Services
         /// which is rollbacked in case of an error.
         /// </summary>
         /// <remarks>
-        /// Calls to this method should be made inside of the state planning lock.
+        /// Calls to this method should be made inside the state planning lock.
         /// </remarks>
         private async Task<RepeatingStatePlanningResult> PlanStatesForRepeatingState(
             RepeatingStateEntity repeatingStateEntity, DateTime dateFrom)

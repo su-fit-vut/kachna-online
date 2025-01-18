@@ -47,6 +47,14 @@ namespace KachnaOnline.Business.Mappings
                 .ForMember(m => m.Type, options =>
                     options.MapFrom(e => e.State));
 
+            // Entity copying
+            this.CreateMap<PlannedState, PlannedState>()
+                .ForMember(m => m.NextPlannedState, c => c.Ignore())
+                .ForMember(m => m.RepeatingState, c => c.Ignore())
+                .ForMember(m => m.AssociatedEvent, c => c.Ignore())
+                .ForMember(m => m.MadeBy, c => c.Ignore())
+                .ForMember(m => m.ClosedBy, c => c.Ignore());
+
             this.CreateMap<KachnaOnline.Data.Entities.ClubStates.RepeatingState, RepeatingState>();
 
             this.CreateMap<RepeatingState, KachnaOnline.Data.Entities.ClubStates.RepeatingState>()

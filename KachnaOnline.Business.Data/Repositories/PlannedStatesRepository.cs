@@ -94,6 +94,15 @@ namespace KachnaOnline.Business.Data.Repositories
             return query.AsAsyncEnumerable();
         }
 
+        public Task<List<PlannedState>> GetAllCollidingStates(DateTime start, DateTime end)
+        {
+            return Set.Where(e => (e.Start >= start && e.Start <= end) // existing starting inside new
+                                  || (start >= e.Start && end <= e.PlannedEnd) // new inside existing
+                                  || (start <= e.PlannedEnd && end >= e.PlannedEnd)) // existing ending inside new
+                .OrderBy(s => s.Start)
+                .ToListAsync();
+        }
+
         public IAsyncEnumerable<PlannedState> GetConflictingStatesForEvent(DateTime from, DateTime to)
         {
             return Set.Where(s => s.Start >= from && s.PlannedEnd <= to).AsAsyncEnumerable();
