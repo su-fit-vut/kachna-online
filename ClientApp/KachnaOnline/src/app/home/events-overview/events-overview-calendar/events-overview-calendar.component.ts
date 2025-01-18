@@ -126,18 +126,20 @@ export class EventsOverviewCalendarComponent implements OnInit {
         let title = "";
         let color = "#2A72FF";
 
-        if (state.state == ClubStateTypes.OpenChillzone) {
-          color = "#063f61";
-          title = "Chillzóna";
+        if (state.state == ClubStateTypes.OpenEvent) {
+          color = "#145f8e";
+          title = "Veřejná akce";
         } else if (state.state == ClubStateTypes.OpenBar) {
           color = "#561303";
           title = "Bar";
         } else if (state.state == ClubStateTypes.Private) {
-          color = "#6500F2";
+          color = "#17003a";
           title = "Soukromá akce";
         } else if (state.state == ClubStateTypes.OpenTearoom) {
           color = "#196911";
           title = "Čajovna";
+        } else {
+          continue;
         }
 
         api.addEvent({

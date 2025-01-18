@@ -1,8 +1,8 @@
 <ng-container *ngIf="state">
   <div class="text-center pt-2 pb-2 mb-2 border-bottom">
     <div class="display-4 mb-1">
-      <ng-container *ngIf="state.state==ST.OpenChillzone">
-        Kachna je otevřená v&nbsp;režimu chillzóna do&nbsp;{{state.plannedEnd | date:'HH:mm'}}.
+      <ng-container *ngIf="state.state==ST.OpenEvent">
+        V Kachně probíhá veřejná akce<br>do&nbsp;{{ state.plannedEnd | date:'HH:mm' }}.
       </ng-container>
       <ng-container *ngIf="state.state==ST.OpenBar">
         V Kachně právě probíhá otvíračka s&nbsp;barem!
@@ -11,29 +11,35 @@
         Kachna je otevřená v režimu čajovna.
       </ng-container>
       <ng-container *ngIf="state.state==ST.Private">
-        V Kachně právě probíhá soukromá akce.
+        Kachna je zavřená – probíhá soukromá akce.
       </ng-container>
       <ng-container *ngIf="state.state==ST.Closed">
         Kachna je zavřená.
+      </ng-container>
+      <ng-container *ngIf="state.state==ST.OpenAll">
+        Kachna je otevřená pro všechny<br>do&nbsp;{{ state.plannedEnd | date:'HH:mm' }}.
       </ng-container>
     </div>
 
     <div *ngIf="state.followingState && state.followingState.state!=ST.Closed && state.state!=ST.Closed"
          class="state-details mb-1">
       Následuje {{
-      state.followingState.state == ST.OpenChillzone ? "chillzóna" :
-        state.followingState.state == ST.OpenBar ? "otvíračka s barem" : "soukromá akce"}}
-      do {{state.followingState.plannedEnd | date: 'HH:mm'}}.
+        state.followingState.state == ST.OpenEvent ? "akce" :
+          state.followingState.state == ST.OpenTearoom ? "čajovna" :
+            state.followingState.state == ST.OpenBar ? "otvíračka s barem" :
+              state.followingState.state == ST.OpenAll ? "běžná otvírací doba" : "soukromá akce"
+      }}
+      do {{ state.followingState.plannedEnd | date: 'HH:mm' }}.
     </div>
 
-    <a href="javascript:void(0)" class="state-details" (click)="modalService.open(getting_there, {size: 'lg'})">Kudy k
-      nám?</a>
+    <a href="javascript:void(0)" class="state-details"
+       (click)="modalService.open(getting_there, {size: 'lg'})">Jak a&nbsp;kudy k&nbsp;nám?</a>
     <a href="javascript:void(0)" (click)="authenticationService.getSessionIdFromKisEduId('registration')"
-       class="state-details ml-4" *ngIf="authenticationService.isLoggedOut()">Stát se členem klubu</a>
+       class="state-details ml-5" *ngIf="authenticationService.isLoggedOut()">Stát se členem klubu</a>
   </div>
 
   <app-bar-details *ngIf="state.state==ST.OpenBar" [state]="state"></app-bar-details>
-  <app-chillzone-details *ngIf="state.state==ST.OpenChillzone" [state]="state"></app-chillzone-details>
+  <app-chillzone-details *ngIf="state.state==ST.OpenEvent" [state]="state"></app-chillzone-details>
   <app-tearoom-details *ngIf="state.state==ST.OpenTearoom" [state]="state"></app-tearoom-details>
 </ng-container>
 
@@ -46,23 +52,30 @@
 <app-events-overview></app-events-overview>
 <ng-container *ngIf="!state || state.state==ST.Closed">
   <div class="border-top mt-2">
-    <app-current-offer-collapsible-block ></app-current-offer-collapsible-block>
+    <app-current-offer-collapsible-block></app-current-offer-collapsible-block>
   </div>
 </ng-container>
 
 <ng-template #getting_there let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Kudy k nám?</h4>
+    <h4 class="modal-title" id="modal-basic-title">Jak a&nbsp;kudy k&nbsp;nám?</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <p class="text-justify">
-      Studentský klub U Kachničky se nachází v místnosti <a href="https://www.fit.vut.cz/fit/room/R212/.cs">R212</a>
+      Studentský klub U Kachničky se nachází v místnosti
+      <a href="https://www.fit.vut.cz/fit/room/R212/.cs" target="_blank">R212</a>
       přímo na naší fakultě. Půjdeš stejně jako do menzy, ale před ní pokračuj dveřmi na schodiště, klub pak najdeš
-      o&nbsp;půl patra výš. Přijít můžeš také vchodem z&nbsp;ulice Metodějova (projdeš <a
-      href="https://goo.gl/maps/dYEUwkHqcLhxPebU9">brankou</a> a po chvíli uvidíš dveře na ISIC s&nbsp;logem Kachny).
+      o&nbsp;půl patra výš. Přijít můžeš také vchodem z&nbsp;ulice Metodějova (projdeš
+      <a href="https://goo.gl/maps/dYEUwkHqcLhxPebU9" target="_blank">brankou</a> a&nbsp;po chvíli uvidíš dveře na
+      ISIC s&nbsp;logem Kachny).
+    </p>
+    <p>
+      Klub je po většinu času (viz pravidelnou otvírací dobu) přístupný všem studujícím z&nbsp;FIT (nebo
+      s&nbsp;předmětem na FIT). Dovnitř se dostaneš pomocí své studentské karty. Před vstupem si
+      <a href="https://su.fit.vut.cz/k4a" target="_blank">přečti pokyny a&nbsp;pravidla</a>!
     </p>
     <img src="assets/mapa.svg" alt="Mapa areálu" style="width: 100%"/>
   </div>

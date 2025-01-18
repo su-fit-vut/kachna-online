@@ -14,10 +14,10 @@
     <div class="form-group" *ngIf="mode == M.CreateCurrent || mode == M.CreatePlanned">
       <label for="stateType">Typ stavu:</label>
       <select class="form-control" id="stateType" formControlName="stateType">
-        <option [value]="ST.OpenChillzone">Otevřeno – chillzóna</option>
+        <option [value]="ST.Private">Zavřeno – soukromá akce</option>
+        <option [value]="ST.OpenEvent">Otevřeno – speciální akce</option>
         <option [value]="ST.OpenBar">Otevřeno – bar</option>
         <option [value]="ST.OpenTearoom">Otevřeno – čajovna</option>
-        <option [value]="ST.Private">Soukromá akce</option>
       </select>
     </div>
 

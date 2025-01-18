@@ -21,6 +21,8 @@ namespace KachnaOnline.Business.Facades
 {
     public class ClubStateFacade
     {
+        private static readonly DateTime KachnaForEveryoneStart = new DateTime(2025, 1, 1);
+
         private readonly IClubStateService _clubStateService;
         private readonly IUserService _userService;
         private readonly IKisService _kisService;
@@ -49,22 +51,6 @@ namespace KachnaOnline.Business.Facades
         private bool IsUserManager
             => _httpContextAccessor.HttpContext?.User?.IsInRole(AuthConstants.StatesManager) ?? false;
 
-        private void EnsureUserStateVisibility(State inputState)
-        {
-            if (inputState.Type == Models.ClubStates.StateType.Private)
-            {
-                if (!this.IsUserManager)
-                {
-                    inputState.Type = Models.ClubStates.StateType.Closed;
-                    inputState.Id = 0;
-                    inputState.EventId = null;
-                    inputState.NoteInternal = null;
-                    inputState.NotePublic = null;
-                    inputState.MadeById = null;
-                }
-            }
-        }
-
         private async Task<MadeByUserDto> MakeMadeByDto(int? userId)
         {
             return await _userService.GetUserMadeByDto(userId, this.IsUserManager);
@@ -75,14 +61,25 @@ namespace KachnaOnline.Business.Facades
             if (state is null)
                 return null;
 
-            if (!string.IsNullOrEmpty(state.NoteInternal) && !this.IsUserManager)
+            if (!this.IsUserManager)
             {
-                state.NoteInternal = null;
-            }
+                if (!string.IsNullOrEmpty(state.NoteInternal))
+                {
+                    state.NoteInternal = null;
+                }
 
-            if (!string.IsNullOrEmpty(state.FollowingState?.NoteInternal) && !this.IsUserManager)
-            {
-                state.FollowingState.NoteInternal = null;
+                if (!string.IsNullOrEmpty(state.FollowingState?.NoteInternal))
+                {
+                    state.FollowingState.NoteInternal = null;
+                }
+
+                if (state.Type == Models.ClubStates.StateType.Private)
+                {
+                    state.MadeById = null;
+                    state.ClosedById = null;
+                    if (state.Start < KachnaForEveryoneStart)
+                        state.NotePublic = null;
+                }
             }
 
             StateDto dto;
@@ -159,8 +156,6 @@ namespace KachnaOnline.Business.Facades
         public async Task<StateDto> GetCurrent()
         {
             var currentState = await _clubStateService.GetCurrentState();
-            this.EnsureUserStateVisibility(currentState);
-
             var dto = await this.MapState(currentState);
             return dto;
         }
@@ -169,9 +164,6 @@ namespace KachnaOnline.Business.Facades
         {
             var state = await _clubStateService.GetState(id);
             if (state is null)
-                return null;
-
-            if (state.Type == Models.ClubStates.StateType.Private && !this.IsUserManager)
                 return null;
 
             var dto = await this.MapState(state);
@@ -214,9 +206,6 @@ namespace KachnaOnline.Business.Facades
 
             foreach (var state in states)
             {
-                if (state.Type == Models.ClubStates.StateType.Private && !isManager)
-                    continue;
-
                 var dto = await this.MapState(state);
                 result.Add(dto);
             }
@@ -226,11 +215,8 @@ namespace KachnaOnline.Business.Facades
 
         public async Task<StateDto> GetNext(StateType? type)
         {
-            if (type == StateType.Private && !this.IsUserManager)
-                return null;
-
-            var state = await _clubStateService.GetNextPlannedState(_mapper.Map<Models.ClubStates.StateType?>(type),
-                this.IsUserManager);
+            var state = await _clubStateService.GetNextPlannedState(
+                _mapper.Map<Models.ClubStates.StateType?>(type));
 
             var dto = await this.MapState(state);
             return dto;
@@ -316,7 +302,7 @@ namespace KachnaOnline.Business.Facades
             var tapInfo = await _kisService.GetTapInfo();
 
             string[] beers = null;
-            if (tapInfo is { Count: >0 })
+            if (tapInfo is { Count: > 0 })
             {
                 beers = tapInfo.Select(t =>
                 {

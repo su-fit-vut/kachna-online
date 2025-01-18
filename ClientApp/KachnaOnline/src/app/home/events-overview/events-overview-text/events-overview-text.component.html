@@ -66,10 +66,10 @@
         <tr *ngFor="let s of shownStates" class="pb-2" [class.clickable]="s.hasNote"
             [class.table-bar]="s.type == 'OpenBar'" (click)="s.hasNote ? onStateClicked(s) : null">
           <td style="width: 20%">{{s.from | date:'EEE d. M.'}}</td>
-          <td style="width: 35%" [class.color-chillzone]="s.type == 'OpenChillzone'"
+          <td style="width: 35%" [class.color-chillzone]="s.type == 'OpenEvent'"
               [class.color-tearoom]="s.type == 'OpenTearoom'"
               [class.color-bar]="s.type == 'OpenBar'">{{s.from | date:'HH:mm'}}–{{s.to | date:'HH:mm'}}</td>
-          <td style="width: 35%" [class.color-chillzone]="s.type == 'OpenChillzone'"
+          <td style="width: 35%" [class.color-chillzone]="s.type == 'OpenEvent'"
               [class.color-tearoom]="s.type == 'OpenTearoom'"
               [class.color-bar]="s.type == 'OpenBar'">{{s.type | stateLoc}}</td>
           <td style="width: 10%">
@@ -80,7 +80,11 @@
       </table>
     </ng-container>
 
-    <ng-template #noStates><h5 class="text-muted text-center">V tomto měsíci nejsou naplánované žádné otvíračky.</h5>
+    <ng-template #noStates>
+      <h5 class="text-muted text-center">
+        Nejsou naplánované žádné otvíračky ani čajovny.<br>
+        Kachna je pro všechny otevřená podle otvírací doby výše.
+      </h5>
     </ng-template>
   </div>
 </div>

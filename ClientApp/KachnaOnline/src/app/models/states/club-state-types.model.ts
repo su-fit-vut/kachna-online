@@ -1,7 +1,8 @@
 export enum ClubStateTypes {
   OpenBar = "OpenBar",
-  OpenChillzone = "OpenChillzone",
+  OpenEvent = "OpenEvent",
   Private = "Private",
   Closed = "Closed",
-  OpenTearoom = "OpenTearoom"
+  OpenTearoom = "OpenTearoom",
+  OpenAll = "OpenAll"
 }

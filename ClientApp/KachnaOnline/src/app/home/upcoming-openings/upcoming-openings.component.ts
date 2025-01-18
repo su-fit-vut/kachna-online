@@ -24,7 +24,7 @@ export class UpcomingOpeningsComponent implements OnInit {
   hasTearoom: boolean;
 
   ngOnInit(): void {
-    this.service.getNext(ClubStateTypes.OpenChillzone)
+    this.service.getNext(ClubStateTypes.OpenEvent)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status == 404) {
           this.hasChillzone = false;

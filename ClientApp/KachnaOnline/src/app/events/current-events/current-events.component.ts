@@ -103,7 +103,7 @@ export class CurrentEventsComponent implements OnInit {
             if (cs.state == ClubStateTypes.OpenBar && !hasBar) {
               event.stateTypes?.push("otevřeno s barem");
               hasBar = true;
-            } else if (cs.state == ClubStateTypes.OpenChillzone && !hasChillzone) {
+            } else if (cs.state == ClubStateTypes.OpenEvent && !hasChillzone) {
               event.stateTypes?.push("chillzóna");
               hasChillzone = true;
             }
@@ -162,7 +162,7 @@ export class CurrentEventsComponent implements OnInit {
             if (cs.state == ClubStateTypes.OpenBar && !hasBar) {
               event.stateTypes?.push("otevřeno s barem");
               hasBar = true;
-            } else if (cs.state == ClubStateTypes.OpenChillzone && !hasChillzone) {
+            } else if (cs.state == ClubStateTypes.OpenEvent && !hasChillzone) {
               event.stateTypes?.push("chillzóna");
               hasChillzone = true;
             }

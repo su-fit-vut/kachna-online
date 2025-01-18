@@ -4,7 +4,7 @@ import { ClubStateTypes } from "./club-state-types.model";
 export class ClubState {
   id: number;
   state: ClubStateTypes;
-  madeByUser: MadeByUser;
+  madeByUser: MadeByUser | null;
   start: Date;
   plannedEnd: Date;
   note: string | null;

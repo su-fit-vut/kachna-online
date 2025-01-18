@@ -29,7 +29,7 @@
       <tbody>
       <tr *ngFor="let state of states">
         <td [class.color-bar]="state.state == 'OpenBar'"
-            [class.color-chillzone]="state.state == 'OpenChillzone'"
+            [class.color-chillzone]="state.state == 'OpenEvent'"
             [class.color-tearoom]="state.state == 'OpenTearoom'">
           {{state.state | stateLoc}}
         </td>
@@ -41,7 +41,7 @@
         <ng-container *ngIf="state.actualEnd == null; else ended">
           <td>–</td>
           <td></td>
-          <td>{{state.madeByUser.name}}</td>
+          <td *ngIf="state.madeByUser !== null">{{state.madeByUser.name}}</td>
           <td>
             <div class="d-flex flex-nowrap justify-content-end">
               <button class="btn btn-outline-primary mr-2 text-nowrap" [routerLink]="['/states', state.id]">
@@ -58,7 +58,7 @@
         <ng-template #ended>
           <td class="text-nowrap">{{state.actualEnd | date: 'd. M.'}}</td>
           <td class="font-weight-bold">{{state.actualEnd | date: 'HH:mm'}}</td>
-          <td>{{state.madeByUser.name}}</td>
+          <td *ngIf="state.madeByUser !== null">{{state.madeByUser.name}}</td>
           <td></td>
         </ng-template>
       </tr>

@@ -7,11 +7,12 @@ import { ClubStateTypes } from "../../models/states/club-state-types.model";
 export class StateLocPipe implements PipeTransform {
 
   names: { [id in ClubStateTypes]: string; } = {
-    OpenChillzone: "chillzóna",
+    OpenEvent: "veřejná akce",
     OpenBar: "otevřeno s barem",
-    Private: "soukromá akce",
+    Private: "zavřeno – soukromá akce",
     Closed: "zavřeno",
-    OpenTearoom: "čajovna"
+    OpenTearoom: "čajovna",
+    OpenAll: "otevřeno pro všechny (bez baru)"
   };
 
   transform(value: ClubStateTypes): string {

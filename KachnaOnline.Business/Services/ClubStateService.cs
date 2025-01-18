@@ -144,16 +144,10 @@ namespace KachnaOnline.Business.Services
                 var currentState = await this.GetCurrentState();
                 if (currentState.Type == StateType.Closed)
                     return currentState;
-
-                while (currentState.FollowingState != null)
-                {
-                    currentState = await this.GetState(currentState.FollowingState.Id);
-                }
             }
 
             if (type == StateType.Private && !enablePrivate)
                 return null;
-
 
             var typeMapped = _mapper.Map<KachnaOnline.Data.Entities.ClubStates.StateType?>(type);
             var stateEntity = await _stateRepository.GetNearest(typeMapped, null, true);

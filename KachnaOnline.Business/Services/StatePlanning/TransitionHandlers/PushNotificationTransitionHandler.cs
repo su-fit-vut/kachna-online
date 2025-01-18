@@ -47,20 +47,20 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
                 var title = state.Type switch
                 {
                     StateType.OpenBar => "Otvíračka v Kachně",
-                    StateType.OpenChillzone => "Chillzóna v Kachně",
+                    StateType.OpenEvent => "Akce v Kachně",
                     StateType.OpenTearoom => "Čajovna v Kachně",
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new Exception()
                 };
 
                 var msg = state.Type switch
                 {
                     StateType.OpenBar =>
                         $"U Kachničky je od {state.Start:HH:mm} otevřeno, bar je obsluhován, pípy naraženy, tak se stav! Končíme ve {state.PlannedEnd:HH:mm}.",
-                    StateType.OpenChillzone =>
-                        $"U Kachničky je otevřeno v režimu chillzóna od {state.Start:HH:mm} do {state.PlannedEnd:HH:mm}.",
+                    StateType.OpenEvent =>
+                        $"U Kachničky je od {state.Start:HH:mm} do {state.PlannedEnd:HH:mm} otevřeno, neboť zde probíhá akce: {state.NotePublic}",
                     StateType.OpenTearoom =>
                         $"U Kachničky je od {state.Start:HH:mm} otevřeno v režimu čajovna. Končíme ve {state.PlannedEnd:HH:mm}.",
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new Exception()
                 };
 
                 try

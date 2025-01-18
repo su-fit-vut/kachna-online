@@ -106,12 +106,6 @@ namespace KachnaOnline.App.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<StateDto>> GetNext(StateType? type)
         {
-            if (type == StateType.Private)
-            {
-                if (!this.User.IsInRole(AuthConstants.StatesManager))
-                    return this.ForbiddenProblem("You cannot access private state plan records.");
-            }
-
             var dto = await _facade.GetNext(type);
             if (dto is null)
                 return this.NotFoundProblem("No state of the given type is planned.", "No such state");

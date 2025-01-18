@@ -63,7 +63,7 @@ export class PlanStateComponent implements OnInit {
   M = Mode;
 
   mainForm = this.fb.group({
-    stateType: [ClubStateTypes.OpenChillzone],
+    stateType: [ClubStateTypes.OpenEvent],
     startDate: [this.calendar.getToday()],
     startTime: [{hour: new Date().getHours(), minute: new Date().getMinutes()}],
     plannedEndDate: [this.calendar.getToday(), Validators.required],

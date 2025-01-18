@@ -11,9 +11,9 @@ namespace KachnaOnline.Business.Models.ClubStates
         OpenBar = 0,
 
         /// <summary>
-        /// The club is open to the public but the bar is not in service.
+        /// The club is open in a special setting.
         /// </summary>
-        OpenChillzone = 1,
+        OpenEvent = 1,
 
         /// <summary>
         /// The club is closed to the public because there's a private event.
@@ -29,6 +29,11 @@ namespace KachnaOnline.Business.Models.ClubStates
         /// <summary>
         /// The club is open to the public in the 'tearoom' mode.
         /// </summary>
-        OpenTearoom = 4
+        OpenTearoom = 4,
+
+        /// <summary>
+        /// The club is open in the 'Kachna 4 everyone' mode.
+        /// </summary>
+        OpenAll = 5
     }
 }

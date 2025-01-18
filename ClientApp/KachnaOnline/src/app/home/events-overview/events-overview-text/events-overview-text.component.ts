@@ -87,7 +87,7 @@ export class EventsOverviewTextComponent implements OnInit {
             if (cs.state == ClubStateTypes.OpenBar && !hasBar) {
               event.stateTypes?.push("otevřeno s barem");
               hasBar = true;
-            } else if (cs.state == ClubStateTypes.OpenChillzone && !hasChillzone) {
+            } else if (cs.state == ClubStateTypes.OpenEvent && !hasChillzone) {
               event.stateTypes?.push("chillzóna");
               hasChillzone = true;
             }
@@ -145,6 +145,7 @@ export class EventsOverviewTextComponent implements OnInit {
 
   updateShownStates(): void {
     this.update(this.states, this.shownStates);
+    this.shownStates = this.shownStates.filter(state => state.type !== ClubStateTypes.OpenAll);
     this.shownStates.sort((a, b) => a.from.getTime() - b.from.getTime());
   }
 

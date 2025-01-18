@@ -21,7 +21,9 @@
     <strong>{{state.actualEnd | date:'HH:mm'}}</strong>
   </div>
 
-  <div *ngIf="state.state != 'OpenBar' && state.state != 'OpenTearoom'" class="mt-2">Otevírá {{state.madeByUser.name}}.</div>
+  <div *ngIf="state.state == 'Private' && state.madeByUser != null" class="mt-2">
+    Otevírá {{state.madeByUser.name}}.
+  </div>
 
   <div *ngIf="state.note" class="mt-2">
     {{state.note}}

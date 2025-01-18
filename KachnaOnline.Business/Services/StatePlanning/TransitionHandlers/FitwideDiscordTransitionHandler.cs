@@ -35,6 +35,42 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             _unitOfWork = unitOfWork;
         }
 
+        private string MakeMessage(State state, State previousState)
+        {
+            string msg = null;
+
+            if (state.Type == StateType.OpenEvent)
+            {
+                msg = $"V Kachně začala akce: {state.NotePublic} {Hypers}";
+            }
+            else if (state.Type == StateType.OpenBar &&
+                     (previousState is null || previousState.Type != StateType.OpenBar))
+            {
+                msg = $"Máme tady otvíračku! {Hypers} Aktuální nabídku najdete na https://su.fit.vut.cz/kachna/.";
+            }
+            else if (state.Type == StateType.OpenTearoom &&
+                     (previousState is null || previousState.Type != StateType.OpenTearoom))
+            {
+                msg =
+                    $"Máme tady čajovnu – klidnou otvíračku bez alkoholu. {Hypers} Nabídku čajů i dalšího občerstvení najdete na https://su.fit.vut.cz/kachna/.";
+            }
+
+            if (state.PlannedEnd.HasValue)
+            {
+                msg += $" Končíme ve {state.PlannedEnd.Value:HH:mm}.";
+            }
+
+            if (state.Type != StateType.OpenEvent)
+            {
+                if (!string.IsNullOrEmpty(state.NotePublic))
+                {
+                    msg += $"\\n{state.NotePublic}";
+                }
+            }
+
+            return msg;
+        }
+
         public async Task PerformStartAction(int stateId, int? previousStateId)
         {
             var state = await _stateService.GetState(stateId);
@@ -43,36 +79,7 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
 
             var previousState = previousStateId.HasValue ? await _stateService.GetState(previousStateId.Value) : null;
 
-            string msg = null;
-
-            if (state.Type == StateType.OpenChillzone)
-            {
-                msg = await this.GetChillzoneMessage(previousState, state);
-            }
-            else if (state.Type == StateType.OpenBar &&
-                     (previousState is null || previousState.Type != StateType.OpenBar))
-            {
-                msg = $"Máme tady otvíračku! {Hypers} Aktuální nabídku najdete na https://su.fit.vut.cz/kachna/.";
-            }
-            else if (state.Type == StateType.OpenTearoom)
-            {
-                msg =
-                    $"Máme tady čajovnu – klidnou otvíračku bez alkoholu. {Hypers} Nabídku čajů i dalšího občerstvení najdete na https://su.fit.vut.cz/kachna/.";
-            }
-
-            if (state.Type != StateType.OpenChillzone)
-            {
-                if (state.PlannedEnd.HasValue)
-                {
-                    msg += $" Končíme ve {state.PlannedEnd.Value:HH:mm}.";
-                }
-
-                if (!string.IsNullOrEmpty(state.NotePublic))
-                {
-                    msg += $"\\n{state.NotePublic}";
-                }
-            }
-
+            var msg = this.MakeMessage(state, previousState);
             if (msg != null)
             {
                 var result = await this.SendWebhookMessage(msg, true);
@@ -85,20 +92,18 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
 
         public async Task PerformModifyAction(State previousState)
         {
-            if (previousState.Type != StateType.OpenChillzone)
-                return;
-
             var state = await _stateService.GetState(previousState.Id);
+            if (state.Type is StateType.Private or StateType.Closed)
+                return;
 
             if (state.Start > DateTime.Now || state.Ended.HasValue)
                 return;
 
             var discordMessageId = await this.GetMessageId(state.Id);
-
             if (!discordMessageId.HasValue)
                 return;
 
-            var msg = await this.GetChillzoneMessage(previousState, state);
+            var msg = this.MakeMessage(state, null);
             if (msg != null)
             {
                 await this.ModifyWebhookMessage(discordMessageId.Value, msg);
@@ -134,73 +139,6 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             {
                 await this.DeleteWebhookMessage(messageId.Value);
             }
-        }
-
-        private async Task<string> GetChillzoneMessage(State previousState, State state)
-        {
-            var madeBy = state.MadeById.HasValue ? await _userService.GetUser(state.MadeById.Value) : null;
-            var madeByName = madeBy.GetDiscordMention(false);
-
-            if (!state.PlannedEnd.HasValue)
-            {
-                _logger.LogCritical("Data inconsistency: chillzone with no planned end (ID {Id}).", state.Id);
-
-                return null;
-            }
-
-            var openTillString = $"**do {state.PlannedEnd.Value:HH:mm}**";
-            if (previousState?.Type == StateType.OpenChillzone
-                && previousState.PlannedEnd.HasValue)
-            {
-                var timeDelta = state.PlannedEnd.Value - previousState.PlannedEnd.Value;
-                if (timeDelta < TimeSpan.Zero)
-                {
-                    openTillString +=
-                        $" (byla zkrácena z přechozích {previousState.PlannedEnd.Value:HH:mm} {PeepoSushiRoll}).";
-                }
-                else if (timeDelta > TimeSpan.FromMinutes(15))
-                {
-                    openTillString +=
-                        $" (byla prodloužena z přechozích {previousState.PlannedEnd.Value:HH:mm} {Hypers}).";
-                }
-            }
-            else
-            {
-                openTillString += $"! {Hypers}";
-            }
-
-            var nextBarOpening = await _stateService.GetNextPlannedState(StateType.OpenBar);
-            if (nextBarOpening != null &&
-                nextBarOpening.Start - state.PlannedEnd.Value < TimeSpan.FromMinutes(15))
-            {
-                openTillString = $"až do otvíračky (v {nextBarOpening.Start:HH:mm}).";
-            }
-
-            var nextTeaRoomOpening = await _stateService.GetNextPlannedState(StateType.OpenTearoom);
-            if (nextTeaRoomOpening != null &&
-                nextTeaRoomOpening.Start - state.PlannedEnd.Value < TimeSpan.FromMinutes(15))
-            {
-                openTillString = $"až do začátku čajovny v {nextTeaRoomOpening.Start:HH:mm}.";
-            }
-
-            var msg =
-                $"Kachna je otevřena v režimu chillzóna {openTillString}";
-            if (madeByName != null)
-            {
-                msg += $" Otevírá pro vás {madeByName} {PeepoLove}";
-            }
-
-            if (state.NotePublic != null)
-            {
-                msg += "\\n" + state.NotePublic;
-                msg += "\\nAktuální nabídku najdete na https://su.fit.vut.cz/kachna/.";
-            }
-            else
-            {
-                msg += " Aktuální nabídku najdete na https://su.fit.vut.cz/kachna/.";
-            }
-
-            return msg;
         }
     }
 }
