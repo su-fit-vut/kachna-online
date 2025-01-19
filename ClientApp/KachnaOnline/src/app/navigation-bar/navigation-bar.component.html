@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3 fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-duck-dark mb-3 fixed-top">
   <div class="container">
     <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed" data-toggle="collapse"
             aria-controls="navbar" data-target="navbar" aria-expanded="false"
@@ -8,9 +8,9 @@
 
     <div class="group">
       <a class="navbar-brand" routerLink="" (click)="isMenuCollapsed = true">
-        <img class="image" style="cursor: pointer;" width="40" routerLink="" (click)="isMenuCollapsed = true"
+        <img class="image mr-1 pb-1" style="cursor: pointer;" height="40" routerLink="" (click)="isMenuCollapsed = true"
              alt="Kachna Online Logo"
-             src="assets/kachna_bez_peny.png" />
+             src="assets/orange_logo.png" />
         Kachna Online
       </a>
 
@@ -23,7 +23,7 @@
       <ul class="navbar-nav">
         <li class="nav-item align-self-xl-center align-self-lg-center mr-xl-3 mr-lg-3 mt-xl-0 mt-lg-0 mt-md-3 mt-sm-3 mt-2" *ngIf="authenticationService.isStatesManager()" ngbDropdown>
           <div ngbDropdown class="d-inline-block btn-block">
-            <div NgbDropdownAnchor>
+            <div>
               <div class="btn-group btn-block d-xl-flex d-lg-flex d-md-none d-sm-none d-none">
             <button type="button" class="btn btn-secondary text-nowrap btn-block
              d-xl-block d-lg-block d-md-none d-sm-none align-self-md-center d-none" style="text-align:left"
@@ -64,7 +64,7 @@
 
         <li class="nav-item align-self-xl-center align-self-lg-center mr-xl-3 mr-lg-3 mt-xl-0 mt-lg-0 mt-md-3 mt-sm-3 mt-2" ngbDropdown>
           <div ngbDropdown class="d-inline-block btn-block">
-            <div NgbDropdownAnchor>
+            <div>
               <div class="btn-group btn-block d-xl-flex d-lg-flex d-md-none d-sm-none d-none">
                 <button type="button" class="btn btn-secondary text-nowrap btn-block d-xl-block d-lg-block d-md-none d-sm-none d-none" style="text-align:left"
                         routerLink="events/current" routerLinkActive="active" (click)="isMenuCollapsed = true">Akce
@@ -97,7 +97,7 @@
 
         <li class="nav-item align-self-xl-center align-self-lg-center mr-xl-3 mr-lg-3 mt-xl-0 mt-lg-0 mt-md-3 mt-sm-3 mt-2" ngbDropdown>
           <div ngbDropdown class="d-inline-block btn-block">
-            <div NgbDropdownAnchor>
+            <div>
               <button type="button" *ngIf="authenticationService.isLoggedOut()" class="btn btn-secondary text-nowrap btn-block" style="text-align:left"
                       routerLink="board-games" (click)="isMenuCollapsed = true">Deskovky
               </button>
@@ -148,7 +148,7 @@
 
         <li class="nav-item align-self-xl-center align-self-lg-center mr-xl-3 mr-lg-3 mt-xl-0 mt-lg-0 mt-md-4 mt-sm-4 mt-3" ngbDropdown *ngIf="authenticationService.isAdmin()">
           <div ngbDropdown class="d-inline-block btn-block">
-            <div NgbDropdownAnchor>
+            <div>
               <div class="btn-group btn-block d-xl-flex d-lg-flex d-md-flex d-sm-flex d-flex">
                 <button type="button" class="btn btn-secondary text-nowrap btn-block " style="text-align:left"
                         routerLink="users" routerLinkActive="active" (click)="isMenuCollapsed = true">

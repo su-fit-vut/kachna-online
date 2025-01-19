@@ -1,6 +1,6 @@
 <ng-container *ngIf="state">
-  <div class="text-center pt-2 pb-2 mb-2 border-bottom">
-    <div class="display-4 mb-1">
+  <div class="text-center pb-2 mb-3 border-bottom">
+    <div class="headline mb-1">
       <ng-container *ngIf="state.state==ST.OpenEvent">
         V Kachně probíhá veřejná akce<br>do&nbsp;{{ state.plannedEnd | date:'HH:mm' }}.
       </ng-container>
@@ -51,7 +51,7 @@
 <app-repeating-states></app-repeating-states>
 <app-events-overview></app-events-overview>
 <ng-container *ngIf="!state || state.state==ST.Closed">
-  <div class="border-top mt-2">
+  <div class="border-top mt-1">
     <app-current-offer-collapsible-block></app-current-offer-collapsible-block>
   </div>
 </ng-container>

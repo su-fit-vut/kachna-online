@@ -159,6 +159,12 @@ dependencies:
 npm install
 ```
 
+The project uses quite old version of Angular and stuff. These days, you may need to use this:
+
+```
+export NODE_OPTIONS=--openssl-legacy-provider
+```
+
 By default, the application is configured to run with SSL (making use of
 the development certificate from ASP.NET backend). It may be necessary to
 set the certificate up:

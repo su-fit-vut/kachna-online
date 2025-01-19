@@ -1,12 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 
 * {
-  font-family: 'Dosis', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 400;
 }
 
-.display-4 {
-  font-weight: 400;
+p, span, div {
+  font-size: 11pt;
+}
+
+h1, h2, h3, h4, .navbar-brand {
+  font-family: 'Exo', sans-serif !important;
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 20pt;
+}
+
+h5 {
+  font-size: 13pt;
+  font-weight: 400 !important;
+}
+
+.btn {
+  font-size: 11pt;
+}
+
+.headline {
+  font-size: 34pt;
+  font-weight: 500;
 }
 
 .form-group label {
@@ -67,4 +90,12 @@ table thead tr th {
 
 .font-small {
   font-size: 80%;
+}
+
+.navbar-duck-dark {
+  background-color: #2a2524 !important
+}
+
+.fc, .fc-event-title, .fc-event-time {
+  font-size: 9pt !important;
 }
