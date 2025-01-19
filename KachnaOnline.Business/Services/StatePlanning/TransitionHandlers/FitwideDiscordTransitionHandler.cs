@@ -54,6 +54,10 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
                 msg =
                     $"Máme tady čajovnu – klidnou otvíračku bez alkoholu. {Hypers} Nabídku čajů i dalšího občerstvení najdete na https://su.fit.vut.cz/kachna/.";
             }
+            else
+            {
+                return null;
+            }
 
             if (state.PlannedEnd.HasValue)
             {
