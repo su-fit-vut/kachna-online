@@ -1,14 +1,28 @@
-<div class="d-block mt-3" style="text-align: center">
+<div class="d-block mt-3 text-center">
+  <p *ngIf="state.state==ST.OpenAll">
+    V&nbsp;tomto režimu se běžně nedá zakoupit občerstvení.<br>
+    Prodat ti něco může člen SU, pokud na nějakého narazíš.
+  </p>
+
+  <p *ngIf="state.state==ST.OpenEvent" class="mb-0">
+    Během akce nemusí být k&nbsp;dispozici občerstvení! Informuj se u&nbsp;členů SU v&nbsp;klubu.
+  </p>
+
   <button class="btn btn-link btn-sm text-decoration-none state-details"
           (click)="currentOffer.toggle()">
-    Aktuální nabídka {{currentOfferCollapsed ? "▼" : "▲"}}
+    <ng-template [ngIf]="state.state==ST.Closed || state.state==ST.OpenAll || state.state==ST.Private"
+                 [ngIfElse]="currentOfferLabel">
+      Obvyklá nabídka
+    </ng-template>
+    <ng-template #currentOfferLabel>Aktuální nabídka</ng-template>
+    {{ currentOfferCollapsed ? "▼" : "▲" }}
   </button>
 </div>
 
 <div #currentOffer="ngbCollapse" [(ngbCollapse)]="currentOfferCollapsed">
   <div class="card">
     <div class="card-body">
-      <app-current-offer [tearoomMode]="tearoomMode"></app-current-offer>
+      <app-current-offer [tearoomMode]="state.state==ST.OpenTearoom"></app-current-offer>
     </div>
   </div>
 </div>

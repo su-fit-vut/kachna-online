@@ -11,7 +11,7 @@
         Kachna je otevřená v režimu čajovna.
       </ng-container>
       <ng-container *ngIf="state.state==ST.Private">
-        Kachna je zavřená – probíhá soukromá akce.
+        Kachna je zavřená (probíhá soukromá akce).
       </ng-container>
       <ng-container *ngIf="state.state==ST.Closed">
         Kachna je zavřená.
@@ -50,9 +50,9 @@
 <app-upcoming-openings *ngIf="state && state.state==ST.Closed"></app-upcoming-openings>
 <app-repeating-states></app-repeating-states>
 <app-events-overview></app-events-overview>
-<ng-container *ngIf="!state || state.state==ST.Closed">
+<ng-container *ngIf="!state || state.state==ST.Closed || state.state==ST.OpenAll">
   <div class="border-top mt-1">
-    <app-current-offer-collapsible-block></app-current-offer-collapsible-block>
+    <app-current-offer-collapsible-block [state]="state"></app-current-offer-collapsible-block>
   </div>
 </ng-container>
 

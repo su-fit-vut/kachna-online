@@ -1,4 +1,4 @@
-.state-details {
+.state-details, .state-details span {
   font-size: x-large;
   font-weight: 400;
 }

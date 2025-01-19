@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { ClubState } from "../../models/states/club-state.model";
+import { ClubStateTypes } from "../../models/states/club-state-types.model";
 
 @Component({
   selector: 'app-current-offer-collapsible-block',
@@ -7,5 +9,7 @@ import { Component, Input } from '@angular/core';
 })
 export class CurrentOfferCollapsibleBlockComponent {
   currentOfferCollapsed: boolean = true;
-  @Input() tearoomMode: boolean = false;
+  @Input() state: ClubState;
+
+  ST = ClubStateTypes;
 }
