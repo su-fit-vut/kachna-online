@@ -1,5 +1,5 @@
 <ng-container *ngIf="state">
-  <div class="text-center pb-2 mb-3 border-bottom">
+  <div class="text-center border-bottom mb-2">
     <div class="headline mb-1">
       <ng-container *ngIf="state.state==ST.OpenEvent">
         V Kachně probíhá veřejná akce<br>do&nbsp;{{ state.plannedEnd | date:'HH:mm' }}.
@@ -22,7 +22,7 @@
     </div>
 
     <div *ngIf="state.followingState && state.followingState.state!=ST.Closed && state.state!=ST.Closed"
-         class="state-details mb-1">
+         class="state-details mb-2">
       Následuje {{
         state.followingState.state == ST.OpenEvent ? "akce" :
           state.followingState.state == ST.OpenTearoom ? "čajovna" :
@@ -32,10 +32,16 @@
       do {{ state.followingState.plannedEnd | date: 'HH:mm' }}.
     </div>
 
-    <a href="javascript:void(0)" class="state-details"
-       (click)="modalService.open(getting_there, {size: 'lg'})">Jak a&nbsp;kudy k&nbsp;nám?</a>
-    <a href="javascript:void(0)" (click)="authenticationService.getSessionIdFromKisEduId('registration')"
-       class="state-details ml-5" *ngIf="authenticationService.isLoggedOut()">Stát se členem klubu</a>
+    <div class="row mb-1">
+      <div [class]="authenticationService.isLoggedOut() ? 'col-6' : 'col-12'">
+        <a href="javascript:void(0)" class="state-details"
+           (click)="modalService.open(getting_there, {size: 'lg'})">Jak a&nbsp;kudy k&nbsp;nám?</a>
+      </div>
+      <div class="col-6" *ngIf="authenticationService.isLoggedOut()">
+        <a href="javascript:void(0)" (click)="authenticationService.getSessionIdFromKisEduId('registration')"
+           class="state-details">Stát se členem klubu</a>
+      </div>
+    </div>
   </div>
 
   <app-bar-details *ngIf="state.state==ST.OpenBar" [state]="state"></app-bar-details>
@@ -50,8 +56,9 @@
 <app-upcoming-openings *ngIf="state && state.state==ST.Closed"></app-upcoming-openings>
 <app-repeating-states></app-repeating-states>
 <app-events-overview></app-events-overview>
+
 <ng-container *ngIf="!state || state.state==ST.Closed || state.state==ST.OpenAll">
-  <div class="border-top mt-1">
+  <div class="border-top">
     <app-current-offer-collapsible-block [state]="state"></app-current-offer-collapsible-block>
   </div>
 </ng-container>
@@ -72,10 +79,12 @@
       <a href="https://goo.gl/maps/dYEUwkHqcLhxPebU9" target="_blank">brankou</a> a&nbsp;po chvíli uvidíš dveře na
       ISIC s&nbsp;logem Kachny).
     </p>
-    <p>
+    <p class="text-justify">
       Klub je po většinu času (viz pravidelnou otvírací dobu) přístupný všem studujícím z&nbsp;FIT (nebo
       s&nbsp;předmětem na FIT). Dovnitř se dostaneš pomocí své studentské karty. Před vstupem si
-      <a href="https://su.fit.vut.cz/k4a" target="_blank">přečti pokyny a&nbsp;pravidla</a>!
+      <a href="https://su.fit.vut.cz/k4a" target="_blank"><strong>přečti pokyny a&nbsp;pravidla</strong></a>!
+      <strong>Každý</strong>, kdo do klubu vstoupí, musí <strong>přiložit kartu</strong>&nbsp;–&nbsp;a&nbsp;totéž
+      po odchodu z&nbsp;klubu.
     </p>
     <img src="assets/mapa.svg" alt="Mapa areálu" style="width: 100%"/>
   </div>

@@ -1,5 +1,5 @@
 <div class="d-block mt-3 text-center">
-  <p *ngIf="state.state==ST.OpenAll">
+  <p *ngIf="state.state==ST.OpenAll" class="mb-0">
     V&nbsp;tomto režimu se běžně nedá zakoupit občerstvení.<br>
     Prodat ti něco může člen SU, pokud na nějakého narazíš.
   </p>
@@ -20,7 +20,7 @@
 </div>
 
 <div #currentOffer="ngbCollapse" [(ngbCollapse)]="currentOfferCollapsed">
-  <div class="card">
+  <div class="card mb-2">
     <div class="card-body">
       <app-current-offer [tearoomMode]="state.state==ST.OpenTearoom"></app-current-offer>
     </div>
