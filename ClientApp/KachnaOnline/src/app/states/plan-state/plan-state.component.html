@@ -18,9 +18,9 @@
         <option [value]="ST.OpenEvent">Otevřeno – speciální akce</option>
         <option [value]="ST.OpenBar">Otevřeno – bar</option>
         <option [value]="ST.OpenTearoom">Otevřeno – čajovna</option>
+        <option [value]="ST.OpenAll" *ngIf="authenticationService.isAdmin()">Otevřeno pro všechny</option>
       </select>
     </div>
-
     <div class="form-group d-flex align-items-center" *ngIf="mode == M.CreatePlanned || mode == M.ModifyPlanned">
       <label for="startDate" class="text-nowrap">Začátek stavu:</label>
 

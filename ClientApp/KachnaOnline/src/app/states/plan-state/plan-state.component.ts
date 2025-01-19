@@ -15,6 +15,7 @@ import { ClubState } from "../../models/states/club-state.model";
 import { DateUtils } from "../../shared/utils/date-utils";
 import { Event } from "../../models/events/event.model";
 import { EventsService } from "../../shared/services/events.service";
+import { AuthenticationService } from "../../shared/services/authentication.service";
 
 enum Mode {
   ModifyCurrent,
@@ -63,7 +64,7 @@ export class PlanStateComponent implements OnInit {
   M = Mode;
 
   mainForm = this.fb.group({
-    stateType: [ClubStateTypes.OpenEvent],
+    stateType: [ClubStateTypes.Private],
     startDate: [this.calendar.getToday()],
     startTime: [{hour: new Date().getHours(), minute: new Date().getMinutes()}],
     plannedEndDate: [this.calendar.getToday(), Validators.required],
@@ -78,7 +79,9 @@ export class PlanStateComponent implements OnInit {
 
   navigationEvent: Event;
 
-  constructor(private stateService: StatesService,
+
+  constructor(public authenticationService: AuthenticationService,
+              private stateService: StatesService,
               private eventsService: EventsService,
               private calendar: NgbCalendar,
               private nativeDateAdapter: NgbDateNativeAdapter,
