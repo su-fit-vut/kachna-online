@@ -11,9 +11,9 @@ Aside from opening hours, the system also maintains a calendar of events
 of the Students' Union, and allows students to borrow board games from the club.
 
 The production version is deployed on the
-[FIT BUT Students' Union](https://www.su.fit.vutbr.cz/kachna/) server.
+[FIT BUT Students' Union](https://www.su.fit.vut.cz/kachna/) server.
 Documentation of the REST API is available as an OpenAPI document and Swagger UI
-[there as well](https://www.su.fit.vutbr.cz/kachna/api/swagger/index.html).
+[there as well](https://su.fit.vut.cz/kachna/api/swagger/index.html).
 Authentication to the system is done using the Student Union's internal system
 *KIS* which makes use of an academic identity federation
 [eduID.cz](https://www.eduid.cz/).
