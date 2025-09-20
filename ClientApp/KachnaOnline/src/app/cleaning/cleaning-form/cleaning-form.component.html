@@ -59,10 +59,10 @@
   <div class="form-group" *ngIf="editMode">
     <label>Přiřazení uživatelé</label>
     <ul class="list-group">
-      <li *ngFor="let userId of form.controls.assignedUsersIds.value"
+      <li *ngFor="let idNick of form.controls.idsToUsername.value"
           class="list-group-item d-flex justify-content-between align-items-center">
-        <span *ngIf="(assignedUsersIdsToNames[userId] | async) as detail" >{{ detail.nickname }}</span>
-        <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeAssignedUser(userId)">
+        <span>{{ idNick.item2 }}</span>
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeAssignedUser(idNick.item1)">
           Odebrat
         </button>
       </li>

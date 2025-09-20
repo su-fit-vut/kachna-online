@@ -239,7 +239,7 @@ namespace KachnaOnline.App.Controllers
             }
         }
 
-        // <summary>
+        /// <summary>
         /// Joins a cleaning with the given ID.
         /// </summary>
         /// <param name="id">ID of the cleaning to join.</param>
@@ -272,7 +272,7 @@ namespace KachnaOnline.App.Controllers
             }
         }
 
-        // <summary>
+        /// <summary>
         /// Leaves a cleaning with the given ID.
         /// </summary>
         /// <param name="id">ID of the cleaning to leave.</param>

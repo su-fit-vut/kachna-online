@@ -30,21 +30,8 @@ namespace KachnaOnline.Business.Facades
             _userService = userService;
         }
 
-        private async Task<IEnumerable<CleaningDto>> MapCleanings(ICollection<Cleaning> cleanings)
+        private async Task<CleaningDto> LinkUsernames(CleaningDto cleaningDto) 
         {
-            if (cleanings is not { Count: > 0 })
-                return new List<CleaningDto>();
-
-            var cleaningDtos = _mapper.Map<List<CleaningDto>>(cleanings);
-            for ()
-
-            return cleaningDtos;
-        }
-
-        private async Task<CleaningDto> MapCleaning(Cleaning @cleaning)
-        {
-            var cleaningDto = _mapper.Map<CleaningDto>(@cleaning);
-
             var usersTask = _userService.GetUsers(cleaningDto.AssignedUsersIds.ToList());
             var users = await usersTask;
 
@@ -56,6 +43,28 @@ namespace KachnaOnline.Business.Facades
                 cleaningDto.IdsToUsername[i] = Tuple.Create(user.Id, user.Nickname);
                 i++;
             }
+
+            return cleaningDto;
+        }
+
+        private async Task<IEnumerable<CleaningDto>> MapCleanings(ICollection<Cleaning> cleanings)
+        {
+            if (cleanings is not { Count: > 0 })
+                return new List<CleaningDto>();
+
+            var cleaningDtos = _mapper.Map<List<CleaningDto>>(cleanings);
+            for (int cleaningI = 0; cleaningI < cleaningDtos.Count(); cleaningI++) {
+                cleaningDtos[cleaningI] = await this.LinkUsernames(cleaningDtos[cleaningI]);
+            }
+
+            return cleaningDtos;
+        }
+
+        private async Task<CleaningDto> MapCleaning(Cleaning @cleaning)
+        {
+            var cleaningDto = _mapper.Map<CleaningDto>(@cleaning);
+
+            cleaningDto = await this.LinkUsernames(cleaningDto);
 
             return cleaningDto;
         }
@@ -87,7 +96,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<IEnumerable<CleaningDto>> GetCurrentCleanings()
         {
             var cleanings = await _cleaningsService.GetCurrentCleanings();
-            return this.MapCleanings(cleanings);
+            return await this.MapCleanings(cleanings);
         }
 
         /// <summary>
@@ -98,7 +107,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<IEnumerable<CleaningDto>> GetCleanings(DateTime at)
         {
             var cleanings = await _cleaningsService.GetCleanings(at);
-            return this.MapCleanings(cleanings);
+            return await this.MapCleanings(cleanings);
         }
 
         /// <summary>
@@ -111,7 +120,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<IEnumerable<CleaningDto>> GetCleanings(DateTime? from = null, DateTime? to = null)
         {
             var cleanings = await _cleaningsService.GetCleanings(from, to);
-            return this.MapCleanings(cleanings);
+            return await this.MapCleanings(cleanings);
         }
 
         /// <summary>
@@ -124,7 +133,7 @@ namespace KachnaOnline.Business.Facades
         /// <paramref name="cleaningId"/> does not exist.</exception>
         public async Task<CleaningDto> GetCleaning(int cleaningId)
         {
-            return this.MapCleaning(await _cleaningsService.GetCleaning(cleaningId));
+            return await this.MapCleaning(await _cleaningsService.GetCleaning(cleaningId));
         }
 
         /// <summary>
@@ -135,7 +144,7 @@ namespace KachnaOnline.Business.Facades
         public async Task<IEnumerable<CleaningDto>> GetNextPlannedCleanings()
         {
             var cleanings = await _cleaningsService.GetNextPlannedCleanings();
-            return this.MapCleanings(cleanings);
+            return await this.MapCleanings(cleanings);
         }
 
         /// <summary>

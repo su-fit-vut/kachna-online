@@ -25,10 +25,8 @@ import { UserDetail } from 'src/app/models/users/user.model';
   styleUrls: ['./cleaning-form.component.css']
 })
 export class CleaningFormComponent implements OnInit {
-
   showOtherPlace: Boolean = false;
   placeInstructions: {[key: string]: string};
-  assignedUsersIdsToNames: {[key: number]: Observable<UserDetail>}; // Stores observable to UserDetail
 
   constructor(
     public cleaningsService: CleaningsService,
@@ -72,6 +70,7 @@ export class CleaningFormComponent implements OnInit {
     place: ["", Validators.maxLength(256)],
     assignedUsersIds: [[]],
     idealParticipantsCount: [3, [Validators.required, Validators.min(1), Validators.max(100)]],
+    idsToUsername: [[]],
     fromDate: [this.calendar.getToday(), Validators.required],
     fromTime: [{hour: new Date().getHours(), minute: new Date().getMinutes()}, Validators.required],
     toDate: [this.calendar.getToday(), Validators.required],
@@ -90,6 +89,7 @@ export class CleaningFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("asdasd");
     if (this.editMode) {
       this.jumbotronText = "Upravit úklid";
       this.submitText = "Uložit změny";
@@ -102,9 +102,7 @@ export class CleaningFormComponent implements OnInit {
             this.form.controls.cleaningInstructions.setValue(edittedCleaning.cleaningInstructions);
             this.form.controls.place.setValue(edittedCleaning.place);
             this.form.controls.assignedUsersIds.setValue(edittedCleaning.assignedUsersIds);
-            for(var el of edittedCleaning.assignedUsersIds ?? []) {
-              var detail = this.authenticationService.getUserDetailRequest(el).subscribe(d => console.log('Got', d));;
-            }
+            this.form.controls.idsToUsername.setValue(edittedCleaning.idsToUsername);
             this.form.controls.idealParticipantsCount.setValue(edittedCleaning.idealParticipantsCount);
             this.form.controls.fromDate.setValue(this.nativeDateAdapter.fromModel(edittedCleaning.from));
             this.form.controls.fromTime.setValue({
@@ -121,7 +119,7 @@ export class CleaningFormComponent implements OnInit {
           return throwError(err);
         });
       });
-
+      console.log(this.form.controls.idsToUsername)
       
     } else {
       this.cleaningsService.cleaningDetail = new Cleaning();
@@ -233,13 +231,6 @@ export class CleaningFormComponent implements OnInit {
     this.cleaningsService.cleaningDetail = new Cleaning();
   }
 
-  onManageLinkedStatesClicked() {
-    this.route.paramMap.subscribe(params => {
-      let cleaningId = Number(params.get('cleaningId'));
-      this.router.navigate([`/cleanings/${cleaningId}/linked-states`]).then();
-    });
-  }
-
   onPlaceChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
     this.showOtherPlace = value === 'other';
@@ -269,12 +260,16 @@ export class CleaningFormComponent implements OnInit {
 
   removeAssignedUser(userId: number) {
     const assignedUsers = this.form.controls.assignedUsersIds.value as number[];
-    const index = assignedUsers.indexOf(userId);
-    if(index == -1) {
+    const idsToUsername = this.form.controls.idsToUsername.value as {item1: number, item2: string}[];
+    const indexAss = assignedUsers.indexOf(userId);
+    const indexId = idsToUsername.findIndex(obj => obj.item1 == userId);
+    if(indexAss == -1) {
       this.toastr.error('Uživatel byl již smazán.', 'Upravit přiřazené uživatele');
       return;
     }
-    assignedUsers.splice(index, 1); // remove from array
+    assignedUsers.splice(indexAss, 1); // remove from array
     this.form.controls.assignedUsersIds.setValue([...assignedUsers]); // trigger change
+    idsToUsername.splice(indexId, 1);
+    this.form.controls.idsToUsername.setValue([...idsToUsername]);
   }
 }

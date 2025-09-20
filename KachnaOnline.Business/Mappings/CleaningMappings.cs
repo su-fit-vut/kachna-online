@@ -16,12 +16,8 @@ namespace KachnaOnline.Business.Mappings
 {
     public class CleaningMappings : Profile
     {
-        private readonly IUserService _userService;
-
-        public CleaningMappings(IUserService userService)
+        public CleaningMappings()
         {
-            _userService = userService;
-
             this.CreateMap<CleaningEntity, Cleaning>();
 
             this.CreateMap<NewCleaning, CleaningEntity>();
