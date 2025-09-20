@@ -37,6 +37,14 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<User> GetUser(int userId);
 
         /// <summary>
+        /// Returns users with specified <paramref name="userIds"/>.
+        /// </summary>
+        /// <param name="userId">The user IDs to search for.</param>
+        /// <returns>A <see cref="User"/> object containing the users matching the specified <paramref name="userIds"/>
+        /// if such users exist, or null if none exist. Can return only subset. </returns>
+        Task<IEnumerable<User>> GetUsers(List<int> userIds);
+
+        /// <summary>
         /// Modifies the mutable properties of a user.
         /// </summary>
         /// <param name="user">The user model.</param>

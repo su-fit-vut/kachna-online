@@ -73,6 +73,19 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
+        public async Task<IEnumerable<User>> GetUsers(List<int> userIds)
+        {
+            if (userIds == null)
+            {
+                return null;
+            }
+
+            var users = await _userRepository.GetUsers(userIds);
+
+            return _mapper.Map<IEnumerable<User>>(users);
+        }
+
+        /// <inheritdoc />
         public async Task SaveUser(User user)
         {
             if (user is null)

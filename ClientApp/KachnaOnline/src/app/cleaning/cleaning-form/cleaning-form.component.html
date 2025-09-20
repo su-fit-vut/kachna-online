@@ -4,7 +4,7 @@
   <div class="form-group">
     <label>Název</label>
 
-    <input class="form-control form-control-lg" placeholder="Název akce" id="name"
+    <input class="form-control form-control-lg" placeholder="Název úklidu" id="name"
            formControlName="name"
            required maxlength="128" [class.is-invalid]="form.get('name')?.errors">
   </div>
@@ -12,10 +12,28 @@
   <div class="form-row">
     <div class="form-group col-md-6">
       <label>Uklízené místo</label>
-      <input class="form-control form-control-lg" placeholder="Uklízené místo" name="place"
-             formControlName="place"
-             required [class.is-invalid]="!form.controls.place.value"
-             maxlength="256">
+      <select class="form-control form-control-lg"
+              formControlName="place"
+              (change)="onPlaceChange($event)"
+              required
+              [class.is-invalid]="!form.controls.place.value">
+        <option value="" disabled selected>Vyberte místo</option>
+        <option value="Bar">Bar</option>
+        <option value="Chlaďáky apod.">Chlaďáky apod.</option>
+        <option value="Nábytek 🦆+🐧">Nábytek 🦆+🐧</option>
+        <option value="Sklo">Sklo</option>
+        <option value="P108">P108</option>
+        <option value="Šatna">Šatna</option>
+        
+        <option value="other">Jiné...</option>
+      </select>
+
+      <!-- Extra input shown only if "other" is selected -->
+      <input *ngIf="showOtherPlace"
+            class="form-control form-control-lg mt-2"
+            placeholder="Zadejte jiné místo"
+            formControlName="otherPlace"
+            maxlength="256">
     </div>
   </div>
   
@@ -36,6 +54,19 @@
             [value]="form.get('idealParticipantsCount')?.value || 3"
             [class.is-invalid]="form.get('number')?.invalid && (form.get('number')?.dirty || form.get('number')?.touched)">
     </div>
+  </div>
+
+  <div class="form-group" *ngIf="editMode">
+    <label>Přiřazení uživatelé</label>
+    <ul class="list-group">
+      <li *ngFor="let userId of form.controls.assignedUsersIds.value"
+          class="list-group-item d-flex justify-content-between align-items-center">
+        <span *ngIf="(assignedUsersIdsToNames[userId] | async) as detail" >{{ detail.nickname }}</span>
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeAssignedUser(userId)">
+          Odebrat
+        </button>
+      </li>
+    </ul>
   </div>
 
   <div class="form-group d-flex align-items-center">
@@ -81,7 +112,7 @@
     </div>
     <div class="form-group mt-3" *ngIf="editMode">
       <button class="btn btn-outline-danger btn-block" type="button" (click)="form.reset()">
-        <i class="fas fa-trash-alt"></i>&nbsp;Zrušit tuto akci</button>
+        <i class="fas fa-trash-alt"></i>&nbsp;Zrušit tento úklid</button>
     </div>
   </div>
 </form>

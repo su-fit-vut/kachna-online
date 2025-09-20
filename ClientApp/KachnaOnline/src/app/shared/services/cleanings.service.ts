@@ -109,6 +109,14 @@ export class CleaningsService {
     return this.http.delete(`${this.CleaningsUrl}/${cleaningId}`);
   }
 
+  joinCleaningRequest(cleaningId: number): Observable<any> {
+    return this.http.post(`${this.CleaningsUrl}/join/${cleaningId}`, null);
+  }
+
+  leaveCleaningRequest(cleaningId: number): Observable<any> {
+    return this.http.post(`${this.CleaningsUrl}/leave/${cleaningId}`, null);
+  }
+
   refreshCleaningsList() {
     this.getCleaningsInInterval().toPromise()
       .then((res: Cleaning[]) => {
@@ -205,6 +213,41 @@ export class CleaningsService {
           this.handleRemoveCleaning(cleaningDetail);
         }
       }, (reason) => {
-      });
+      }
+    );
+  }
+
+  handleJoinCleaning(cleaningDetail?: Cleaning){
+    if (cleaningDetail) {
+      this.cleaningDetail = Object.assign({}, cleaningDetail);
+    }
+
+    this.joinCleaningRequest(this.cleaningDetail.id).subscribe(
+      res => {
+        this.refreshCleaningsList();
+        this.toastr.success("Úklid úspěšně připojen.", "Připojení k úklidu");
+      },
+      err => {
+        console.log(err)
+        this.toastr.error("K úklidu se nepodařilo připojit.", "Připojeni k úklidu");
+      }
+    );
+  }
+
+  handleLeaveCleaning(cleaningDetail?: Cleaning){
+    if (cleaningDetail) {
+      this.cleaningDetail = Object.assign({}, cleaningDetail);
+    }
+
+    this.leaveCleaningRequest(this.cleaningDetail.id).subscribe(
+      res => {
+        this.refreshCleaningsList();
+        this.toastr.success("Úklid úspěšně opuštěn.", "Opuštění k úklidu");
+      },
+      err => {
+        console.log(err)
+        this.toastr.error("Úklid se nepodařilo opustit.", "Opuštění úklidu");
+      }
+    );
   }
 }

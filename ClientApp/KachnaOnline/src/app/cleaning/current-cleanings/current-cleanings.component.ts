@@ -39,7 +39,7 @@ export class CurrentCleaningsComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    this.cleaningsService.getMonthCleanings(new Date(), false).subscribe(
+    this.cleaningsService.getMonthCleanings(new Date()).subscribe(
       (res: Cleaning[]) => {
         this.makeCleanings(res);
       },
@@ -54,7 +54,13 @@ export class CurrentCleaningsComponent implements OnInit {
   }
 
   onJoinButtonClicked(selectedCleaningDetail: Cleaning) {
-    // this.cleaningsService.openCleaningJoinConfirmationModal(selectedCleaningDetail);
+    this.cleaningsService.handleJoinCleaning(selectedCleaningDetail);
+    window.location.reload();
+  }
+    
+  onLeaveButtonClicked(selectedCleaningDetail: Cleaning) {
+    this.cleaningsService.handleLeaveCleaning(selectedCleaningDetail);
+    window.location.reload();
   }
 
   onModifyButtonClicked(selectedCleaningDetail: Cleaning) {
@@ -79,11 +85,13 @@ export class CurrentCleaningsComponent implements OnInit {
       //   multipleDays: (c.to.getTime() - c.from.getTime() <= 86400000)
       // };
 
-      this.cleanings.push(c);
-      if (!this.grouped[c.place]) {
-        this.grouped[c.place] = [];
+      if(c.finished == false) {
+        this.cleanings.push(c);
+        if (!this.grouped[c.place]) {
+          this.grouped[c.place] = [];
+        }
+        this.grouped[c.place].push(c);
       }
-      this.grouped[c.place].push(c);
     }
 
     forkJoin(waiting).pipe(endWith(null)).subscribe(_ => {

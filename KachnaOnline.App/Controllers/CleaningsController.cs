@@ -11,6 +11,7 @@ using KachnaOnline.Dto.Cleanings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static KachnaOnline.App.Controllers.UserController;
 
 namespace KachnaOnline.App.Controllers
 {
@@ -20,6 +21,31 @@ namespace KachnaOnline.App.Controllers
     public class CleaningsController : ControllerBase
     {
         private readonly CleaningsFacade _cleaningsFacade;
+
+        // private CleaningViewDto linkUsernamesFromId(CleaningDto cleaning) {
+        //     var linkedCleaning = new CleaningViewDto
+        //     {
+        //         Name = cleaning.Name,
+        //         Place = cleaning.Place,
+        //         CleaningInstructions = cleaning.CleaningInstructions,
+        //         AssignedUsersIds = cleaning.AssignedUsersIds,
+        //         IdealParticipantsCount = cleaning.IdealParticipantsCount,
+        //         Finished = cleaning.Finished,
+        //         From = cleaning.From,
+        //         To = cleaning.To,
+        //         LinkedPlannedStateIds = cleaning.LinkedPlannedStateIds,
+        //         Id = cleaning.Id,
+        //         IdToUsername = []
+        //     };
+
+        //     foreach (var userId in cleaning.AssignedUsersIds)
+        //     {
+        //         var userName = 
+        //         linkedCleaning.IdToUsername = { userId, };
+        //     }
+
+        //     return linkedCleaning;
+        // }
 
         public CleaningsController(CleaningsFacade cleaningsFacade)
         {
@@ -178,18 +204,13 @@ namespace KachnaOnline.App.Controllers
             {
                 return this.ConflictProblem("The specified cleaning has already passed and cannot be modified.");
             }
-            // TODO: change the underlying logic to throw a more specific exception
-            catch (CleaningManipulationFailedException)
-            {
-                return this.ConflictProblem("A state outside the new cleaning's time is linked to the cleaning.");
-            }
         }
 
         /// <summary>
         /// Deletes an cleaning with the given ID.
         /// </summary>
         /// <param name="id">ID of the cleaning to delete.</param>
-        /// <response code="200">The cleaning was deleted. The list of linked states at the time of deletion.</response>
+        /// <response code="200">The cleaning was deleted.</response>
         /// <response code="404">No such cleaning exists.</response>
         /// <response code="409">The cleaning has already ended and cannot be modified.</response>
         [HttpDelete("{id}")]
@@ -211,6 +232,72 @@ namespace KachnaOnline.App.Controllers
             catch (CleaningReadOnlyException)
             {
                 return this.ConflictProblem("The specified cleaning has already passed and cannot be deleted.");
+            }
+            catch (CleaningNotFoundException)
+            {
+                return this.NotFoundProblem("The specified cleaning does not exist.");
+            }
+        }
+
+        // <summary>
+        /// Joins a cleaning with the given ID.
+        /// </summary>
+        /// <param name="id">ID of the cleaning to join.</param>
+        /// <response code="200">The cleaning was joined.</response>
+        /// <response code="404">No such cleaning exists.</response>
+        /// <response code="409">The cleaning has already ended and cannot be joined.</response>
+        [HttpPost("join/{id}")]
+        [ProducesResponseType(typeof(IEnumerable<StateDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> JoinCleaning(int id)
+        {
+            try
+            {
+                await _cleaningsFacade.JoinCleaning(id);
+                return this.Ok();
+            }
+            catch (NotACleaningsManagerException)
+            {
+                // Shouldn't happen.
+                return this.ForbiddenProblem();
+            }
+            catch (CleaningReadOnlyException)
+            {
+                return this.ConflictProblem("The specified cleaning has already passed and cannot be joined.");
+            }
+            catch (CleaningNotFoundException)
+            {
+                return this.NotFoundProblem("The specified cleaning does not exist.");
+            }
+        }
+
+        // <summary>
+        /// Leaves a cleaning with the given ID.
+        /// </summary>
+        /// <param name="id">ID of the cleaning to leave.</param>
+        /// <response code="200">The cleaning was left.</response>
+        /// <response code="404">No such cleaning exists.</response>
+        /// <response code="409">The cleaning has already ended and cannot be left.</response>
+        [HttpPost("leave/{id}")]
+        [ProducesResponseType(typeof(IEnumerable<StateDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> LeaveCleaning(int id)
+        {
+            try
+            {
+                await _cleaningsFacade.LeaveCleaning(id);
+                return this.Ok();
+            }
+            catch (NotACleaningsManagerException)
+            {
+                // Shouldn't happen.
+                return this.ForbiddenProblem();
+            }
+            catch (CleaningReadOnlyException)
+            {
+                return this.ConflictProblem("The specified cleaning has already passed and cannot be left.");
             }
             catch (CleaningNotFoundException)
             {

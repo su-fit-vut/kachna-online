@@ -26,6 +26,13 @@ namespace KachnaOnline.Business.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<List<User>> GetUsers(List<int> ids)
+        {
+            return await Set
+                .Where(e => ids.Contains(e.Id))
+                .ToListAsync();
+        }
+
         public async Task<List<User>> GetFiltered(string filter)
         {
             filter = filter.ToLower(CultureInfo.GetCultureInfo("cs-CZ"));

@@ -9,5 +9,6 @@ namespace KachnaOnline.Business.Models.Cleanings
         /// An ID of the cleaning.
         /// </summary>
         public int Id { get; set; }
+        public string AssignedUsersNames { get; }
     }
 }

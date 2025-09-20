@@ -29,9 +29,13 @@
                   <i class="far fa-edit"></i>
                   Upravit
                 </button>
-                <button type="button" class="btn btn-danger" (click)="onJoinButtonClicked(c)">
+                <button *ngIf="!c.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-danger" (click)="onJoinButtonClicked(c)">
                   <i class="far fa-calendar-plus"></i>
                   Připojit
+                </button>
+                <button *ngIf="c.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-danger" (click)="onLeaveButtonClicked(c)">
+                  <i class="far fa-calendar-plus"></i>
+                  Odpojit
                 </button>
               </div>
             </div>

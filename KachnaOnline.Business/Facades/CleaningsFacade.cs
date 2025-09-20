@@ -19,31 +19,45 @@ namespace KachnaOnline.Business.Facades
         private readonly ICleaningsService _cleaningsService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public CleaningsFacade(ICleaningsService cleaningsService, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+        public CleaningsFacade(ICleaningsService cleaningsService, IHttpContextAccessor httpContextAccessor,
+                               IMapper mapper, IUserService userService)
         {
             _cleaningsService = cleaningsService;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _userService = userService;
         }
 
-        private IEnumerable<CleaningDto> MapCleanings(ICollection<Cleaning> cleanings)
+        private async Task<IEnumerable<CleaningDto>> MapCleanings(ICollection<Cleaning> cleanings)
         {
-            if (cleanings is not { Count: >0 })
+            if (cleanings is not { Count: > 0 })
                 return new List<CleaningDto>();
 
-            if (this.IsUserCleaningsManager())
-                return _mapper.Map<List<ManagerCleaningDto>>(cleanings);
+            var cleaningDtos = _mapper.Map<List<CleaningDto>>(cleanings);
+            for ()
 
-            return _mapper.Map<List<CleaningDto>>(cleanings);
+            return cleaningDtos;
         }
 
-        private CleaningDto MapCleaning(Cleaning @cleaning)
+        private async Task<CleaningDto> MapCleaning(Cleaning @cleaning)
         {
-            if (this.IsUserCleaningsManager())
-                return _mapper.Map<ManagerCleaningDto>(@cleaning);
+            var cleaningDto = _mapper.Map<CleaningDto>(@cleaning);
 
-            return _mapper.Map<CleaningDto>(@cleaning);
+            var usersTask = _userService.GetUsers(cleaningDto.AssignedUsersIds.ToList());
+            var users = await usersTask;
+
+            cleaningDto.IdsToUsername = new Tuple<int, string>[users.Count()];
+
+            var i = 0;
+            foreach (var user in users)
+            {
+                cleaningDto.IdsToUsername[i] = Tuple.Create(user.Id, user.Nickname);
+                i++;
+            }
+
+            return cleaningDto;
         }
 
         /// <summary>
@@ -171,6 +185,43 @@ namespace KachnaOnline.Business.Facades
         public async Task RemoveCleaning(int cleaningId)
         {
             await _cleaningsService.RemoveCleaning(cleaningId);
+        }
+
+
+        /// <summary>
+        /// Join a cleaning with the given ID.
+        /// </summary>
+        /// <param name="cleaningId">ID of the cleaning to join.</param>
+        /// <exception cref="CleaningNotFoundException">Thrown when the cleaning with the given <paramref name="cleaningId"/> does not
+        /// exist.</exception>
+        /// <exception cref="CleaningManipulationFailedException">Thrown when the cleaning cannot be joined.</exception>
+        /// <exception cref="CleaningReadOnlyException">Thrown when cleaning to be joined has already ended.</exception>
+        public async Task JoinCleaning(int cleaningId)
+        {
+            var joinedCleaningModel = _mapper.Map<ModifiedCleaning>(await this.GetCleaning(cleaningId));
+            if (!joinedCleaningModel.AssignedUsersIds.Contains(this.CurrentUserId))
+            {
+                joinedCleaningModel.AssignedUsersIds.Add(this.CurrentUserId);
+                await _cleaningsService.ModifyCleaning(cleaningId, joinedCleaningModel);
+            }
+        }
+        
+        /// <summary>
+        /// Leaves a cleaning with the given ID.
+        /// </summary>
+        /// <param name="cleaningId">ID of the cleaning to leave.</param>
+        /// <exception cref="CleaningNotFoundException">Thrown when the cleaning with the given <paramref name="cleaningId"/> does not
+        /// exist.</exception>
+        /// <exception cref="CleaningManipulationFailedException">Thrown when the cleaning cannot be left.</exception>
+        /// <exception cref="CleaningReadOnlyException">Thrown when cleaning to be left has already ended.</exception>
+        public async Task LeaveCleaning(int cleaningId)
+        {
+            var joinedCleaningModel = _mapper.Map<ModifiedCleaning>(await this.GetCleaning(cleaningId));
+            if (joinedCleaningModel.AssignedUsersIds.Contains(this.CurrentUserId))
+            {
+                joinedCleaningModel.AssignedUsersIds.Remove(this.CurrentUserId);
+                await _cleaningsService.ModifyCleaning(cleaningId, joinedCleaningModel);
+            }
         }
     }
 }

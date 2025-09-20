@@ -13,9 +13,11 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbCalendar, NgbDate, NgbDateNativeAdapter, NgbDateStruct, NgbTimeStruct } from "@ng-bootstrap/ng-bootstrap";
-import { throwError } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { HttpStatusCode } from "@angular/common/http";
 import { DateUtils } from "../../shared/utils/date-utils";
+import { AuthenticationService } from 'src/app/shared/services/authentication.service';
+import { UserDetail } from 'src/app/models/users/user.model';
 
 @Component({
   selector: 'app-cleaning-form',
@@ -24,6 +26,10 @@ import { DateUtils } from "../../shared/utils/date-utils";
 })
 export class CleaningFormComponent implements OnInit {
 
+  showOtherPlace: Boolean = false;
+  placeInstructions: {[key: string]: string};
+  assignedUsersIdsToNames: {[key: number]: Observable<UserDetail>}; // Stores observable to UserDetail
+
   constructor(
     public cleaningsService: CleaningsService,
     public calendar: NgbCalendar,
@@ -31,7 +37,8 @@ export class CleaningFormComponent implements OnInit {
     private toastr: ToastrService,
     private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    public authenticationService: AuthenticationService,
   ) { }
 
   dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -76,6 +83,12 @@ export class CleaningFormComponent implements OnInit {
   jumbotronText: string = "Naplánovat úklid";
   submitText: string = "Přidat úklid";
 
+  private prepareInstructions(cleaningModels: Cleaning[]) {
+    for(let cleaning of cleaningModels) {
+      this.placeInstructions[cleaning.place] = cleaning.cleaningInstructions;
+    }
+  }
+
   ngOnInit(): void {
     if (this.editMode) {
       this.jumbotronText = "Upravit úklid";
@@ -89,6 +102,9 @@ export class CleaningFormComponent implements OnInit {
             this.form.controls.cleaningInstructions.setValue(edittedCleaning.cleaningInstructions);
             this.form.controls.place.setValue(edittedCleaning.place);
             this.form.controls.assignedUsersIds.setValue(edittedCleaning.assignedUsersIds);
+            for(var el of edittedCleaning.assignedUsersIds ?? []) {
+              var detail = this.authenticationService.getUserDetailRequest(el).subscribe(d => console.log('Got', d));;
+            }
             this.form.controls.idealParticipantsCount.setValue(edittedCleaning.idealParticipantsCount);
             this.form.controls.fromDate.setValue(this.nativeDateAdapter.fromModel(edittedCleaning.from));
             this.form.controls.fromTime.setValue({
@@ -105,8 +121,16 @@ export class CleaningFormComponent implements OnInit {
           return throwError(err);
         });
       });
+
+      
     } else {
       this.cleaningsService.cleaningDetail = new Cleaning();
+
+      this.cleaningsService.getYearCleanings(new Date).subscribe(
+        (res: Cleaning[]) => {
+          this.prepareInstructions(res);
+        }
+      );
     }
   }
 
@@ -123,6 +147,11 @@ export class CleaningFormComponent implements OnInit {
     cleaningData.cleaningInstructions = formVal.cleaningInstructions;
     cleaningData.assignedUsersIds = formVal.assignedUsersIds;
     cleaningData.idealParticipantsCount = formVal.idealParticipantsCount;
+
+    //other has to be taken from text box
+    if (cleaningData.place === 'other') {
+      cleaningData.place = formVal.place;
+    }
 
     // Process date and time values.
     const from = this.joinDateTime(formVal.fromDate, formVal.fromTime);
@@ -209,5 +238,43 @@ export class CleaningFormComponent implements OnInit {
       let cleaningId = Number(params.get('cleaningId'));
       this.router.navigate([`/cleanings/${cleaningId}/linked-states`]).then();
     });
+  }
+
+  onPlaceChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    this.showOtherPlace = value === 'other';
+  
+    if (!this.showOtherPlace) {
+      this.form.get('otherPlace')?.reset();
+    }
+
+    // Auto-set cleaningInstructions depending on the place
+    switch (value) {
+      case 'park':
+        this.form.get('cleaningInstructions')?.setValue('Sbírejte odpadky v parku a roztřiďte plasty, sklo a papír.');
+        break;
+      case 'school':
+        this.form.get('cleaningInstructions')?.setValue('Zaměřte se na školní dvůr, hřiště a okolní chodníky.');
+        break;
+      case 'street':
+        this.form.get('cleaningInstructions')?.setValue('Ukliďte chodníky, zastávky a veřejné koše.');
+        break;
+      case 'other':
+        this.form.get('cleaningInstructions')?.reset(); // let user type freely
+        break;
+      default:
+        this.form.get('cleaningInstructions')?.reset();
+    }
+  }
+
+  removeAssignedUser(userId: number) {
+    const assignedUsers = this.form.controls.assignedUsersIds.value as number[];
+    const index = assignedUsers.indexOf(userId);
+    if(index == -1) {
+      this.toastr.error('Uživatel byl již smazán.', 'Upravit přiřazené uživatele');
+      return;
+    }
+    assignedUsers.splice(index, 1); // remove from array
+    this.form.controls.assignedUsersIds.setValue([...assignedUsers]); // trigger change
   }
 }
