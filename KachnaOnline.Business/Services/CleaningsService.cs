@@ -143,8 +143,6 @@ namespace KachnaOnline.Business.Services
                 throw new ArgumentNullException(nameof(newCleaning));
 
             newCleaning.From = newCleaning.From.RoundToMinutes();
-            if (newCleaning.From < DateTime.Now.RoundToMinutes())
-                throw new ArgumentException("Cannot plan a cleaning in the past.", nameof(newCleaning));
 
             newCleaning.To = newCleaning.To.RoundToMinutes();
             if (newCleaning.To < newCleaning.From)
@@ -181,9 +179,6 @@ namespace KachnaOnline.Business.Services
             if (cleaningEntity is null)
                 throw new CleaningNotFoundException();
 
-            if (cleaningEntity.To < DateTime.Now.RoundToMinutes())
-                throw new CleaningReadOnlyException();
-
             _mapper.Map(modifiedCleaning, cleaningEntity);
             try
             {
@@ -204,7 +199,7 @@ namespace KachnaOnline.Business.Services
             if (cleaningEntity is null)
                 throw new CleaningNotFoundException();
 
-            if (cleaningEntity.To < DateTime.Now.RoundToMinutes())
+            if (cleaningEntity.Finished)
                 throw new CleaningReadOnlyException();
 
             // Remove cleaning, set all linked planned states references to this cleaning to null.

@@ -12,9 +12,9 @@ import { endWith } from "rxjs/operators";
 import { ToastrService } from "ngx-toastr";
 
 @Component({
-  selector: 'app-current-cleanings',
-  templateUrl: './current-cleanings.component.html',
-  styleUrls: ['./current-cleanings.component.css']
+  selector: 'app-planned-cleanings',
+  templateUrl: './planned-cleanings.component.html',
+  styleUrls: ['./planned-cleanings.component.css']
 })
 export class CurrentCleaningsComponent implements OnInit {
   cleanings: Cleaning[] = [];
@@ -22,6 +22,7 @@ export class CurrentCleaningsComponent implements OnInit {
   currentMonth: Date = new Date();
   loading: boolean = false;
   now: Date = new Date();
+  maxCleaningInstructionsChars: number = 25;
 
   constructor(
     public cleaningsService: CleaningsService,
@@ -65,6 +66,7 @@ export class CurrentCleaningsComponent implements OnInit {
   }
   
   onFinishButtonClicked(selectedCleaningDetail: Cleaning) {
+    // window reload in cleaningsService
     this.cleaningsService.openCleaningFinishConfirmationModal(selectedCleaningDetail);
   }
 

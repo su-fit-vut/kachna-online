@@ -1,5 +1,5 @@
 <ng-container *ngIf="cleanings.length > 0">
-  <h1>Probíhající úklidy</h1>
+  <h1>Naplánované úklidy</h1>
 
   <table class="table table-bordered">
     <tbody>
@@ -20,19 +20,20 @@
                 {{ c.from | date:'d. M. HH:mm' }} – {{ c.to | date:'d. M. HH:mm' }}
               </div>
               <div class="small">
-                {{ c.cleaningInstructions }}
+                {{ c.cleaningInstructions.slice(0, maxCleaningInstructionsChars) }}
+                <a [routerLink]="['/cleanings', c.id]" *ngIf="c.cleaningInstructions.length > maxCleaningInstructionsChars">...</a>
               </div>
               <div class="small">
                 <p *ngFor="let user of c.idsToUsername">
-                  {{user.item2}}
+                  {{user.item2}},
                 </p>
               </div>
               <div class="small" *ngIf="c.to.getTime() > now.getTime() && !c.finished">
-                <button *ngIf="!c.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-danger" (click)="onJoinButtonClicked(c)">
+                <button *ngIf="!c.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-success" (click)="onJoinButtonClicked(c)">
                   <i class="far fa-calendar-plus"></i>
                   Připojit
                 </button>
-                <button *ngIf="c.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-danger" (click)="onLeaveButtonClicked(c)">
+                <button *ngIf="c.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-danger mb-1" (click)="onLeaveButtonClicked(c)">
                   <i class="far fa-calendar-plus"></i>
                   Odpojit
                 </button>

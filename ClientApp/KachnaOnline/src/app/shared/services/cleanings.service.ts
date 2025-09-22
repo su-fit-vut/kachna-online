@@ -235,6 +235,7 @@ export class CleaningsService {
       (result) => {
         if (result == "Finished") {
           this.handleFinishCleaning(cleaningDetail);
+          window.location.reload();
         }
       }, (reason) => {
       }

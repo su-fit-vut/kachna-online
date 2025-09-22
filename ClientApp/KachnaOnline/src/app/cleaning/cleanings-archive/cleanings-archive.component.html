@@ -15,7 +15,7 @@
     <th>Začátek</th>
     <th>Konec</th>
     <th>Místo</th>
-    <th>Instrukce</th>
+    <th>Dokončen</th>
     <th *ngIf="authenticationService.isCleaningsManager()">Operace</th>
   </tr>
   </thead>
@@ -38,17 +38,20 @@
       {{cleaningDetail.place}}
     </td>
     <td (click)="openCleaningDetail(cleaningDetail)">
-      <div *ngIf="cleaningDetail.cleaningInstructions.length > maxCleaningInstructionsChars">
-        {{cleaningDetail.cleaningInstructions.slice(0, maxCleaningInstructionsChars)}}...
-        <button type="button" class="btn btn-outline-secondary mt-1 note-button" [ngbPopover]="cleaningDetail.cleaningInstructions"
-                (click)="$event.stopPropagation();" popoverTitle="Zkrácené instrukce k úklidu" placement="auto">
-          Celé instrukce
-        </button>
+      <span *ngIf="cleaningDetail.finished">
+        <i class="fas fa-check"></i>
+        Ano
+      </span>
+      <div *ngIf="!cleaningDetail.finished">
+        <span *ngIf="cleaningDetail.to.getTime() < now.getTime()">
+          <i class="fas fa-exclamation"></i>
+          Ne
+        </span>
+        <span *ngIf="cleaningDetail.to.getTime() >= now.getTime()">
+          <i class="fas fa-times"></i>
+          Ne
+        </span>
       </div>
-      <div *ngIf="cleaningDetail.cleaningInstructions.length <= maxCleaningInstructionsChars">
-        {{cleaningDetail.cleaningInstructions}}
-      </div>
-
     </td>
     <td *ngIf="authenticationService.isCleaningsManager()">
       <div class="row" *ngIf="cleaningDetail.to.getTime() > now.getTime()">

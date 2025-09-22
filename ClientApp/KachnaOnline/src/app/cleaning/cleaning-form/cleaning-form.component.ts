@@ -56,10 +56,6 @@ export class CleaningFormComponent implements OnInit {
     let now = new Date();
     now.setSeconds(0, 0);
 
-    if (start < now) {
-      return {planningForPast: true};
-    }
-
     return end > start ? null : {incorrectDateRange: true};
   }
 
@@ -75,6 +71,7 @@ export class CleaningFormComponent implements OnInit {
     fromTime: [{hour: new Date().getHours(), minute: new Date().getMinutes()}, Validators.required],
     toDate: [this.calendar.getToday(), Validators.required],
     toTime: [{hour: new Date().getHours() + 1, minute: new Date().getMinutes()}, Validators.required],
+    finished: [false]
   }, {validators: [this.dateRangeValidator]});
 
 
@@ -89,7 +86,6 @@ export class CleaningFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("asdasd");
     if (this.editMode) {
       this.jumbotronText = "Upravit úklid";
       this.submitText = "Uložit změny";
@@ -119,9 +115,7 @@ export class CleaningFormComponent implements OnInit {
           this.toastr.error("Stažení dat o úklidu se nezdařilo.", "Upravit úklid");
           return throwError(err);
         });
-      });
-      console.log(this.form.controls.idsToUsername)
-      
+      });      
     } else {
       this.cleaningsService.cleaningDetail = new Cleaning();
 
@@ -146,6 +140,7 @@ export class CleaningFormComponent implements OnInit {
     cleaningData.cleaningInstructions = formVal.cleaningInstructions;
     cleaningData.assignedUsersIds = formVal.assignedUsersIds;
     cleaningData.idealParticipantsCount = formVal.idealParticipantsCount;
+    cleaningData.finished = formVal.finished;
 
     //other has to be taken from text box
     if (cleaningData.place === 'other') {
@@ -178,11 +173,11 @@ export class CleaningFormComponent implements OnInit {
 
   private verifyDates(from: Date | null, to: Date | null): boolean {
     if (!from || !to) {
-      this.toastr.error("Úklid musí mít nastavený počátek i konec akce.", "Plánování úklidu")
+      this.toastr.error("Úklid musí mít nastavený počátek i konec.", "Plánování úklidu")
       return false;
     }
     if (from >= to) {
-      this.toastr.error("Úklid nemůže začínat po jejím konci. Upravte termín počátku nebo konce akce.", "Plánování úklidu")
+      this.toastr.error("Úklid nemůže začínat po jeho konci. Upravte termín počátku nebo konce úklidu.", "Plánování úklidu")
       return false;
     }
 

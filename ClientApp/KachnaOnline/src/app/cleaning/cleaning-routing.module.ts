@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PlanCleaningComponent } from "./plan-cleaning/plan-cleaning.component";
 import { CleaningManagerGuard } from "./cleaning-manager.guard";
-import { CurrentCleaningsComponent } from "./current-cleanings/current-cleanings.component";
+import { CurrentCleaningsComponent } from "./planned-cleanings/planned-cleanings.component";
 import { CleaningsArchiveComponent } from "./cleanings-archive/cleanings-archive.component";
 import { EditCleaningsComponent } from './edit-cleanings/edit-cleanings.component';
 import { CleaningDetailComponent } from './cleaning-detail/cleaning-detail.component';
@@ -16,7 +16,7 @@ const routes: Routes = [
         path: '',
         children: [
           {
-            path: 'current',
+            path: 'planned',
             component: CurrentCleaningsComponent,
             data: {
               title: `${environment.siteName} | Aktuální úklidy`,

@@ -57,6 +57,14 @@
   </div>
 
   <div class="form-group" *ngIf="editMode">
+    <input type="checkbox" class="form-check-input big-checkbox ml-1" id="finished"
+          formControlName="finished">
+    <label class="form-check-label ml-4" for="finished">
+      Úklid dokončen
+    </label>
+  </div>
+
+  <div class="form-group" *ngIf="editMode">
     <label>Přiřazení uživatelé</label>
     <ul class="list-group">
       <li *ngFor="let idNick of form.controls.idsToUsername.value"
@@ -72,10 +80,10 @@
   <div class="form-group d-flex align-items-center">
     <label>Trvání od</label>
     <div class="input-group mx-3">
-      <input class="form-control" [minDate]="calendar.getToday()" (click)="fromDate.open()" type="text" ngbDatepicker
+      <input class="form-control" (click)="fromDate.open()" type="text" ngbDatepicker
              #fromDate="ngbDatepicker" id="fromDate" formControlName="fromDate"
              placeholder="dd. MM. yyyy" autocomplete="false" required
-             [class.is-invalid]="form.get('fromDate')?.errors || form.errors?.incorrectDateRange || form.errors?.planningForPast"/>
+             [class.is-invalid]="form.get('fromDate')?.errors || form.errors?.incorrectDateRange"/>
       <div class="input-group-append">
         <button class="btn btn-outline-secondary calendar" (click)="fromDate.toggle()" type="button"><i
           class="far fa-calendar"></i></button>
@@ -87,7 +95,7 @@
   <div class="form-group d-flex align-items-center">
     <label>Trvání do</label>
     <div class="input-group mx-3">
-      <input class="form-control" [minDate]="calendar.getToday()" (click)="toDate.open()" type="text" ngbDatepicker
+      <input class="form-control" (click)="toDate.open()" type="text" ngbDatepicker
              #toDate="ngbDatepicker" id="toDate" formControlName="toDate"
              placeholder="dd. MM. yyyy" autocomplete="false" required
              [class.is-invalid]="!form.value.toDate"/>
@@ -101,7 +109,6 @@
   </div>
   <div class="text-danger">
     <div *ngIf="form.errors?.incorrectDateRange">Úklid musí začínat dříve, než kdy skončí.</div>
-    <div *ngIf="form.errors?.planningForPast">Není možné plánovat úklid v&nbsp;minulosti.</div>
     <div *ngIf="form.get('idealParticipantsCount')?.errors?.min">Počet účastníků musí být alespoň 1.</div>
     <div *ngIf="form.get('idealParticipantsCount')?.errors?.max">Počet účastníků nesmí být větší než 100.</div>
   </div>

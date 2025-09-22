@@ -6,7 +6,7 @@ import { PlanCleaningComponent } from './plan-cleaning/plan-cleaning.component';
 import { ComponentsModule } from '../shared/components/components.module';
 import { CleaningRoutingModule } from './cleaning-routing.module';
 import { CleaningFormComponent } from './cleaning-form/cleaning-form.component';
-import { CurrentCleaningsComponent } from './current-cleanings/current-cleanings.component';
+import { CurrentCleaningsComponent } from './planned-cleanings/planned-cleanings.component';
 import { CleaningsArchiveComponent } from './cleanings-archive/cleanings-archive.component';
 import { EditCleaningsComponent } from './edit-cleanings/edit-cleanings.component';
 import { CleaningDetailComponent } from './cleaning-detail/cleaning-detail.component';
