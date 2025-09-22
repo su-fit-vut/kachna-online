@@ -50,6 +50,19 @@ namespace KachnaOnline.Business.Services
         }
 
         /// <inheritdoc />
+        public async Task<ICollection<Cleaning>> GetUnfinishedCleanings()
+        {
+            var cleaningEntities = _cleaningsRepository.GetUnfinished();
+            var resultList = new List<Cleaning>();
+            await foreach (var cleaningEntity in cleaningEntities)
+            {
+                resultList.Add(_mapper.Map<Cleaning>(cleaningEntity));
+            }
+
+            return resultList;
+        }
+
+        /// <inheritdoc />
         public async Task<Cleaning> GetCleaning(int cleaningId)
         {
             var cleaningEntity = await _cleaningsRepository.Get(cleaningId);
@@ -186,29 +199,6 @@ namespace KachnaOnline.Business.Services
 
         /// <inheritdoc />
         public async Task RemoveCleaning(int cleaningId)
-        {
-            var cleaningEntity = await _cleaningsRepository.Get(cleaningId);
-            if (cleaningEntity is null)
-                throw new CleaningNotFoundException();
-
-            if (cleaningEntity.To < DateTime.Now.RoundToMinutes())
-                throw new CleaningReadOnlyException();
-
-            // Remove cleaning, set all linked planned states references to this cleaning to null.
-            await _cleaningsRepository.Delete(cleaningEntity);
-            try
-            {
-                await _unitOfWork.SaveChanges();
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, $"Cannot remove the cleaning with ID {cleaningId}.");
-                await _unitOfWork.ClearTrackedChanges();
-                throw new CleaningManipulationFailedException();
-            }
-        }
-        
-        public async Task JoinCleaning(int cleaningId)
         {
             var cleaningEntity = await _cleaningsRepository.Get(cleaningId);
             if (cleaningEntity is null)

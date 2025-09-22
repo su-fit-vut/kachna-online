@@ -22,13 +22,12 @@
               <div class="small">
                 {{ c.cleaningInstructions }}
               </div>
-              <div class="small" *ngIf="c.to.getTime() > now.getTime()">
-                <button type="button" class="btn mr-1 btn-primary float-right"
-                        data-toggle="modal" data-target="#exampleModal"
-                        data-backdrop="static" data-keyboard="false" (click)="onModifyButtonClicked(c)">
-                  <i class="far fa-edit"></i>
-                  Upravit
-                </button>
+              <div class="small">
+                <p *ngFor="let user of c.idsToUsername">
+                  {{user.item2}}
+                </p>
+              </div>
+              <div class="small" *ngIf="c.to.getTime() > now.getTime() && !c.finished">
                 <button *ngIf="!c.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-danger" (click)="onJoinButtonClicked(c)">
                   <i class="far fa-calendar-plus"></i>
                   Připojit
@@ -36,6 +35,12 @@
                 <button *ngIf="c.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-danger" (click)="onLeaveButtonClicked(c)">
                   <i class="far fa-calendar-plus"></i>
                   Odpojit
+                </button>
+              </div>
+              <div class="small" *ngIf="c.from.getTime() < now.getTime() && !c.finished">
+                <button *ngIf="c.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-success" (click)="onFinishButtonClicked(c)">
+                  <i class="far fa-calendar-plus"></i>
+                  Dokončeno
                 </button>
               </div>
             </div>

@@ -29,6 +29,13 @@ namespace KachnaOnline.Business.Data.Repositories
                 .AsAsyncEnumerable();
         }
 
+        public IAsyncEnumerable<Cleaning> GetUnfinished()
+        {
+            return Set
+                .Where(e => e.Finished == false)
+                .AsAsyncEnumerable();
+        }
+
         public IAsyncEnumerable<Cleaning> GetNearest(DateTime? after = null)
         {
             var afterDate = after ?? DateTime.Now;

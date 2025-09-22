@@ -92,10 +92,21 @@ namespace KachnaOnline.Business.Facades
         /// Returns a list of current cleanings.
         /// </summary>
         /// <returns>A List of <see cref="KachnaOnline.Dto.Cleanings.CleaningDto"/> of current cleanings or an empty list if no there is no cleaning currently.
-        /// The list usually contains only one cleaning, more in case multiple next cleanings start at the same time.</returns>
+        /// The list usually contains more than one cleaning.</returns>
         public async Task<IEnumerable<CleaningDto>> GetCurrentCleanings()
         {
             var cleanings = await _cleaningsService.GetCurrentCleanings();
+            return await this.MapCleanings(cleanings);
+        }
+
+        /// <summary>
+        /// Returns a list of not yet finished cleanings.
+        /// </summary>
+        /// <returns>A List of <see cref="KachnaOnline.Dto.Cleanings.CleaningDto"/> of unfinished cleanings or an empty list if no there is no such cleaning currently.
+        /// The list usually contains more than one cleaning.</returns>
+        public async Task<IEnumerable<CleaningDto>> GetUnfinishedCleanings()
+        {
+            var cleanings = await _cleaningsService.GetUnfinishedCleanings();
             return await this.MapCleanings(cleanings);
         }
 
@@ -230,6 +241,25 @@ namespace KachnaOnline.Business.Facades
             {
                 joinedCleaningModel.AssignedUsersIds.Remove(this.CurrentUserId);
                 await _cleaningsService.ModifyCleaning(cleaningId, joinedCleaningModel);
+            }
+        }
+
+        /// <summary>
+        /// Marks a cleaning as finished.
+        /// </summary>
+        /// <param name="cleaningId">ID of the cleaning to finish.</param>
+        /// <exception cref="CleaningNotFoundException">Thrown when the cleaning with the given <paramref name="cleaningId"/> does not
+        /// exist.</exception>
+        /// <exception cref="CleaningManipulationFailedException">Thrown when the cleaning cannot be finished.</exception>
+        /// <exception cref="CleaningReadOnlyException">Thrown when cleaning to be finished has already ended.</exception>
+        public async Task FinishCleaning(int cleaningId)
+        {
+            var finishedCleaningModel = _mapper.Map<ModifiedCleaning>(await this.GetCleaning(cleaningId));
+            if (finishedCleaningModel.AssignedUsersIds.Contains(this.CurrentUserId) ||
+                this.IsUserCleaningsManager())
+            {
+                finishedCleaningModel.Finished = true;
+                await _cleaningsService.ModifyCleaning(cleaningId, finishedCleaningModel);
             }
         }
     }

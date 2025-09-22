@@ -22,31 +22,6 @@ namespace KachnaOnline.App.Controllers
     {
         private readonly CleaningsFacade _cleaningsFacade;
 
-        // private CleaningViewDto linkUsernamesFromId(CleaningDto cleaning) {
-        //     var linkedCleaning = new CleaningViewDto
-        //     {
-        //         Name = cleaning.Name,
-        //         Place = cleaning.Place,
-        //         CleaningInstructions = cleaning.CleaningInstructions,
-        //         AssignedUsersIds = cleaning.AssignedUsersIds,
-        //         IdealParticipantsCount = cleaning.IdealParticipantsCount,
-        //         Finished = cleaning.Finished,
-        //         From = cleaning.From,
-        //         To = cleaning.To,
-        //         LinkedPlannedStateIds = cleaning.LinkedPlannedStateIds,
-        //         Id = cleaning.Id,
-        //         IdToUsername = []
-        //     };
-
-        //     foreach (var userId in cleaning.AssignedUsersIds)
-        //     {
-        //         var userName = 
-        //         linkedCleaning.IdToUsername = { userId, };
-        //     }
-
-        //     return linkedCleaning;
-        // }
-
         public CleaningsController(CleaningsFacade cleaningsFacade)
         {
             _cleaningsFacade = cleaningsFacade;
@@ -97,6 +72,18 @@ namespace KachnaOnline.App.Controllers
         public async Task<IActionResult> GetCurrentCleanings()
         {
             return this.Ok(await _cleaningsFacade.GetCurrentCleanings());
+        }
+
+        /// <summary>
+        /// Returns a list of cleanings that are not yet finished.
+        /// </summary>
+        /// <response code="200">The list of unfinished cleanings.</response>
+        [AllowAnonymous]
+        [HttpGet("unfinished")]
+        [ProducesResponseType(typeof(IEnumerable<CleaningDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUnfinishedCleanings()
+        {
+            return this.Ok(await _cleaningsFacade.GetUnfinishedCleanings());
         }
 
         /// <summary>
@@ -298,6 +285,39 @@ namespace KachnaOnline.App.Controllers
             catch (CleaningReadOnlyException)
             {
                 return this.ConflictProblem("The specified cleaning has already passed and cannot be left.");
+            }
+            catch (CleaningNotFoundException)
+            {
+                return this.NotFoundProblem("The specified cleaning does not exist.");
+            }
+        }
+
+        /// <summary>
+        /// Marks cleaning as finished.
+        /// </summary>
+        /// <param name="id">ID of the cleaning to finish.</param>
+        /// <response code="200">The cleaning was finished.</response>
+        /// <response code="404">No such cleaning exists.</response>
+        /// <response code="409">The cleaning has already finished and cannot be marked as finished.</response>
+        [HttpPost("finish/{id}")]
+        [ProducesResponseType(typeof(IEnumerable<StateDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> FinishCleaning(int id)
+        {
+            try
+            {
+                await _cleaningsFacade.FinishCleaning(id);
+                return this.Ok();
+            }
+            catch (NotACleaningsManagerException)
+            {
+                // Shouldn't happen.
+                return this.ForbiddenProblem();
+            }
+            catch (CleaningReadOnlyException)
+            {
+                return this.ConflictProblem("The specified cleaning has already passed and cannot be finished.");
             }
             catch (CleaningNotFoundException)
             {

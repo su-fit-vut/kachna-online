@@ -6,6 +6,7 @@ import { CleaningManagerGuard } from "./cleaning-manager.guard";
 import { CurrentCleaningsComponent } from "./current-cleanings/current-cleanings.component";
 import { CleaningsArchiveComponent } from "./cleanings-archive/cleanings-archive.component";
 import { EditCleaningsComponent } from './edit-cleanings/edit-cleanings.component';
+import { CleaningDetailComponent } from './cleaning-detail/cleaning-detail.component';
 // import { CleaningArchiveComponent } from "./cleaning-archive/cleaning-archive.component";
 
 const routes: Routes = [
@@ -39,23 +40,23 @@ const routes: Routes = [
               description: 'Přehled proběhlých úklidů',
             }
           },
-          // {
-          //   path: ':cleaningId',
-          //   pathMatch: 'full',
-          //   component: CleaningDetailComponent,
-          //   data: {
-          //     title: `${environment.siteName} | Detail úklidu`,
-          //     description: 'Detailní popis úklidu',
-          //   },
-          //   children: [
-          //     {
-          //       path: '',
-          //       component: CleaningDetailComponent,
-          //       children: [
-          //       ]
-          //     }
-          //   ]
-          // },
+          {
+            path: ':cleaningId',
+            pathMatch: 'full',
+            component: CleaningDetailComponent,
+            data: {
+              title: `${environment.siteName} | Detail úklidu`,
+              description: 'Detailní popis úklidu',
+            },
+            children: [
+              {
+                path: '',
+                component: CleaningDetailComponent,
+                children: [
+                ]
+              }
+            ]
+          },
           {
             path: ':cleaningId/edit',
             pathMatch: 'full',

@@ -12,6 +12,7 @@ import { MonthSelectionComponent } from './month-selection/month-selection.compo
 import { PipesModule } from "../pipes/pipes.module";
 import { DeletionConfirmationModalComponent } from './deletion-confirmation-modal/deletion-confirmation-modal.component';
 import { YearSelectionComponent } from "./year-selection/year-selection.component";
+import { CleaningFinishConfirmationModalComponent } from './cleaning-finish-confirmation-modal/cleaning-finish-confirmation-modal.component';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { YearSelectionComponent } from "./year-selection/year-selection.componen
     MonthSelectionComponent,
     YearSelectionComponent,
     DeletionConfirmationModalComponent,
+    CleaningFinishConfirmationModalComponent
   ],
   imports: [
     RouterModule,

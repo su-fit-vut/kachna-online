@@ -10,6 +10,7 @@ import { DeletionConfirmationModalComponent, DeletionType,
 } from "../components/deletion-confirmation-modal/deletion-confirmation-modal.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { StatesService } from "./states.service";
+import { CleaningFinishConfirmationModalComponent } from '../components/cleaning-finish-confirmation-modal/cleaning-finish-confirmation-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -86,6 +87,10 @@ export class CleaningsService {
     return this.http.get<Cleaning[]>(`${this.CleaningsUrl}/current`);
   }
 
+  getUnfinishedCleaningsRequest(): Observable<Cleaning[]> {
+    return this.http.get<Cleaning[]>(`${this.CleaningsUrl}/unfinished`);
+  }
+
   refreshCurrentCleanings() {
     this.getCurrentCleaningsRequest().toPromise()
       .then((res: Cleaning[]) => {
@@ -109,6 +114,10 @@ export class CleaningsService {
     return this.http.delete(`${this.CleaningsUrl}/${cleaningId}`);
   }
 
+  finishCleaningRequest(cleaningId: number): Observable<any> {
+    return this.http.post(`${this.CleaningsUrl}/finish/${cleaningId}`, null);
+  }
+
   joinCleaningRequest(cleaningId: number): Observable<any> {
     return this.http.post(`${this.CleaningsUrl}/join/${cleaningId}`, null);
   }
@@ -130,6 +139,23 @@ export class CleaningsService {
 
   populateForm(selectedCleaningDetail: Cleaning) {
     this.cleaningDetail = Object.assign({}, selectedCleaningDetail);
+  }
+
+  private handleFinishCleaning(cleaningDetail?: Cleaning) {
+    if (cleaningDetail) {
+      this.cleaningDetail = Object.assign({}, cleaningDetail);
+    }
+
+    this.finishCleaningRequest(this.cleaningDetail.id).subscribe(
+      res => {
+        this.refreshCleaningsList();
+        this.toastr.success("Úklid úspěšně dokončen.", "Dokončení úklidu");
+      },
+      err => {
+        console.log(err)
+        this.toastr.error("Úklid se nepovedlo dokončit.", "Dokončení úklidu");
+      }
+    )
   }
 
   handleRemoveCleaning(cleaningDetail?: Cleaning) {
@@ -200,6 +226,19 @@ export class CleaningsService {
 
   getFormattedToDate(format: string = "d. M. yyyy HH:mm") {
     return formatDate(this.cleaningDetail.to, format, "cs-CZ")
+  }
+
+  openCleaningFinishConfirmationModal(cleaningDetail: Cleaning) {
+    const modal = this._modalService.open(CleaningFinishConfirmationModalComponent);
+
+    modal.result.then(
+      (result) => {
+        if (result == "Finished") {
+          this.handleFinishCleaning(cleaningDetail);
+        }
+      }, (reason) => {
+      }
+    );
   }
 
   openCleaningDeletionConfirmationModal(cleaningDetail: Cleaning) {

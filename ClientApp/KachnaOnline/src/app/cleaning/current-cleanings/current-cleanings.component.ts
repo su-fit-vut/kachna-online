@@ -10,7 +10,6 @@ import { forkJoin, Observable } from "rxjs";
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
 import { endWith } from "rxjs/operators";
 import { ToastrService } from "ngx-toastr";
-import { UrlUtils } from "../../shared/utils/url-utils";
 
 @Component({
   selector: 'app-current-cleanings',
@@ -23,8 +22,6 @@ export class CurrentCleaningsComponent implements OnInit {
   currentMonth: Date = new Date();
   loading: boolean = false;
   now: Date = new Date();
-
-  getImageUrl = UrlUtils.getAbsoluteImageUrl;
 
   constructor(
     public cleaningsService: CleaningsService,
@@ -39,7 +36,7 @@ export class CurrentCleaningsComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    this.cleaningsService.getMonthCleanings(new Date()).subscribe(
+    this.cleaningsService.getUnfinishedCleaningsRequest().subscribe(
       (res: Cleaning[]) => {
         this.makeCleanings(res);
       },
@@ -66,6 +63,10 @@ export class CurrentCleaningsComponent implements OnInit {
   onModifyButtonClicked(selectedCleaningDetail: Cleaning) {
     this.router.navigate([`/cleanings/${selectedCleaningDetail.id}/edit`]).then();
   }
+  
+  onFinishButtonClicked(selectedCleaningDetail: Cleaning) {
+    this.cleaningsService.openCleaningFinishConfirmationModal(selectedCleaningDetail);
+  }
 
   makeCleanings(cleaningModels: Cleaning[]): void {
     this.cleanings = [];
@@ -73,17 +74,6 @@ export class CurrentCleaningsComponent implements OnInit {
     let waiting: Observable<any>[] = [];
 
     for (let c of cleaningModels) {
-      // let cleaning: CleaningItem = {
-      //   from: c.from,
-      //   to: c.to,
-      //   id: c.id,
-      //   title: c.name,
-      //   cleaningInstructions: c.cleaningInstructions,
-      //   place: c.place,
-      //   idealParticipantsCount: c.idealParticipantsCount,
-      //   finished: c.finished,
-      //   multipleDays: (c.to.getTime() - c.from.getTime() <= 86400000)
-      // };
 
       if(c.finished == false) {
         this.cleanings.push(c);
@@ -103,15 +93,6 @@ export class CurrentCleaningsComponent implements OnInit {
   sortCleanings(cleanings: CleaningItem[]): CleaningItem[] {
     return cleanings.sort((a, b) => a.from.getTime() - b.from.getTime());
   }
-
-  monthChanged(month: Date) {
-    // this.cleaningsService.getMonthCleanings(month, false).subscribe(res => this.makeNextCleanings(res));
-  }
-
-  // updateNextCleanings(): void {
-  //   this.update(this.nextCleanings, this.shownNextCleanings);
-  //   this.shownNextCleanings = this.sortCleanings(this.shownNextCleanings)
-  // }
 
   update(source: { to: Date }[], target: { to: Date }[]): void {
     const now = new Date().getTime();

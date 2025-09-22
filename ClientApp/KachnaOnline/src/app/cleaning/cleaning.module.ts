@@ -9,6 +9,8 @@ import { CleaningFormComponent } from './cleaning-form/cleaning-form.component';
 import { CurrentCleaningsComponent } from './current-cleanings/current-cleanings.component';
 import { CleaningsArchiveComponent } from './cleanings-archive/cleanings-archive.component';
 import { EditCleaningsComponent } from './edit-cleanings/edit-cleanings.component';
+import { CleaningDetailComponent } from './cleaning-detail/cleaning-detail.component';
+import { PipesModule } from '../shared/pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,7 @@ import { EditCleaningsComponent } from './edit-cleanings/edit-cleanings.componen
     CurrentCleaningsComponent,
     CleaningsArchiveComponent,
     EditCleaningsComponent,
+    CleaningDetailComponent,
   ],
   imports: [
     CommonModule,
@@ -24,6 +27,7 @@ import { EditCleaningsComponent } from './edit-cleanings/edit-cleanings.componen
     NgbModule,
     FormsModule,
     ComponentsModule,
+    PipesModule,
     ReactiveFormsModule,
   ]
 })

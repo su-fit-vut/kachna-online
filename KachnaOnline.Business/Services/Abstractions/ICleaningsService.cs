@@ -53,6 +53,12 @@ namespace KachnaOnline.Business.Services.Abstractions
         Task<ICollection<Cleaning>> GetCleanings(DateTime at);
 
         /// <summary>
+        /// Returns a collection of all cleanings which are not marked as finished.
+        /// </summary>
+        /// <returns>A Collection of <see cref="Cleaning"/> or an empty list if there is no unfinished cleaning.</returns>
+        Task<ICollection<Cleaning>> GetUnfinishedCleanings();
+
+        /// <summary>
         /// Plans a new cleaning.
         /// </summary>
         /// <remarks>
@@ -77,16 +83,6 @@ namespace KachnaOnline.Business.Services.Abstractions
         /// <exception cref="CleaningManipulationFailedException">Thrown when the cleaning cannot be deleted.</exception>
         /// <exception cref="CleaningReadOnlyException">Thrown when cleaning to be removed has already ended.</exception>
         Task RemoveCleaning(int cleaningId);
-
-                /// <summary>
-        /// Joins a cleaning record with the ID <paramref name="cleaningId"/>.
-        /// </summary>
-        /// <param name="cleaningId">ID of the cleaning to join.</param>
-        /// <exception cref="CleaningNotFoundException">Thrown when the cleaning with the given <paramref name="cleaningId"/> does not
-        /// exist.</exception>
-        /// <exception cref="CleaningManipulationFailedException">Thrown when the cleaning cannot be joined.</exception>
-        /// <exception cref="CleaningReadOnlyException">Thrown when cleaning to be joined has already ended.</exception>
-        Task JoinCleaning(int cleaningId);
 
         /// <summary>
         /// Changes details of a cleaning specified by <paramref name="cleaningId"/>. Projects these changes into all planned states linked to this cleaning. State records from the past are not changed.

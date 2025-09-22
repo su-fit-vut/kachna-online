@@ -114,6 +114,7 @@ export class CleaningFormComponent implements OnInit {
               hour: edittedCleaning.to.getHours(),
               minute: edittedCleaning.to.getMinutes(),
             });
+            this.form.controls.finished.setValue(edittedCleaning.finished);
           }).catch(err => {
           this.toastr.error("Stažení dat o úklidu se nezdařilo.", "Upravit úklid");
           return throwError(err);
@@ -160,7 +161,7 @@ export class CleaningFormComponent implements OnInit {
     cleaningData.from = DateUtils.dateTimeToString(formVal.fromDate, formVal.fromTime, this.nativeDateAdapter);
     cleaningData.to = DateUtils.dateTimeToString(formVal.toDate, formVal.toTime, this.nativeDateAdapter);
 
-    if (this.editMode) { // FIXME: When cleared, ID will be replaced. Remove clear button altogether?
+    if (this.editMode) {
       this.modifyCleaning(cleaningData);
     } else {
       this.planCleaning(cleaningData);
@@ -178,14 +179,6 @@ export class CleaningFormComponent implements OnInit {
   private verifyDates(from: Date | null, to: Date | null): boolean {
     if (!from || !to) {
       this.toastr.error("Úklid musí mít nastavený počátek i konec akce.", "Plánování úklidu")
-      return false;
-    }
-    if (from.getTime() < Date.now()) {
-      this.toastr.error("Úklid nemůže začínat v minulosti. Upravte termín počátku akce.", "Plánování úklidu")
-      return false;
-    }
-    if (from.getTime() < Date.now()) {
-      this.toastr.error("Úklid nemůže končit v minulosti. Upravte termín konce akce.", "Plánování úklidu")
       return false;
     }
     if (from >= to) {

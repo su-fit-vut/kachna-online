@@ -1,0 +1,74 @@
+<app-back-arrow heading="Detail úklidu"></app-back-arrow>
+
+<ng-container *ngIf="cleaningsService.cleaningDetail?.name">
+  <h2 *ngIf="cleaningsService.cleaningDetail.name" class="mb-1">{{cleaningsService.cleaningDetail.name}}</h2>
+  <div class="">
+    <div class="card">
+      <div class="row no-gutters">
+        <div class="col">
+          <div class="card-body">
+            <div class="" *ngIf="cleaningsService.cleaningDetail.cleaningInstructions">
+              <div class="d-flex w-100 justify-content-between">
+                <h4 class="mb-1">Instrukce</h4>
+              </div>
+              <p class="mb-2">{{cleaningsService.cleaningDetail.cleaningInstructions}}</p>
+            </div>
+
+            <div class="">
+              <div class="d-flex w-100 justify-content-between">
+                <h4 class="mb-1">Termín konání</h4>
+              </div>
+              <div class="container row">
+                <p class="mb-2">Od {{cleaningsService.cleaningDetail.from | date:'d. M. HH:mm'}} do {{cleaningsService.cleaningDetail.to | date: 'd. M. HH:mm'}}</p>
+              </div>
+            </div>
+
+            <div class="flex-fill mb-2" *ngIf="cleaningsService.cleaningDetail.place">
+              <div class="d-flex w-100 justify-content-between">
+                <h4 class="mb-1">Místo</h4>
+              </div>
+              <p *ngIf="cleaningsService.cleaningDetail.place" class="mb-1">{{cleaningsService.cleaningDetail.place}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="small" *ngIf="cleaningsService.cleaningDetail.to.getTime() > now.getTime()" class="list-group-item">
+			<ul class="list-group list-group-horizontal">
+        <li class="list-group-item border-0">
+            <button *ngIf="!cleaningsService.cleaningDetail.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-secondary" (click)="onJoinButtonClicked()">
+                <i class="far fa-calendar-plus"></i>
+                Připojit
+            </button>
+        </li>
+				<li>
+				 <button *ngIf="cleaningsService.cleaningDetail.assignedUsersIds?.includes(authenticationService.getUserId())" type="button" class="btn btn-danger" (click)="onLeaveButtonClicked()">
+						<i class="far fa-calendar-plus"></i>
+						Odpojit
+					</button>
+				</li>
+			</ul>
+    </div>
+
+    <div *ngIf="authenticationService.isCleaningsManager()" class="list-group-item">
+      <ul class="list-group list-group-horizontal">
+        <li class="list-group-item border-0">
+          <button class="btn btn-primary" (click)="onModifyButtonClicked()"
+                  data-toggle="modal" data-target="#exampleModal"
+                  data-backdrop="static" data-keyboard="false">
+            <i class="far fa-edit"></i>
+            Upravit úklid
+          </button>
+        </li>
+
+        <li class="list-group-item border-0">
+          <button class="btn btn-danger" (click)="onDeleteButtonClicked()">
+            <i class="far fa-trash-alt"></i>
+            Odstranit
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-container>
