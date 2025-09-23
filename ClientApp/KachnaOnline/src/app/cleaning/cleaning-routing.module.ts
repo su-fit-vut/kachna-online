@@ -18,6 +18,7 @@ const routes: Routes = [
           {
             path: 'planned',
             component: CurrentCleaningsComponent,
+            canActivate: [CleaningManagerGuard],
             data: {
               title: `${environment.siteName} | Aktuální úklidy`,
               description: 'Přehled probíhajících úklidů',
@@ -35,6 +36,7 @@ const routes: Routes = [
           { 
             path: 'archive',
             component: CleaningsArchiveComponent,
+            canActivate: [CleaningManagerGuard],
             data: {
               title: `${environment.siteName} | Archiv úklidů`,
               description: 'Přehled proběhlých úklidů',
@@ -44,6 +46,7 @@ const routes: Routes = [
             path: ':cleaningId',
             pathMatch: 'full',
             component: CleaningDetailComponent,
+            canActivate: [CleaningManagerGuard],
             data: {
               title: `${environment.siteName} | Detail úklidu`,
               description: 'Detailní popis úklidu',

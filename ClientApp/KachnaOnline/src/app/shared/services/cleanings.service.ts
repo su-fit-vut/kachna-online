@@ -69,8 +69,8 @@ export class CleaningsService {
   }
 
   getYearCleanings(year: Date) {
-    let firstDayOfYear = new Date(year.getFullYear(), 0, 1, 0, 0, 0, 0);
-    let lastDayOfYear = new Date(year.getFullYear(), 11, 31, 23, 59, 59);
+    let firstDayOfYear = new Date(Date.UTC(year.getUTCFullYear(), 0, 1, 0, 0, 0, 0));
+    let lastDayOfYear = new Date(Date.UTC(year.getUTCFullYear(), 11, 31, 23, 59, 59, 999));
 
     return this.getBetween(firstDayOfYear, lastDayOfYear);
   }

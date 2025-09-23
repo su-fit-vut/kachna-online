@@ -5,6 +5,6 @@ namespace KachnaOnline.Business.Configuration
         /// <summary>
         /// Default time span to query for in days.
         /// </summary>
-        public int QueryDaysTimeSpan { get; set; } = 180;
+        public int QueryDaysTimeSpan { get; set; } = 400;
     }
 }

@@ -26,7 +26,7 @@ export class CleaningsArchiveComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.cleaningsService.getMonthCleanings(this.now).subscribe(
+    this.cleaningsService.getYearCleanings(this.now).subscribe(
       res => this.setCleanings(res),
       err => {
         this.toastrService.error("Stažení úklidů selhalo.", "Stažení úklidů");
