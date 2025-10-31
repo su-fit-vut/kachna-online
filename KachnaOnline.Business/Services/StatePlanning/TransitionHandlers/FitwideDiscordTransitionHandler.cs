@@ -46,7 +46,7 @@ namespace KachnaOnline.Business.Services.StatePlanning.TransitionHandlers
             else if (state.Type == StateType.OpenBar &&
                      (previousState is null || previousState.Type != StateType.OpenBar))
             {
-                msg = $"Máme tady otvíračku! {Hypers} Aktuální nabídku najdete na https://su.fit.vut.cz/kachna/.";
+                msg = $"Máme tady otvíračku! {Hypers} Kompletní nabídku najdete na https://su.fit.vut.cz/kachna/. (ne všechny položky musí být aktuálně dostupné)";
             }
             else if (state.Type == StateType.OpenTearoom &&
                      (previousState is null || previousState.Type != StateType.OpenTearoom))
