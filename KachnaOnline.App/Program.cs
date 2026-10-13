@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using KachnaOnline.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +23,10 @@ namespace KachnaOnline.App
 
                 var migrateDb = Environment.CommandLine.Contains("--migrate-db");
                 var bootstrapDb = Environment.CommandLine.Contains("--bootstrap-db");
+                var bootstrapIfEmpty = Environment.CommandLine.Contains("--bootstrap-db-if-empty");
                 var fillImages = args.Length > 0 && args[0] == "--fill-images";
 
-                if (migrateDb || bootstrapDb || fillImages)
+                if (migrateDb || bootstrapDb || bootstrapIfEmpty || fillImages)
                 {
                     Log.Information("Database initialization mode.");
 
@@ -38,11 +40,13 @@ namespace KachnaOnline.App
                         dbContext.Database.Migrate();
                     }
 
-                    if (bootstrapDb)
+                    if (bootstrapDb || (bootstrapIfEmpty && !dbContext.Roles.Any()))
                     {
                         Log.Information("Bootstrapping the database.");
+                        using var transaction = dbContext.Database.BeginTransaction();
                         var dbBootstrapper = new DataBootstrapper(dbContext);
                         dbBootstrapper.BootstrapDatabase();
+                        transaction.Commit();
                     }
 
                     if (fillImages)
