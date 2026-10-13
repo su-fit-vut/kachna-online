@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ClubInfoService } from "../../shared/services/club-info.service";
 import { ClubOffer, ClubOfferItem } from "../../models/clubinfo/offer.model";
 
@@ -8,6 +8,7 @@ import { ClubOffer, ClubOfferItem } from "../../models/clubinfo/offer.model";
   styleUrls: ['./current-offer.component.css']
 })
 export class CurrentOfferComponent implements OnInit {
+  @Output() offerLoaded = new EventEmitter<void>();
 
   constructor(private infoService: ClubInfoService) {
   }
@@ -113,6 +114,10 @@ export class CurrentOfferComponent implements OnInit {
         });
       }
     }
+
+    // When current-offer fragment is present it scrolls to current-offer block
+    // after loading things on offer from home component.
+    this.offerLoaded.emit();
   }
 
   makeCategories(definitions: { [id: string]: ClubOfferItem[] }) {

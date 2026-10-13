@@ -24,7 +24,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   state: ClubState;
   statesReloadSubscription: Subscription;
   routerReloadSubscription: Subscription;
-  fragmentSubscription: Subscription;
   unrollCurrentOffer = false;
 
   ngOnInit(): void {
@@ -34,28 +33,56 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.routerReloadSubscription = this.router.events.subscribe((e: any) => {
       if (e instanceof NavigationEnd) {
         this.loadState();
+        this.setUnrollFromFragment();
       }
     });
 
-    this.fragmentSubscription = this.router.events.subscribe((e: any) => {
-      if (e instanceof NavigationEnd) {
-        const fragment = this.router.parseUrl(this.router.url).fragment;
-        this.unrollCurrentOffer = fragment === 'current-offer';
-      }
-    });
-
-    const fragment = this.router.parseUrl(this.router.url).fragment;
-    this.unrollCurrentOffer = fragment === 'current-offer';
+    this.setUnrollFromFragment();
   }
 
   ngOnDestroy(): void {
     this.statesReloadSubscription?.unsubscribe();
     this.routerReloadSubscription?.unsubscribe();
-    this.fragmentSubscription?.unsubscribe();
   }
 
   loadState(): void {
-    this.stateService.getCurrent().subscribe(result => this.state = result);
+    this.stateService.getCurrent().subscribe(result => {
+      // Load result
+      this.state = result;
+
+      // If fragment scroll to offer
+      if (this.getFragment() === 'current-offer') {
+        this.scrollToOffer();
+      }
+    });
   }
 
+  private scrollToOffer(timeoutMS: number = 100) {
+    setTimeout(() => {
+      const el = document.getElementById('current-offer');
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top > 0) {
+          window.scrollTo({
+            top: rect.top + window.pageYOffset,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }, timeoutMS);
+  }
+
+  onOfferLoaded() {
+    if (this.getFragment() === 'current-offer') {
+      this.scrollToOffer()
+    }
+  }
+
+  private setUnrollFromFragment() {
+    this.unrollCurrentOffer = this.getFragment() === 'current-offer';
+  }
+
+  private getFragment() {
+    return this.router.parseUrl(this.router.url).fragment;
+  }
 }

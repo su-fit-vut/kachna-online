@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { ClubState } from "../../models/states/club-state.model";
 import { ClubStateTypes } from "../../models/states/club-state-types.model";
 
@@ -8,15 +8,20 @@ import { ClubStateTypes } from "../../models/states/club-state-types.model";
   styleUrls: ['./current-offer-collapsible-block.component.css', '../home.component.css']
 })
 export class CurrentOfferCollapsibleBlockComponent {
-  @Input() state: ClubState;
-  @Input() unroll: boolean = false;
+  @Input() state: ClubState
+  @Input()
+  set unroll(operation: boolean) {
+    if (operation) {
+      this.currentOfferCollapsed = false;
+    }
+  }
   currentOfferCollapsed: boolean = true;
+
+  @Output() offerLoaded = new EventEmitter<void>();
 
   ST = ClubStateTypes;
 
-  ngOnChanges() {
-    if (this.unroll === true) {
-      this.currentOfferCollapsed = false;
-    }
+  onOfferLoaded() {
+    this.offerLoaded.emit();
   }
 }

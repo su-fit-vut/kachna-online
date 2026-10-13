@@ -22,7 +22,7 @@
 <div #currentOffer="ngbCollapse" [(ngbCollapse)]="currentOfferCollapsed">
   <div class="card mb-2">
     <div class="card-body">
-      <app-current-offer [tearoomMode]="state && state.state==ST.OpenTearoom"></app-current-offer>
+      <app-current-offer [tearoomMode]="state && state.state==ST.OpenTearoom" (offerLoaded)="onOfferLoaded()"></app-current-offer>
     </div>
   </div>
 </div>

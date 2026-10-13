@@ -60,7 +60,7 @@
 <ng-container *ngIf="!state || state.state==ST.Closed || state.state==ST.OpenAll">
   <div class="border-top">
     <a id="current-offer"></a>
-    <app-current-offer-collapsible-block [state]="state" [unroll]="unrollCurrentOffer"></app-current-offer-collapsible-block>
+    <app-current-offer-collapsible-block [state]="state" [unroll]="unrollCurrentOffer" (offerLoaded)="onOfferLoaded()"></app-current-offer-collapsible-block>
   </div>
 </ng-container>
 
