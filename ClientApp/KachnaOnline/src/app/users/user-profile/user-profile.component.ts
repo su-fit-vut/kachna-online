@@ -14,6 +14,7 @@ import { throwError } from "rxjs";
 })
 export class UserProfileComponent implements OnInit {
   public isCardInfoCollapsed: boolean = true;
+  public isLoadingWalletLink: boolean = false;
 
   constructor(
     public authenticationService: AuthenticationService,
@@ -70,5 +71,32 @@ export class UserProfileComponent implements OnInit {
     }
 
     this.form.markAsPristine();
+  }
+
+  onAddToGoogleWallet(): void {
+    this.isLoadingWalletLink = true;
+    this.authenticationService.getGoogleWalletSaveLink()
+      .then((res: { url: string }) => {
+        this.isLoadingWalletLink = false;
+        if (res && res.url) {
+          const opened = window.open(res.url, '_blank');
+          if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+            window.location.href = res.url;
+          }
+        } else {
+          this.toastrService.error("Nebylo možné získat odkaz pro Peněženku Google.", "Digitální karta");
+        }
+      })
+      .catch((err: any) => {
+        this.isLoadingWalletLink = false;
+        console.error("Failed to fetch Google Wallet save link:", err);
+        if (err?.status === 0) {
+          this.toastrService.error("Nepodařilo se připojit k serveru. Zkontrolujte připojení.", "Digitální karta");
+        } else if (err?.status === 401 || err?.status === 403) {
+          this.toastrService.error("Pro přidání karty do Peněženky Google se prosím znovu přihlaste.", "Digitální karta");
+        } else {
+          this.toastrService.error("Nebylo možné vygenerovat odkaz pro Peněženku Google.", "Digitální karta");
+        }
+      });
   }
 }

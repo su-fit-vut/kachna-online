@@ -68,7 +68,26 @@
       </div>
       </div>
 
-      <button class="btn btn-primary" type="submit" [disabled]="form.invalid || form.pristine">Uložit změny</button>
+      <div class="form-group mt-4">
+        <h5 class="digital-card-title">Digitální karta</h5>
+        <div class="d-flex align-items-center mt-2">
+          <button type="button" class="btn p-0 border-0 bg-transparent wallet-button"
+                  (click)="onAddToGoogleWallet()" [disabled]="isLoadingWalletLink"
+                  title="Přidat do Peněženky Google">
+            <img src="assets/icons/cz_add_to_google_wallet_wallet-button.png"
+                 alt="Přidat do Peněženky Google"
+                 class="wallet-badge">
+          </button>
+          <div *ngIf="isLoadingWalletLink" class="spinner-border spinner-border-sm ml-3 text-secondary" role="status">
+            <span class="sr-only">Načítání...</span>
+          </div>
+        </div>
+        <p class="text-muted small mt-2">
+          Digitální KachnaKarta nahrazuje ISIC při identifikaci na baru. Nenahrazuje ISIC při otevírání dveří na fakultě.
+        </p>
+      </div>
+
+      <button class="btn btn-primary mt-3" type="submit" [disabled]="form.invalid || form.pristine">Uložit změny</button>
     </form>
   </div>
 </div>

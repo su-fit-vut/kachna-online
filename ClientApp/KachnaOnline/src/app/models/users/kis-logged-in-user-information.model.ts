@@ -6,6 +6,8 @@ export class KisLoggedInUserInformation {
   gamification_consent: boolean = false;
   has_eduid: boolean = false;
   has_rfid: boolean = false;
+  has_mobilecard_google: boolean = false;
+  has_mobilecard_apple: boolean = false;
   id: number = -1;
   is_member: boolean = false;
   member_until: string = "";
