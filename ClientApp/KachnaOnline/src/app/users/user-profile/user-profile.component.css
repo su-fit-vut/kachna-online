@@ -1,0 +1,32 @@
+.digital-card-title {
+  color: #495057;
+  font-weight: 600;
+}
+
+.wallet-button {
+  cursor: pointer;
+  display: inline-block;
+  line-height: 0;
+  border-radius: 25px;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.wallet-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.wallet-button:active:not(:disabled) {
+  opacity: 0.8;
+}
+
+.wallet-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.wallet-badge {
+  height: 48px;
+  width: auto;
+  max-width: 100%;
+}
+

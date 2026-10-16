@@ -486,4 +486,12 @@ export class AuthenticationService {
       this.toastrService.error("Karta může být změněna pouze jednou za 6 měsíců.", "Změna uživatelských údajů");
     }
   }
+
+  getGoogleWalletSaveLinkRequest(): Observable<{ url: string }> {
+    return this.http.get<{ url: string }>(`${environment.kisApiUrl}/users/me/mobilecard/google`);
+  }
+
+  getGoogleWalletSaveLink(): Promise<{ url: string }> {
+    return this.getGoogleWalletSaveLinkRequest().toPromise();
+  }
 }
